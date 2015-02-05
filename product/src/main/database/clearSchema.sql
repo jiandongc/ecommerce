@@ -1,0 +1,1 @@
+DO $$DECLARE cur_rec record; BEGIN FOR cur_rec IN SELECT table_schema, table_name FROM information_schema.tables WHERE table_type = 'BASE TABLE' AND table_schema = 'public' LOOP EXECUTE 'DROP TABLE ' || quote_ident(cur_rec.table_name) || ' CASCADE'; END LOOP; END$$;

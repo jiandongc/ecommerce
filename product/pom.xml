@@ -1,0 +1,141 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ecommerce</groupId>
+	<artifactId>product</artifactId>
+	<packaging>war</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>product Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.1.8.RELEASE</version>
+	</parent>
+
+	<properties>
+		<postgresql.version>9.1-901.jdbc4</postgresql.version>
+		<dbdeploy.version>3.0M3</dbdeploy.version>
+		<db.driver>org.postgresql.Driver</db.driver>
+        <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
+        <dbdeploy.user>jiandong</dbdeploy.user>
+        <dbdeploy.password>0501052006</dbdeploy.password>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>${postgresql.version}</version>
+		</dependency>
+
+		<!-- Test Scope-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			
+			<plugin>
+				<groupId>com.dbdeploy</groupId>
+                <artifactId>maven-dbdeploy-plugin</artifactId>
+                <version>${dbdeploy.version}</version>	
+
+                <configuration>
+                   	<scriptdirectory>src/main/database/deltas</scriptdirectory>
+                   	<driver>${db.driver}</driver>
+                   	<url>${db.url}</url>
+                   	<userid>${dbdeploy.user}</userid>
+                   	<password>${dbdeploy.password}</password>
+                   	<dbms>pgsql</dbms>
+                   	<delimiter>;</delimiter>
+                   	<delimiterType>row</delimiterType>
+                   	<outputfile>apply.sql</outputfile>
+                   	<undoOutputfile>undo.sql</undoOutputfile>
+                </configuration>
+               	<dependencies>
+                   	<dependency>
+                       	<groupId>postgresql</groupId>
+                       	<artifactId>postgresql</artifactId>
+                       	<version>${postgresql.version}</version>
+                   	</dependency>
+               	</dependencies>
+			</plugin>
+		</plugins>
+	</build>
+
+	<profiles>
+		<profile>
+			<id>drop-database</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+        				<artifactId>sql-maven-plugin</artifactId>
+        				<version>1.5</version>
+						<dependencies>
+							<dependency>
+								<groupId>postgresql</groupId>
+								<artifactId>postgresql</artifactId>
+								<version>${postgresql.version}</version>
+							</dependency>
+                		</dependencies>
+						<configuration>
+                    		<driver>${db.driver}</driver>
+                    		<url>${db.url}</url>
+                    		<username>${dbdeploy.user}</username>
+                    		<password>${dbdeploy.password}</password>
+                		</configuration>
+                		<executions>
+                			<execution>
+                				<phase>generate-resources</phase>
+                				<goals>
+                					<goal>execute</goal>
+                				</goals>
+                				<configuration>
+                					<srcFiles>
+                						<srcFile>src/main/database/clearSchema.sql</srcFile>
+                						<srcFile>src/main/database/createSchemaChangeLogTable.sql</srcFile>
+                					</srcFiles>		
+                				</configuration>
+                			</execution>
+                		</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+	
+	<repositories>
+		<repository>
+			<id>spring-releases</id>
+			<name>Spring Releases</name>
+			<url>http://repo.spring.io/libs-release</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>spring-releases</id>
+			<name>Spring Releases</name>
+			<url>http://repo.spring.io/libs-release</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
