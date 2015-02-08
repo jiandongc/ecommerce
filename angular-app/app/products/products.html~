@@ -1,0 +1,5 @@
+<div ng-repeat="product in products | orderBy:'id'" class="productItem">
+	<a href="#/products/{{product.id}}"><img ng-src="{{product.imageUrl}}"></a>
+	<h3>{{product.name}}</h3>
+	<p>{{product.description}}</p>
+</div>

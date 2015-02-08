@@ -1,0 +1,17 @@
+<div class="product">
+	<div class="productImg"><img ng-src="{{product.imageUrl}}"></div>
+	<div class="productDetail">
+		<div class="productName">{{product.name}}</div>
+		<div class="productType">{{product.category}}</div>
+		<div class="productDesc">{{product.description}}</div>
+		<div class="priceAndButton">
+			<span class="productPrice">{{product.unitPrice}} gbs</span>
+			<button id="add-to-cart" type="button" disabled="disabled">Add to cart</button>
+		</div>
+	</div>
+</div>
+
+
+
+
+
