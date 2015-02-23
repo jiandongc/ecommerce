@@ -1,12 +1,19 @@
-<div class="product">
-	<div class="productImg"><img ng-src="{{product.imageUrl}}"></div>
-	<div class="productDetail">
-		<div class="productName">{{product.name}}</div>
-		<div class="productType">{{product.category}}</div>
-		<div class="productDesc">{{product.description}}</div>
-		<div class="priceAndButton">
-			<span class="productPrice">{{product.unitPrice}} gbp</span>
-			<button id="add-to-cart" type="button" disabled="disabled">Add to cart</button>
+<div class="container">
+	<div class = "row">
+		<div class = "col-xs-12 col-md-6">
+			<img ng-src="{{product.imageUrl}}" class="img-responsive">
+		</div>
+		<div class = "col-xs-12 col-md-6 productDetail">
+			<div class="productName">{{product.name}}</div>
+			<div class="productType">{{product.category}}</div>
+			<div class="productDesc">{{product.description}}</div>
+			<form class = "form-inline">
+				<div class="productPrice">£{{product.unitPrice}} GBP</text>
+				<div class="form-group">
+					<input type="number" value="1" max="99" min="1" maxlength="2" class="quantity">
+					<button class="btn btn-add" type="submit"><span class="glyphicon glyphicon-cutlery"></span></button>
+				</div>
+			</form>
 		</div>
 	</div>
 </div>

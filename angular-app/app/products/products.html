@@ -1,5 +1,17 @@
-<div ng-repeat="product in products | orderBy:'id'" class="productItem">
-	<a href="#/products/{{product.id}}"><img ng-src="{{product.imageUrl}}"></a>
-	<h3>{{product.name}}</h3>
-	<p>{{product.description}}</p>
+<div class = "container">
+	<div class = "row">
+		<div ng-repeat="product in products | orderBy:'id'">
+			<div class = "col-xs-6 col-sm-4 col-md-3 productItem">
+				<a href="#/products/{{product.id}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
+				<div class="name">{{product.name}}</div>	
+				<form class = "form-inline">
+					<text class="price">£{{product.unitPrice}}</text>
+					<div class="form-group">
+						<input type="number" value="1" max="99" min="1" maxlength="1" class="quantity">
+						<button class="btn btn-add btn-sm" type="submit"><span class="glyphicon glyphicon-cutlery"></span></button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
 </div>
