@@ -19,8 +19,8 @@
 		<dbdeploy.version>3.0M3</dbdeploy.version>
 		<db.driver>org.postgresql.Driver</db.driver>
         <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
-        <dbdeploy.user>jiandong</dbdeploy.user>
-        <dbdeploy.password>0501052006</dbdeploy.password>
+        <dbdeploy.user>product</dbdeploy.user>
+        <dbdeploy.password>password</dbdeploy.password>
 	</properties>
 
 	<dependencies>
