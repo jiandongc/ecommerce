@@ -1,7 +1,5 @@
 package product.domain;
 
-import java.util.Calendar;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.EnumType;
