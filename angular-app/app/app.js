@@ -1,7 +1,8 @@
 var app = angular.module('myApp', [
 	'ngRoute',
 	'allProduct',
-	'productDetail'
+	'productDetail',
+	'customer'
 ]);
 
 app.config(['$routeProvider',

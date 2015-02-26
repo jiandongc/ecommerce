@@ -1,0 +1,1 @@
+CREATE SCHEMA customer AUTHORIZATION customer;

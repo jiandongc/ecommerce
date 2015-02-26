@@ -111,4 +111,26 @@ html, body {
 	padding: 0.4em 0px;
 }
 
+.login {
+	color: #455560;
+}
+
+.login .textInputLength {
+	width: 60%;
+}
+
+.login form {
+	padding-bottom: 7%;
+}
+
+.login h3 {
+	padding-bottom: 2%;
+}
+
+.login button {
+	font-weight: bold;	
+	background-color: #455560;		
+	color: #E8E8E8;
+}
+
 
