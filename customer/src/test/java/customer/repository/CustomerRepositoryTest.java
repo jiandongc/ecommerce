@@ -1,7 +1,7 @@
 package customer.repository;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,7 +13,7 @@ public class CustomerRepositoryTest extends AbstractRepositoryTest{
 	private CustomerRepository customerRepository;
 	
 	@Test
-	public void shouldSaveCustomer(){
+	public void shouldSaveAndFindCustomer(){
 		// Given
 		Customer customer = new Customer("Name", "Email", "Password");
 		
@@ -22,7 +22,19 @@ public class CustomerRepositoryTest extends AbstractRepositoryTest{
 		
 		// Then
 		Customer savedCustomer = customerRepository.findOne(customer.getId());
-		MatcherAssert.assertThat(savedCustomer, Matchers.is(customer));
+		assertThat(savedCustomer, is(customer));
+	}
 	
+	@Test
+	public void shouldFindCustomerByEmail(){
+		// Given
+		Customer customer = new Customer("Name", "Email", "Password");
+		
+		// When
+		customerRepository.save(customer);
+		
+		// Then
+		Customer savedCustomer = customerRepository.findByEmail("Email");
+		assertThat(savedCustomer, is(customer));
 	}
 }

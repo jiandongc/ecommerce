@@ -14,6 +14,11 @@ html, body {
 	font-family: Verdana, Helvetica, sans-serif;
 }
 
+.welcome-message {
+    float: none !important;
+    text-align: center;
+}
+
 .productItem {
   padding-bottom:2em;
 }
@@ -111,8 +116,9 @@ html, body {
 	padding: 0.4em 0px;
 }
 
+/* login page */
 .login {
-	color: #455560;
+	color: #45555f;
 }
 
 .login .textInputLength {
@@ -131,6 +137,34 @@ html, body {
 	font-weight: bold;	
 	background-color: #455560;		
 	color: #E8E8E8;
+}
+
+/* account page */
+.account {
+	color: #45555f;
+}
+
+.account .row {
+	padding-bottom: 3%;
+}
+
+.account .title {
+	font-size: 1.3em;
+	font-weight: bold;
+	padding-bottom: 3%;
+}
+
+.address {
+	font-family: "Lucida Console", Monaco, monospace;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+}
+.address .name {
+	font-weight: bold;
+}
+
+.address .line{
+	padding-bottom: 0.5%;
 }
 
 

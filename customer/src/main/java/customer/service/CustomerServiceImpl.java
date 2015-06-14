@@ -23,4 +23,16 @@ public class CustomerServiceImpl implements CustomerService{
 		return customerRepository.save(customer);
 	}
 
+	@Override
+	@Transactional(readOnly = true)
+	public Customer findById(Long Id) {
+		return customerRepository.findOne(Id);
+	}
+	
+	@Override
+	@Transactional(readOnly = true)
+	public Customer findByEmail(String email){
+		return customerRepository.findByEmail(email);
+	}
+
 }

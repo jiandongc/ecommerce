@@ -1,6 +1,8 @@
 package customer.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,11 +21,22 @@ public class CustomerController {
 	public CustomerController(CustomerService customerService){
 		this.customerService = customerService;
 	}
-	
+
 	@RequestMapping(method=RequestMethod.POST)
 	public Customer save(@RequestBody Customer customer){
 		return customerService.save(customer);
 	}
 	
+	@RequestMapping(method=RequestMethod.GET)
+	public Customer findByEmail(@RequestParam("email") String email){
+		return customerService.findByEmail(email);
+	}
+	
+	
+    @RequestMapping(value = "/{id}", method=RequestMethod.GET)
+    public Customer findById(@PathVariable long id) {
+    	Customer customer = customerService.findById(id);
+        return customer;
+    }
 
 }

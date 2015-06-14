@@ -9,7 +9,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import customer.Application;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
+@SpringApplicationConfiguration(classes = TestApplicationContext.class)
 @WebAppConfiguration
 @IntegrationTest
 public abstract class AbstractControllerTest {
