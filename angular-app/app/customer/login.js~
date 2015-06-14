@@ -1,9 +1,0 @@
-var login = angular.module('customer', ['ngRoute']);
-
-productDetail.config(['$routeProvider',
-  function($routeProvider) {
-    $routeProvider.
-      when('/login', {
-        templateUrl: 'customer/login.html',
-      });
-  }]);
