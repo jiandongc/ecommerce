@@ -18,8 +18,8 @@
     <postgresql.version>9.1-901.jdbc4</postgresql.version>
     <dbdeploy.version>3.0M3</dbdeploy.version>
     <db.driver>org.postgresql.Driver</db.driver>
-    <db.url>jdbc:postgresql://127.0.0.1:5432/order</db.url>
-    <dbdeploy.user>order</dbdeploy.user>
+    <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
+    <dbdeploy.user>orders</dbdeploy.user>
     <dbdeploy.password>password</dbdeploy.password>
   </properties>
 

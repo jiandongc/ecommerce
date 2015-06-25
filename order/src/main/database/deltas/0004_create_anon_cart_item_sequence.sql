@@ -1,0 +1,1 @@
+CREATE SEQUENCE anon_cart_item_seq START 1;

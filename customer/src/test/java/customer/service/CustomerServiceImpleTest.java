@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import customer.domain.Customer;
 import customer.repository.CustomerRepository;
@@ -25,7 +24,7 @@ public class CustomerServiceImpleTest {
 		customerService.save(customer);
 		
 		// Then
-		Mockito.verify(customerRepository).save(customer);
+		verify(customerRepository).save(customer);
 	}
 	
 	@Test
