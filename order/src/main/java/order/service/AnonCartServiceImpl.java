@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.UUID;
 
 @Service
 public class AnonCartServiceImpl implements AnonCartService {
@@ -37,5 +38,11 @@ public class AnonCartServiceImpl implements AnonCartService {
                 anonCartItemData.getProductName(), anonCartItemData.getProductPrice(), anonCartItemData.getQuantity());
         anonCart.addAnonCartItem(anotherCartItem);
         return anonCartRepository.save(anonCart);
+    }
+
+    @Override
+    @Transactional
+    public AnonCart findAnonCartByUid(UUID cartUid) {
+        return anonCartRepository.findByCartUid(cartUid);
     }
 }

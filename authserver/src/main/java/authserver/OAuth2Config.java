@@ -42,7 +42,7 @@ public class OAuth2Config extends AuthorizationServerConfigurerAdapter {
                 .withClient("newClient")
                 .secret("newSecret")
                 .authorizedGrantTypes("client_credentials")
-                .scopes("create_user");
+                .scopes("anon_user");
     }
 
 }

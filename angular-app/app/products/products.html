@@ -7,8 +7,8 @@
 				<form class = "form-inline">
 					<text class="price">£{{product.unitPrice}}</text>
 					<div class="form-group">
-						<input type="number" value="1" max="99" min="1" maxlength="1" class="quantity">
-						<button class="btn btn-add btn-sm" type="submit"><span class="glyphicon glyphicon-cutlery"></span></button>
+						<input type="number" max="99" min="1" class="quantity" ng-model="product.quantity">
+						<button class="btn btn-add btn-sm" type="button" ng-click="addItem(product)"><span class="glyphicon glyphicon-cutlery"></span></button>
 					</div>
 				</form>
 			</div>

@@ -1,43 +1,22 @@
 var customer = angular.module('customer', ['ngRoute','ngResource','ngCookies']);
 
-customer.controller('loginCtrl', function($scope, $location, customersFactory, $http, $cookies, $timeout) {
+customer.controller('loginCtrl', function($scope, $location, customersFactory, $http, $cookies, $timeout, authService) {
 
-	$scope.registerCustomer = function(isValid){
-		if (isValid) {
-			var data = 'grant_type=client_credentials';
-			var configs = {headers: {'Content-Type' : 'application/x-www-form-urlencoded'}}
-			$cookies.access_token = 'Basic '+ btoa('newClient:newSecret');
-
-	    var success = function (data) {
-				$cookies.access_token = 'Bearer ' + data.access_token;
-				var newCustomer = {
-					name : $scope.customer.name,
-					email : $scope.customer.email,
-					password : $scope.customer.password
-				};
-				customersFactory.save(newCustomer, function(data){
-					$scope.login(data);
-				});
-	    };
-
-			$http.post('http://localhost:9999/uaa/oauth/token', data, configs).success(success);
-		}
+	$scope.registerCustomer = function(){
+		authService.anonymousAccess(function(){
+            var newCustomer = {
+                name : $scope.customer.name,
+                email : $scope.customer.email,
+                password : $scope.customer.password
+            };
+            customersFactory.save(newCustomer, function(data){
+                $scope.login(data);
+            });
+        });
 	}
 
 	$scope.login = function(credentials){
-		var data = 'grant_type=password&username='+credentials.email+'&password='+credentials.password;
-		var configs = {headers: {'Content-Type' : 'application/x-www-form-urlencoded'}}
-		$cookies.access_token = 'Basic '+ btoa('client:secret');
-
-    var success = function (data) {
-			$cookies.access_token = 'Bearer ' + data.access_token;
-			customersFactory.get({email:credentials.email}, function(response){
-        $cookies.currentUser = response.name;
-        $location.path("/account/" + response.id);				
-			});
-    };
-
-		$http.post('http://localhost:9999/uaa/oauth/token', data, configs).success(success);
+        authService.authenticateUser(credentials);
 	}
 
 });

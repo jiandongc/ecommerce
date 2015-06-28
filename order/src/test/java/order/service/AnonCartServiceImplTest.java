@@ -5,6 +5,10 @@ import order.domain.AnonCart;
 import order.domain.AnonCartItem;
 import order.repository.AnonCartRepository;
 import org.junit.Test;
+
+import java.util.UUID;
+
+import static java.util.UUID.randomUUID;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -47,9 +51,17 @@ public class AnonCartServiceImplTest {
         final AnonCartItem anotherCartItem = new AnonCartItem(2, "pen", 0.5, 20);
         anonCart.addAnonCartItem(anotherCartItem);
         verify(anonCartRepository).save(anonCart);
+    }
 
+    @Test
+    public void shouldFindAnonCartByCartUid(){
+        // Given
+        final UUID cartUid = randomUUID();
 
+        // When
+        anonCartService.findAnonCartByUid(cartUid);
 
-
+        // Then
+        verify(anonCartRepository).findByCartUid(cartUid);
     }
 }

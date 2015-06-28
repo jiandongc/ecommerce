@@ -32,9 +32,9 @@
 							<li><a href="#/products">今日特卖</a></li>
 						</ul>				
 						<ul class="nav navbar-nav navbar-right">
-							<li ng-show="currentUser" class="navbar-text">欢迎光临, {{currentUser}} !</li>
+							<li ng-show="currentUser" class="navbar-text">欢迎光临, {{currentUser}}!</li>
 							<li><a href="#/login"><span class="glyphicon glyphicon-user"></span></a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span> 2 item(s) - £60.00 </a></li>
+							<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span><span ng-show="cartUid"> {{totalCount}} items - £{{totalPrice}}</span></a></li>
 							<li ng-show="currentUser"><a href = "" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
 						</ul>				
 					</div>
@@ -84,6 +84,7 @@
 			</div>
 	</div>
 	<script src="app.js"></script>
+	<script src="auth.js"></script>
 	<script src="products/products.js"></script>
 	<script src="product/product.js"></script>
 	<script src="customer/customer.js"></script>

@@ -57,6 +57,18 @@ public class AnonCart {
         this.anonCartItems.add(anonCartItem);
     }
 
+    public int getTotalCount(){
+        return anonCartItems.size();
+    }
+
+    public double getTotalPrice(){
+        double totalPrice = 0D;
+        for(AnonCartItem anonCartItem : anonCartItems){
+            totalPrice = totalPrice + anonCartItem.getProductPrice() * anonCartItem.getQuantity();
+        }
+        return totalPrice;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
