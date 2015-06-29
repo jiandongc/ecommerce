@@ -21,5 +21,20 @@
     <module>../product</module>
   </modules>
 
+  <repositories>
+    <repository>
+      <id>spring-releases</id>
+      <name>Spring Releases</name>
+      <url>http://repo.spring.io/libs-release</url>
+    </repository>
+  </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>spring-releases</id>
+      <name>Spring Releases</name>
+      <url>http://repo.spring.io/libs-release</url>
+    </pluginRepository>
+  </pluginRepositories>
+
 </project>
 
