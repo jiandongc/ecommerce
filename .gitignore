@@ -17,6 +17,9 @@ hs_err_pid*
 # angular js
 node_modules/
 
+# Mac OX
+.DS_Store
+
 # js
 *.*~
 
