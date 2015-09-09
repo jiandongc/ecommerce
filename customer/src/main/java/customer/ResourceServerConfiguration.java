@@ -26,8 +26,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/customers").access("#oauth2.hasScope('anon_user')")
+		http.anonymous().and().authorizeRequests()
+				.antMatchers(HttpMethod.POST, "/customers").permitAll()
 				.anyRequest().authenticated();
 	}
 

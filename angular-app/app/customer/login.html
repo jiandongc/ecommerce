@@ -4,6 +4,7 @@
 		<div class="col-md-6">
 			<form name="loginForm" ng-submit="login(credentials)">
 				<h3>我有帐号</h3>
+				<div class="alert alert-danger textInputLength" ng-show="loginError">邮箱 / 密码 貌似有误</div>
 			  <div class="form-group">
 			    <label for="loginEmail">邮箱</label>
 			    <input type="email" class="form-control textInputLength" id="loginEmail" ng-model="credentials.email" placeholder="Enter email">
@@ -16,7 +17,7 @@
 			</form>
 		</div> 
 		<div class="col-md-6">
-			<form name="regForm" ng-submit="registerCustomer(regForm.$valid)" novalidate>
+			<form name="regForm" ng-submit="registerCustomer()" novalidate>
 				<h3>我来注册</h3>
 			  <div class="form-group" ng-class="{'has-error': regForm.registerName.$invalid && (regForm.registerName.$touched || regForm.$submitted) }">
 			    <label for="registerName">姓名</label>

@@ -1,17 +1,17 @@
 var customer = angular.module('customer', ['ngRoute','ngResource','ngCookies']);
 
-customer.controller('loginCtrl', function($scope, $location, customersFactory, $http, $cookies, $timeout, authService) {
+customer.controller('loginCtrl', function($scope, customersFactory, authService, $rootScope) {
+    
+    $rootScope.loginError = false;
 
 	$scope.registerCustomer = function(){
-		authService.anonymousAccess(function(){
-            var newCustomer = {
-                name : $scope.customer.name,
-                email : $scope.customer.email,
-                password : $scope.customer.password
-            };
-            customersFactory.save(newCustomer, function(data){
-                $scope.login(data);
-            });
+        var newCustomer = {
+            name : $scope.customer.name,
+            email : $scope.customer.email,
+            password : $scope.customer.password
+        };
+        customersFactory.save(newCustomer, function(data){
+            $scope.login(data);
         });
 	}
 
@@ -29,14 +29,6 @@ customer.controller('accountCtrl', function($scope, $routeParams, customersFacto
 
 customer.factory('customersFactory', function($resource){
 	return $resource('http://localhost:8081/customers/:id');
-});
-
-customer.service('oauthTokenInterceptor', function ($cookies) {
-	var service = this;
-	service.request = function(config) { 
-		config.headers.authorization = $cookies.access_token;
-    return config;
-  };
 });
 
 customer.directive('passwordMatch', [function () {
@@ -58,7 +50,7 @@ customer.directive('passwordMatch', [function () {
 }]);
 
 customer.config(
-  function($routeProvider, $httpProvider) {
+  function($routeProvider) {
 
     $routeProvider.
       when('/login', {
@@ -69,7 +61,6 @@ customer.config(
         controller: 'accountCtrl'
       });
 
-		$httpProvider.interceptors.push('oauthTokenInterceptor');
 });
 
 
