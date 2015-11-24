@@ -1,88 +1,90 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.ecommerce</groupId>
-  <artifactId>order</artifactId>
-  <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>order Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-
-  <parent>
-    <groupId>com.ecommerce</groupId>
-    <artifactId>parent</artifactId>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>order</artifactId>
+    <packaging>jar</packaging>
     <version>1.0-SNAPSHOT</version>
-  </parent>
+    <name>order service</name>
 
-  <properties>
-    <postgresql.version>9.1-901.jdbc4</postgresql.version>
-    <dbdeploy.version>3.0M3</dbdeploy.version>
-    <db.driver>org.postgresql.Driver</db.driver>
-    <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
-    <dbdeploy.user>orders</dbdeploy.user>
-    <dbdeploy.password>password</dbdeploy.password>
-  </properties>
+    <parent>
+        <groupId>com.ecommerce</groupId>
+        <artifactId>parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
 
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-web</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>postgresql</groupId>
-      <artifactId>postgresql</artifactId>
-      <version>${postgresql.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security.oauth</groupId>
-      <artifactId>spring-security-oauth2</artifactId>
-      <version>2.0.5.RELEASE</version>
-    </dependency>
+    <properties>
+        <postgresql.version>9.1-901.jdbc4</postgresql.version>
+        <dbdeploy.version>3.0M3</dbdeploy.version>
+        <db.driver>org.postgresql.Driver</db.driver>
+        <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
+        <dbdeploy.user>orders</dbdeploy.user>
+        <dbdeploy.password>password</dbdeploy.password>
+    </properties>
 
-    <!-- Test Scope-->
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-      </plugin>
-
-      <plugin>
-        <groupId>com.dbdeploy</groupId>
-        <artifactId>maven-dbdeploy-plugin</artifactId>
-        <version>${dbdeploy.version}</version>
-
-        <configuration>
-          <scriptdirectory>src/main/database/deltas</scriptdirectory>
-          <driver>${db.driver}</driver>
-          <url>${db.url}</url>
-          <userid>${dbdeploy.user}</userid>
-          <password>${dbdeploy.password}</password>
-          <dbms>pgsql</dbms>
-          <delimiter>;</delimiter>
-          <delimiterType>row</delimiterType>
-          <outputfile>apply.sql</outputfile>
-          <undoOutputfile>undo.sql</undoOutputfile>
-        </configuration>
-        <dependencies>
-          <dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-    </plugins>
-  </build>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.0.5.RELEASE</version>
+        </dependency>
+
+        <!-- Test Scope-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>com.dbdeploy</groupId>
+                <artifactId>maven-dbdeploy-plugin</artifactId>
+                <version>${dbdeploy.version}</version>
+
+                <configuration>
+                    <scriptdirectory>src/main/database/deltas</scriptdirectory>
+                    <driver>${db.driver}</driver>
+                    <url>${db.url}</url>
+                    <userid>${dbdeploy.user}</userid>
+                    <password>${dbdeploy.password}</password>
+                    <dbms>pgsql</dbms>
+                    <delimiter>;</delimiter>
+                    <delimiterType>row</delimiterType>
+                    <outputfile>apply.sql</outputfile>
+                    <undoOutputfile>undo.sql</undoOutputfile>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
 </project>

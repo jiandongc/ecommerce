@@ -28,6 +28,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	public void configure(HttpSecurity http) throws Exception {
 		http.anonymous().and().authorizeRequests()
 				.antMatchers(HttpMethod.POST, "/customers").permitAll()
+				.antMatchers(HttpMethod.GET, "/health").permitAll()
 				.anyRequest().authenticated();
 	}
 
