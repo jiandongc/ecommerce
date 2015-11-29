@@ -4,7 +4,7 @@
 
 describe('my app', function() {
 
-  browser.get('/#');
+  browser.get('/app');
 
   it('should display correct title', function() {
     expect(browser.getTitle()).toMatch("Product Page");
