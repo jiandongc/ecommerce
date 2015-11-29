@@ -16,17 +16,17 @@ allProducts.controller('allProductCtrl', function($scope, allProductService, pro
 	});
 
 	$scope.addItem = function(product){
-		authService.authorize(function(){
-            var anonCartItem = {
-				productId : product.id,
-				productName : product.name,
-				productPrice : product.unitPrice,
-				quantity : product.quantity
-			};
-			productsFactory.save(anonCartItem, function(data){
-				$cookies.cart_uid = data.cartUid;
-			});
-        });
+        var anonCartItem = {
+			productId : product.id,
+			productName : product.name,
+			productPrice : product.unitPrice,
+			quantity : product.quantity,
+			cartUid : $cookies.cart_uid
+		};
+		
+		productsFactory.save(anonCartItem, function(data){
+			$cookies.cart_uid = data.cartUid;
+		});
 	}
 });
 
