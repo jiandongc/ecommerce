@@ -33,9 +33,9 @@
 						</ul>				
 						<ul class="nav navbar-nav navbar-right">
 							<li ng-show="currentUser" class="navbar-text">欢迎光临, {{currentUser}}!</li>
-							<li><a href="#/login"><span class="glyphicon glyphicon-user"></span></a></li>
+							<li><a id="login" href="#/login"><span class="glyphicon glyphicon-user"></span></a></li>
 							<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span><span ng-show="cartUid"> {{totalCount}} items - £{{totalPrice}}</span></a></li>
-							<li ng-show="currentUser"><a href = "" ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
+							<li ng-show="currentUser"><a ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
 						</ul>				
 					</div>
 				</div>
