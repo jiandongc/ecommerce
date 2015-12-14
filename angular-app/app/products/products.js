@@ -6,7 +6,7 @@ allProducts.service('allProductService', function($http){
    }
 });
 
-allProducts.controller('allProductCtrl', function($scope, allProductService, productsFactory, authService, $cookies) {
+allProducts.controller('allProductCtrl', function($scope, allProductService, productsFactory, $cookies) {
 
 	allProductService.getAllProducts().success(function(response) {
 		$scope.products = response;
