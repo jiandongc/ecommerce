@@ -6,7 +6,7 @@ allProducts.service('allProductService', function($http){
    }
 });
 
-allProducts.controller('allProductCtrl', function($scope, allProductService, productsFactory, $cookies) {
+allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, allProductService, productsFactory) {
 
 	allProductService.getAllProducts().success(function(response) {
 		$scope.products = response;
@@ -26,6 +26,7 @@ allProducts.controller('allProductCtrl', function($scope, allProductService, pro
 		
 		productsFactory.save(anonCartItem, function(data){
 			$cookies.cart_uid = data.cartUid;
+			$rootScope.$broadcast('updateCartSummary');
 		});
 	}
 });

@@ -25,22 +25,13 @@ app.controller('appCtrl', function($scope, $cookies, $location, productsFactory)
 		}
 	})
 
-	$scope.hasRefreshed = false;
-
-	$scope.$watch(function() {
-		if (!$scope.hasRefreshed) {
+	$scope.$on('updateCartSummary', function() {
+		productsFactory.get({
+			cartuid: $cookies.cart_uid
+		}, function(response) {
 			$scope.cartUid = $cookies.cart_uid;
-			if ($cookies.cart_uid !== undefined) {
-				productsFactory.get({cartuid: $cookies.cart_uid}, function(response) {
-					$scope.totalCount = response.totalCount;
-					$scope.totalPrice = response.totalPrice;
-				});
-			}
-			$scope.hasRefreshed = true;
-		}
-
-		$scope.$$postDigest(function() {
-			$scope.hasRefreshed = false;
+			$scope.totalCount = response.totalCount;
+			$scope.totalPrice = response.totalPrice;
 		});
 	})
 
