@@ -1,6 +1,6 @@
 var auth = angular.module('auth', ['ngCookies']);
 
-auth.factory('authService', function($http, $cookies, $location, customersFactory, $rootScope){
+auth.factory('authService', function($http, $cookies, $location, $rootScope, customersFactory){
 
 	var authService = {};
 

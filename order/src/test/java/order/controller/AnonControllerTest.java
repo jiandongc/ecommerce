@@ -86,7 +86,7 @@ public class AnonControllerTest extends AbstractControllerTest{
     }
 
     @Test
-    public void shouldFindAnonCartByCartUid(){
+    public void shouldGetCartSummaryByCartUid(){
         // Given
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10);
@@ -95,7 +95,7 @@ public class AnonControllerTest extends AbstractControllerTest{
 
         // When
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "?cartuid=" + anonCart.getCartUid().toString(), HttpMethod.GET, httpEntity, CartSummaryData.class);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/" + anonCart.getCartUid().toString(), HttpMethod.GET, httpEntity, CartSummaryData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));

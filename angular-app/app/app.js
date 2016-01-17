@@ -3,6 +3,7 @@ var app = angular.module('store', [
 	'allProduct',
 	'productDetail',
 	'customer',
+	'cart',
 	'auth',
 	'ngCookies'
 ]);
@@ -17,7 +18,7 @@ app.config(['$routeProvider',
 ]);
 
 
-app.controller('appCtrl', function($scope, $cookies, $location, productsFactory) {
+app.controller('appCtrl', function($scope, $cookies, $location, cartSummaryFactory) {
 
 	$scope.$watch(function() { return $cookies.currentUser;}, function(newValue, oldValue) {
 		if ($scope.currentUser === undefined || newValue !== oldValue) {
@@ -26,7 +27,7 @@ app.controller('appCtrl', function($scope, $cookies, $location, productsFactory)
 	})
 
 	$scope.$on('updateCartSummary', function() {
-		productsFactory.get({
+		cartSummaryFactory.get({
 			cartuid: $cookies.cart_uid
 		}, function(response) {
 			$scope.cartUid = $cookies.cart_uid;

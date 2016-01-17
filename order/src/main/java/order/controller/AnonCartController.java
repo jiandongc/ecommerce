@@ -23,7 +23,7 @@ public class AnonCartController {
         this.anonCartService = anonCartService;
     }
 
-    @RequestMapping(method= POST)
+    @RequestMapping(method = POST)
     public CartSummaryData save(@RequestBody AnonCartItemData anonCartItemData){
         if(anonCartItemData.getCartUid() == null) {
             final AnonCart anonCart = anonCartService.addFirstItem(anonCartItemData);
@@ -35,8 +35,8 @@ public class AnonCartController {
         }
     }
 
-    @RequestMapping(method= GET)
-    public CartSummaryData findByCartUid(@RequestParam("cartuid") UUID cartUid) {
+    @RequestMapping(value = "/summary/{cartUid}", method = GET)
+    public CartSummaryData getCartSummary(@PathVariable UUID cartUid) {
         AnonCart anonCart = anonCartService.findAnonCartByUid(cartUid);
         return new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
     }
