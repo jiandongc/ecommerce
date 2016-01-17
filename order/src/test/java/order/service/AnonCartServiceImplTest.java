@@ -9,6 +9,9 @@ import org.junit.Test;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -63,5 +66,36 @@ public class AnonCartServiceImplTest {
 
         // Then
         verify(anonCartRepository).findByCartUid(cartUid);
+    }
+
+    @Test
+    public void shouldUpdateCustomerId(){
+        // Given
+        final long customerId = 10293l;
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10);
+        anonCart.addAnonCartItem(firstCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+
+        // When
+        AnonCart actualCart = anonCartService.updateCustomerId(anonCart.getCartUid(), customerId);
+
+        // Then
+        anonCart.setCustomerId(customerId);
+        assertThat(actualCart, is(anonCart));
+    }
+
+    @Test
+    public void shouldReturnNullIfCartIsNotFound(){
+        // Given
+        final long customerId = 10293l;
+        final AnonCart anonCart = new AnonCart();
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(null);
+
+        // When
+        AnonCart actualCart = anonCartService.updateCustomerId(anonCart.getCartUid(), customerId);
+
+        // Then
+        assertThat(actualCart, is(nullValue()));
     }
 }

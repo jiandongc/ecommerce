@@ -45,4 +45,14 @@ public class AnonCartServiceImpl implements AnonCartService {
     public AnonCart findAnonCartByUid(UUID cartUid) {
         return anonCartRepository.findByCartUid(cartUid);
     }
+
+    @Override
+    @Transactional
+    public AnonCart updateCustomerId(UUID cartUid, Long customerId) {
+        final AnonCart anonCart = anonCartRepository.findByCartUid(cartUid);
+        if(anonCart != null){
+            anonCart.setCustomerId(customerId);
+        }
+        return anonCart;
+    }
 }

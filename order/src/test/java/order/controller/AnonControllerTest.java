@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
+import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -103,4 +104,35 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(response.getBody().getTotalCount(), is(1));
         assertThat(response.getBody().getTotalPrice(), is(10D));
     }
+
+    @Test
+    public void shouldUpdateCustomerId(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10);
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCartRepository.save(anonCart);
+
+        // When
+        final Long customerId = 102534l;
+        final HttpEntity<Long> payload = new HttpEntity<Long>(customerId, headers);
+        ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString(), HttpMethod.PUT, payload, Void.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        AnonCart actualAnonCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
+        assertThat(actualAnonCart.getCustomerId(), is(customerId));
+    }
+
+    @Test
+    public void shouldReturn404IfCustomerIsNotFound(){
+        // Given & When
+        final Long customerId = 102534l;
+        final HttpEntity<Long> payload = new HttpEntity<Long>(customerId, headers);
+        ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + randomUUID().toString(), HttpMethod.PUT, payload, Void.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
+
 }

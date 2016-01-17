@@ -6,7 +6,8 @@ import order.domain.AnonCart;
 import java.util.UUID;
 
 public interface AnonCartService {
-    public AnonCart addFirstItem(AnonCartItemData anonCartItemData);
-    public AnonCart addAnotherItem(AnonCartItemData anonCartItemData);
-    public AnonCart findAnonCartByUid(UUID cartUid);
+    AnonCart addFirstItem(AnonCartItemData anonCartItemData);
+    AnonCart addAnotherItem(AnonCartItemData anonCartItemData);
+    AnonCart findAnonCartByUid(UUID cartUid);
+    AnonCart updateCustomerId(UUID cartUid, Long customerId);
 }

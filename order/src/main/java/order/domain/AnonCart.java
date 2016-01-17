@@ -23,6 +23,9 @@ public class AnonCart {
     @org.hibernate.annotations.Type(type="pg-uuid")
     private UUID cartUid;
 
+    @Column(name = "customer_id")
+    private Long customerId;
+
     @OneToMany(fetch = LAZY, cascade= ALL)
     @JoinColumn(name = "anon_cart_id")
     private Set<AnonCartItem> anonCartItems;
@@ -61,6 +64,14 @@ public class AnonCart {
         return anonCartItems.size();
     }
 
+    public long getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(long customerId) {
+        this.customerId = customerId;
+    }
+
     public double getTotalPrice(){
         double totalPrice = 0D;
         for(AnonCartItem anonCartItem : anonCartItems){
@@ -76,6 +87,7 @@ public class AnonCart {
 
         AnonCart anonCart = (AnonCart) o;
 
+        if (customerId != anonCart.customerId) return false;
         if (cartUid != null ? !cartUid.equals(anonCart.cartUid) : anonCart.cartUid != null) return false;
         return !(anonCartItems != null ? !anonCartItems.equals(anonCart.anonCartItems) : anonCart.anonCartItems != null);
 
@@ -84,8 +96,8 @@ public class AnonCart {
     @Override
     public int hashCode() {
         int result = cartUid != null ? cartUid.hashCode() : 0;
+        result = 31 * result + (int) (customerId ^ (customerId >>> 32));
         result = 31 * result + (anonCartItems != null ? anonCartItems.hashCode() : 0);
         return result;
     }
-
 }
