@@ -21,18 +21,18 @@ public class AnonCartItem {
     private double productPrice;
     @Column(name = "quantity")
     private int quantity;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "anon_cart_id")
+    private AnonCart anonCart;
 
-    public AnonCartItem(){}
+    public AnonCartItem() {
+    }
 
-    public AnonCartItem(long productId, String productName, double productPrice, int quantity){
+    public AnonCartItem(long productId, String productName, double productPrice, int quantity) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.quantity = quantity;
-    }
-
-    public long getId() {
-        return id;
     }
 
     public long getProductId() {
@@ -65,6 +65,20 @@ public class AnonCartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public AnonCart getAnonCart() {
+        return anonCart;
+    }
+
+    public void setAnonCart(AnonCart anonCart) {
+        if (this.anonCart != null) {
+            this.anonCart.internalRemoveAnonCartItem(this);
+        }
+        this.anonCart = anonCart;
+        if (anonCart != null) {
+            anonCart.internalAddAnonCartItem(this);
+        }
     }
 
     @Override

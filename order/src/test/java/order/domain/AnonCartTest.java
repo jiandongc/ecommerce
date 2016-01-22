@@ -11,9 +11,11 @@ public class AnonCartTest {
     @Test
     public void shouldGetTotalCount() {
         // Given
+        final AnonCart anonCart = new AnonCart();
         final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1);
         final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10);
-        final AnonCart anonCart = new AnonCart(newSet(itemOne, itemTwo));
+        anonCart.addAnonCartItem(itemOne);
+        anonCart.addAnonCartItem(itemTwo);
 
         // When
         int totalCount = anonCart.getTotalCount();
@@ -25,9 +27,11 @@ public class AnonCartTest {
     @Test
     public void shouldGetTotalPrice() {
         // Given
+        final AnonCart anonCart = new AnonCart();
         final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1);
         final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10);
-        final AnonCart anonCart = new AnonCart(newSet(itemOne, itemTwo));
+        anonCart.addAnonCartItem(itemOne);
+        anonCart.addAnonCartItem(itemTwo);
 
         // When
         double totalPrice = anonCart.getTotalPrice();

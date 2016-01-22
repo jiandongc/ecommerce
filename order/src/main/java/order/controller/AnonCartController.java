@@ -31,8 +31,7 @@ public class AnonCartController {
         if(anonCartItemData.getCartUid() == null) {
             final AnonCart anonCart = anonCartService.addFirstItem(anonCartItemData);
             return new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
-        }
-        else {
+        } else {
             final AnonCart anonCart = anonCartService.addAnotherItem(anonCartItemData);
             return new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
         }

@@ -21,6 +21,7 @@ import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -63,7 +64,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
         assertThat(response.getBody().getTotalCount(), is(1));
-        assertThat(response.getBody().getTotalPrice(), is(24.02D));
+        assertThat(response.getBody().getTotalPrice(), is(24.02d));
     }
 
     @Test
@@ -83,7 +84,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), is(anonCart.getCartUid()));
         assertThat(response.getBody().getTotalCount(), is(2));
-        assertThat(response.getBody().getTotalPrice(), is(34D));
+        assertThat(response.getBody().getTotalPrice(), is(34d));
     }
 
     @Test
@@ -106,22 +107,31 @@ public class AnonControllerTest extends AbstractControllerTest{
     }
 
     @Test
-    public void shouldUpdateCustomerId(){
+    public void shouldUpdateCustomerIdAndDeleteOtherCartsForTheSameCustomer(){
         // Given
+        final Long customerId = 102534l;
+
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10);
         anonCart.addAnonCartItem(firstCartItem);
         anonCartRepository.save(anonCart);
 
+        final AnonCart otherCart = new AnonCart();
+        otherCart.setCustomerId(customerId);
+        final AnonCartItem otherCartItem = new AnonCartItem(1, "book", 1, 10);
+        otherCart.addAnonCartItem(otherCartItem);
+        anonCartRepository.save(otherCart);
+
         // When
-        final Long customerId = 102534l;
         final HttpEntity<Long> payload = new HttpEntity<Long>(customerId, headers);
         ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        AnonCart actualAnonCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
+        final AnonCart actualAnonCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
         assertThat(actualAnonCart.getCustomerId(), is(customerId));
+        final AnonCart actualOtherCart = anonCartRepository.findByCartUid(otherCart.getCartUid());
+        assertThat(actualOtherCart, is(nullValue()));
     }
 
     @Test
