@@ -49,7 +49,7 @@ public class AnonCartServiceImpl implements AnonCartService {
     @Override
     @Transactional
     public AnonCart updateCustomerId(UUID cartUid, Long customerId) {
-        anonCartRepository.deleteOtherCartsForSameCustomer(cartUid, customerId);
+        anonCartRepository.deleteByCustomerId(customerId);
         final AnonCart anonCart = anonCartRepository.findByCartUid(cartUid);
         if(anonCart != null){
             anonCart.setCustomerId(customerId);

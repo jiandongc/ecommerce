@@ -55,9 +55,11 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
     }
 
     @Test
+    @Rollback(false)
     public void shouldDeleteCartByCustomerId(){
         // Given
         final Long customerId = 12345l;
+        final Long anotherCustomerId = 54321l;
 
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1);
@@ -71,14 +73,24 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
         anonCartTwo.setCustomerId(customerId);
         anonCartRepository.save(anonCartTwo);
 
+        final AnonCart anonCartThree = new AnonCart();
+        final AnonCartItem itemThree = new AnonCartItem(3, "book3", 133, 13);
+        anonCartThree.addAnonCartItem(itemThree);
+        anonCartThree.setCustomerId(anotherCustomerId);
+        anonCartRepository.save(anonCartThree);
+
+
         // When
-        anonCartRepository.deleteOtherCartsForSameCustomer(anonCart.getCartUid(), customerId);
+        anonCartRepository.deleteByCustomerId(customerId);
 
         // Then
         final AnonCart actualCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
-        assertThat(actualCart, is(anonCart));
+        assertThat(actualCart, is(nullValue()));
 
         final AnonCart actualCartTwo = anonCartRepository.findByCartUid(anonCartTwo.getCartUid());
         assertThat(actualCartTwo, is(nullValue()));
+
+        final AnonCart actualCartThree = anonCartRepository.findByCartUid(anonCartThree.getCartUid());
+        assertThat(actualCartThree, is(anonCartThree));
     }
 }
