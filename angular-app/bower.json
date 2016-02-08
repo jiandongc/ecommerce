@@ -10,6 +10,9 @@
     "angular-route": "~1.4",
     "angular-loader": "~1.4",
     "angular-mocks": "~1.4",
+    "angular-resource": "~1.4",
+    "angular-cookies": "~1.4",
+    "bootstrap": "3.3.2",
     "html5-boilerplate": "~4.3.0"
   }
 }
