@@ -21,7 +21,7 @@ app.config(['$routeProvider',
 app.controller('appCtrl', function($scope, $cookies, $location, cartSummaryFactory) {
 
 	$scope.$watch(function() { return $cookies.currentUser;}, function(newValue, oldValue) {
-		if ($scope.currentUser === undefined || newValue !== oldValue) {
+		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
 			$scope.currentUser = $cookies.currentUser;
 		}
 	})

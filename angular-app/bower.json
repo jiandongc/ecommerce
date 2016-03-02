@@ -14,5 +14,8 @@
     "angular-cookies": "~1.4",
     "bootstrap": "3.3.2",
     "html5-boilerplate": "~4.3.0"
+  },
+  "resolutions": {
+    "angular": "1.4.9"
   }
 }

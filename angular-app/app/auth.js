@@ -1,24 +1,53 @@
 var auth = angular.module('auth', ['ngCookies']);
 
-auth.factory('authService', function($http, $cookies, $location, $rootScope, customersFactory){
+auth.factory('authService', function($http, $cookies, $location, $rootScope, $q, customersFactory){
 
-	var authService = {};
+	var authenticateUser = function (credentials){
+		validateUser(credentials)
+        .then(getCustomerByEmail)
+        .then(updateCartAndDirectToAccountPage, showLogInErrorMessage);
+	};
 
-	authService.authenticateUser = function (credentials){
-		var data = 'grant_type=password&username='+credentials.email+'&password='+credentials.password;
-		var configs = {headers: {'Content-Type' : 'application/x-www-form-urlencoded'}}
-		$cookies.access_token = 'Basic '+ btoa('client:secret');
-		$http.post('http://localhost:9999/uaa/oauth/token', data, configs).success(function(data){
-			$rootScope.loginError = false;
-			$cookies.access_token = 'Bearer ' + data.access_token;
-			customersFactory.get({email:credentials.email}, function(response){
-           		$cookies.currentUser = response.name;
-        		$location.path("/account/" + response.id);
-        	});
-		}).error(function(error){$rootScope.loginError = true;});
-	}
+    var validateUser = function(credentials){
+        var data = 'grant_type=password&username='+credentials.email+'&password='+credentials.password;
+        var configs = {headers: {'Content-Type' : 'application/x-www-form-urlencoded'}}
+        $cookies.access_token = 'Basic '+ btoa('client:secret');
 
-	return authService;
+        // return a derived promise 
+        return $http.post('http://localhost:9999/uaa/oauth/token', data, configs).then(function(response){
+            $cookies.access_token = 'Bearer ' + response.data.access_token;
+            return credentials;
+        }, function(error){
+            return $q.reject("authentication failed for user"); 
+        });
+    };
+
+    var getCustomerByEmail = function(credentials){
+        return customersFactory.get({email:credentials.email}).$promise.then(function(customer){
+            $cookies.currentUser = customer.name;
+            return customer;
+        }, function(error){
+            return $q.reject("customer not found");
+        });
+    };
+
+    var updateCartAndDirectToAccountPage = function(customer){
+        $rootScope.loginError = false;
+        if(typeof $cookies.cart_uid !== "undefined"){
+            var configs = {headers: {'Content-Type' : 'application/json'}};
+            $http.put('http://localhost:8082/anoncarts/'+$cookies.cart_uid, customer.id, configs);
+        }
+        
+        $location.path("/account/" + customer.id);
+    };
+
+    var showLogInErrorMessage = function(error){
+        $rootScope.loginError = true;
+    };
+
+	return {
+        authenticateUser : authenticateUser
+    };
 });
 
 auth.factory('oauthTokenInterceptor', function($cookies, $location, $q){

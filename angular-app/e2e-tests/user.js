@@ -6,7 +6,7 @@ describe('User registration / log in / log off', function() {
         browser.get('http://localhost:8000/app/#/products');
     });
 
-    it('should be able to register a new user', function() {
+    it('should be able to register a new user, login/logout', function() {
         // Given
         element(by.id("login")).click();
         element(by.id("registerName")).sendKeys("mata");
@@ -27,11 +27,6 @@ describe('User registration / log in / log off', function() {
 
         var customerEmail = element(by.id("customerEmail")).evaluate('customer.email');
         expect(customerEmail).toBe('mata@gmail.com');
-    });
-
-    it('should be able to log out', function() {
-        // Given & When
-        var list = element(by.css('.nav.navbar-nav.navbar-right')).$$('li');
 
         // When
         list.last().click();
@@ -40,7 +35,6 @@ describe('User registration / log in / log off', function() {
         expect(list.first().isDisplayed()).toBe(false);
         expect(list.last().isDisplayed()).toBe(false);
     });
-
 
     it('should validate email/password upon login - incorrect password', function() {
         // Given
@@ -74,7 +68,7 @@ describe('User registration / log in / log off', function() {
     });
 
 
-    it('should be able to log in', function() {
+    it('should be able to login/logout', function() {
         // Given
         element(by.id("login")).click();
         element(by.id("loginEmail")).sendKeys("mata@gmail.com");
@@ -93,5 +87,13 @@ describe('User registration / log in / log off', function() {
 
         var customerEmail = element(by.id("customerEmail")).evaluate('customer.email');
         expect(customerEmail).toBe('mata@gmail.com');
+
+        // When
+        list.last().click();
+
+        // Then
+        expect(list.first().isDisplayed()).toBe(false);
+        expect(list.last().isDisplayed()).toBe(false);
     });
+
 });

@@ -6,7 +6,7 @@ allProducts.service('allProductService', function($http){
    }
 });
 
-allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, allProductService, productsFactory) {
+allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, allProductService, anonCartFactory) {
 
 	allProductService.getAllProducts().success(function(response) {
 		$scope.products = response;
@@ -24,15 +24,11 @@ allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, 
 			cartUid : $cookies.cart_uid
 		};
 		
-		productsFactory.save(anonCartItem, function(data){
+		anonCartFactory.save(anonCartItem, function(data){
 			$cookies.cart_uid = data.cartUid;
 			$rootScope.$broadcast('updateCartSummary');
 		});
 	}
-});
-
-allProducts.factory('productsFactory', function($resource){
-	return $resource('http://localhost:8082/anoncarts/:id');
 });
 
 allProducts.config(['$routeProvider',
