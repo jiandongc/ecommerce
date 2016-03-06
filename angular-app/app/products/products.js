@@ -21,11 +21,11 @@ allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, 
 			productName : product.name,
 			productPrice : product.unitPrice,
 			quantity : product.quantity,
-			cartUid : $cookies.cart_uid
+			cartUid : $cookies.get('cart_uid')
 		};
 		
 		anonCartFactory.save(anonCartItem, function(data){
-			$cookies.cart_uid = data.cartUid;
+			$cookies.put('cart_uid', data.cartUid);
 			$rootScope.$broadcast('updateCartSummary');
 		});
 	}
