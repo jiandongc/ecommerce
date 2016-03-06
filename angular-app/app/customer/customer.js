@@ -1,4 +1,4 @@
-var customer = angular.module('customer', ['ngRoute','ngResource','ngCookies']);
+var customer = angular.module('customer', ['ngRoute','ngResource']);
 
 customer.controller('loginCtrl', function($scope, customersFactory, authService, $rootScope) {
     

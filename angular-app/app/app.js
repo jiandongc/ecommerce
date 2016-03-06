@@ -20,17 +20,17 @@ app.config(['$routeProvider',
 
 app.controller('appCtrl', function($scope, $cookies, $location, cartSummaryFactory) {
 
-	$scope.$watch(function() { return $cookies.currentUser;}, function(newValue, oldValue) {
+	$scope.$watch(function() { return $cookies.get('current_user');}, function(newValue, oldValue) {
 		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
-			$scope.currentUser = $cookies.currentUser;
+			$scope.currentUser = $cookies.get('current_user');
 		}
 	})
 
 	$scope.$on('updateCartSummary', function() {
 		cartSummaryFactory.get({
-			cartuid: $cookies.cart_uid
+			cartuid: $cookies.get('cart_uid')
 		}, function(response) {
-			$scope.cartUid = $cookies.cart_uid;
+			$scope.cartUid = $cookies.get('cart_uid');
 			$scope.totalCount = response.totalCount;
 			$scope.totalPrice = response.totalPrice;
 		});
@@ -38,9 +38,9 @@ app.controller('appCtrl', function($scope, $cookies, $location, cartSummaryFacto
 
 
 	$scope.logout = function() {
-		delete $cookies['currentUser'];
-		delete $cookies['access_token'];
-		delete $cookies['cart_uid'];
+		$cookies.remove('current_user');
+		$cookies.remove('access_token');
+		$cookies.remove('cart_uid');
 		$location.path("#");
 	}
 });
