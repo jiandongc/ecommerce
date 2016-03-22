@@ -15,6 +15,7 @@ import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
+import java.util.Random;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
@@ -22,6 +23,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
@@ -97,13 +99,55 @@ public class AnonControllerTest extends AbstractControllerTest{
 
         // When
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/" + anonCart.getCartUid().toString(), HttpMethod.GET, httpEntity, CartSummaryData.class);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/" + anonCart.getCartUid().toString(), GET, httpEntity, CartSummaryData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
         assertThat(response.getBody().getTotalCount(), is(1));
         assertThat(response.getBody().getTotalPrice(), is(10D));
+    }
+
+    @Test
+    public void shouldReturn404IfNoCartSummaryIsFoundByCartUid(){
+        // Given & When
+        final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/" + randomUUID().toString(), GET, httpEntity, CartSummaryData.class);
+        
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
+    public void shouldGetCartSummaryByCustomerId(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(2, "pen", 1, 11);
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCart.setCustomerId(12345l);
+        anonCartRepository.save(anonCart);
+
+        // When
+        final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId=12345" , GET, httpEntity, CartSummaryData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
+        assertThat(response.getBody().getTotalCount(), is(1));
+        assertThat(response.getBody().getTotalPrice(), is(11D));
+    }
+
+    @Test
+    public void shouldReturn404IfNoCartSummaryIsFoundByCustomerId(){
+        // Given & When
+        final Random random = new Random();
+        final long customerId = random.nextLong();
+        final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId="+customerId , GET, httpEntity, CartSummaryData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test

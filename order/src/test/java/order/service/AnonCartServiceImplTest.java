@@ -69,6 +69,18 @@ public class AnonCartServiceImplTest {
     }
 
     @Test
+    public void shouldFindAnonCartByCustomerId(){
+        // Given
+        final long customerId = 12345l;
+
+        // When
+        anonCartService.findAnonCartByCustomerId(customerId);
+
+        // Then
+        verify(anonCartRepository).findByCustomerId(customerId);
+    }
+
+    @Test
     public void shouldUpdateCustomerId(){
         // Given
         final long customerId = 10293l;

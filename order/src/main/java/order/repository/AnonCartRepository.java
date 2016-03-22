@@ -14,7 +14,5 @@ public interface AnonCartRepository extends JpaRepository<AnonCart, Long> {
 
     void deleteByCustomerId(Long customerId);
 
-    @Modifying
-    @Query("delete from AnonCart ac where ac.cartUid <> :cartId and ac.customerId = :customerId")
-    void deleteOtherCartsForSameCustomer(@Param("cartId") UUID cartId, @Param("customerId") Long customerId);
+    AnonCart findByCustomerId(Long customerId);
 }

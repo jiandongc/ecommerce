@@ -37,12 +37,6 @@ public class AnonCartController {
         }
     }
 
-    @RequestMapping(value = "/summary/{cartUid}", method = GET)
-    public CartSummaryData getCartSummary(@PathVariable UUID cartUid) {
-        final AnonCart anonCart = anonCartService.findAnonCartByUid(cartUid);
-        return new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
-    }
-
     @RequestMapping(value = "/{cartUid}", method = PUT)
     public ResponseEntity updateCartCustomerId(@PathVariable UUID cartUid, @RequestBody Long customerId){
         final AnonCart anonCart = anonCartService.updateCustomerId(cartUid, customerId);
@@ -50,6 +44,27 @@ public class AnonCartController {
             return new ResponseEntity(HttpStatus.OK);
         } else {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "/summary/{cartUid}", method = GET)
+    public ResponseEntity<CartSummaryData> getCartSummary(@PathVariable UUID cartUid) {
+        final AnonCart anonCart = anonCartService.findAnonCartByUid(cartUid);
+        return createCartSummaryResponse(anonCart);
+    }
+
+    @RequestMapping(value = "/summary", method=RequestMethod.GET)
+    public ResponseEntity<CartSummaryData> getCartSummaryByCustomerId(@RequestParam("customerId") Long customerId){
+        final AnonCart anonCart = anonCartService.findAnonCartByCustomerId(customerId);
+        return createCartSummaryResponse(anonCart);
+    }
+
+    private ResponseEntity<CartSummaryData> createCartSummaryResponse(AnonCart anonCart){
+        if (anonCart != null){
+            final CartSummaryData cartSummaryData = new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
+            return new ResponseEntity<CartSummaryData>(cartSummaryData, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<CartSummaryData>(HttpStatus.NOT_FOUND);
         }
     }
 

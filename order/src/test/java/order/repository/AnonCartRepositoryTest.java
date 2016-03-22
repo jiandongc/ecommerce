@@ -55,7 +55,25 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
     }
 
     @Test
-    @Rollback(false)
+    public void shouldFindAnonCartByCustomerId(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem itemOne = new AnonCartItem(1, "book", 1, 1);
+        final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10);
+        anonCart.addAnonCartItem(itemOne);
+        anonCart.addAnonCartItem(itemTwo);
+        anonCart.setCustomerId(12345l);
+        anonCartRepository.save(anonCart);
+
+        // When
+        final AnonCart foundAnonCart = anonCartRepository.findByCustomerId(12345l);
+
+        // Then
+        assertThat(foundAnonCart, is(anonCart));
+        assertThat(foundAnonCart.getTotalPrice(), is(11d));
+    }
+
+    @Test
     public void shouldDeleteCartByCustomerId(){
         // Given
         final Long customerId = 12345l;

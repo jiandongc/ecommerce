@@ -1,11 +1,12 @@
 var auth = angular.module('auth', ['ngCookies']);
 
-auth.factory('authService', function($http, $cookies, $location, $rootScope, $q, customersFactory){
+auth.factory('authService', function($http, $cookies, $location, $rootScope, $q, customersFactory, cartSummaryFactory){
 
 	var authenticateUser = function (credentials){
 		validateUser(credentials)
         .then(getCustomerByEmail)
-        .then(updateCartAndDirectToAccountPage, showLogInErrorMessage);
+        .then(syncCustomerAndCart)
+        .then(redirectToAccountPage, loginFailed);
 	};
 
     var validateUser = function(credentials){
@@ -31,18 +32,32 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
         });
     };
 
-    var updateCartAndDirectToAccountPage = function(customer){
-        $rootScope.loginError = false;
-        if(typeof $cookies.get('cart_uid') !== "undefined"){
+    var syncCustomerAndCart = function(customer) {
+        if(typeof $cookies.get('cart_uid') !== "undefined") {
             var configs = {headers: {'Content-Type' : 'application/json'}};
             var cartUid = $cookies.get('cart_uid');
-            $http.put('http://localhost:8082/anoncarts/' + cartUid, customer.id, configs);
+            return $http.put('http://localhost:8082/anoncarts/' + cartUid, customer.id, configs).then(function(response){
+                return customer;
+            }, function(error){
+                return $q.reject("update shopping cart failed");
+            })
+        } else {
+            return cartSummaryFactory.get({customerId:customer.id}).$promise.then(function(response){
+                $cookies.put('cart_uid', response.cartUid);
+                return customer;
+            }, function(error){
+                return customer;
+            });
         }
-        
-        $location.path("/account/" + customer.id);
     };
 
-    var showLogInErrorMessage = function(error){
+    var redirectToAccountPage = function(customer){
+        $rootScope.loginError = false;
+        $location.path("/account/" + customer.id);
+        $rootScope.$broadcast('updateCartSummaryByCartUid');
+    };
+
+    var loginFailed = function(error){
         $rootScope.loginError = true;
     };
 

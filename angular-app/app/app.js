@@ -18,7 +18,7 @@ app.config(['$routeProvider',
 ]);
 
 
-app.controller('appCtrl', function($scope, $cookies, $location, cartSummaryFactory) {
+app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, cartSummaryFactory) {
 
 	$scope.$watch(function() { return $cookies.get('current_user');}, function(newValue, oldValue) {
 		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
@@ -26,16 +26,28 @@ app.controller('appCtrl', function($scope, $cookies, $location, cartSummaryFacto
 		}
 	})
 
-	$scope.$on('updateCartSummary', function() {
+	$scope.$watch(function() { return $cookies.get('cart_uid');}, function(newValue, oldValue) {
+		if (typeof $scope.cartUid === "undefined" || newValue !== oldValue) {
+			$scope.cartUid = $cookies.get('cart_uid');
+			if(typeof $cookies.get('cart_uid') !== "undefined") {
+				$rootScope.$broadcast('updateCartSummaryByCartUid');
+			}
+		}
+	})
+
+	$scope.$on('updateCartSummaryByCartUid', function() {
 		cartSummaryFactory.get({
 			cartuid: $cookies.get('cart_uid')
 		}, function(response) {
 			$scope.cartUid = $cookies.get('cart_uid');
 			$scope.totalCount = response.totalCount;
 			$scope.totalPrice = response.totalPrice;
-		});
+		}, function(error){
+			$scope.cartUid = null;
+			$scope.totalCount = null;
+			$scope.totalPrice = null;
+		});	
 	})
-
 
 	$scope.logout = function() {
 		$cookies.remove('current_user');
