@@ -1,6 +1,7 @@
 package order.controller;
 
 
+import order.data.AnonCartItemData;
 import order.data.CartSummaryData;
 import order.domain.AnonCart;
 import order.domain.AnonCartItem;
@@ -16,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
 import java.util.Random;
+import java.util.Set;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
@@ -106,6 +108,16 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
         assertThat(response.getBody().getTotalCount(), is(1));
         assertThat(response.getBody().getTotalPrice(), is(10D));
+
+        assertThat(response.getBody().getCartItems().size(), is(1));
+        final Set<AnonCartItemData> cartItems = response.getBody().getCartItems();
+        final AnonCartItemData anonCartItemData = cartItems.iterator().next();
+        assertThat(anonCartItemData.getCartUid(), instanceOf(UUID.class));
+        assertThat(anonCartItemData.getProductId(), is(1l));
+        assertThat(anonCartItemData.getProductName(), is("book"));
+        assertThat(anonCartItemData.getProductPrice(), is(1d));
+        assertThat(anonCartItemData.getQuantity(), is(10));
+
     }
 
     @Test
@@ -136,6 +148,15 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
         assertThat(response.getBody().getTotalCount(), is(1));
         assertThat(response.getBody().getTotalPrice(), is(11D));
+
+        assertThat(response.getBody().getCartItems().size(), is(1));
+        final Set<AnonCartItemData> cartItems = response.getBody().getCartItems();
+        final AnonCartItemData anonCartItemData = cartItems.iterator().next();
+        assertThat(anonCartItemData.getCartUid(), instanceOf(UUID.class));
+        assertThat(anonCartItemData.getProductId(), is(2l));
+        assertThat(anonCartItemData.getProductName(), is("pen"));
+        assertThat(anonCartItemData.getProductPrice(), is(1d));
+        assertThat(anonCartItemData.getQuantity(), is(11));
     }
 
     @Test

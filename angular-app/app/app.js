@@ -42,6 +42,12 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, cart
 			$scope.cartUid = $cookies.get('cart_uid');
 			$scope.totalCount = response.totalCount;
 			$scope.totalPrice = response.totalPrice;
+			$scope.cartItems = response.cartItems;
+			var dropdown = $('ul.nav li.dropdown').find('.dropdown-menu');
+			dropdown.stop(true, true).fadeIn(1000, "swing", function(){
+				dropdown.stop(true, true).delay(5000).fadeOut(3800);
+			});
+
 		}, function(error){
 			$scope.cartUid = null;
 			$scope.totalCount = null;

@@ -20,7 +20,7 @@ html, body {
 }
 
 .productItem {
-  padding-bottom:2em;
+  	padding-bottom:2em;
 }
 
 .productItem .price{
@@ -30,7 +30,7 @@ html, body {
 
 .productItem .name{	
 	color: #1D2807;
-  font-size: 1em;
+  	font-size: 1em;
 }
 
 .productItem img {
@@ -40,13 +40,13 @@ html, body {
 }
 
 .productItem .quantity {
-		margin-left:90px;
+	margin-left:90px;
     width:40px;
 }
  
 .btn-add {
-		background-color: #536F19;
-		color: #E8E8E8;
+	background-color: #536F19;
+	color: #E8E8E8;
 }
 
 .productDetail .productName {
@@ -69,7 +69,7 @@ html, body {
 }
 
 .productDetail .quantity {
-		margin-left:90px;
+	margin-left:90px;
     width:60px;
     height:40px;
 }
@@ -165,6 +165,45 @@ html, body {
 
 .address .line{
 	padding-bottom: 0.5%;
+}
+
+/*dropdown menu*/
+ul.dropdown-menu img{
+	border-style: solid;
+	border-width: 1px;
+	border-color: #F2F2F2;
+}
+
+ul.dropdown-menu .productPrice{
+	font-weight: bold;
+    color: #324902;
+    font-size: 1em;    
+    margin-bottom: 2.5%;
+} 
+
+ul.dropdown-menu .productName{
+	font-weight: bold;
+    color: #1D2807;
+    font-size: 1em;
+    text-transform: uppercase;
+    margin-bottom: 2.5%;
+} 
+
+ul.dropdown-menu .productQty{
+    color: #324902;
+    font-size: 1em;    
+    margin-top: 10%;
+    margin-bottom: 2.5%;
+} 
+
+ul.dropdown-menu .btn-view {
+	background-color: #536F19;
+	color: #E8E8E8;
+}
+
+ul.dropdown-menu .btn-remove {
+	margin-right: 15%;
+	color: #99AA77;
 }
 
 

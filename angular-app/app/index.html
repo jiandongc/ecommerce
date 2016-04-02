@@ -34,7 +34,33 @@
 						<ul class="nav navbar-nav navbar-right">
 							<li ng-show="currentUser" class="navbar-text">欢迎光临, {{currentUser}}!</li>
 							<li><a id="login" href="#/login"><span class="glyphicon glyphicon-user"></span></a></li>
-							<li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span><span ng-show="cartUid"> {{totalCount}} items - £{{totalPrice}}</span></a></li>
+							<li class="dropdown">
+								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+									<span class="glyphicon glyphicon-shopping-cart"></span>
+									<span ng-show="cartUid"> {{totalCount}} items - £{{totalPrice}} <span class="caret"></span></span>
+								</a>
+								<ul class="dropdown-menu">
+									<div ng-repeat="cartItem in cartItems | orderBy:'productId'">
+                                  		<li>
+                							<div class = "row">
+												<div class = "col-md-6">
+													<img ng-src="https://img1.doubanio.com/lpic/s10391342.jpg" class="img-responsive">
+												</div>
+												<div class = "col-md-5">
+													<div class="productPrice">£{{cartItem.productPrice}}</div>
+													<div class="productName">{{cartItem.productName}}</div>
+													<div class="productQty">Qty {{cartItem.quantity}}</div>
+												</div>
+												<div class = "col-md-1">
+													<a href = "#"><span class="glyphicon glyphicon-remove pull-right btn-remove"></span></a>
+												</div>
+											</div>
+										</li>
+										<li class='divider'></li>
+									</div>										
+                					<li><a href='#' class='btn btn-view'>View Cart</a></li>
+              					</ul>
+							</li>
 							<li ng-show="currentUser"><a ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
 						</ul>				
 					</div>
@@ -91,5 +117,12 @@
 	<script src="cart/cart.js"></script>
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+			<script>
+$('ul.nav li.dropdown').hover(function() {
+  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeIn(500);
+}, function() {
+  $(this).find('.dropdown-menu').stop(true, true).delay(200).fadeOut(500);
+});
+		</script>
 	</body>
 </html>

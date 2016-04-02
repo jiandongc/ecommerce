@@ -4,14 +4,12 @@ import order.domain.AnonCart;
 import order.domain.AnonCartItem;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.internal.util.collections.Sets.newSet;
 
 public class AnonCartRepositoryTest extends AbstractRepositoryTest{
 

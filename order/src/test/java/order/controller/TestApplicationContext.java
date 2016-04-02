@@ -9,7 +9,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
-@ComponentScan(basePackages = { "order.controller", "order.service"})
+@ComponentScan(basePackages = { "order.controller", "order.service", "order.mapper"})
 @EnableJpaRepositories(basePackages = "order.repository")
 @EntityScan(basePackages="order.domain")
 @PropertySource({"classpath:application.properties", "classpath:test.properties"})

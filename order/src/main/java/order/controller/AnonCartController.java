@@ -3,6 +3,7 @@ package order.controller;
 import order.data.AnonCartItemData;
 import order.data.CartSummaryData;
 import order.domain.AnonCart;
+import order.mapper.CartSummaryDataMapper;
 import order.service.AnonCartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,21 +20,23 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 @RequestMapping("/anoncarts")
 public class AnonCartController {
 
-    private AnonCartService anonCartService;
+    private final AnonCartService anonCartService;
+    private final CartSummaryDataMapper mapper;
 
     @Autowired
-    public AnonCartController(AnonCartService anonCartService){
+    public AnonCartController(AnonCartService anonCartService, CartSummaryDataMapper mapper){
         this.anonCartService = anonCartService;
+        this.mapper = mapper;
     }
 
     @RequestMapping(method = POST)
     public CartSummaryData save(@RequestBody AnonCartItemData anonCartItemData){
         if(anonCartItemData.getCartUid() == null) {
             final AnonCart anonCart = anonCartService.addFirstItem(anonCartItemData);
-            return new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
+            return mapper.getValue(anonCart);
         } else {
             final AnonCart anonCart = anonCartService.addAnotherItem(anonCartItemData);
-            return new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
+            return mapper.getValue(anonCart);
         }
     }
 
@@ -61,7 +64,7 @@ public class AnonCartController {
 
     private ResponseEntity<CartSummaryData> createCartSummaryResponse(AnonCart anonCart){
         if (anonCart != null){
-            final CartSummaryData cartSummaryData = new CartSummaryData(anonCart.getCartUid(), anonCart.getTotalCount(), anonCart.getTotalPrice());
+            final CartSummaryData cartSummaryData = mapper.getValue(anonCart);
             return new ResponseEntity<CartSummaryData>(cartSummaryData, HttpStatus.OK);
         } else {
             return new ResponseEntity<CartSummaryData>(HttpStatus.NOT_FOUND);
