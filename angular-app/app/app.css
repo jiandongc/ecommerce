@@ -34,14 +34,14 @@ html, body {
 }
 
 .productItem img {
-	width:200px;
-	height:200px;
-	overflow:hidden;
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
 }
 
 .productItem .quantity {
-	margin-left:90px;
-    width:40px;
+	margin-left: 90px;
+    width: 40px;
 }
  
 .btn-add {
@@ -168,32 +168,42 @@ html, body {
 }
 
 /*dropdown menu*/
+.scrollable-menu {
+    height: auto;
+    max-height: 800px;
+    overflow-x: hidden;
+}
+
+ul.dropdown-menu{
+    width: 300px;
+}
+
 ul.dropdown-menu img{
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
 	border-style: solid;
-	border-width: 1px;
+	border-width: 0.5px;
 	border-color: #F2F2F2;
 }
 
 ul.dropdown-menu .productPrice{
+    margin-top: 2.5%;
 	font-weight: bold;
     color: #324902;
-    font-size: 1em;    
-    margin-bottom: 2.5%;
+    font-size: 0.8em;
 } 
 
 ul.dropdown-menu .productName{
 	font-weight: bold;
     color: #1D2807;
-    font-size: 1em;
+    font-size: 0.8em;
     text-transform: uppercase;
-    margin-bottom: 2.5%;
 } 
 
 ul.dropdown-menu .productQty{
     color: #324902;
-    font-size: 1em;    
-    margin-top: 10%;
-    margin-bottom: 2.5%;
+    font-size: 0.8em;
 } 
 
 ul.dropdown-menu .btn-view {

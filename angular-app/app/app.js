@@ -47,7 +47,6 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, cart
 			dropdown.stop(true, true).fadeIn(1000, "swing", function(){
 				dropdown.stop(true, true).delay(5000).fadeOut(3800);
 			});
-
 		}, function(error){
 			$scope.cartUid = null;
 			$scope.totalCount = null;

@@ -39,19 +39,19 @@
 									<span class="glyphicon glyphicon-shopping-cart"></span>
 									<span ng-show="cartUid"> {{totalCount}} items - £{{totalPrice}} <span class="caret"></span></span>
 								</a>
-								<ul class="dropdown-menu">
+								<ul class="dropdown-menu scrollable-menu">
 									<div ng-repeat="cartItem in cartItems | orderBy:'productId'">
                                   		<li>
                 							<div class = "row">
-												<div class = "col-md-6">
-													<img ng-src="{{cartItem.imageUrl}}" class="img-responsive">
+												<div class = "col-md-4">
+													<img class="img-responsive" ng-src="{{cartItem.imageUrl}}">
 												</div>
-												<div class = "col-md-5">
+												<div class = "col-md-6">
 													<div class="productPrice">£{{cartItem.productPrice}}</div>
 													<div class="productName">{{cartItem.productName}}</div>
 													<div class="productQty">Qty {{cartItem.quantity}}</div>
 												</div>
-												<div class = "col-md-1">
+												<div class = "col-md-2">
 													<a href = "#"><span class="glyphicon glyphicon-remove pull-right btn-remove"></span></a>
 												</div>
 											</div>
