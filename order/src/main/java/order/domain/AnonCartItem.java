@@ -21,6 +21,8 @@ public class AnonCartItem {
     private double productPrice;
     @Column(name = "quantity")
     private int quantity;
+    @Column(name = "image_url")
+    private String imageUrl;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "anon_cart_id")
     private AnonCart anonCart;
@@ -28,11 +30,12 @@ public class AnonCartItem {
     public AnonCartItem() {
     }
 
-    public AnonCartItem(long productId, String productName, double productPrice, int quantity) {
+    public AnonCartItem(long productId, String productName, double productPrice, int quantity, String imageUrl) {
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
     }
 
     public long getProductId() {
@@ -65,6 +68,14 @@ public class AnonCartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public AnonCart getAnonCart() {

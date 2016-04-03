@@ -18,9 +18,10 @@ allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, 
 	$scope.addItem = function(product){
         var anonCartItem = {
 			productId : product.id,
-			productName : product.name,
+			productName : product.name, 
 			productPrice : product.unitPrice,
 			quantity : product.quantity,
+			imageUrl : product.imageUrl,
 			cartUid : $cookies.get('cart_uid')
 		};
 		

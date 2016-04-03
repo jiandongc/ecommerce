@@ -9,13 +9,15 @@ public class AnonCartItemData {
     private String productName;
     private double productPrice;
     private int quantity;
+    private String imageUrl;
 
-    public AnonCartItemData(UUID cartUid, long productId, String productName, double productPrice, int quantity){
+    public AnonCartItemData(UUID cartUid, long productId, String productName, double productPrice, int quantity, String imageUrl){
         this.cartUid = cartUid;
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.quantity = quantity;
+        this.imageUrl = imageUrl;
     }
 
     public AnonCartItemData(){}
@@ -40,6 +42,10 @@ public class AnonCartItemData {
         return quantity;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -51,7 +57,8 @@ public class AnonCartItemData {
         if (Double.compare(that.productPrice, productPrice) != 0) return false;
         if (quantity != that.quantity) return false;
         if (cartUid != null ? !cartUid.equals(that.cartUid) : that.cartUid != null) return false;
-        return !(productName != null ? !productName.equals(that.productName) : that.productName != null);
+        if (productName != null ? !productName.equals(that.productName) : that.productName != null) return false;
+        return !(imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null);
 
     }
 
@@ -65,6 +72,7 @@ public class AnonCartItemData {
         temp = Double.doubleToLongBits(productPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + quantity;
+        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
         return result;
     }
 }

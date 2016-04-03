@@ -33,6 +33,7 @@ public class CartSummaryDataMapper {
                     .setProductName(anonCartItem.getProductName())
                     .setProductPrice(anonCartItem.getProductPrice())
                     .setQuantity(anonCartItem.getQuantity())
+                    .setImageUrl(anonCartItem.getImageUrl())
                     .build();
             builder.addAnonCartItemData(anonCartItemData);
         }

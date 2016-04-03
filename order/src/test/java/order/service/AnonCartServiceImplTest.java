@@ -25,14 +25,14 @@ public class AnonCartServiceImplTest {
     @Test
     public void shouldSaveNewAnonCartWhenAddTheFirstCartItem(){
         // Given
-        final AnonCartItemData anonCartItemData = new AnonCartItemData(null, 1, "book", 1.3, 10);
+        final AnonCartItemData anonCartItemData = new AnonCartItemData(null, 1, "book", 1.3, 10, "url");
 
         // When
         anonCartService.addFirstItem(anonCartItemData);
 
         // Then
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10);
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
 
         verify(anonCartRepository).save(refEq(anonCart, "cartUid"));
@@ -42,16 +42,16 @@ public class AnonCartServiceImplTest {
     public void shouldBeAbleToAddCartItemIntoExistingCart(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10);
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
-        final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 2, "pen", 0.5, 20);
+        final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 2, "pen", 0.5, 20, "url2");
 
         // When
         anonCartService.addAnotherItem(anotherCartItemData);
 
         // Then
-        final AnonCartItem anotherCartItem = new AnonCartItem(2, "pen", 0.5, 20);
+        final AnonCartItem anotherCartItem = new AnonCartItem(2, "pen", 0.5, 20, "url2");
         anonCart.addAnonCartItem(anotherCartItem);
         verify(anonCartRepository).save(anonCart);
     }
@@ -85,7 +85,7 @@ public class AnonCartServiceImplTest {
         // Given
         final long customerId = 10293l;
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10);
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
 

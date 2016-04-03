@@ -58,7 +58,7 @@ public class AnonControllerTest extends AbstractControllerTest{
     @Test
     public void shouldSaveAnonCartWhenFirstCartItemIsAdded(){
         // Given
-        final String json = "{\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"12.01\",\"quantity\": \"2\"}";
+        final String json = "{\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"12.01\",\"quantity\": \"2\",\"imageUrl\": \"http://book.jpeg\"}";
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
 
         // When
@@ -69,16 +69,26 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
         assertThat(response.getBody().getTotalCount(), is(1));
         assertThat(response.getBody().getTotalPrice(), is(24.02d));
+
+        assertThat(response.getBody().getCartItems().size(), is(1));
+        final Set<AnonCartItemData> cartItems = response.getBody().getCartItems();
+        final AnonCartItemData anonCartItemData = cartItems.iterator().next();
+        assertThat(anonCartItemData.getCartUid(), instanceOf(UUID.class));
+        assertThat(anonCartItemData.getProductId(), is(1l));
+        assertThat(anonCartItemData.getProductName(), is("book"));
+        assertThat(anonCartItemData.getProductPrice(), is(12.01d));
+        assertThat(anonCartItemData.getQuantity(), is(2));
+        assertThat(anonCartItemData.getImageUrl(), is("http://book.jpeg"));
     }
 
     @Test
     public void shouldAddExtraItemIntoExistingCart(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10);
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
         anonCart.addAnonCartItem(firstCartItem);
         anonCartRepository.save(anonCart);
-        final String json = "{\"cartUid\":\"" +anonCart.getCartUid().toString() +"\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"12\",\"quantity\": \"2\"}";
+        final String json = "{\"cartUid\":\"" +anonCart.getCartUid().toString() +"\",\"productId\": \"2\",\"productName\": \"pen\",\"productPrice\": \"12\",\"quantity\": \"2\",\"imageUrl\": \"http://pen.jpeg\"}";
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
 
         // When
@@ -89,13 +99,14 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(response.getBody().getCartUid(), is(anonCart.getCartUid()));
         assertThat(response.getBody().getTotalCount(), is(2));
         assertThat(response.getBody().getTotalPrice(), is(34d));
+        assertThat(response.getBody().getCartItems().size(), is(2));
     }
 
     @Test
     public void shouldGetCartSummaryByCartUid(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10);
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
         anonCart.addAnonCartItem(firstCartItem);
         anonCartRepository.save(anonCart);
 
@@ -117,6 +128,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("book"));
         assertThat(anonCartItemData.getProductPrice(), is(1d));
         assertThat(anonCartItemData.getQuantity(), is(10));
+        assertThat(anonCartItemData.getImageUrl(), is("http://book.jpeg"));
 
     }
 
@@ -134,7 +146,7 @@ public class AnonControllerTest extends AbstractControllerTest{
     public void shouldGetCartSummaryByCustomerId(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(2, "pen", 1, 11);
+        final AnonCartItem firstCartItem = new AnonCartItem(2, "pen", 1, 11, "http://pen.jpeg");
         anonCart.addAnonCartItem(firstCartItem);
         anonCart.setCustomerId(12345l);
         anonCartRepository.save(anonCart);
@@ -157,6 +169,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("pen"));
         assertThat(anonCartItemData.getProductPrice(), is(1d));
         assertThat(anonCartItemData.getQuantity(), is(11));
+        assertThat(anonCartItemData.getImageUrl(), is("http://pen.jpeg"));
     }
 
     @Test
@@ -177,13 +190,13 @@ public class AnonControllerTest extends AbstractControllerTest{
         final Long customerId = 102534l;
 
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10);
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
         anonCart.addAnonCartItem(firstCartItem);
         anonCartRepository.save(anonCart);
 
         final AnonCart otherCart = new AnonCart();
         otherCart.setCustomerId(customerId);
-        final AnonCartItem otherCartItem = new AnonCartItem(1, "book", 1, 10);
+        final AnonCartItem otherCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
         otherCart.addAnonCartItem(otherCartItem);
         anonCartRepository.save(otherCart);
 

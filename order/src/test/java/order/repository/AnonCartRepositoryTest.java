@@ -20,8 +20,8 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
     public void shouldSaveAnonCartWithMultipleItems(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1);
-        final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10);
+        final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1, "http://book.jpeg");
+        final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10, "http://pen.jpeg");
         anonCart.addAnonCartItem(itemOne);
         anonCart.addAnonCartItem(itemTwo);
 
@@ -29,46 +29,46 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
         anonCartRepository.save(anonCart);
 
         // Then
-        AnonCart savedAnonCart = anonCartRepository.findOne(anonCart.getId());
-        assertThat(savedAnonCart, is(anonCart));
+        AnonCart actualAnonCart = anonCartRepository.findOne(anonCart.getId());
+        assertThat(actualAnonCart, is(anonCart));
     }
 
     @Test
     public void shouldFindAnonCartByCartUid(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1);
-        final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10);
+        final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1, "http://book.jpeg");
+        final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10, "http://pen.jpeg");
         anonCart.addAnonCartItem(itemOne);
         anonCart.addAnonCartItem(itemTwo);
         anonCartRepository.save(anonCart);
 
         // When
         final UUID cartUid = anonCart.getCartUid();
-        final AnonCart foundAnonCart = anonCartRepository.findByCartUid(cartUid);
+        final AnonCart actualAnonCart = anonCartRepository.findByCartUid(cartUid);
 
         // Then
-        assertThat(foundAnonCart, is(anonCart));
-        assertThat(foundAnonCart.getTotalPrice(), is(22d));
+        assertThat(actualAnonCart, is(anonCart));
+        assertThat(actualAnonCart.getTotalPrice(), is(22d));
     }
 
     @Test
     public void shouldFindAnonCartByCustomerId(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem itemOne = new AnonCartItem(1, "book", 1, 1);
-        final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10);
+        final AnonCartItem itemOne = new AnonCartItem(1, "book", 1, 1, "http://book.jpeg");
+        final AnonCartItem itemTwo = new AnonCartItem(2, "pen", 1, 10, "http://pen.jpeg");
         anonCart.addAnonCartItem(itemOne);
         anonCart.addAnonCartItem(itemTwo);
         anonCart.setCustomerId(12345l);
         anonCartRepository.save(anonCart);
 
         // When
-        final AnonCart foundAnonCart = anonCartRepository.findByCustomerId(12345l);
+        final AnonCart actualAnonCart = anonCartRepository.findByCustomerId(12345l);
 
         // Then
-        assertThat(foundAnonCart, is(anonCart));
-        assertThat(foundAnonCart.getTotalPrice(), is(11d));
+        assertThat(actualAnonCart, is(anonCart));
+        assertThat(actualAnonCart.getTotalPrice(), is(11d));
     }
 
     @Test
@@ -78,19 +78,19 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
         final Long anotherCustomerId = 54321l;
 
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1);
+        final AnonCartItem itemOne = new AnonCartItem(1, "book", 12, 1, "http://book.jpeg");
         anonCart.addAnonCartItem(itemOne);
         anonCart.setCustomerId(customerId);
         anonCartRepository.save(anonCart);
 
         final AnonCart anonCartTwo = new AnonCart();
-        final AnonCartItem itemTwo = new AnonCartItem(2, "book2", 122, 12);
+        final AnonCartItem itemTwo = new AnonCartItem(2, "book2", 122, 12, "http://book.jpeg");
         anonCartTwo.addAnonCartItem(itemTwo);
         anonCartTwo.setCustomerId(customerId);
         anonCartRepository.save(anonCartTwo);
 
         final AnonCart anonCartThree = new AnonCart();
-        final AnonCartItem itemThree = new AnonCartItem(3, "book3", 133, 13);
+        final AnonCartItem itemThree = new AnonCartItem(3, "book3", 133, 13, "http://book.jpeg");
         anonCartThree.addAnonCartItem(itemThree);
         anonCartThree.setCustomerId(anotherCustomerId);
         anonCartRepository.save(anonCartThree);

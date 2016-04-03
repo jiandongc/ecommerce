@@ -7,8 +7,6 @@ import order.domain.AnonCartItem;
 import org.junit.Test;
 import org.mockito.internal.util.collections.Sets;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.is;
@@ -25,8 +23,8 @@ public class CartSummaryDataMapperTest {
     public void shouldMapAnonCartToCartSummaryData(){
         // Given
         final AnonCart anonCart = new AnonCart();
-        final AnonCartItem cartItemOne = new AnonCartItem(1, "book", 1, 10);
-        final AnonCartItem cartItemTwo = new AnonCartItem(2, "pen", 2, 11);
+        final AnonCartItem cartItemOne = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
+        final AnonCartItem cartItemTwo = new AnonCartItem(2, "pen", 2, 11, "http://pen.jpeg");
         anonCart.addAnonCartItem(cartItemOne);
         anonCart.addAnonCartItem(cartItemTwo);
 
@@ -35,8 +33,8 @@ public class CartSummaryDataMapperTest {
 
         // Then
         final UUID cartUid = anonCart.getCartUid();
-        final AnonCartItemData cartItemDataOne = new AnonCartItemData(cartUid, 1, "book", 1d, 10);
-        final AnonCartItemData cartItemDataTwo = new AnonCartItemData(cartUid, 2, "pen", 2d, 11);
+        final AnonCartItemData cartItemDataOne = new AnonCartItemData(cartUid, 1, "book", 1d, 10, "http://book.jpeg");
+        final AnonCartItemData cartItemDataTwo = new AnonCartItemData(cartUid, 2, "pen", 2d, 11, "http://pen.jpeg");
         final CartSummaryData expected = new CartSummaryData(cartUid, 2, 32, Sets.newSet(cartItemDataOne, cartItemDataTwo));
         assertThat(actual, is(expected));
     }
