@@ -90,7 +90,7 @@ public class AnonCartServiceImplTest {
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
 
         // When
-        AnonCart actualCart = anonCartService.updateCustomerId(anonCart.getCartUid(), customerId);
+        AnonCart actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
 
         // Then
         anonCart.setCustomerId(customerId);
@@ -105,9 +105,28 @@ public class AnonCartServiceImplTest {
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(null);
 
         // When
-        AnonCart actualCart = anonCartService.updateCustomerId(anonCart.getCartUid(), customerId);
+        AnonCart actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
 
         // Then
         assertThat(actualCart, is(nullValue()));
+    }
+
+    @Test
+    public void shouldDeleteCartItemByCartUidAndProductId(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        final AnonCartItem secondCartItem = new AnonCartItem(2, "pen", 1.2, 20, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCart.addAnonCartItem(secondCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+
+        // When
+        anonCartService.deleteCartItemByProductId(anonCart.getCartUid(), 2l);
+
+        // Then
+        assertThat(anonCart.getAnonCartItems().size(), is(1));
+        final AnonCartItem cartItem = anonCart.getAnonCartItems().iterator().next();
+        assertThat(cartItem, is(firstCartItem));
     }
 }
