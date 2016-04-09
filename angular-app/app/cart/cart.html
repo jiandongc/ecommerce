@@ -1,0 +1,118 @@
+<div class="container cart">
+	<div class="row">
+		<div class="title col-md-10">我的菜篮子</div>
+		<div class="title col-md-2">
+			<button type="button" class="btn btn-checkout">结帐</button>
+		</div>
+	</div>
+	<table class="table table-bordered" width = "100%">
+		<thead class="thead-default">
+		<tr>
+			<th class="padding-left" width = "60%">商品</th>
+			<th class="padding-left" width = "20%">选择</th>
+			<th class="padding-left" width = "20%">价格</th>
+		</tr>
+		</thread>
+		<tbody>
+     	<tr ng-repeat="cartItem in cartItems | orderBy:'productId'">
+     		<td>
+     			<table>
+     				<tr>
+     					<td rowspan="2"><img class="img-responsive product" ng-src="{{cartItem.imageUrl}}"></td>
+     					<td>{{cartItem.productName}}</td>
+     				</tr>
+     				<tr>
+     					<td><a href="#">删除</a></td>
+     				</tr>
+     			</table>
+     		</td>
+     		<td>
+     			<table>
+     				<tr>
+     					<td rowspan="2" class="space"></td>
+     					<td>数量: {{cartItem.quantity}}</td>
+     				</tr>
+     				<tr>
+     					<td><a href="#">改变数量</a></td>
+     				</tr>
+     			</table>
+     		</td>
+     		<td>
+     			<table>
+     				<tr>
+     					<td rowspan="2" class="space"></td>
+     					<td>单价: £{{cartItem.productPrice}}</td>
+     				</tr>
+     				<tr>
+     					<td>小计: £{{cartItem.subTotal}}</td>
+     				</tr>
+     			</table>
+     		</td>
+		</tr>
+		<tr>
+			<th colspan="2"></th>
+			<th class="padding-left">商品合计: £{{totalPrice}}</th>
+		</tr>
+		</tbody>
+	</table>
+     <div class="row">
+          <div class="col-md-6">
+               <div class="panel panel-default">
+                    <div class="panel-heading" style="color:#45555f; font-weight: bold;">派递方式</div>
+                    <div class="panel-body">
+                         <div class = "btn-group full-length">
+                              <button class="btn btn-default full-length dropdown-toggle" data-toggle="dropdown">
+                                   选择我的派递方式 <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                   <li><a href="#">Free Delivery</a></li>
+                                   <li><a href="#">Next Day Delivery - £3</a></li>
+                                   <li><a href="#">Weekend Delivery - £5</a></li>
+                              </ul>
+                         </div>
+                         <div class='pull-right margin-top info'><a href="#">派递方式详细?</a></div>
+                    </div>
+               </div>
+          </div>
+          <div class="col-md-6">
+               <div class="panel panel-default">
+                    <div class="panel-heading" style="color:#45555f; font-weight: bold;">折价券</div>
+                    <div class="panel-body">
+                         <div class = "btn-group full-length">
+                              <button class="btn btn-default full-length dropdown-toggle" data-toggle="dropdown">
+                                   选择我的折价券 <span class="caret"></span>
+                              </button>
+                              <ul class="dropdown-menu">
+                                   <li><a href="#">Buy one get one free</a></li>
+                                   <li><a href="#">Save £5 if you spend more than £40</a></li>
+                                   <li><a href="#">Buy over £50, free shipping</a></li>
+                              </ul>
+                         </div>
+                         <div class='pull-right margin-top info'><a href="#">怎样获得更多折价券?</a></div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <div class="row">
+          <div class="col-md-6">
+               <img class="pay" ng-src="/app/img/paypal.jpg">
+               <img class="pay" ng-src="/app/img/alipay.png">
+          </div>
+          <div class="col-md-6">
+               <div class="panel panel-default">
+                    <div class="panel-heading" style="color:#45555f; font-weight: bold;">
+                         <div class="text-right">待付(含运费): £100</div>
+                    </div>
+               </div>
+          </div>
+     </div>     
+     <div class="row">
+          <div class="title col-md-2">
+               <button type="button" class="btn btn-checkout">继续购物</button>
+          </div>
+          <div class="title col-md-8"></div>
+          <div class="title col-md-2">
+               <button type="button" class="btn btn-checkout">结帐</button>
+          </div>
+     </div>
+</div>

@@ -228,14 +228,18 @@ ul.dropdown-menu .btn-remove {
     padding-bottom: 3%;
 }
 
-.cart img{
+.cart img.product{
     width: 130px;
     height: 130px;
     overflow: hidden;
 }
 
-.cart .left-padding{
+.cart .padding-left{
     padding-left: 3%; 
+}
+
+.cart .margin-top{
+    margin-top: 3%; 
 }
 
 .cart .space {
@@ -248,4 +252,18 @@ ul.dropdown-menu .btn-remove {
     color: #E8E8E8;
     width: 100%;
     font-weight: bold;
+}
+
+.cart .full-length {
+    width: 100%;
+}
+
+.cart .text-info {
+    font-style: italic;
+}
+
+.cart img.pay{
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
 }
