@@ -33,9 +33,9 @@ public class CartSummaryDataMapperTest {
 
         // Then
         final UUID cartUid = anonCart.getCartUid();
-        final AnonCartItemData cartItemDataOne = new AnonCartItemData(cartUid, 1, "book", 1d, 10, "http://book.jpeg");
-        final AnonCartItemData cartItemDataTwo = new AnonCartItemData(cartUid, 2, "pen", 2d, 11, "http://pen.jpeg");
-        final CartSummaryData expected = new CartSummaryData(cartUid, 2, 32, Sets.newSet(cartItemDataOne, cartItemDataTwo));
+        final AnonCartItemData cartItemDataOne = new AnonCartItemData(cartUid, 1, "book", 1d, 10, 10d, "http://book.jpeg");
+        final AnonCartItemData cartItemDataTwo = new AnonCartItemData(cartUid, 2, "pen", 2d, 11, 22d, "http://pen.jpeg");
+        final CartSummaryData expected = new CartSummaryData(cartUid, 21, 32, Sets.newSet(cartItemDataOne, cartItemDataTwo));
         assertThat(actual, is(expected));
     }
 }

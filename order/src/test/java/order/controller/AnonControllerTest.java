@@ -67,7 +67,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
-        assertThat(response.getBody().getTotalCount(), is(1));
+        assertThat(response.getBody().getTotalQuantity(), is(2));
         assertThat(response.getBody().getTotalPrice(), is(24.02d));
 
         assertThat(response.getBody().getCartItems().size(), is(1));
@@ -78,6 +78,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("book"));
         assertThat(anonCartItemData.getProductPrice(), is(12.01d));
         assertThat(anonCartItemData.getQuantity(), is(2));
+        assertThat(anonCartItemData.getSubTotal(), is(24.02d));
         assertThat(anonCartItemData.getImageUrl(), is("http://book.jpeg"));
     }
 
@@ -97,7 +98,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), is(anonCart.getCartUid()));
-        assertThat(response.getBody().getTotalCount(), is(2));
+        assertThat(response.getBody().getTotalQuantity(), is(12));
         assertThat(response.getBody().getTotalPrice(), is(34d));
         assertThat(response.getBody().getCartItems().size(), is(2));
     }
@@ -117,7 +118,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
-        assertThat(response.getBody().getTotalCount(), is(1));
+        assertThat(response.getBody().getTotalQuantity(), is(10));
         assertThat(response.getBody().getTotalPrice(), is(10D));
 
         assertThat(response.getBody().getCartItems().size(), is(1));
@@ -128,6 +129,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("book"));
         assertThat(anonCartItemData.getProductPrice(), is(1d));
         assertThat(anonCartItemData.getQuantity(), is(10));
+        assertThat(anonCartItemData.getSubTotal(), is(10d));
         assertThat(anonCartItemData.getImageUrl(), is("http://book.jpeg"));
 
     }
@@ -158,7 +160,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
-        assertThat(response.getBody().getTotalCount(), is(1));
+        assertThat(response.getBody().getTotalQuantity(), is(11));
         assertThat(response.getBody().getTotalPrice(), is(11D));
 
         assertThat(response.getBody().getCartItems().size(), is(1));
@@ -169,6 +171,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("pen"));
         assertThat(anonCartItemData.getProductPrice(), is(1d));
         assertThat(anonCartItemData.getQuantity(), is(11));
+        assertThat(anonCartItemData.getSubTotal(), is(11d));
         assertThat(anonCartItemData.getImageUrl(), is("http://pen.jpeg"));
     }
 

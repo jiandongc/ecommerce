@@ -25,7 +25,7 @@ public class AnonCartServiceImplTest {
     @Test
     public void shouldSaveNewAnonCartWhenAddTheFirstCartItem(){
         // Given
-        final AnonCartItemData anonCartItemData = new AnonCartItemData(null, 1, "book", 1.3, 10, "url");
+        final AnonCartItemData anonCartItemData = new AnonCartItemData(null, 1, "book", 1.3, 10, 0, "url");
 
         // When
         anonCartService.addFirstItem(anonCartItemData);
@@ -45,7 +45,7 @@ public class AnonCartServiceImplTest {
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
-        final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 2, "pen", 0.5, 20, "url2");
+        final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 2, "pen", 0.5, 20, 0, "url2");
 
         // When
         anonCartService.addAnotherItem(anotherCartItemData);

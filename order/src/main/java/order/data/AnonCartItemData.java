@@ -9,14 +9,16 @@ public class AnonCartItemData {
     private String productName;
     private double productPrice;
     private int quantity;
+    private double subTotal;
     private String imageUrl;
 
-    public AnonCartItemData(UUID cartUid, long productId, String productName, double productPrice, int quantity, String imageUrl){
+    public AnonCartItemData(UUID cartUid, long productId, String productName, double productPrice, int quantity, double subTotal, String imageUrl){
         this.cartUid = cartUid;
         this.productId = productId;
         this.productName = productName;
         this.productPrice = productPrice;
         this.quantity = quantity;
+        this.subTotal = subTotal;
         this.imageUrl = imageUrl;
     }
 
@@ -46,6 +48,10 @@ public class AnonCartItemData {
         return imageUrl;
     }
 
+    public double getSubTotal() {
+        return subTotal;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -56,6 +62,7 @@ public class AnonCartItemData {
         if (productId != that.productId) return false;
         if (Double.compare(that.productPrice, productPrice) != 0) return false;
         if (quantity != that.quantity) return false;
+        if (Double.compare(that.subTotal, subTotal) != 0) return false;
         if (cartUid != null ? !cartUid.equals(that.cartUid) : that.cartUid != null) return false;
         if (productName != null ? !productName.equals(that.productName) : that.productName != null) return false;
         return !(imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null);
@@ -72,6 +79,8 @@ public class AnonCartItemData {
         temp = Double.doubleToLongBits(productPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + quantity;
+        temp = Double.doubleToLongBits(subTotal);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
         return result;
     }

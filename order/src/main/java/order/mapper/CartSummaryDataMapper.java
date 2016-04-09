@@ -24,7 +24,7 @@ public class CartSummaryDataMapper {
         final CartSummaryDataBuilder builder = CartSummaryDataBuilder.newBuilder()
                 .setCartUid(cartUid)
                 .setTotalPrice(anonCart.getTotalPrice())
-                .setTotalCount(anonCart.getTotalCount());
+                .setTotalQuantity(anonCart.getTotalQuantity());
 
         for (AnonCartItem anonCartItem : anonCart.getAnonCartItems()) {
             final AnonCartItemData anonCartItemData = AnonCartItemDataBuilder.newBuilder()
@@ -33,6 +33,7 @@ public class CartSummaryDataMapper {
                     .setProductName(anonCartItem.getProductName())
                     .setProductPrice(anonCartItem.getProductPrice())
                     .setQuantity(anonCartItem.getQuantity())
+                    .setSubTotal(anonCartItem.getSubTotal())
                     .setImageUrl(anonCartItem.getImageUrl())
                     .build();
             builder.addAnonCartItemData(anonCartItemData);

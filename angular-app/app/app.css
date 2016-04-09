@@ -159,6 +159,7 @@ html, body {
 	letter-spacing: 0.08em;
 	text-transform: uppercase;
 }
+
 .address .name {
 	font-weight: bold;
 }
@@ -216,4 +217,35 @@ ul.dropdown-menu .btn-remove {
 	color: #99AA77;
 }
 
+/* cart page */
+.cart {
+    color: #45555f;
+}
 
+.cart .title {
+    font-size: 1.3em;
+    font-weight: bold;
+    padding-bottom: 3%;
+}
+
+.cart img{
+    width: 130px;
+    height: 130px;
+    overflow: hidden;
+}
+
+.cart .left-padding{
+    padding-left: 3%; 
+}
+
+.cart .space {
+    height: 130px;
+    width: 30%;
+}
+
+.cart .btn-checkout {
+    background-color: #536F19;
+    color: #E8E8E8;
+    width: 100%;
+    font-weight: bold;
+}

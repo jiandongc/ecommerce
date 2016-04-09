@@ -92,6 +92,10 @@ public class AnonCartItem {
         }
     }
 
+    public double getSubTotal() {
+        return productPrice * quantity;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
