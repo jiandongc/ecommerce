@@ -8,12 +8,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 @Configuration
 @EnableGlobalAuthentication
 public class GlobalAuthenticationConfiguration {
+
     @Autowired
     private CustomAuthenticationProvider customAuthenticationProvider;
 
-	
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) {
-		auth.authenticationProvider(customAuthenticationProvider);
-	}
+    @Autowired
+    public void configureGlobal(AuthenticationManagerBuilder auth) {
+        auth.authenticationProvider(customAuthenticationProvider);
+    }
 }
