@@ -30,12 +30,12 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, cart
 		if (typeof $scope.cartUid === "undefined" || newValue !== oldValue) {
 			$scope.cartUid = $cookies.get('cart_uid');
 			if(typeof $cookies.get('cart_uid') !== "undefined") {
-				$rootScope.$broadcast('updateCartSummaryByCartUid');
+				$rootScope.$broadcast('updateCartSummary', false);
 			}
 		}
 	})
 
-	$scope.$on('updateCartSummaryByCartUid', function() {
+	$scope.$on('updateCartSummary', function(event, data) {
 		cartSummaryFactory.get({
 			cartuid: $cookies.get('cart_uid')
 		}, function(response) {
@@ -43,14 +43,17 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, cart
 			$scope.totalQuantity = response.totalQuantity;
 			$scope.totalPrice = response.totalPrice;
 			$scope.cartItems = response.cartItems;
-			var dropdown = $('ul.nav li.dropdown').find('.dropdown-menu');
-			dropdown.stop(true, true).fadeIn(1000, "swing", function(){
-				dropdown.stop(true, true).delay(5000).fadeOut(3800);
-			});
+			if(data === true){
+				var dropdown = $('ul.nav li.dropdown').find('.dropdown-menu');
+				dropdown.stop(true, true).fadeIn(1000, "swing", function(){
+					dropdown.stop(true, true).delay(5000).fadeOut(3800);
+				});
+			}
 		}, function(error){
 			$scope.cartUid = null;
 			$scope.totalQuantity = null;
 			$scope.totalPrice = null;
+			$scope.cartItems = null;
 		});	
 	})
 
@@ -58,6 +61,7 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, cart
 		$cookies.remove('current_user');
 		$cookies.remove('access_token');
 		$cookies.remove('cart_uid');
+		$scope.cartItems = null;
 		$location.path("#");
 	}
 });

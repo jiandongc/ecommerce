@@ -54,7 +54,6 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
     var redirectToAccountPage = function(customer){
         $rootScope.loginError = false;
         $location.path("/account/" + customer.id);
-        $rootScope.$broadcast('updateCartSummaryByCartUid');
     };
 
     var loginFailed = function(error){

@@ -7,6 +7,10 @@ cart.controller('cartCtrl', function($scope, $cookies, cartSummaryFactory) {
 		$scope.totalQuantity = response.totalQuantity;
 		$scope.totalPrice = response.totalPrice;
 		$scope.cartItems = response.cartItems;
+	}, function(error){
+		$scope.totalQuantity = null;
+		$scope.totalPrice = null;
+		$scope.cartItems = null;
 	});
 });
 

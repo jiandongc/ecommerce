@@ -27,7 +27,7 @@ allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, 
 		
 		anonCartFactory.save(anonCartItem, function(data){
 			$cookies.put('cart_uid', data.cartUid);
-			$rootScope.$broadcast('updateCartSummaryByCartUid');
+			$rootScope.$broadcast('updateCartSummary', true);
 		});
 	}
 });
