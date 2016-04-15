@@ -52,7 +52,9 @@
 													<div class="productQty">Qty {{cartItem.quantity}}</div>
 												</div>
 												<div class = "col-md-2">
-													<a href = "#"><span class="glyphicon glyphicon-remove pull-right btn-remove"></span></a>
+													<a href ng-click="removeItem(cartItem)">
+														<span class="glyphicon glyphicon-remove pull-right btn-remove"></span>
+													</a>
 												</div>
 											</div>
 										</li>
@@ -61,7 +63,7 @@
                 					<li><a href='#/cart' class='btn btn-view'>查看菜篮子</a></li>
               					</ul>
 							</li>
-							<li ng-show="currentUser"><a ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
+							<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
 						</ul>				
 					</div>
 				</div>
