@@ -241,7 +241,7 @@ public class AnonControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString() + "/?productId=" + firstCartItem.getProductId(), HttpMethod.DELETE, httpEntity, Void.class);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString() + "/cartItems/" + firstCartItem.getProductId(), HttpMethod.DELETE, httpEntity, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
@@ -253,7 +253,7 @@ public class AnonControllerTest extends AbstractControllerTest {
 
         // When - repeat the delete again, delete operation should be idempotent
         final HttpEntity<?> httpEntity2 = new HttpEntity<Object>(headers);
-        final ResponseEntity<Void> response2 = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString() + "/?productId=" + firstCartItem.getProductId(), HttpMethod.DELETE, httpEntity2, Void.class);
+        final ResponseEntity<Void> response2 = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString() + "/cartItems/" + firstCartItem.getProductId(), HttpMethod.DELETE, httpEntity2, Void.class);
 
         // Then
         assertThat(response2.getStatusCode(), is(HttpStatus.NO_CONTENT));
@@ -268,7 +268,7 @@ public class AnonControllerTest extends AbstractControllerTest {
     public void shouldReturnNoContentWhatCartUidIsNotFound(){
         // When
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + randomUUID().toString() + "/?productId=12345", HttpMethod.DELETE, httpEntity, Void.class);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + randomUUID().toString() + "/cartItems/12345", HttpMethod.DELETE, httpEntity, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));

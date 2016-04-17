@@ -62,8 +62,8 @@ public class AnonCartController {
         return createCartSummaryResponse(anonCart);
     }
 
-    @RequestMapping(value = "/{cartUid}", method=RequestMethod.DELETE)
-    public ResponseEntity deleteCartItem(@PathVariable UUID cartUid, @RequestParam("productId") Long productId){
+    @RequestMapping(value = "/{cartUid}/cartItems/{productId}", method=RequestMethod.DELETE)
+    public ResponseEntity deleteCartItem(@PathVariable UUID cartUid, @PathVariable("productId") Long productId){
         try{
             anonCartService.deleteCartItemByProductId(cartUid, productId);
             return new ResponseEntity(HttpStatus.NO_CONTENT);

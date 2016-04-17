@@ -67,11 +67,9 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 
 	$scope.removeItem = function(cartItem){
 		var configs = {headers: {'Content-Type' : 'application/json'}};
-		$http.delete('http://localhost:8082/anoncarts/' + cartItem.cartUid + '?productId=' + cartItem.productId, configs).then(function(response){
+		$http.delete('http://localhost:8082/anoncarts/' + cartItem.cartUid + '/cartItems/' + cartItem.productId, configs).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);
-			if($location.path().endsWith('/cart')){
-				$route.reload();
-			}
+			if($location.path().endsWith('/cart')){$route.reload();}
 		}, function(error){
 			alert('Delete fail');
 		});
