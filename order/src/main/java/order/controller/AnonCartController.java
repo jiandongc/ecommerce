@@ -30,13 +30,13 @@ public class AnonCartController {
     }
 
     @RequestMapping(method = POST)
-    public CartSummaryData save(@RequestBody AnonCartItemData anonCartItemData){
+    public ResponseEntity save(@RequestBody AnonCartItemData anonCartItemData){
         if(anonCartItemData.getCartUid() == null) {
             final AnonCart anonCart = anonCartService.addFirstItem(anonCartItemData);
-            return mapper.getValue(anonCart);
+            return createCartSummaryResponse(anonCart);
         } else {
             final AnonCart anonCart = anonCartService.addAnotherItem(anonCartItemData);
-            return mapper.getValue(anonCart);
+            return createCartSummaryResponse(anonCart);
         }
     }
 

@@ -106,7 +106,8 @@ public class AnonCartItem {
         if (productId != that.productId) return false;
         if (Double.compare(that.productPrice, productPrice) != 0) return false;
         if (quantity != that.quantity) return false;
-        return !(productName != null ? !productName.equals(that.productName) : that.productName != null);
+        if (productName != null ? !productName.equals(that.productName) : that.productName != null) return false;
+        return !(imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null);
 
     }
 
@@ -119,6 +120,7 @@ public class AnonCartItem {
         temp = Double.doubleToLongBits(productPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + quantity;
+        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
         return result;
     }
 }

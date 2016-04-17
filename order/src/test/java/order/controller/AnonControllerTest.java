@@ -107,6 +107,40 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void shouldUpdateQuantityIfItemIsAlreadyInTheCart(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCartRepository.save(anonCart);
+        final String json = "{\"cartUid\":\"" +anonCart.getCartUid().toString() +"\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"11\",\"imageUrl\": \"http://book.jpeg\"}";
+        final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
+
+        // When
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL, POST, payload, CartSummaryData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getCartUid(), is(anonCart.getCartUid()));
+        assertThat(response.getBody().getTotalQuantity(), is(21));
+        assertThat(response.getBody().getTotalPrice(), is(21d));
+        assertThat(response.getBody().getCartItems().size(), is(1));
+    }
+
+    @Test
+    public void shouldReturn404IfCartIsNotFound(){
+        // Given
+        final String json = "{\"cartUid\":\"" +randomUUID().toString() +"\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"10\",\"imageUrl\": \"http://book.jpeg\"}";
+        final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
+
+        // When
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL, POST, payload, CartSummaryData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
     public void shouldGetCartSummaryByCartUid(){
         // Given
         final AnonCart anonCart = new AnonCart();
