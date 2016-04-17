@@ -1,6 +1,6 @@
 var cart = angular.module('cart',[]);
 
-cart.controller('cartCtrl', function($scope, $cookies, cartSummaryFactory) {
+cart.controller('cartCtrl', function($scope, $cookies, $location, cartSummaryFactory) {
 	cartSummaryFactory.get({
 		cartuid: $cookies.get('cart_uid')
 	}, function(response) {
@@ -12,6 +12,15 @@ cart.controller('cartCtrl', function($scope, $cookies, cartSummaryFactory) {
 		$scope.totalPrice = null;
 		$scope.cartItems = null;
 	});
+
+	$scope.checkout = function() {
+		if(typeof $cookies.get('current_user') === "undefined") {
+			$location.path("/login");
+		} else {
+			$location.path("/checkout/delivery");
+		}
+		
+	}
 });
 
 cart.factory('cartSummaryFactory', function($resource){

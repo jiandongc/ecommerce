@@ -14,7 +14,7 @@
 
 	<body>
 	<div ng-app="store" ng-controller="appCtrl" id="store">
-			<div class = "navbar navbar-default header navbar-fixed-top">
+			<div class="header navbar navbar-default navbar-fixed-top" ng-show="isNotCheckOutPage()">
 				<div class="container-fluid">
 					<div class="navbar-header">					
 						<a href="#" class = "navbar-brand"><img src = "/app/img/logo.png"></a>
@@ -74,7 +74,7 @@
 			</div>
 
 
-			<div class = "footer">
+			<div class = "footer" ng-show="isNotCheckOutPage()">
 				<div class = "footerContent section">
     					<div class="footerColumn">
         					<h3>Products</h3>
@@ -117,6 +117,7 @@
 	<script src="product/product.js"></script>
 	<script src="customer/customer.js"></script>
 	<script src="cart/cart.js"></script>
+	<script src="checkout/checkout.js"></script>
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 			<script>

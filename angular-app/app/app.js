@@ -4,6 +4,7 @@ var app = angular.module('store', [
 	'productDetail',
 	'customer',
 	'cart',
+	'checkout',
 	'auth',
 	'ngCookies'
 ]);
@@ -73,5 +74,13 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 		}, function(error){
 			alert('Delete fail');
 		});
+	}
+
+	$scope.isNotCheckOutPage = function(){
+		if($location.path().search(/^\/checkout/) == -1){
+			return true;	
+		} else {
+			return false;	
+		}
 	}
 });

@@ -8,7 +8,9 @@
 					<text class="price">£{{product.unitPrice}}</text>
 					<div class="form-group">
 						<input type="number" max="99" min="1" class="quantity" ng-model="product.quantity">
-						<button class="btn btn-add btn-sm" type="button" ng-click="addItem(product)"><span class="glyphicon glyphicon-cutlery"></span></button>
+						<button type="button" class="btn btn-add btn-sm" ng-click="addItem(product)">
+							<span class="glyphicon glyphicon-cutlery"></span>
+						</button>
 					</div>
 				</form>
 			</div>
