@@ -78,8 +78,10 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 
 	$scope.isNotCheckOutPage = function(){
 		if($location.path().search(/^\/checkout/) == -1){
+			$scope.paddingTop='70px';
 			return true;	
 		} else {
+			$scope.paddingTop='20px';
 			return false;	
 		}
 	}
