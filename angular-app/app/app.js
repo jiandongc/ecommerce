@@ -1,12 +1,13 @@
 var app = angular.module('store', [
 	'ngRoute',
+	'ngCookies',
 	'allProduct',
 	'productDetail',
 	'customer',
 	'cart',
 	'checkout',
 	'auth',
-	'ngCookies'
+	'config'
 ]);
 
 app.config(['$routeProvider',
@@ -19,7 +20,7 @@ app.config(['$routeProvider',
 ]);
 
 
-app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $http, $route, cartSummaryFactory) {
+app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $http, $route, cartSummaryFactory, environment) {
 
 	$scope.$watch(function() { return $cookies.get('current_user');}, function(newValue, oldValue) {
 		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
@@ -68,7 +69,7 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 
 	$scope.removeItem = function(cartItem){
 		var configs = {headers: {'Content-Type' : 'application/json'}};
-		$http.delete('http://localhost:8082/anoncarts/' + cartItem.cartUid + '/cartItems/' + cartItem.productId, configs).then(function(response){
+		$http.delete(environment.orderUrl + '/anoncarts/' + cartItem.cartUid + '/cartItems/' + cartItem.productId, configs).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);
 			if($location.path().endsWith('/cart')){$route.reload();}
 		}, function(error){

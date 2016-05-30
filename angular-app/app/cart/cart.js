@@ -20,15 +20,15 @@ cart.controller('cartCtrl', function($scope, $cookies, $location, cartSummaryFac
 			$location.path("/checkout/delivery");
 		}
 		
-	}
+	};
 });
 
-cart.factory('cartSummaryFactory', function($resource){
-	return $resource('http://localhost:8082/anoncarts/summary/:cartuid');
+cart.factory('cartSummaryFactory', function($resource, environment){
+	return $resource(environment.orderUrl + '/anoncarts/summary/:cartuid');
 });
 
-cart.factory('anonCartFactory', function($resource){
-	return $resource('http://localhost:8082/anoncarts/:cartuid');
+cart.factory('anonCartFactory', function($resource, environment){
+	return $resource(environment.orderUrl + '/anoncarts/:cartuid');
 });
 
 cart.config(

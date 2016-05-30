@@ -16,7 +16,8 @@ hs_err_pid*
 
 # angular js
 node_modules/
-bower_components/ 
+bower_components/
+config.js
 
 # Mac OX
 .DS_Store

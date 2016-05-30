@@ -6,12 +6,17 @@
   "repository": "https://github.com/angular/angular-seed",
   "license": "MIT",
   "devDependencies": {
-    "karma": "^0.13",
-    "protractor": "^2.5.0",
-    "http-server": "^0.6.1",
     "bower": "^1.3.1",
+    "cssmin": "latest",
+    "gulp": "^3.9.1",
+    "gulp-ng-config": "latest",
+    "http-server": "^0.6.1",
+    "jshint": "latest",
+    "karma": "^0.13",
+    "karma-junit-reporter": "^0.2.2",
+    "protractor": "^2.5.0",
     "shelljs": "^0.2.6",
-    "karma-junit-reporter": "^0.2.2"
+    "uglify-js": "latest"
   },
   "scripts": {
     "postinstall": "bower install",
@@ -24,6 +29,11 @@
     "update-webdriver": "webdriver-manager update",
     "preprotractor": "npm run update-webdriver",
     "protractor": "protractor e2e-tests/protractor.conf.js",
-    "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map','app/bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\""
+    "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map','app/bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\"",
+    "lint": "jshint app/*/*.js",
+    "build:css": "cssmin app/app.css > app/dist/app.css",
+    "build:js": "uglifyjs app/*/*.js app/*.js> app/dist/maitian.js",
+    "build": "npm run build:css && npm run build:js",
+    "config": "gulp config"
   }
 }
