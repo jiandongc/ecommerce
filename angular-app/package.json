@@ -33,7 +33,8 @@
     "lint": "jshint app/*/*.js",
     "build:css": "cssmin app/app.css > app/dist/app.css",
     "build:js": "uglifyjs app/*/*.js app/*.js> app/dist/maitian.js",
-    "build": "npm run build:css && npm run build:js && npm run config",
-    "config": "gulp config"
+    "build": "npm run build:css && npm run build:js && npm run configDev",
+    "configDev": "gulp configDev",
+    "config": "gulp configProd"
   }
 }
