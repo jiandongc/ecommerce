@@ -1,9 +1,9 @@
 var allProducts = angular.module('allProduct', ['ngRoute', 'ngCookies']);
 
-allProducts.service('allProductService', function($http){
+allProducts.service('allProductService', function($http, environment){
    this.getAllProducts = function() {
-     return $http.get('http://localhost:8080/products');
-   }
+     return $http.get(environment.productUrl + '/products');
+   };
 });
 
 allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, allProductService, anonCartFactory) {
@@ -12,7 +12,7 @@ allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, 
 		$scope.products = response;
 		angular.forEach($scope.products,function(value,index){
 			value.quantity = 1;
-    	})
+    	});
 	});
 
 	$scope.addItem = function(product){
@@ -27,9 +27,9 @@ allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, 
 		
 		anonCartFactory.save(anonCartItem, function(data){
 			$cookies.put('cart_uid', data.cartUid);
-			$rootScope.$broadcast('updateCartSummaryByCartUid');
+			$rootScope.$broadcast('updateCartSummary', true);
 		});
-	}
+	};
 });
 
 allProducts.config(['$routeProvider',

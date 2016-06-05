@@ -17,10 +17,10 @@ public class AnonCartTest {
         anonCart.addAnonCartItem(itemTwo);
 
         // When
-        int totalCount = anonCart.getTotalCount();
+        int totalQuantity = anonCart.getTotalQuantity();
 
         // Then
-        assertThat(totalCount, is(2));
+        assertThat(totalQuantity, is(11));
     }
 
     @Test

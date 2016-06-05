@@ -6,13 +6,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CustomAuthenticationProvider extends DaoAuthenticationProvider{	
-	
-	@Override
-	@Autowired
-	public void setUserDetailsService(UserDetailsService userDetailsService) {
-		super.setUserDetailsService(userDetailsService);
-	}
-	
+public class CustomAuthenticationProvider extends DaoAuthenticationProvider {
+
+    @Override
+    @Autowired
+    public void setUserDetailsService(UserDetailsService userDetailsService) {
+        super.setUserDetailsService(userDetailsService);
+    }
+
 
 }

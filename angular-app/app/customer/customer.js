@@ -13,11 +13,11 @@ customer.controller('loginCtrl', function($scope, customersFactory, authService,
         customersFactory.save(newCustomer, function(data){
             $scope.login(data);
         });
-	}
+	};
 
 	$scope.login = function(credentials){
         authService.authenticateUser(credentials);
-	}
+	};
 
 });
 
@@ -27,8 +27,8 @@ customer.controller('accountCtrl', function($scope, $routeParams, customersFacto
 	});
 });
 
-customer.factory('customersFactory', function($resource){
-	return $resource('http://localhost:8081/customers/:id');
+customer.factory('customersFactory', function($resource, environment){
+	return $resource(environment.customerUrl + '/customers/:id');
 });
 
 customer.directive('passwordMatch', [function () {

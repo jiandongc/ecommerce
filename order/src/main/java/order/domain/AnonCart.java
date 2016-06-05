@@ -43,10 +43,6 @@ public class AnonCart {
         return id;
     }
 
-    public int getTotalCount() {
-        return anonCartItems.size();
-    }
-
     public long getCustomerId() {
         return customerId;
     }
@@ -78,9 +74,17 @@ public class AnonCart {
     public double getTotalPrice() {
         double totalPrice = 0D;
         for (AnonCartItem anonCartItem : anonCartItems) {
-            totalPrice = totalPrice + anonCartItem.getProductPrice() * anonCartItem.getQuantity();
+            totalPrice += anonCartItem.getSubTotal();
         }
         return totalPrice;
+    }
+
+    public int getTotalQuantity() {
+        int totalQuantity = 0;
+        for (AnonCartItem anonCartItem : anonCartItems) {
+            totalQuantity += anonCartItem.getQuantity();
+        }
+        return totalQuantity;
     }
 
     @Override

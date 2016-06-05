@@ -1,6 +1,5 @@
 package order;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,6 +40,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
         http.anonymous().and().authorizeRequests()
                 .antMatchers(HttpMethod.GET, "/anoncarts/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/anoncarts").permitAll()
+                .antMatchers(HttpMethod.DELETE, "/anoncarts/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/health").permitAll()
                 .anyRequest().authenticated();
     }

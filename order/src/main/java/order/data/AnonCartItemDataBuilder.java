@@ -12,6 +12,7 @@ public class AnonCartItemDataBuilder {
     private String productName;
     private double productPrice;
     private int quantity;
+    private double subTotal;
     private String imageUrl;
 
     private AnonCartItemDataBuilder(){}
@@ -45,6 +46,11 @@ public class AnonCartItemDataBuilder {
         return this;
     }
 
+    public AnonCartItemDataBuilder setSubTotal(double subTotal) {
+        this.subTotal = subTotal;
+        return this;
+    }
+
     public AnonCartItemDataBuilder setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
         return this;
@@ -52,6 +58,6 @@ public class AnonCartItemDataBuilder {
 
     public AnonCartItemData build(){
         return new AnonCartItemData(
-                this.cartUid, this.productId, this.productName, this.productPrice, this.quantity, this.imageUrl);
+                this.cartUid, this.productId, this.productName, this.productPrice, this.quantity, this.subTotal, this.imageUrl);
     }
 }

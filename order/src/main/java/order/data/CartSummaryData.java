@@ -6,21 +6,21 @@ import java.util.UUID;
 public class CartSummaryData {
 
     private UUID cartUid;
-    private int totalCount;
+    private int totalQuantity;
     private double totalPrice;
     private Set<AnonCartItemData> cartItems;
 
-    public CartSummaryData(UUID cartUid, int totalCount, double totalPrice, Set<AnonCartItemData> cartItems) {
+    public CartSummaryData(UUID cartUid, int totalQuantity, double totalPrice, Set<AnonCartItemData> cartItems) {
         this.cartUid = cartUid;
-        this.totalCount = totalCount;
+        this.totalQuantity = totalQuantity;
         this.totalPrice = totalPrice;
         this.cartItems = cartItems;
     }
 
     public CartSummaryData(){}
 
-    public int getTotalCount() {
-        return totalCount;
+    public int getTotalQuantity() {
+        return totalQuantity;
     }
 
     public UUID getCartUid() {
@@ -42,7 +42,7 @@ public class CartSummaryData {
 
         CartSummaryData that = (CartSummaryData) o;
 
-        if (totalCount != that.totalCount) return false;
+        if (totalQuantity != that.totalQuantity) return false;
         if (Double.compare(that.totalPrice, totalPrice) != 0) return false;
         if (cartUid != null ? !cartUid.equals(that.cartUid) : that.cartUid != null) return false;
         return !(cartItems != null ? !cartItems.equals(that.cartItems) : that.cartItems != null);
@@ -54,7 +54,7 @@ public class CartSummaryData {
         int result;
         long temp;
         result = cartUid != null ? cartUid.hashCode() : 0;
-        result = 31 * result + totalCount;
+        result = 31 * result + totalQuantity;
         temp = Double.doubleToLongBits(totalPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (cartItems != null ? cartItems.hashCode() : 0);

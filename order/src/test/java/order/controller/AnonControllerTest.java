@@ -6,6 +6,7 @@ import order.data.CartSummaryData;
 import order.domain.AnonCart;
 import order.domain.AnonCartItem;
 import order.repository.AnonCartRepository;
+import order.service.AnonCartService;
 import org.apache.commons.codec.binary.Base64;
 import org.junit.After;
 import org.junit.Before;
@@ -29,10 +30,12 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
-public class AnonControllerTest extends AbstractControllerTest{
+public class AnonControllerTest extends AbstractControllerTest {
 
     @Autowired
     private AnonCartRepository anonCartRepository;
+    @Autowired
+    private AnonCartService anonCartService;
 
     private final String BASE_URL = "http://localhost:8082/anoncarts";
     private final RestTemplate rest = new TestRestTemplate();
@@ -67,7 +70,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
-        assertThat(response.getBody().getTotalCount(), is(1));
+        assertThat(response.getBody().getTotalQuantity(), is(2));
         assertThat(response.getBody().getTotalPrice(), is(24.02d));
 
         assertThat(response.getBody().getCartItems().size(), is(1));
@@ -78,6 +81,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("book"));
         assertThat(anonCartItemData.getProductPrice(), is(12.01d));
         assertThat(anonCartItemData.getQuantity(), is(2));
+        assertThat(anonCartItemData.getSubTotal(), is(24.02d));
         assertThat(anonCartItemData.getImageUrl(), is("http://book.jpeg"));
     }
 
@@ -97,9 +101,43 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), is(anonCart.getCartUid()));
-        assertThat(response.getBody().getTotalCount(), is(2));
+        assertThat(response.getBody().getTotalQuantity(), is(12));
         assertThat(response.getBody().getTotalPrice(), is(34d));
         assertThat(response.getBody().getCartItems().size(), is(2));
+    }
+
+    @Test
+    public void shouldUpdateQuantityIfItemIsAlreadyInTheCart(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCartRepository.save(anonCart);
+        final String json = "{\"cartUid\":\"" +anonCart.getCartUid().toString() +"\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"11\",\"imageUrl\": \"http://book.jpeg\"}";
+        final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
+
+        // When
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL, POST, payload, CartSummaryData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getCartUid(), is(anonCart.getCartUid()));
+        assertThat(response.getBody().getTotalQuantity(), is(21));
+        assertThat(response.getBody().getTotalPrice(), is(21d));
+        assertThat(response.getBody().getCartItems().size(), is(1));
+    }
+
+    @Test
+    public void shouldReturn404IfCartIsNotFound(){
+        // Given
+        final String json = "{\"cartUid\":\"" +randomUUID().toString() +"\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"10\",\"imageUrl\": \"http://book.jpeg\"}";
+        final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
+
+        // When
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL, POST, payload, CartSummaryData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -117,7 +155,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
-        assertThat(response.getBody().getTotalCount(), is(1));
+        assertThat(response.getBody().getTotalQuantity(), is(10));
         assertThat(response.getBody().getTotalPrice(), is(10D));
 
         assertThat(response.getBody().getCartItems().size(), is(1));
@@ -128,6 +166,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("book"));
         assertThat(anonCartItemData.getProductPrice(), is(1d));
         assertThat(anonCartItemData.getQuantity(), is(10));
+        assertThat(anonCartItemData.getSubTotal(), is(10d));
         assertThat(anonCartItemData.getImageUrl(), is("http://book.jpeg"));
 
     }
@@ -158,7 +197,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
-        assertThat(response.getBody().getTotalCount(), is(1));
+        assertThat(response.getBody().getTotalQuantity(), is(11));
         assertThat(response.getBody().getTotalPrice(), is(11D));
 
         assertThat(response.getBody().getCartItems().size(), is(1));
@@ -169,6 +208,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         assertThat(anonCartItemData.getProductName(), is("pen"));
         assertThat(anonCartItemData.getProductPrice(), is(1d));
         assertThat(anonCartItemData.getQuantity(), is(11));
+        assertThat(anonCartItemData.getSubTotal(), is(11d));
         assertThat(anonCartItemData.getImageUrl(), is("http://pen.jpeg"));
     }
 
@@ -178,7 +218,7 @@ public class AnonControllerTest extends AbstractControllerTest{
         final Random random = new Random();
         final long customerId = random.nextLong();
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId="+customerId , GET, httpEntity, CartSummaryData.class);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId=" + customerId , GET, httpEntity, CartSummaryData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
@@ -202,7 +242,7 @@ public class AnonControllerTest extends AbstractControllerTest{
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(customerId, headers);
-        ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString(), HttpMethod.PUT, payload, Void.class);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -217,10 +257,55 @@ public class AnonControllerTest extends AbstractControllerTest{
         // Given & When
         final Long customerId = 102534l;
         final HttpEntity<Long> payload = new HttpEntity<Long>(customerId, headers);
-        ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + randomUUID().toString(), HttpMethod.PUT, payload, Void.class);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + randomUUID().toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
+
+    @Test
+    public void shouldDeleteCartItemByCartUidAndProductId(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        final AnonCartItem secondCartItem = new AnonCartItem(2, "pen", 1.2, 20, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCart.addAnonCartItem(secondCartItem);
+        anonCartRepository.save(anonCart);
+
+        // When
+        final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString() + "/cartItems/" + firstCartItem.getProductId(), HttpMethod.DELETE, httpEntity, Void.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
+        final AnonCart actualAnonCart = anonCartService.findAnonCartByUidForTest(anonCart.getCartUid());
+        assertThat(actualAnonCart.getTotalPrice(), is(24d));
+        assertThat(actualAnonCart.getTotalQuantity(), is(20));
+        assertThat(actualAnonCart.getAnonCartItems().size(), is(1));
+        assertThat(actualAnonCart.getAnonCartItems().iterator().next(), is(secondCartItem));
+
+        // When - repeat the delete again, delete operation should be idempotent
+        final HttpEntity<?> httpEntity2 = new HttpEntity<Object>(headers);
+        final ResponseEntity<Void> response2 = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString() + "/cartItems/" + firstCartItem.getProductId(), HttpMethod.DELETE, httpEntity2, Void.class);
+
+        // Then
+        assertThat(response2.getStatusCode(), is(HttpStatus.NO_CONTENT));
+        final AnonCart actualAnonCart2 = anonCartService.findAnonCartByUidForTest(anonCart.getCartUid());
+        assertThat(actualAnonCart2.getTotalPrice(), is(24d));
+        assertThat(actualAnonCart2.getTotalQuantity(), is(20));
+        assertThat(actualAnonCart2.getAnonCartItems().size(), is(1));
+        assertThat(actualAnonCart2.getAnonCartItems().iterator().next(), is(secondCartItem));
+    }
+
+    @Test
+    public void shouldReturnNoContentWhatCartUidIsNotFound(){
+        // When
+        final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + randomUUID().toString() + "/cartItems/12345", HttpMethod.DELETE, httpEntity, Void.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
     }
 
 }

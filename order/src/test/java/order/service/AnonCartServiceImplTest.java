@@ -25,7 +25,7 @@ public class AnonCartServiceImplTest {
     @Test
     public void shouldSaveNewAnonCartWhenAddTheFirstCartItem(){
         // Given
-        final AnonCartItemData anonCartItemData = new AnonCartItemData(null, 1, "book", 1.3, 10, "url");
+        final AnonCartItemData anonCartItemData = new AnonCartItemData(null, 1, "book", 1.3, 10, 0, "url");
 
         // When
         anonCartService.addFirstItem(anonCartItemData);
@@ -45,15 +45,33 @@ public class AnonCartServiceImplTest {
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
-        final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 2, "pen", 0.5, 20, "url2");
+        final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 2, "pen", 0.5, 20, 0, "url2");
 
         // When
-        anonCartService.addAnotherItem(anotherCartItemData);
+        final AnonCart actualCart = anonCartService.addAnotherItem(anotherCartItemData);
 
         // Then
-        final AnonCartItem anotherCartItem = new AnonCartItem(2, "pen", 0.5, 20, "url2");
-        anonCart.addAnonCartItem(anotherCartItem);
-        verify(anonCartRepository).save(anonCart);
+        assertThat(actualCart.getTotalPrice(), is(23d));
+        assertThat(actualCart.getTotalQuantity(), is(30));
+        assertThat(actualCart.getAnonCartItems().size(), is(2));
+    }
+
+    @Test
+    public void shouldUpdateQuantityIfItemIsAlreadyInTheCart(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+        final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 1, "book", 1.3, 11, 0, "url");
+
+        // When
+        final AnonCart actualCart = anonCartService.addAnotherItem(anotherCartItemData);
+
+        // Then
+        assertThat(actualCart.getTotalPrice(), is(27.3d));
+        assertThat(actualCart.getTotalQuantity(), is(21));
+        assertThat(actualCart.getAnonCartItems().size(), is(1));
     }
 
     @Test
@@ -90,7 +108,7 @@ public class AnonCartServiceImplTest {
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
 
         // When
-        AnonCart actualCart = anonCartService.updateCustomerId(anonCart.getCartUid(), customerId);
+        final AnonCart actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
 
         // Then
         anonCart.setCustomerId(customerId);
@@ -105,9 +123,28 @@ public class AnonCartServiceImplTest {
         when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(null);
 
         // When
-        AnonCart actualCart = anonCartService.updateCustomerId(anonCart.getCartUid(), customerId);
+        AnonCart actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
 
         // Then
         assertThat(actualCart, is(nullValue()));
+    }
+
+    @Test
+    public void shouldDeleteCartItemByCartUidAndProductId(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        final AnonCartItem secondCartItem = new AnonCartItem(2, "pen", 1.2, 20, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCart.addAnonCartItem(secondCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+
+        // When
+        anonCartService.deleteCartItemByProductId(anonCart.getCartUid(), 2l);
+
+        // Then
+        assertThat(anonCart.getAnonCartItems().size(), is(1));
+        final AnonCartItem cartItem = anonCart.getAnonCartItems().iterator().next();
+        assertThat(cartItem, is(firstCartItem));
     }
 }

@@ -11,7 +11,7 @@ import java.util.UUID;
 public class CartSummaryDataBuilder {
 
     private UUID cartUid;
-    private int totalCount;
+    private int totalQuantity;
     private double totalPrice;
     private Set<AnonCartItemData> cartItems = new HashSet<AnonCartItemData>();
 
@@ -26,8 +26,8 @@ public class CartSummaryDataBuilder {
         return this;
     }
 
-    public CartSummaryDataBuilder setTotalCount(int totalCount) {
-        this.totalCount = totalCount;
+    public CartSummaryDataBuilder setTotalQuantity(int totalQuantity) {
+        this.totalQuantity = totalQuantity;
         return this;
     }
 
@@ -42,6 +42,6 @@ public class CartSummaryDataBuilder {
     }
 
     public CartSummaryData build(){
-        return new CartSummaryData(this.cartUid, this.totalCount, this.totalPrice, this.cartItems);
+        return new CartSummaryData(this.cartUid, this.totalQuantity, this.totalPrice, this.cartItems);
     }
 }

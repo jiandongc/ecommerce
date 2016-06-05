@@ -1,6 +1,6 @@
 var auth = angular.module('auth', ['ngCookies']);
 
-auth.factory('authService', function($http, $cookies, $location, $rootScope, $q, customersFactory, cartSummaryFactory){
+auth.factory('authService', function($http, $cookies, $location, $rootScope, $q, customersFactory, cartSummaryFactory, environment){
 
 	var authenticateUser = function (credentials){
 		validateUser(credentials)
@@ -15,7 +15,7 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
         $cookies.put('access_token', 'Basic '+ btoa('client:secret'));
 
         // return a derived promise 
-        return $http.post('http://localhost:9999/uaa/oauth/token', data, configs).then(function(response){
+        return $http.post(environment.authServerUrl + '/uaa/oauth/token', data, configs).then(function(response){
             $cookies.put('access_token', 'Bearer ' + response.data.access_token);
             return credentials;
         }, function(error){
@@ -36,7 +36,7 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
         if(typeof $cookies.get('cart_uid') !== "undefined") {
             var configs = {headers: {'Content-Type' : 'application/json'}};
             var cartUid = $cookies.get('cart_uid');
-            return $http.put('http://localhost:8082/anoncarts/' + cartUid, customer.id, configs).then(function(response){
+            return $http.put(environment.orderUrl + '/anoncarts/' + cartUid, customer.id, configs).then(function(response){
                 return customer;
             }, function(error){
                 return $q.reject("update shopping cart failed");
@@ -54,7 +54,6 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
     var redirectToAccountPage = function(customer){
         $rootScope.loginError = false;
         $location.path("/account/" + customer.id);
-        $rootScope.$broadcast('updateCartSummaryByCartUid');
     };
 
     var loginFailed = function(error){

@@ -30,19 +30,19 @@ public class AnonCartController {
     }
 
     @RequestMapping(method = POST)
-    public CartSummaryData save(@RequestBody AnonCartItemData anonCartItemData){
+    public ResponseEntity save(@RequestBody AnonCartItemData anonCartItemData){
         if(anonCartItemData.getCartUid() == null) {
             final AnonCart anonCart = anonCartService.addFirstItem(anonCartItemData);
-            return mapper.getValue(anonCart);
+            return createCartSummaryResponse(anonCart);
         } else {
             final AnonCart anonCart = anonCartService.addAnotherItem(anonCartItemData);
-            return mapper.getValue(anonCart);
+            return createCartSummaryResponse(anonCart);
         }
     }
 
     @RequestMapping(value = "/{cartUid}", method = PUT)
     public ResponseEntity updateCartCustomerId(@PathVariable UUID cartUid, @RequestBody Long customerId){
-        final AnonCart anonCart = anonCartService.updateCustomerId(cartUid, customerId);
+        final AnonCart anonCart = anonCartService.updateCartWithCustomerId(cartUid, customerId);
         if (anonCart != null) {
             return new ResponseEntity(HttpStatus.OK);
         } else {
@@ -60,6 +60,16 @@ public class AnonCartController {
     public ResponseEntity<CartSummaryData> getCartSummaryByCustomerId(@RequestParam("customerId") Long customerId){
         final AnonCart anonCart = anonCartService.findAnonCartByCustomerId(customerId);
         return createCartSummaryResponse(anonCart);
+    }
+
+    @RequestMapping(value = "/{cartUid}/cartItems/{productId}", method=RequestMethod.DELETE)
+    public ResponseEntity deleteCartItem(@PathVariable UUID cartUid, @PathVariable("productId") Long productId){
+        try{
+            anonCartService.deleteCartItemByProductId(cartUid, productId);
+            return new ResponseEntity(HttpStatus.NO_CONTENT);
+        } catch (Exception e){
+            return new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     private ResponseEntity<CartSummaryData> createCartSummaryResponse(AnonCart anonCart){
