@@ -20,6 +20,7 @@
         <module>../order</module>
         <module>../product</module>
         <module>../integration-test</module>
+        <module>../db-deploy</module>
     </modules>
 
     <repositories>
