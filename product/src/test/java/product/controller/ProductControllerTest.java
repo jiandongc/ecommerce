@@ -23,7 +23,7 @@ public class ProductControllerTest extends AbstractControllerTest{
 	@Autowired
 	private ProductRepository productRepository;
 
-	private final String BASE_URL = "http://localhost:8080/products/";
+	private final String BASE_URL = "http://localhost:8083/products/";
 	private RestTemplate rest = new TestRestTemplate();
 
 	@After

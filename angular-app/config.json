@@ -4,7 +4,7 @@
 			"authServerUrl": "http://localhost:9999",
 			"customerUrl": "http://localhost:8081",
 			"orderUrl": "http://localhost:8082",
-			"productUrl": "http://localhost:8080"
+			"productUrl": "http://localhost:8083"
 		}	
 	},
 	"production" : {

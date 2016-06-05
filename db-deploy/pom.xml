@@ -15,7 +15,7 @@
     
     <profiles>
         <profile>
-            <id>dev-customers</id>
+            <id>local-customers</id>
             <properties>
                 <project>customer</project>
                 <postgresql.version>9.1-901.jdbc4</postgresql.version>
@@ -39,7 +39,7 @@
             </properties>
         </profile>
         <profile>
-            <id>dev-orders</id>
+            <id>local-orders</id>
             <properties>
                 <project>order</project>
                 <postgresql.version>9.1-901.jdbc4</postgresql.version>
@@ -63,7 +63,7 @@
             </properties>
         </profile>
         <profile>
-            <id>dev-product</id>
+            <id>local-product</id>
             <properties>
                 <project>product</project>
                 <postgresql.version>9.1-901.jdbc4</postgresql.version>
