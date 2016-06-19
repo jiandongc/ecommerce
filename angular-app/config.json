@@ -12,7 +12,7 @@
 			"authServerUrl": "http://localhost:9999",
 			"customerUrl": "http://localhost:8081",
 			"orderUrl": "http://localhost:8082",
-			"productUrl": "http://cawaiiproductservice.5ydhdu2x39.eu-west-1.elasticbeanstalk.com/"
+			"productUrl": "http://cawaiiproductservice.5ydhdu2x39.eu-west-1.elasticbeanstalk.com"
 		}	
 	}
 	
