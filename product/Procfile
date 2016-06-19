@@ -1,1 +1,1 @@
-web: java -Xmx128m -Dspring.profiles.active="staging" -jar product-1.0-SNAPSHOT.jar
+web: java -Xmx128m -Dspring.profiles.active="uat" -jar product-1.0-SNAPSHOT.jar

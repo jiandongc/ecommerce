@@ -6,8 +6,8 @@ gulp.task('configDev', function () {
   .pipe(gulp.dest('app/'));
 });
 
-gulp.task('configProd', function () {
+gulp.task('configUat', function () {
   gulp.src('config.json')
-  .pipe(gulpNgConfig('config', {environment: 'production'}))
+  .pipe(gulpNgConfig('config', {environment: 'uat'}))
   .pipe(gulp.dest('app/'));
 });

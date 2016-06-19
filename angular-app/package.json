@@ -31,10 +31,10 @@
     "protractor": "protractor e2e-tests/protractor.conf.js",
     "update-index-async": "node -e \"require('shelljs/global'); sed('-i', /\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/, '//@@NG_LOADER_START@@\\n' + sed(/sourceMappingURL=angular-loader.min.js.map/,'sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map','app/bower_components/angular-loader/angular-loader.min.js') + '\\n//@@NG_LOADER_END@@', 'app/index-async.html');\"",
     "lint": "jshint app/*/*.js",
-    "build:css": "cssmin app/app.css > app/dist/app.css",
-    "build:js": "uglifyjs app/*/*.js app/*.js> app/dist/maitian.js",
-    "build": "npm run build:css && npm run build:js && npm run configDev",
+    "build:css": "cssmin app/app.css > app/dist/cawaii.css",
+    "build:js": "uglifyjs app/*/*.js app/*.js> app/dist/cawaii.js",
+    "build": "npm run configUat && npm run build:css && npm run build:js",
     "configDev": "gulp configDev",
-    "config": "gulp configProd"
+    "configUat": "gulp configUat"
   }
 }
