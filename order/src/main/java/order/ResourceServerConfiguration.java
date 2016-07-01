@@ -1,5 +1,6 @@
 package order;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,15 +18,24 @@ import javax.sql.DataSource;
 @EnableResourceServer
 public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter {
 
+    @Value("${token.store.driverClassName}")
+    private String driverClassName;
+    @Value("${token.store.url}")
+    private String url;
+    @Value("${token.store.username}")
+    private String username;
+    @Value("${token.store.password}")
+    private String password;
+
     private DataSource dataSource;
 
     @PostConstruct
     private void initialize(){
         dataSource = DataSourceBuilder.create()
-                .driverClassName("org.postgresql.Driver")
-                .url("jdbc:postgresql://127.0.0.1:5432/ecommerce")
-                .username("customer")
-                .password("password")
+                .driverClassName(driverClassName)
+                .url(url)
+                .username(username)
+                .password(password)
                 .build();
     }
 
