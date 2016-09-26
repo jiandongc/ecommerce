@@ -118,23 +118,6 @@ public class AnonCartServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateProductQuantity(){
-        // Given
-        final AnonCartItemData anonCartItemData = AnonCartItemDataBuilder.newBuilder().setQuantity(20).build();
-        final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
-        anonCart.addAnonCartItem(firstCartItem);
-        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
-
-        // When
-        final Optional<AnonCart> actualCart = anonCartService.updateCartItemWithProductId(anonCart.getCartUid(), 1l, anonCartItemData);
-
-        // Then
-        assertThat(actualCart.isPresent(), is(true));
-        assertThat(actualCart.get().getTotalQuantity(), is(20));
-    }
-
-    @Test
     public void shouldReturnNullIfCartIsNotFound(){
         // Given
         final long customerId = 10293l;
@@ -165,5 +148,62 @@ public class AnonCartServiceImplTest {
         assertThat(anonCart.getAnonCartItems().size(), is(1));
         final AnonCartItem cartItem = anonCart.getAnonCartItems().iterator().next();
         assertThat(cartItem, is(firstCartItem));
+    }
+
+    @Test
+    public void shouldDoNothingIfItemIsNotFoundByProductInTheCartWhenDeleting(){
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        final AnonCartItem secondCartItem = new AnonCartItem(2, "pen", 1.2, 20, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCart.addAnonCartItem(secondCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
+
+        // When
+        anonCartService.deleteCartItemByProductId(anonCart.getCartUid(), 3l);
+
+        // Then
+        assertThat(anonCart.getAnonCartItems().size(), is(2));
+        assertThat(anonCart.getTotalPrice(), is(37D));
+    }
+
+    @Test
+    public void shouldUpdateProductQuantity(){
+        // Given
+        final AnonCartItemData anonCartItemData = AnonCartItemDataBuilder.newBuilder().setQuantity(30).build();
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        final AnonCartItem secondCartItem = new AnonCartItem(2, "pen", 1.2, 20, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCart.addAnonCartItem(secondCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
+
+        // When
+        final Optional<AnonCart> actualCart = anonCartService.updateCartItemWithProductId(anonCart.getCartUid(), 2l, anonCartItemData);
+
+        // Then
+        assertThat(actualCart.isPresent(), is(true));
+        assertThat(actualCart.get().getTotalQuantity(), is(40));
+    }
+
+    @Test
+    public void shouldDoNothingIfItemIsNotFoundByProductInTheCartWhenUpdating(){
+        // Given
+        final AnonCartItemData anonCartItemData = AnonCartItemDataBuilder.newBuilder().setQuantity(30).build();
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        final AnonCartItem secondCartItem = new AnonCartItem(2, "pen", 1.2, 20, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCart.addAnonCartItem(secondCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
+
+        // When
+        Optional<AnonCart> actualCart = anonCartService.updateCartItemWithProductId(anonCart.getCartUid(), 3L, anonCartItemData);
+
+        // Then
+        assertThat(actualCart.isPresent(), is(true));
+        assertThat(actualCart.get().getAnonCartItems().size(), is(2));
+        assertThat(actualCart.get().getTotalQuantity(), is(30));
     }
 }
