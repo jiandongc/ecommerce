@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -22,93 +24,89 @@ public class AnonCartServiceImpl implements AnonCartService {
 
     @Override
     @Transactional
-    public AnonCart addFirstItem(AnonCartItemData anonCartItemData) {
-        final AnonCart anonCart = new AnonCart();
-        final AnonCartItem firstCartItem = new AnonCartItem(
-                anonCartItemData.getProductId(),
-                anonCartItemData.getProductName(),
-                anonCartItemData.getProductPrice(),
-                anonCartItemData.getQuantity(),
-                anonCartItemData.getImageUrl());
-        anonCart.addAnonCartItem(firstCartItem);
-        return anonCartRepository.save(anonCart);
-    }
+    public AnonCart addItem(AnonCartItemData anonCartItemData) {
+        final Optional<AnonCart> anonCart = anonCartRepository.findByCartUid(anonCartItemData.getCartUid());
+        if (anonCart.isPresent()) {
 
-    @Override
-    @Transactional
-    public AnonCart addAnotherItem(AnonCartItemData anonCartItemData) {
-        final AnonCart anonCart = anonCartRepository.findByCartUid(anonCartItemData.getCartUid());
-        if (anonCart != null) {
-            for (AnonCartItem anonCartItem : anonCart.getAnonCartItems()) {
-                if (anonCartItem.getProductId() == anonCartItemData.getProductId()) {
-                    anonCartItem.setQuantity(anonCartItemData.getQuantity() + anonCartItem.getQuantity());
-                    anonCartItem.setProductPrice(anonCartItemData.getProductPrice());
-                    anonCartItem.setProductName(anonCartItemData.getProductName());
-                    anonCartItem.setImageUrl(anonCartItemData.getImageUrl());
-                    return anonCart;
-                }
+            final Optional<AnonCartItem> existingItem = anonCart.get().getAnonCartItems().stream()
+                    .filter(item -> item.getProductId() == anonCartItemData.getProductId()).findFirst();
+
+            if (existingItem.isPresent()) {
+                existingItem.get().setQuantity(anonCartItemData.getQuantity() + existingItem.get().getQuantity());
+                existingItem.get().setProductPrice(anonCartItemData.getProductPrice());
+                existingItem.get().setProductName(anonCartItemData.getProductName());
+                existingItem.get().setImageUrl(anonCartItemData.getImageUrl());
+            } else {
+                final AnonCartItem newItem = new AnonCartItem(anonCartItemData.getProductId(), anonCartItemData.getProductName(),
+                        anonCartItemData.getProductPrice(), anonCartItemData.getQuantity(), anonCartItemData.getImageUrl());
+                anonCart.get().addAnonCartItem(newItem);
             }
 
-            final AnonCartItem anotherCartItem = new AnonCartItem(
+            return anonCart.get();
+
+        } else {
+            final AnonCart newCart = new AnonCart();
+            newCart.addAnonCartItem(new AnonCartItem(
                     anonCartItemData.getProductId(),
                     anonCartItemData.getProductName(),
                     anonCartItemData.getProductPrice(),
                     anonCartItemData.getQuantity(),
-                    anonCartItemData.getImageUrl());
-            anonCart.addAnonCartItem(anotherCartItem);
+                    anonCartItemData.getImageUrl()));
+            return anonCartRepository.save(newCart);
         }
-        return anonCart;
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AnonCart findAnonCartByUid(UUID cartUid) {
+    public Optional<AnonCart> findAnonCartByUid(UUID cartUid) {
         return anonCartRepository.findByCartUid(cartUid);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public AnonCart findAnonCartByCustomerId(Long customerId) {
+    public Optional<AnonCart> findAnonCartByCustomerId(Long customerId) {
         return anonCartRepository.findByCustomerId(customerId);
     }
 
     @Override
     @Transactional
-    public AnonCart updateCartWithCustomerId(UUID cartUid, Long customerId) {
+    public Optional<AnonCart> updateCartWithCustomerId(UUID cartUid, Long customerId) {
         anonCartRepository.deleteByCustomerId(customerId);
-        final AnonCart anonCart = anonCartRepository.findByCartUid(cartUid);
-        if (anonCart != null) {
-            anonCart.setCustomerId(customerId);
-        }
+        final Optional<AnonCart> anonCart = anonCartRepository.findByCartUid(cartUid);
+        anonCart.ifPresent(cart -> cart.setCustomerId(customerId));
         return anonCart;
     }
 
     @Override
     @Transactional
+    public Optional<AnonCart> updateCartItemWithProductId(UUID cartUid, Long productId, AnonCartItemData anonCartItemData) {
+        final Optional<AnonCart> cart = anonCartRepository.findByCartUid(cartUid);
+        cart.ifPresent(v -> v.getAnonCartItems().stream()
+                .filter(item -> item.getProductId() == productId)
+                .findFirst().ifPresent(item -> item.setQuantity(anonCartItemData.getQuantity())));
+        return cart;
+    }
+
+    @Override
+    @Transactional
     public void deleteCartItemByProductId(UUID cartUid, Long productId) {
-        final AnonCart anonCart = anonCartRepository.findByCartUid(cartUid);
-        if (anonCart != null) {
-            for (AnonCartItem anonCartItem : anonCart.getAnonCartItems()) {
-                if (anonCartItem.getProductId() == productId) {
-                    anonCart.removeAnonCartItem(anonCartItem);
-                    break;
-                }
-            }
-        }
+        final Optional<AnonCart> cart = anonCartRepository.findByCartUid(cartUid);
+        cart.ifPresent(v -> v.getAnonCartItems().stream()
+                .filter(item -> item.getProductId() == productId)
+                .findFirst().ifPresent(item -> cart.get().removeAnonCartItem(item)));
     }
 
     /**
      * This method should be used in test only. It would EAGER load the collection
+     *
      * @param cartUid
      * @return
      */
     @Override
     @Transactional(readOnly = true)
     public AnonCart findAnonCartByUidForTest(UUID cartUid) {
-        final AnonCart anonCart = anonCartRepository.findByCartUid(cartUid);
-        for (AnonCartItem anonCartItem : anonCart.getAnonCartItems()) {
-            anonCartItem.getProductId();
-        }
-        return anonCart;
+        final Optional<AnonCart> anonCart = anonCartRepository.findByCartUid(cartUid);
+        anonCart.ifPresent(cart -> cart.getAnonCartItems().stream().forEach(AnonCartItem::getProductId));
+        return anonCart.orElseThrow(NoSuchElementException::new);
     }
 }

@@ -5,11 +5,11 @@ import order.domain.AnonCartItem;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 
 public class AnonCartRepositoryTest extends AbstractRepositoryTest{
 
@@ -45,11 +45,12 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
 
         // When
         final UUID cartUid = anonCart.getCartUid();
-        final AnonCart actualAnonCart = anonCartRepository.findByCartUid(cartUid);
+        final Optional<AnonCart> actualAnonCart = anonCartRepository.findByCartUid(cartUid);
 
         // Then
-        assertThat(actualAnonCart, is(anonCart));
-        assertThat(actualAnonCart.getTotalPrice(), is(22d));
+        assertThat(actualAnonCart.isPresent(), is(true));
+        assertThat(actualAnonCart.get(), is(anonCart));
+        assertThat(actualAnonCart.get().getTotalPrice(), is(22d));
     }
 
     @Test
@@ -64,11 +65,12 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
         anonCartRepository.save(anonCart);
 
         // When
-        final AnonCart actualAnonCart = anonCartRepository.findByCustomerId(12345l);
+        final Optional<AnonCart> actualAnonCart = anonCartRepository.findByCustomerId(12345l);
 
         // Then
-        assertThat(actualAnonCart, is(anonCart));
-        assertThat(actualAnonCart.getTotalPrice(), is(11d));
+        assertThat(actualAnonCart.isPresent(), is(true));
+        assertThat(actualAnonCart.get(), is(anonCart));
+        assertThat(actualAnonCart.get().getTotalPrice(), is(11d));
     }
 
     @Test
@@ -100,13 +102,14 @@ public class AnonCartRepositoryTest extends AbstractRepositoryTest{
         anonCartRepository.deleteByCustomerId(customerId);
 
         // Then
-        final AnonCart actualCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
-        assertThat(actualCart, is(nullValue()));
+        final Optional<AnonCart> actualCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
+        assertThat(actualCart.isPresent(), is(false));
 
-        final AnonCart actualCartTwo = anonCartRepository.findByCartUid(anonCartTwo.getCartUid());
-        assertThat(actualCartTwo, is(nullValue()));
+        final Optional<AnonCart> actualCartTwo = anonCartRepository.findByCartUid(anonCartTwo.getCartUid());
+        assertThat(actualCartTwo.isPresent(), is(false));
 
-        final AnonCart actualCartThree = anonCartRepository.findByCartUid(anonCartThree.getCartUid());
-        assertThat(actualCartThree, is(anonCartThree));
+        final Optional<AnonCart> actualCartThree = anonCartRepository.findByCartUid(anonCartThree.getCartUid());
+        assertThat(actualCartThree.isPresent(), is(true));
+        assertThat(actualCartThree.get(), is(anonCartThree));
     }
 }

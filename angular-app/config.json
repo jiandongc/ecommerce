@@ -10,7 +10,7 @@
 	"uat" : {
 		"environment" : {
 			"authServerUrl": "http://cawaiiauthservice.rap9ugageu.eu-west-1.elasticbeanstalk.com",
-			"customerUrl": "http://http://cawaiicustomerservice.zkmkymkcgi.eu-west-1.elasticbeanstalk.com",
+			"customerUrl": "http://cawaiicustomerservice.zkmkymkcgi.eu-west-1.elasticbeanstalk.com",
 			"orderUrl": "http://cawaiiorderservice.zef6waiujn.eu-west-1.elasticbeanstalk.com",
 			"productUrl": "http://cawaiiproductservice.5ydhdu2x39.eu-west-1.elasticbeanstalk.com"
 		}	

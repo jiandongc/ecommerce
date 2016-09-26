@@ -14,9 +14,11 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.*;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
 import java.nio.charset.Charset;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
@@ -25,7 +27,6 @@ import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -38,11 +39,11 @@ public class AnonControllerTest extends AbstractControllerTest {
     private AnonCartService anonCartService;
 
     private final String BASE_URL = "http://localhost:8082/anoncarts";
-    private final RestTemplate rest = new TestRestTemplate();
-    private HttpHeaders headers = null;
+    private RestTemplate rest;
+    private HttpHeaders headers;
 
     @Before
-    public void before(){
+    public void before() {
         if (headers == null) {
             headers = new HttpHeaders();
             final String auth = "test:password";
@@ -51,15 +52,20 @@ public class AnonControllerTest extends AbstractControllerTest {
             headers.add("Authorization", authHeader);
             headers.setContentType(APPLICATION_JSON);
         }
+
+        if (rest == null) {
+            rest = new TestRestTemplate();
+            rest.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        }
     }
 
     @After
-    public void after(){
+    public void after() {
         anonCartRepository.deleteAll();
     }
 
     @Test
-    public void shouldSaveAnonCartWhenFirstCartItemIsAdded(){
+    public void shouldSaveAnonCartWhenFirstCartItemIsAdded() {
         // Given
         final String json = "{\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"12.01\",\"quantity\": \"2\",\"imageUrl\": \"http://book.jpeg\"}";
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
@@ -86,13 +92,13 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldAddExtraItemIntoExistingCart(){
+    public void shouldAddExtraItemIntoExistingCart() {
         // Given
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
         anonCart.addAnonCartItem(firstCartItem);
         anonCartRepository.save(anonCart);
-        final String json = "{\"cartUid\":\"" +anonCart.getCartUid().toString() +"\",\"productId\": \"2\",\"productName\": \"pen\",\"productPrice\": \"12\",\"quantity\": \"2\",\"imageUrl\": \"http://pen.jpeg\"}";
+        final String json = "{\"cartUid\":\"" + anonCart.getCartUid().toString() + "\",\"productId\": \"2\",\"productName\": \"pen\",\"productPrice\": \"12\",\"quantity\": \"2\",\"imageUrl\": \"http://pen.jpeg\"}";
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
 
         // When
@@ -107,13 +113,13 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldUpdateQuantityIfItemIsAlreadyInTheCart(){
+    public void shouldUpdateQuantityIfItemIsAlreadyInTheCart() {
         // Given
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
         anonCart.addAnonCartItem(firstCartItem);
         anonCartRepository.save(anonCart);
-        final String json = "{\"cartUid\":\"" +anonCart.getCartUid().toString() +"\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"11\",\"imageUrl\": \"http://book.jpeg\"}";
+        final String json = "{\"cartUid\":\"" + anonCart.getCartUid().toString() + "\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"11\",\"imageUrl\": \"http://book.jpeg\"}";
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
 
         // When
@@ -128,20 +134,24 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldReturn404IfCartIsNotFound(){
+    public void shouldCreateNewCartIfCartUidInRequestIsNotFound() {
         // Given
-        final String json = "{\"cartUid\":\"" +randomUUID().toString() +"\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"10\",\"imageUrl\": \"http://book.jpeg\"}";
+        final String json = "{\"cartUid\":\"" + randomUUID().toString() + "\",\"productId\": \"1\",\"productName\": \"book\",\"productPrice\": \"1\",\"quantity\": \"10\",\"imageUrl\": \"http://book.jpeg\"}";
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
 
         // When
         final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL, POST, payload, CartSummaryData.class);
 
         // Then
-        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getCartUid(), instanceOf(UUID.class));
+        assertThat(response.getBody().getTotalQuantity(), is(10));
+        assertThat(response.getBody().getTotalPrice(), is(10d));
+        assertThat(response.getBody().getCartItems().size(), is(1));
     }
 
     @Test
-    public void shouldGetCartSummaryByCartUid(){
+    public void shouldGetCartSummaryByCartUid() {
         // Given
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1, 10, "http://book.jpeg");
@@ -172,17 +182,17 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldReturn404IfNoCartSummaryIsFoundByCartUid(){
+    public void shouldReturn404IfNoCartSummaryIsFoundByCartUid() {
         // Given & When
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
         final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/" + randomUUID().toString(), GET, httpEntity, CartSummaryData.class);
-        
+
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test
-    public void shouldGetCartSummaryByCustomerId(){
+    public void shouldGetCartSummaryByCustomerId() {
         // Given
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(2, "pen", 1, 11, "http://pen.jpeg");
@@ -192,7 +202,7 @@ public class AnonControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId=12345" , GET, httpEntity, CartSummaryData.class);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId=12345", GET, httpEntity, CartSummaryData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -213,19 +223,19 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldReturn404IfNoCartSummaryIsFoundByCustomerId(){
+    public void shouldReturn404IfNoCartSummaryIsFoundByCustomerId() {
         // Given & When
         final Random random = new Random();
         final long customerId = random.nextLong();
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId=" + customerId , GET, httpEntity, CartSummaryData.class);
+        final ResponseEntity<CartSummaryData> response = rest.exchange(BASE_URL + "/summary/?customerId=" + customerId, GET, httpEntity, CartSummaryData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test
-    public void shouldUpdateCustomerIdAndDeleteOtherCartsForTheSameCustomer(){
+    public void shouldUpdateCustomerIdAndDeleteOtherCartsForTheSameCustomer() {
         // Given
         final Long customerId = 102534l;
 
@@ -246,14 +256,15 @@ public class AnonControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        final AnonCart actualAnonCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
-        assertThat(actualAnonCart.getCustomerId(), is(customerId));
-        final AnonCart actualOtherCart = anonCartRepository.findByCartUid(otherCart.getCartUid());
-        assertThat(actualOtherCart, is(nullValue()));
+        final Optional<AnonCart> actualAnonCart = anonCartRepository.findByCartUid(anonCart.getCartUid());
+        assertThat(actualAnonCart.isPresent(), is(true));
+        assertThat(actualAnonCart.get().getCustomerId(), is(customerId));
+        final Optional<AnonCart> actualOtherCart = anonCartRepository.findByCartUid(otherCart.getCartUid());
+        assertThat(actualOtherCart.isPresent(), is(false));
     }
 
     @Test
-    public void shouldReturn404IfCustomerIsNotFound(){
+    public void shouldReturn404IfCustomerIsNotFound() {
         // Given & When
         final Long customerId = 102534l;
         final HttpEntity<Long> payload = new HttpEntity<Long>(customerId, headers);
@@ -264,7 +275,7 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldDeleteCartItemByCartUidAndProductId(){
+    public void shouldDeleteCartItemByCartUidAndProductId() {
         // Given
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
@@ -299,13 +310,35 @@ public class AnonControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldReturnNoContentWhatCartUidIsNotFound(){
+    public void shouldReturnNoContentWhenCartUidIsNotFound() {
         // When
         final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
         final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + randomUUID().toString() + "/cartItems/12345", HttpMethod.DELETE, httpEntity, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NO_CONTENT));
+    }
+
+    @Test
+    public void shouldUpdateCartItemQuantity() {
+        // Given
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        anonCartRepository.save(anonCart);
+        rest.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+
+        // When
+        final String json = "{\"quantity\": \"20\"}";
+        final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
+        final ResponseEntity<HttpStatus> response = rest.exchange(BASE_URL + "/" + anonCart.getCartUid().toString() + "/items?productId=1", HttpMethod.PATCH, payload, HttpStatus.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        final AnonCart actualAnonCart = anonCartService.findAnonCartByUidForTest(anonCart.getCartUid());
+        assertThat(actualAnonCart.getTotalPrice(), is(26d));
+        assertThat(actualAnonCart.getTotalQuantity(), is(20));
+        assertThat(actualAnonCart.getAnonCartItems().size(), is(1));
     }
 
 }

@@ -1,16 +1,17 @@
 package order.service;
 
 import order.data.AnonCartItemData;
+import order.data.AnonCartItemDataBuilder;
 import order.domain.AnonCart;
 import order.domain.AnonCartItem;
 import order.repository.AnonCartRepository;
 import org.junit.Test;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.refEq;
 import static org.mockito.Mockito.mock;
@@ -26,9 +27,10 @@ public class AnonCartServiceImplTest {
     public void shouldSaveNewAnonCartWhenAddTheFirstCartItem(){
         // Given
         final AnonCartItemData anonCartItemData = new AnonCartItemData(null, 1, "book", 1.3, 10, 0, "url");
+        when(anonCartRepository.findByCartUid(anonCartItemData.getCartUid())).thenReturn(Optional.empty());
 
         // When
-        anonCartService.addFirstItem(anonCartItemData);
+        anonCartService.addItem(anonCartItemData);
 
         // Then
         final AnonCart anonCart = new AnonCart();
@@ -44,11 +46,11 @@ public class AnonCartServiceImplTest {
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
-        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
         final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 2, "pen", 0.5, 20, 0, "url2");
 
         // When
-        final AnonCart actualCart = anonCartService.addAnotherItem(anotherCartItemData);
+        final AnonCart actualCart = anonCartService.addItem(anotherCartItemData);
 
         // Then
         assertThat(actualCart.getTotalPrice(), is(23d));
@@ -62,11 +64,11 @@ public class AnonCartServiceImplTest {
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
-        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
         final AnonCartItemData anotherCartItemData = new AnonCartItemData(anonCart.getCartUid(), 1, "book", 1.3, 11, 0, "url");
 
         // When
-        final AnonCart actualCart = anonCartService.addAnotherItem(anotherCartItemData);
+        final AnonCart actualCart = anonCartService.addItem(anotherCartItemData);
 
         // Then
         assertThat(actualCart.getTotalPrice(), is(27.3d));
@@ -105,14 +107,31 @@ public class AnonCartServiceImplTest {
         final AnonCart anonCart = new AnonCart();
         final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
         anonCart.addAnonCartItem(firstCartItem);
-        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
 
         // When
-        final AnonCart actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
+        final Optional<AnonCart> actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
 
         // Then
-        anonCart.setCustomerId(customerId);
-        assertThat(actualCart, is(anonCart));
+        assertThat(actualCart.isPresent(), is(true));
+        assertThat(actualCart.get().getCustomerId(), is(10293l));
+    }
+
+    @Test
+    public void shouldUpdateProductQuantity(){
+        // Given
+        final AnonCartItemData anonCartItemData = AnonCartItemDataBuilder.newBuilder().setQuantity(20).build();
+        final AnonCart anonCart = new AnonCart();
+        final AnonCartItem firstCartItem = new AnonCartItem(1, "book", 1.3, 10, "url");
+        anonCart.addAnonCartItem(firstCartItem);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
+
+        // When
+        final Optional<AnonCart> actualCart = anonCartService.updateCartItemWithProductId(anonCart.getCartUid(), 1l, anonCartItemData);
+
+        // Then
+        assertThat(actualCart.isPresent(), is(true));
+        assertThat(actualCart.get().getTotalQuantity(), is(20));
     }
 
     @Test
@@ -120,13 +139,13 @@ public class AnonCartServiceImplTest {
         // Given
         final long customerId = 10293l;
         final AnonCart anonCart = new AnonCart();
-        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(null);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.empty());
 
         // When
-        AnonCart actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
+        Optional<AnonCart> actualCart = anonCartService.updateCartWithCustomerId(anonCart.getCartUid(), customerId);
 
         // Then
-        assertThat(actualCart, is(nullValue()));
+        assertThat(actualCart.isPresent(), is(false));
     }
 
     @Test
@@ -137,7 +156,7 @@ public class AnonCartServiceImplTest {
         final AnonCartItem secondCartItem = new AnonCartItem(2, "pen", 1.2, 20, "url");
         anonCart.addAnonCartItem(firstCartItem);
         anonCart.addAnonCartItem(secondCartItem);
-        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(anonCart);
+        when(anonCartRepository.findByCartUid(anonCart.getCartUid())).thenReturn(Optional.of(anonCart));
 
         // When
         anonCartService.deleteCartItemByProductId(anonCart.getCartUid(), 2l);
