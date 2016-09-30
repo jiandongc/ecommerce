@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta content="width=device-width, initial-scale=1.0" name="viewport">
-		<link href="dist/cawaii.css" rel="stylesheet" type="text/css"/>
+		<link href="app.css" rel="stylesheet" type="text/css"/>
 		<meta charset="UTF-8">
 		<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 		<title>Product Page</title>
@@ -37,7 +37,7 @@
 							<li class="dropdown">
 								<a href="#/cart" class="dropdown-toggle" data-toggle="dropdown">
 									<span class="glyphicon glyphicon-shopping-cart"></span>
-									<span ng-show="cartUid"> {{totalQuantity}} items - £{{totalPrice}} <span class="caret"></span></span>
+									<span ng-show="cartUid"> {{totalQuantity}} 件商品 £{{totalPrice}} <span class="caret"></span></span>
 								</a>
 								<ul class="dropdown-menu scrollable-menu">
 									<div ng-repeat="cartItem in cartItems | orderBy:'productId'">
@@ -60,7 +60,7 @@
 										</li>
 										<li class='divider'></li>
 									</div>										
-                					<li><a href='#/cart' class='btn btn-view'>查看菜篮子</a></li>
+                					<li><a href='#/cart' class='btn btn-view'>我要結帳</a></li>
               					</ul>
 							</li>
 							<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>

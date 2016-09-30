@@ -14,8 +14,8 @@ describe('shopping carts', function() {
 
     it('should be able to add items in shopping cart as anonymous user', function() {
         element.all(by.repeater('product in products')).get(0).$$('button').click();
-        expect(element(by.css('.nav.navbar-nav.navbar-right')).$$('li').get(2).getText()).toContain('1 items - £10');
+        expect(element(by.css('.nav.navbar-nav.navbar-right')).$$('li').get(2).getText()).toContain('1 件商品 £10');
         element.all(by.repeater('product in products')).get(1).$$('button').click();
-        expect(element(by.css('.nav.navbar-nav.navbar-right')).$$('li').get(2).getText()).toContain('2 items - £30');
+        expect(element(by.css('.nav.navbar-nav.navbar-right')).$$('li').get(2).getText()).toContain('2 件商品 £30');
     });
 });

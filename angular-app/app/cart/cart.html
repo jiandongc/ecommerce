@@ -9,7 +9,7 @@
 		<thead class="thead-default">
 		<tr>
 			<th class="padding-left" width = "60%">商品</th>
-			<th class="padding-left" width = "20%">选择</th>
+			<th class="padding-left" width = "20%">数量</th>
 			<th class="padding-left" width = "20%">价格</th>
 		</tr>
 		</thread>
@@ -27,21 +27,30 @@
      			</table>
      		</td>
      		<td>
-     			<table>
-     				<tr>
-     					<td rowspan="2" class="space"></td>
-     					<td>数量: {{cartItem.quantity}}</td>
-     				</tr>
-     				<tr>
-     					<td><a href="#">改变数量</a></td>
-     				</tr>
-     			</table>
+                    <table>
+                         <tr>
+                              <td width="30%" rowspan="2" height="130px"></td>
+                              <td width="70%">
+                                   <select class="form-control">
+                                        <option>1</option>
+                                        <option>2</option>
+                                        <option>3</option>
+                                        <option>4</option>
+                                        <option>5</option>
+                                   </select>
+                              </td>
+                         </tr>
+                         <tr>
+                              <td><div>&nbsp;</div></td>
+                         </tr>
+                    </table>
+                    
      		</td>
      		<td>
-     			<table>
+     			<table height="100%">
      				<tr>
-     					<td rowspan="2" class="space"></td>
-     					<td>单价: £{{cartItem.productPrice}}</td>
+                              <td width="30%" rowspan="2" height="130px"></td>
+     					<td width="70%">单价: £{{cartItem.productPrice}}</td>
      				</tr>
      				<tr>
      					<td>小计: £{{cartItem.subTotal}}</td>
