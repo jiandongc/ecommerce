@@ -19,7 +19,7 @@ describe('User registration / log in / log off', function() {
 
         // Then
         var list = element(by.css('.nav.navbar-nav.navbar-right')).$$('li');
-        expect(list.first().getText()).toEqual('欢迎光临, mata!');
+        expect(list.first().getText()).toEqual('歡迎光臨, mata!');
         expect(list.last().isDisplayed()).toBe(true);
 
         var customerName = element(by.id("customerName")).evaluate('customer.name');
@@ -79,7 +79,7 @@ describe('User registration / log in / log off', function() {
 
         // Then
         var list = element(by.css('.nav.navbar-nav.navbar-right')).$$('li');
-        expect(list.first().getText()).toEqual('欢迎光临, mata!');
+        expect(list.first().getText()).toEqual('歡迎光臨, mata!');
         expect(list.last().isDisplayed()).toBe(true);
 
         var customerName = element(by.id("customerName")).evaluate('customer.name');

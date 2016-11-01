@@ -1,14 +1,13 @@
-var allProducts = angular.module('allProduct', ['ngRoute', 'ngCookies']);
+var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-allProducts.service('allProductService', function($http, environment){
+home.service('productService', function($http, environment){
    this.getAllProducts = function() {
      return $http.get(environment.productUrl + '/products');
    };
 });
 
-allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, allProductService, anonCartFactory) {
-
-	allProductService.getAllProducts().success(function(response) {
+home.controller('homeCtrl', function($scope, $cookies, $rootScope, productService, anonCartFactory) {
+	productService.getAllProducts().success(function(response) {
 		$scope.products = response;
 		angular.forEach($scope.products,function(value,index){
 			value.quantity = 1;
@@ -32,11 +31,11 @@ allProducts.controller('allProductCtrl', function($scope, $cookies, $rootScope, 
 	};
 });
 
-allProducts.config(['$routeProvider',
+home.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/products', {
-        templateUrl: 'products/products.html',
-        controller: 'allProductCtrl'
+      when('/home', {
+        templateUrl: 'home/home.html',
+        controller: 'homeCtrl'
       });
 }]);

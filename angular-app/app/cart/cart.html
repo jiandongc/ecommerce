@@ -1,16 +1,16 @@
 <div class="container cart">
 	<div class="row">
-		<div class="title col-md-10">我的菜篮子</div>
+		<div class="title col-md-10">我的購物車</div>
 		<div class="title col-md-2">
 			<button type="button" class="btn btn-checkout" ng-click="checkout()">结帐</button>
 		</div>
 	</div>
-	<table class="table table-bordered" width = "100%">
-		<thead class="thead-default">
+	<table class="table table-bordered" width="100%">
+		<thead>
 		<tr>
-			<th class="padding-left" width = "60%">商品</th>
-			<th class="padding-left" width = "20%">数量</th>
-			<th class="padding-left" width = "20%">价格</th>
+			<th width = "60%">商品</th>
+			<th width = "20%">数量</th>
+			<th width = "20%">价格</th>
 		</tr>
 		</thread>
 		<tbody>
@@ -27,40 +27,20 @@
      			</table>
      		</td>
      		<td>
-                    <table>
-                         <tr>
-                              <td width="30%" rowspan="2" height="130px"></td>
-                              <td width="70%">
-                                   <select class="form-control">
-                                        <option>1</option>
-                                        <option>2</option>
-                                        <option>3</option>
-                                        <option>4</option>
-                                        <option>5</option>
-                                   </select>
-                              </td>
-                         </tr>
-                         <tr>
-                              <td><div>&nbsp;</div></td>
-                         </tr>
-                    </table>
-                    
+                    <div class="p-t-10 row">
+                         <div class="col-xs-6">
+                              <select class="form-control" ng-model="cartItem.quantity" ng-options="v for v in [1,2,3,4,5]" ng-change="updateItem(cartItem)"></select>
+                         </div>
+                    </div>
      		</td>
      		<td>
-     			<table height="100%">
-     				<tr>
-                              <td width="30%" rowspan="2" height="130px"></td>
-     					<td width="70%">单价: £{{cartItem.productPrice}}</td>
-     				</tr>
-     				<tr>
-     					<td>小计: £{{cartItem.subTotal}}</td>
-     				</tr>
-     			</table>
+                    <div class="p-t-10 p-b-30">单价: £{{cartItem.productPrice}}</div>
+                    <div>小计: £{{cartItem.subTotal}}</div>
      		</td>
 		</tr>
 		<tr>
 			<th colspan="2"></th>
-			<th class="padding-left">商品合计: £{{totalPrice}}</th>
+			<th class="p-l-30">商品合计: £{{totalPrice}}</th>
 		</tr>
 		</tbody>
 	</table>
@@ -104,9 +84,9 @@
      </div>
      <div class="row">
           <div class="col-md-6">
-               <img class="pay" ng-src="/app/img/paypal.jpg" title="Paypal支付">
-               <img class="pay" ng-src="/app/img/alipay.png" title="支付宝支付">
-               <img class="pay" ng-src="/app/img/cash.png" title="到货现金支付">
+               <img class="pay" ng-src="/images/paypal.jpg" title="Paypal支付">
+               <img class="pay" ng-src="/images/alipay.png" title="支付宝支付">
+               <img class="pay" ng-src="/images/cash.png" title="到货现金支付">
           </div>
           <div class="col-md-6">
                <div class="panel panel-default">

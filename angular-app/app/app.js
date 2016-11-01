@@ -1,7 +1,7 @@
 var app = angular.module('store', [
 	'ngRoute',
 	'ngCookies',
-	'allProduct',
+	'home',
 	'productDetail',
 	'customer',
 	'cart',
@@ -14,7 +14,7 @@ app.config(['$routeProvider',
 	function($routeProvider) {
 		$routeProvider.
 		otherwise({
-			redirectTo: '/products'
+			redirectTo: '/home'
 		});
 	}
 ]);
@@ -68,12 +68,25 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 	}
 
 	$scope.removeItem = function(cartItem){
+		alert('removeItem');
 		var configs = {headers: {'Content-Type' : 'application/json'}};
 		$http.delete(environment.orderUrl + '/anoncarts/' + cartItem.cartUid + '/cartItems/' + cartItem.productId, configs).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);
 			if($location.path().endsWith('/cart')){$route.reload();}
 		}, function(error){
-			alert('Delete fail');
+			alert('Delete failed');
+		});
+	}
+
+	$scope.updateItem = function(cartItem){
+		var configs = {headers: {'Content-Type' : 'application/json'}};
+		$http.patch(environment.orderUrl + '/anoncarts/' + cartItem.cartUid + '/items?productId=' + cartItem.productId, cartItem, configs).then(function(response){
+			$rootScope.$broadcast('updateCartSummary', false);
+			if($location.path().endsWith('/cart')){$route.reload();}
+		}, function(error){
+			alert(error.status);
+			alert(error.data);
+			alert('Update failed');
 		});
 	}
 
@@ -84,6 +97,15 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 		} else {
 			$scope.paddingTop='20px';
 			return false;	
+		}
+	}
+
+	$scope.isHomePage = function(){
+		if($location.path().search(/^\/home/) == -1){
+			return false;
+		} else {
+			$scope.paddingTop='5px';
+			return true;
 		}
 	}
 });

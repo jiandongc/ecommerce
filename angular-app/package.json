@@ -33,7 +33,7 @@
     "lint": "jshint app/*/*.js",
     "build:css": "cssmin app/app.css > app/dist/cawaii.css",
     "build:js": "uglifyjs app/*/*.js app/*.js> app/dist/cawaii.js",
-    "build": "npm run configUat && npm run build:css && npm run build:js",
+    "build": "npm run configDev && npm run build:css && npm run build:js",
     "configDev": "gulp configDev",
     "configUat": "gulp configUat"
   }

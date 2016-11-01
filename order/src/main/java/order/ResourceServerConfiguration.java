@@ -51,6 +51,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
                 .antMatchers(HttpMethod.GET, "/anoncarts/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/anoncarts").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/anoncarts/**").permitAll()
+                .antMatchers(HttpMethod.PATCH, "/anoncarts/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/health").permitAll()
                 .anyRequest().authenticated();
     }
