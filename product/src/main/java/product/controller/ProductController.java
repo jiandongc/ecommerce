@@ -11,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import product.domain.Product;
-import product.service.ProductSerivce;
+import product.service.ProductService;
 
 @RestController
 @RequestMapping("/products")
 public class ProductController {
 	
-	private ProductSerivce productService;
+	private ProductService productService;
 	
 	@Autowired
-	public ProductController(ProductSerivce productService){
+	public ProductController(ProductService productService){
 		this.productService = productService;
 	}
 

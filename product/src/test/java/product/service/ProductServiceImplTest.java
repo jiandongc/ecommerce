@@ -10,7 +10,7 @@ import product.repository.ProductRepository;
 
 public class ProductServiceImplTest {
 	private ProductRepository productRepository = mock(ProductRepository.class);
-	private ProductSerivce productService = new ProductServiceImpl(productRepository);
+	private ProductService productService = new ProductServiceImpl(productRepository);
 
 	@Test
 	public void shouldFindProductById(){

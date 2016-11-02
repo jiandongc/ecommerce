@@ -10,7 +10,7 @@ import product.domain.Product;
 import product.repository.ProductRepository;
 
 @Service
-public class ProductServiceImpl implements ProductSerivce{
+public class ProductServiceImpl implements ProductService {
 	
 	public ProductRepository productRepository;
 	

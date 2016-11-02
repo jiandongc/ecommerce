@@ -4,7 +4,7 @@ import java.util.List;
 
 import product.domain.Product;
 
-public interface ProductSerivce {
+public interface ProductService {
 	public Product findById(Long Id);	
 	public List<Product> findAll();
 }
