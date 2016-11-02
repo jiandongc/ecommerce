@@ -50,10 +50,11 @@ html, body {
 
 .product-header {
     font-size: 1.2em;
-    background: #f6f6f6;
+    background: #d9d9d9;
     color: #666;
     font-weight: bold;
     border-radius: 4px;
+    border-left: 15px #7ba626 solid;
 }
  
 .product-header a {
