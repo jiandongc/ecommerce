@@ -3,24 +3,35 @@ package product.repository;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
-import static product.domain.Category.PUFFED_SNACKS;
 
 import java.util.List;
 
+import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.Test;
 
+import product.domain.Category;
 import product.domain.Product;
 
 public class ProductRepositoryTest extends AbstractRepositoryTest{
 
 	@Autowired
 	private ProductRepository productRepository;
-	
+
+	@Autowired
+	private CategoryRepository categoryRepository;
+
+	@Before
+	public void setUp(){
+		final Category category = new Category(1, "food", "delicious", "img/0005.jpg", 0);
+		categoryRepository.save(category);
+	}
+
 	@Test
 	public void shouldFindProductById(){
 		// Given
-		final Product product = new Product("Chester", Double.valueOf(10), "delicious", PUFFED_SNACKS, "img/0001.jpg");
+		final Category category = categoryRepository.findOne(1l);
+		final Product product = new Product("Chester", 10d, "delicious", category, "img/0001.jpg");
 		productRepository.save(product);
 		
 		// When
@@ -33,9 +44,10 @@ public class ProductRepositoryTest extends AbstractRepositoryTest{
 	@Test
 	public void shouldFindAllProducts(){
 		// Given
-		final Product productOne = new Product("Chester1", Double.valueOf(10), "delicious", PUFFED_SNACKS, "img/0001.jpg");
-		final Product productTwo = new Product("Chester2", Double.valueOf(10), "delicious", PUFFED_SNACKS, "img/0002.jpg");
-		final Product productThree = new Product("Chester3", Double.valueOf(10), "delicious", PUFFED_SNACKS, "img/0003.jpg");
+		final Category category = categoryRepository.findOne(1l);
+		final Product productOne = new Product("Chester1", 10d, "delicious", category, "img/0001.jpg");
+		final Product productTwo = new Product("Chester2", 10d, "delicious", category, "img/0002.jpg");
+		final Product productThree = new Product("Chester3", 10d, "delicious", category, "img/0003.jpg");
 		productRepository.save(productOne);
 		productRepository.save(productTwo);
 		productRepository.save(productThree);
@@ -43,6 +55,24 @@ public class ProductRepositoryTest extends AbstractRepositoryTest{
 		// When
 		final List<Product> products = productRepository.findAll();
 		
+		// Then
+		assertThat(products, hasItems(productOne, productTwo, productThree));
+	}
+
+	@Test
+	public void shouldFindProductsByCategoryId(){
+		// Given
+		final Category category = categoryRepository.findOne(1l);
+		final Product productOne = new Product("Chester1", 10d, "delicious", category, "img/0001.jpg");
+		final Product productTwo = new Product("Chester2", 10d, "delicious", category, "img/0002.jpg");
+		final Product productThree = new Product("Chester3", 10d, "delicious", category, "img/0003.jpg");
+		productRepository.save(productOne);
+		productRepository.save(productTwo);
+		productRepository.save(productThree);
+
+		// When
+		final List<Product> products = productRepository.findByCategoryId(1l);
+
 		// Then
 		assertThat(products, hasItems(productOne, productTwo, productThree));
 	}

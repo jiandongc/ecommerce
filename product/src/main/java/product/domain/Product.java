@@ -1,14 +1,8 @@
 package product.domain;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.SequenceGenerator;
-import javax.persistence.GeneratedValue;
+import javax.persistence.*;
+
+import static javax.persistence.FetchType.EAGER;
 
 @Entity
 @Table(name = "product")
@@ -24,8 +18,8 @@ public class Product {
 	private Double unitPrice;
 	@Column(name = "description")
 	private String description;
-	@Enumerated(EnumType.STRING)
-	@Column(name = "category")
+	@ManyToOne(fetch = EAGER)
+	@JoinColumn(name = "categoryid")
 	private Category category;
 	@Column(name = "imageurl")
 	private String imageUrl;
@@ -99,56 +93,29 @@ public class Product {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result
-				+ ((category == null) ? 0 : category.hashCode());
-		result = prime * result
-				+ ((description == null) ? 0 : description.hashCode());
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result
-				+ ((imageUrl == null) ? 0 : imageUrl.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result
-				+ ((unitPrice == null) ? 0 : unitPrice.hashCode());
-		return result;
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+
+		Product product = (Product) o;
+
+		if (id != product.id) return false;
+		if (name != null ? !name.equals(product.name) : product.name != null) return false;
+		if (unitPrice != null ? !unitPrice.equals(product.unitPrice) : product.unitPrice != null) return false;
+		if (description != null ? !description.equals(product.description) : product.description != null) return false;
+		if (category != null ? !category.equals(product.category) : product.category != null) return false;
+		return !(imageUrl != null ? !imageUrl.equals(product.imageUrl) : product.imageUrl != null);
+
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Product other = (Product) obj;
-		if (category != other.category)
-			return false;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (id != other.id)
-			return false;
-		if (imageUrl == null) {
-			if (other.imageUrl != null)
-				return false;
-		} else if (!imageUrl.equals(other.imageUrl))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (unitPrice == null) {
-			if (other.unitPrice != null)
-				return false;
-		} else if (!unitPrice.equals(other.unitPrice))
-			return false;
-		return true;
+	public int hashCode() {
+		int result = (int) (id ^ (id >>> 32));
+		result = 31 * result + (name != null ? name.hashCode() : 0);
+		result = 31 * result + (unitPrice != null ? unitPrice.hashCode() : 0);
+		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (category != null ? category.hashCode() : 0);
+		result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+		return result;
 	}
-
 }

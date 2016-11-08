@@ -5,6 +5,7 @@ import java.util.List;
 import product.domain.Product;
 
 public interface ProductService {
-	public Product findById(Long Id);	
-	public List<Product> findAll();
+	Product findById(long Id);
+	List<Product> findAll();
+	List<Product> findByCategoryId(long categoryId);
 }

@@ -2,13 +2,8 @@ package product.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import product.domain.Product;
 import product.service.ProductService;
@@ -25,14 +20,16 @@ public class ProductController {
 	}
 
 	@RequestMapping(method=RequestMethod.GET)
-	public List<Product> findAll(HttpServletResponse response) {
+	public List<Product> findProducts(@RequestParam(value = "categoryId", required = false) Long categoryId) {
+		if(categoryId != null){
+			return productService.findByCategoryId(categoryId);
+		}
 		return productService.findAll();
 	}
 	
     @RequestMapping(value = "/{id}", method=RequestMethod.GET)
     public Product findById(@PathVariable long id) {
-    	Product product = productService.findById(id);
-        return product;
+    	return productService.findById(id);
     }
     
 }
