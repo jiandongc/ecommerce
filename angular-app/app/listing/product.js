@@ -10,7 +10,7 @@ productDetail.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/products/:id', {
-        templateUrl: 'product/product.html',
+        templateUrl: 'listing/product.html',
         controller: 'productDetailCtrl'
       });
   }]);

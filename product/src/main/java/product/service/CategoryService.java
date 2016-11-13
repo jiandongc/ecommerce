@@ -13,4 +13,6 @@ public interface CategoryService {
     Optional<Category> findById(Long id);
 
     List<Category> findSubCategoriesByParentId(Long parentId);
+
+    List<Category> findCategoryTree(Long id);
 }

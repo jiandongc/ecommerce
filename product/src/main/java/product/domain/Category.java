@@ -69,7 +69,7 @@ public class Category {
 		this.parentId = parentId;
 	}
 
-	public boolean isRootCategory () {
+	public boolean isTopCategory () {
 		return parentId == 0l;
 	}
 

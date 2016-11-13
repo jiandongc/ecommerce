@@ -3,6 +3,7 @@ var app = angular.module('store', [
 	'ngCookies',
 	'home',
 	'productDetail',
+	'category',
 	'customer',
 	'cart',
 	'checkout',
@@ -91,21 +92,26 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 	}
 
 	$scope.isNotCheckOutPage = function(){
-		if($location.path().search(/^\/checkout/) == -1){
-			$scope.paddingTop='70px';
-			return true;	
-		} else {
+		if($location.path().indexOf('checkout') > -1){
 			$scope.paddingTop='20px';
 			return false;	
+		} else if ($location.path().indexOf('home') > -1){
+			$scope.paddingTop='5px';
+			return true
+		} else if ($location.path().indexOf('cart') > -1){
+			$scope.paddingTop='70px';
+			return true
+		} else {
+			$scope.paddingTop='60px';
+			return true;	
 		}
 	}
 
 	$scope.isHomePage = function(){
-		if($location.path().search(/^\/home/) == -1){
-			return false;
-		} else {
-			$scope.paddingTop='5px';
+		if($location.path().indexOf('home') > -1){
 			return true;
+		} else {
+			return false;
 		}
 	}
 });

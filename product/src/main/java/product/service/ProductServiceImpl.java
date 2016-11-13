@@ -1,8 +1,6 @@
 package product.service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,5 +56,16 @@ public class ProductServiceImpl implements ProductService {
                 .distinct()
                 .collect(Collectors.toList());
 
+    }
+
+    @Override
+    public Map<Category, Integer> findProductTotalInSubCategories(Long categoryId) {
+        final List<Category> subCategories = categoryService.findSubCategoriesByParentId(categoryId);
+        final Map<Category, Integer> categories = new HashMap<>();
+        for(Category category : subCategories){
+            final List<Product> products = this.findByCategoryId(category.getId());
+            categories.put(category, products.size());
+        }
+        return categories;
     }
 }

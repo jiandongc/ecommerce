@@ -10,13 +10,16 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 
+import product.domain.Brand;
 import product.domain.Category;
 import product.domain.Product;
 import product.repository.ProductRepository;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ProductServiceImplTest {
@@ -50,6 +53,7 @@ public class ProductServiceImplTest {
 	@Test
 	public void shouldFindProductsByCategoryIdScenarioOne(){
 		// Given
+		final Brand brand = new Brand(1, "Walkers");
 		final Category category = new Category(1, "food", "delicious", "img/0005.jpg", 0);
 		final Category subCategoryOne = new Category(2, "subCategoryOne", "delicious", "img/0005.jpg", 1);
 		final Category subCategoryTwo = new Category(3, "subCategoryTwo", "delicious", "img/0005.jpg", 1);
@@ -60,9 +64,9 @@ public class ProductServiceImplTest {
 		when(categoryService.findSubCategoriesByParentId(2l)).thenReturn(emptyList());
 		when(categoryService.findSubCategoriesByParentId(3l)).thenReturn(emptyList());
 
-		final Product productOne = new Product("Chester1", 10d, "delicious", category, "img/0001.jpg");
-		final Product productTwo = new Product("Chester2", 10d, "delicious", category, "img/0002.jpg");
-		final Product productThree = new Product("Chester3", 10d, "delicious", category, "img/0003.jpg");
+		final Product productOne = new Product("Chester1", 10d, "delicious", category, brand, "img/0001.jpg");
+		final Product productTwo = new Product("Chester2", 10d, "delicious", category, brand, "img/0002.jpg");
+		final Product productThree = new Product("Chester3", 10d, "delicious", category, brand, "img/0003.jpg");
 		when(productRepository.findByCategoryId(1l)).thenReturn(emptyList());
 		when(productRepository.findByCategoryId(2l)).thenReturn(asList(productOne));
 		when(productRepository.findByCategoryId(3l)).thenReturn(asList(productTwo, productThree));
@@ -85,6 +89,7 @@ public class ProductServiceImplTest {
 	@Test
 	public void shouldFindProductsByCategoryIdScenarioTwo(){
 		// Given
+		final Brand brand = new Brand(1, "Walkers");
 		final Category category = new Category(1, "food", "delicious", "img/0005.jpg", 0);
 		final Category subCategoryOne = new Category(2, "subCategoryOne", "delicious", "img/0005.jpg", 1);
 		final Category subCategoryTwo = new Category(3, "subCategoryTwo", "delicious", "img/0005.jpg", 1);
@@ -101,13 +106,13 @@ public class ProductServiceImplTest {
 		when(categoryService.findSubCategoriesByParentId(4l)).thenReturn(emptyList());
 		when(categoryService.findSubCategoriesByParentId(5l)).thenReturn(emptyList());
 
-		final Product productOne = new Product("Chester1", 10d, "delicious", category, "img/0001.jpg");
-		final Product productTwo = new Product("Chester2", 10d, "delicious", category, "img/0002.jpg");
-		final Product productThree = new Product("Chester3", 10d, "delicious", category, "img/0003.jpg");
-		final Product productFour = new Product("Chester4", 10d, "delicious", category, "img/0004.jpg");
-		final Product productFive = new Product("Chester5", 10d, "delicious", category, "img/0005.jpg");
-		final Product productSix = new Product("Chester6", 10d, "delicious", category, "img/0006.jpg");
-		final Product productSeven = new Product("Chester7", 10d, "delicious", category, "img/0007.jpg");
+		final Product productOne = new Product("Chester1", 10d, "delicious", category, brand, "img/0001.jpg");
+		final Product productTwo = new Product("Chester2", 10d, "delicious", category, brand, "img/0002.jpg");
+		final Product productThree = new Product("Chester3", 10d, "delicious", category, brand, "img/0003.jpg");
+		final Product productFour = new Product("Chester4", 10d, "delicious", category, brand, "img/0004.jpg");
+		final Product productFive = new Product("Chester5", 10d, "delicious", category, brand, "img/0005.jpg");
+		final Product productSix = new Product("Chester6", 10d, "delicious", category, brand, "img/0006.jpg");
+		final Product productSeven = new Product("Chester7", 10d, "delicious", category, brand, "img/0007.jpg");
 		when(productRepository.findByCategoryId(1l)).thenReturn(emptyList());
 		when(productRepository.findByCategoryId(2l)).thenReturn(emptyList());
 		when(productRepository.findByCategoryId(3l)).thenReturn(asList(productOne, productTwo));
@@ -148,5 +153,35 @@ public class ProductServiceImplTest {
 		// Then & When
 		productService.findByCategoryId(3l);
 	}
+
+	@Test
+	public void shouldReturnProductTotalInSubCategories(){
+		// Given
+		final Brand brandOne = new Brand(1, "Walkers");
+
+		final Category categoryOne = new Category(2, "food", "delicious", "img/0005.jpg", 0);
+		final Category categoryTwo = new Category(3, "cloth", "beautiful", "img/0006.jpg", 0);
+		when(categoryService.findSubCategoriesByParentId(1l)).thenReturn(asList(categoryOne, categoryTwo));
+		when(categoryService.findById(2l)).thenReturn(Optional.of(categoryOne));
+		when(categoryService.findById(3l)).thenReturn(Optional.of(categoryTwo));
+		when(categoryService.findSubCategoriesByParentId(2l)).thenReturn(emptyList());
+		when(categoryService.findSubCategoriesByParentId(3l)).thenReturn(emptyList());
+
+		final Product productOne = new Product("Chester1", 10d, "delicious", categoryOne, brandOne, "img/0001.jpg");
+		final Product productTwo = new Product("Chester2", 10d, "delicious", categoryOne, brandOne, "img/0002.jpg");
+		final Product productThree = new Product("Chester3", 10d, "delicious", categoryOne, brandOne, "img/0003.jpg");
+		final Product productFour = new Product("Chester4", 10d, "delicious", categoryTwo, brandOne, "img/0004.jpg");
+		final Product productFive = new Product("Chester5", 10d, "delicious", categoryTwo, brandOne, "img/0005.jpg");
+		when(productRepository.findByCategoryId(2l)).thenReturn(asList(productOne, productTwo, productThree));
+		when(productRepository.findByCategoryId(3l)).thenReturn(asList(productFour, productFive));
+
+		// When
+		final Map<Category, Integer> actual = productService.findProductTotalInSubCategories(1l);
+
+		// Then
+		assertThat(actual.get(categoryOne), Matchers.is(3));
+		assertThat(actual.get(categoryTwo), Matchers.is(2));
+	}
+
 
 }

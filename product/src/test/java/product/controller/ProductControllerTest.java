@@ -14,13 +14,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import product.domain.Brand;
 import product.domain.Category;
 import product.domain.Product;
+import product.repository.BrandRepository;
 import product.repository.CategoryRepository;
 import product.repository.ProductRepository;
 
 
-public class ProductControllerTest extends AbstractControllerTest{
+public class ProductControllerTest extends AbstractControllerTest {
 
 	@Autowired
 	private ProductRepository productRepository;
@@ -28,26 +30,33 @@ public class ProductControllerTest extends AbstractControllerTest{
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	@Autowired
+	private BrandRepository brandRepository;
+
 	private final String BASE_URL = "http://localhost:8083/products/";
-	private RestTemplate rest = new TestRestTemplate();
+	private final RestTemplate rest = new TestRestTemplate();
 
 	@Before
 	public void setUp(){
 		final Category category = new Category(1, "food", "delicious", "img/0005.jpg", 0);
 		categoryRepository.save(category);
+		final Brand brand = new Brand(1, "Walkers");
+		brandRepository.save(brand);
 	}
 
 	@After
-	public void before(){
+	public void after(){
 		productRepository.deleteAll();
 		categoryRepository.deleteAll();
+		brandRepository.deleteAll();
 	}
 	
 	@Test
 	public void shouldGetProductById(){
 		// Given
 		final Category category = categoryRepository.findOne(1l);
-		final Product product = new Product("Chester", 10d, "delicious", category, "img/0001.jpg");
+		final Brand brand = brandRepository.findOne(1l);
+		final Product product = new Product("Chester", 10d, "delicious", category, brand, "img/0001.jpg");
 		productRepository.save(product);
 				
 		// When
@@ -62,9 +71,10 @@ public class ProductControllerTest extends AbstractControllerTest{
 	public void shouldFindAllProducts(){
 		// Given
 		final Category category = categoryRepository.findOne(1l);
-		final Product productOne = new Product("Chester1", 10d, "delicious", category, "img/0001.jpg");
-		final Product productTwo = new Product("Chester2", 10d, "delicious", category, "img/0002.jpg");
-		final Product productThree = new Product("Chester3", 10d, "delicious", category, "img/0003.jpg");
+		final Brand brand = brandRepository.findOne(1l);
+		final Product productOne = new Product("Chester1", 10d, "delicious", category, brand, "img/0001.jpg");
+		final Product productTwo = new Product("Chester2", 10d, "delicious", category, brand, "img/0002.jpg");
+		final Product productThree = new Product("Chester3", 10d, "delicious", category, brand, "img/0003.jpg");
 
 		productRepository.save(productOne);
 		productRepository.save(productTwo);
@@ -85,15 +95,16 @@ public class ProductControllerTest extends AbstractControllerTest{
 		categoryRepository.save(categoryTwo);
 		final Category categoryThree = new Category(3, "food", "delicious", "img/0005.jpg", 1);
 		categoryRepository.save(categoryThree);
+		final Brand brand = brandRepository.findOne(1l);
 
 		final Category subCategoryTwo = categoryRepository.findOne(2l);
-		final Product productOne = new Product("Chester1", 10d, "delicious", subCategoryTwo, "img/0001.jpg");
-		final Product productTwo = new Product("Chester2", 10d, "delicious", subCategoryTwo, "img/0002.jpg");
+		final Product productOne = new Product("Chester1", 10d, "delicious", subCategoryTwo, brand, "img/0001.jpg");
+		final Product productTwo = new Product("Chester2", 10d, "delicious", subCategoryTwo, brand, "img/0002.jpg");
 		productRepository.save(productOne);
 		productRepository.save(productTwo);
 
 		final Category subCategoryThree = categoryRepository.findOne(3l);
-		final Product productThree = new Product("Chester3", 10d, "delicious", subCategoryThree, "img/0003.jpg");
+		final Product productThree = new Product("Chester3", 10d, "delicious", subCategoryThree, brand, "img/0003.jpg");
 		productRepository.save(productThree);
 
 		// When & Then

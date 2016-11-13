@@ -21,22 +21,23 @@ public class Product {
 	@ManyToOne(fetch = EAGER)
 	@JoinColumn(name = "categoryid")
 	private Category category;
+	@ManyToOne(fetch = EAGER)
+	@JoinColumn(name = "brandid")
+	private Brand brand;
 	@Column(name = "imageurl")
 	private String imageUrl;
 
 	Product() {
-		this(null, null, null, null, null);
+		this(null, null, null, null, null, null);
 	}
 
-	public Product(String name, 
-			Double unitPrice, 
-			String description,
-			Category category,
-			String imageUrl) {
+	public Product(String name, Double unitPrice, String description,
+			Category category, Brand brand, String imageUrl) {
 		this.name = name;
 		this.unitPrice = unitPrice;
 		this.description = description;
 		this.category = category;
+		this.brand = brand;
 		this.imageUrl = imageUrl;
 	}
 
@@ -84,6 +85,14 @@ public class Product {
 		this.category = category;
 	}
 
+	public Brand getBrand() {
+		return brand;
+	}
+
+	public void setBrand(Brand brand) {
+		this.brand = brand;
+	}
+
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -104,6 +113,7 @@ public class Product {
 		if (unitPrice != null ? !unitPrice.equals(product.unitPrice) : product.unitPrice != null) return false;
 		if (description != null ? !description.equals(product.description) : product.description != null) return false;
 		if (category != null ? !category.equals(product.category) : product.category != null) return false;
+		if (brand != null ? !brand.equals(product.brand) : product.brand != null) return false;
 		return !(imageUrl != null ? !imageUrl.equals(product.imageUrl) : product.imageUrl != null);
 
 	}
@@ -115,6 +125,7 @@ public class Product {
 		result = 31 * result + (unitPrice != null ? unitPrice.hashCode() : 0);
 		result = 31 * result + (description != null ? description.hashCode() : 0);
 		result = 31 * result + (category != null ? category.hashCode() : 0);
+		result = 31 * result + (brand != null ? brand.hashCode() : 0);
 		result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
 		return result;
 	}
