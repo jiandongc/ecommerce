@@ -69,6 +69,7 @@ html, body {
 	background-color: #536F19;
 	color: #E8E8E8;
     margin-right: 5%;
+    font-size: 1.0em;
 }
 
 .productDetail .productName {
@@ -134,22 +135,27 @@ html, body {
     font-size: 1.2em;
 }
 
-.btn-sort-new {
-    background-color: #00BFB8;
-    border-color: #00BFB8;
+
+.btn-sort, 
+.btn-sort:focus {
+    background-color: #30638E;
     color: #fff;
+    outline: 0;
 }
 
-.btn-sort-price {
-    background-color: #7ba626;
-    border-color: #7ba626;
-    color: #fff;
+.btn-sort:hover {
+    color: #FF5714;
 }
 
-.btn-sort-sale {
-    background-color: #E33D26;
-    border-color: #E33D26;
+.btn-sort-selected,
+.btn-sort-selected:focus {
+    background-color: #DB3A34;
     color: #fff;
+    outline: 0;
+}
+
+.btn-sort-selected:hover {
+    color: #64D678;        
 }
 
 .footer {
