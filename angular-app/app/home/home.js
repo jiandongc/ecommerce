@@ -6,29 +6,20 @@ home.service('productService', function($http, environment){
    };
 });
 
-home.controller('homeCtrl', function($scope, $cookies, $rootScope, productService, anonCartFactory) {
+home.controller('homeCtrl', function($scope, productService, cartService) {
 	productService.getAllProducts().success(function(response) {
+		$scope.processing = {};
 		$scope.products = response;
 		angular.forEach($scope.products,function(value,index){
 			value.quantity = 1;
     	});
 	});
 
-	$scope.addItem = function(product){
-        var anonCartItem = {
-			productId : product.id,
-			productName : product.name, 
-			productPrice : product.unitPrice,
-			quantity : product.quantity,
-			imageUrl : product.imageUrl,
-			cartUid : $cookies.get('cart_uid')
-		};
-		
-		anonCartFactory.save(anonCartItem, function(data){
-			$cookies.put('cart_uid', data.cartUid);
-			$rootScope.$broadcast('updateCartSummary', true);
-		});
-	};
+  	$scope.addItemToCart = function(product){
+    	cartService.addItem(product, function(){
+      		$scope.processing[product.id]=false;
+    	});
+  	};
 });
 
 home.config(['$routeProvider',

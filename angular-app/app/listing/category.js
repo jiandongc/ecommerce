@@ -1,6 +1,6 @@
 var category = angular.module('category', ['ngRoute']);
 
-category.controller('categoryCtrl', function($scope, $http, $routeParams, environment) {
+category.controller('categoryCtrl', function($scope, $http, $routeParams, cartService, environment) {
 	$http.get(environment.productUrl + '/categories/' + $routeParams.id).success(function(response){
     $scope.categoryname = response.categoryName;
 		$scope.products = response.products;
@@ -11,6 +11,11 @@ category.controller('categoryCtrl', function($scope, $http, $routeParams, enviro
     $scope.selectedBrands = {};
     $scope.property = 'id';
     $scope.reverse = true;
+    $scope.processing = {};
+
+    angular.forEach($scope.products,function(value,index){
+      value.quantity = 1;
+    });
 	});
 
   $scope.brandfilter=function(item){
@@ -28,6 +33,11 @@ category.controller('categoryCtrl', function($scope, $http, $routeParams, enviro
     $scope.property = property;
   };
 
+  $scope.addItemToCart = function(product){
+    cartService.addItem(product, function(){
+      $scope.processing[product.id]=false;
+    });
+  };
 });
 
 category.config(['$routeProvider',

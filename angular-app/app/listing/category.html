@@ -60,8 +60,10 @@
 						<a href="#/products/{{product.id}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 						<a href="#/products/{{product.id}}"><span class="product-name">{{product.name}}</span></a>
 						<form class = "form-inline p-t-02">
-							<text class="product-price">£{{product.unitPrice}}</text>
-							<button type="button" class="btn btn-add btn-sm pull-right" ng-click="addItem(product)">加入購物車</button>
+							<text class="product-price">£{{product.unitPrice}}</text>	
+							<button type="button" class="btn btn-sm pull-right btn-add-to-cart" ng-click="addItemToCart(product); processing[product.id]=true">
+								<i ng-show="processing[product.id]" class="fa fa-spinner fa-pulse fa-fw"></i> 加入購物車
+							</button>
 						</form>
 					</div>
 				</div>

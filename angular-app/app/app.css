@@ -65,11 +65,16 @@ html, body {
     border: 1px solid #e9e8e8;
 }
  
-.btn-add {
+.btn-add-to-cart,
+.btn-add-to-cart:focus {
 	background-color: #536F19;
 	color: #E8E8E8;
     margin-right: 5%;
     font-size: 1.0em;
+}
+
+.btn-add-to-cart:hover {
+    color: #BB5B19;
 }
 
 .productDetail .productName {
@@ -135,7 +140,6 @@ html, body {
     font-size: 1.2em;
 }
 
-
 .btn-sort, 
 .btn-sort:focus {
     background-color: #30638E;
@@ -155,7 +159,7 @@ html, body {
 }
 
 .btn-sort-selected:hover {
-    color: #64D678;        
+    color: #7ba626;        
 }
 
 .footer {
