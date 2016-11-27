@@ -69,7 +69,6 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 	}
 
 	$scope.removeItem = function(cartItem){
-		alert('removeItem');
 		var configs = {headers: {'Content-Type' : 'application/json'}};
 		$http.delete(environment.orderUrl + '/anoncarts/' + cartItem.cartUid + '/cartItems/' + cartItem.productId, configs).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);
@@ -80,6 +79,10 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 	}
 
 	$scope.updateItem = function(cartItem){
+		if (typeof cartItem.quantity === "undefined"){
+			return;
+		}
+
 		var configs = {headers: {'Content-Type' : 'application/json'}};
 		$http.patch(environment.orderUrl + '/anoncarts/' + cartItem.cartUid + '/items?productId=' + cartItem.productId, cartItem, configs).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);

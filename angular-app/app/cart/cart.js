@@ -7,19 +7,31 @@ cart.controller('cartCtrl', function($scope, $cookies, $location, cartSummaryFac
 		$scope.totalQuantity = response.totalQuantity;
 		$scope.totalPrice = response.totalPrice;
 		$scope.cartItems = response.cartItems;
+    $scope.forms = {};
 	}, function(error){
 		$scope.totalQuantity = null;
 		$scope.totalPrice = null;
 		$scope.cartItems = null;
 	});
 
-	$scope.checkout = function() {
+	$scope.checkout = function(){
+    var valid = true;
+    angular.forEach($scope.cartItems, function(value, index){
+      var name = 'update_'+index;
+      if($scope.forms[name].$invalid && valid == true){
+        valid = false;
+      }
+    });
+
+    if(valid == false){
+      return;
+    }
+
 		if(typeof $cookies.get('current_user') === "undefined") {
 			$location.path("/login");
 		} else {
-			$location.path("/checkout/delivery");
+			$location.path("/checkout");
 		}
-		
 	};
 });
 

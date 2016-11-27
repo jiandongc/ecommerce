@@ -1,14 +1,14 @@
 var checkout = angular.module('checkout',[]);
 
-checkout.controller('deliveryCtrl', function() {
+checkout.controller('checkoutCtrl', function() {
 	
 });
 
 checkout.config(
   function($routeProvider) {
     $routeProvider.
-      when('/checkout/delivery', {
-        templateUrl: 'checkout/delivery.html',
-        controller: 'deliveryCtrl'
+      when('/checkout', {
+        templateUrl: 'checkout/checkout.html',
+        controller: 'checkoutCtrl'
       });
 });

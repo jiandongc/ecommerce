@@ -323,7 +323,7 @@ ul.dropdown-menu .btn-remove {
     margin-top: 3%; 
 }
 
-button.btn-checkout {
+.btn-checkout {
     background-color: #536F19;
     color: #E8E8E8;
     width: 100%;
@@ -345,14 +345,7 @@ button.btn-checkout {
 }
 
 /* checkout page */
-.tracker {
-    margin-top: 1%;
-}
 
-.btn-arrow-right {
-    width:100%;
-    position: relative;
-}
 
 /* utility class */
 .p-t-02 { padding-top: 0.2em; }
