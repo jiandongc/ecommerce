@@ -29,6 +29,12 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 		}
 	})
 
+	$scope.$watch(function() { return $cookies.get('customer_id');}, function(newValue, oldValue) {
+		if (typeof $scope.customerId === "undefined" || newValue !== oldValue) {
+			$scope.customerId = $cookies.get('customer_id');
+		}
+	})
+
 	$scope.$watch(function() { return $cookies.get('cart_uid');}, function(newValue, oldValue) {
 		if (typeof $scope.cartUid === "undefined" || newValue !== oldValue) {
 			$scope.cartUid = $cookies.get('cart_uid');
@@ -64,6 +70,7 @@ app.controller('appCtrl', function($scope, $cookies, $location, $rootScope, $htt
 		$cookies.remove('current_user');
 		$cookies.remove('access_token');
 		$cookies.remove('cart_uid');
+		$cookies.remove('customer_id');
 		$scope.cartItems = null;
 		$location.path("#");
 	}

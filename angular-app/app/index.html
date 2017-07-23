@@ -4,7 +4,10 @@
 		<meta content="width=device-width, initial-scale=1.0" name="viewport">
 		<meta charset="UTF-8">
 		<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-		<link href="dist/cawaii.css" rel="stylesheet" type="text/css"/>
+		<!-- <link href="dist/cawaii.css" rel="stylesheet" type="text/css"/> -->
+		<link href="app.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" href="bower_components/animate.css/animate.css">
+		<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
 		<title>卡哇伊-你的英倫伴侶</title>
 		<script src="bower_components/angular/angular.min.js"></script>
 		<script src="bower_components/angular-route/angular-route.min.js"></script>
@@ -32,10 +35,11 @@
 						<li><a href="#/home">特賣場</a></li>
 					</ul>				
 					<ul class="nav navbar-nav navbar-right">
-						<li ng-show="currentUser" class="navbar-text">歡迎光臨, {{currentUser}}!</li>
-						<li><a id="login" href="#/login"><span class="glyphicon glyphicon-user"></span></a></li>
+						<li ng-show="currentUser" class="navbar-text">{{currentUser}}</li>
+						<li ng-show="currentUser"><a href="#/account/{{customerId}}"><span class="glyphicon glyphicon-user"></span></a></li>
+						<li ng-hide="currentUser"><a id="login" href="#/login"><span class="glyphicon glyphicon-user"></span></a></li>
 						<li class="dropdown">
-							<a href="#/cart" class="dropdown-toggle" data-toggle="dropdown">
+							<a href="#/cart" class="dropdown-toggle">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 								<span ng-show="cartUid"> {{totalQuantity}} 件商品 £{{totalPrice}} <span class="caret"></span></span>
 							</a>
@@ -69,7 +73,16 @@
 			</div>
 		</div>
 
-		<div ng-view class="main-content"></div>
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-lg-2 hidden-md"></div>
+				<div class="col-lg-8">
+					<div ng-view class="main-content"></div>
+				</div>
+				<div class="col-lg-2 hidden-md"></div>
+			</div>
+		</div>
+		
 
 		<div class = "footer" ng-show="isNotCheckOutPage()">
 			<div class = "footerContent section">

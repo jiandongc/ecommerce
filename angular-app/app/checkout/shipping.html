@@ -1,0 +1,133 @@
+<div class="container-fluid checkout">
+   <div class="row">
+      <div class="col-sm-12 hidden-xs">
+         <ul class="breadcrumb checkout-breadcrumb">
+            <li class="active">Shipping</li>
+            <li>Delivery</li>
+            <li>Billing</li>
+            <li>Payment</li>
+            <li>Confirm</li>
+         </ul>
+      </div>
+   </div>
+   <div class = "row">
+      <div class = "col-md-8">
+         <div class="header border-bottom p-b-05">Shipping Address</div>
+         <div ng-repeat="address in addresses">
+            <div class="row p-t-10 p-b-10 border-bottom">
+               <div class="col-sm-8 address">
+                  <input type="radio" name="address" ng-checked="selected===$index" ng-click="select($index, address)">
+                  <span class="name">{{address.fullname}}</span>
+                  <div class="m-l-12">{{address.address1}}</div>
+                  <div class="m-l-12">{{address.address2}}</div>
+                  <div class="m-l-12">{{address.city}}, {{address.postcode}}</div>
+                  <div class="m-l-12">{{address.country}}</div>
+                  <div class="m-l-12">T: {{address.phone}}</div>
+               </div>
+               <div class="col-sm-4" ng-show="selected===$index">
+                  <button class="btn btn-block btn-style" ng-click="continue()">Continue</button>
+                  <button class="btn btn-block btn-style" data-toggle="modal" data-target="#addressform">Edit</button>
+               </div>
+            </div>
+         </div>
+         <div class="row p-t-05 p-b-05">
+            <div class="col-sm-6">
+               <button class="btn btn-block btn-style" ng-click="">Add a new address</button>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-4">
+         <div class="order-summary p-10">
+            <div class="order-summary-header border-bottom p-b-05">Order Summary</div>
+            <div class = "row p-t-05">
+               <div class="col-xs-6">
+                  <span class="title">Subtotal</span>
+               </div>
+               <div class="col-xs-6">
+                  <span class="value pull-right">{{30 | currency:"£"}}</span>
+               </div>
+            </div>   
+            <div class = "row p-t-05 p-b-05">
+               <div class="col-xs-6">
+                  <span class="title">Shipping</span>
+               </div>
+               <div class="col-xs-6">
+                  <span class="value pull-right">FREE</span>
+               </div>
+            </div>
+            <div class = "row border-top p-t-05">
+               <div class="col-xs-6">
+                  <span class="title">Total</span>
+                  <div class="value">
+                     incl. VAT ({{10 | currency:"£"}})
+                  </div>
+               </div>
+               <div class="col-xs-6">
+                  <span class="value pull-right">{{30 | currency:"£"}}</span>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+   <div class="modal fade" id="addressform" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+         <div class="modal-content">
+            <div class="modal-header">
+               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+               </button>
+               <h4 class="modal-title">Update your delivery address</h4>
+            </div>
+            <div class="modal-body">
+               <form class="form-horizontal" role="form">
+                  <div class="form-group">
+                     <label class="col-sm-2 control-label" for="fullname">Full Name</label>
+                     <div class="col-sm-10">
+                        <input type="text" id="fullname" class="form-control" ng-model="address.fullname" placeholder="Full Name"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-sm-2 control-label" for="address1" >Address 1</label>
+                     <div class="col-sm-10">
+                        <input type="text" id="address1" class="form-control" ng-model="address.address1" placeholder="Address 1"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-sm-2 control-label" for="address1" >Address 2</label>
+                     <div class="col-sm-10">
+                        <input type="text" id="address2" class="form-control" ng-model="address.address2" placeholder="Address 2"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-sm-2 control-label" for="city" >City</label>
+                     <div class="col-sm-10">
+                        <input type="text" id="city" class="form-control" ng-model="address.city" placeholder="City"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-sm-2 control-label" for="postcode" >Postcode</label>
+                     <div class="col-sm-10">
+                        <input type="text" id="postcode" class="form-control" ng-model="address.postcode" placeholder="Postcode"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-sm-2 control-label" for="country" >Country</label>
+                     <div class="col-sm-10">
+                        <input type="text" id="country" class="form-control" ng-model="address.country" placeholder="Country"/>
+                     </div>
+                  </div>
+                  <div class="form-group">
+                     <label class="col-sm-2 control-label" for="telephone" >Telephone</label>
+                     <div class="col-sm-10">
+                        <input type="text" id="telephone" class="form-control" ng-model="address.phone" placeholder="Telephone"/>
+                     </div>
+                  </div>                                                                 
+               </form>     
+            </div>
+            <div class="modal-footer">
+               <button type="button" class="btn btn-primary">Save</button>
+            </div>
+         </div>
+      </div>
+   </div>
+</div>

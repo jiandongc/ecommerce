@@ -26,6 +26,7 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
     var getCustomerByEmail = function(credentials){
         return customersFactory.get({email:credentials.email}).$promise.then(function(customer){
             $cookies.put('current_user', customer.name);
+            $cookies.put('customer_id', customer.id);
             return customer;
         }, function(error){
             return $q.reject("customer not found");

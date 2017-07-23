@@ -13,7 +13,8 @@
     "angular-resource": "~1.4",
     "angular-cookies": "~1.4",
     "bootstrap": "3.3.6",
-    "html5-boilerplate": "~4.3.0"
+    "html5-boilerplate": "~4.3.0",
+    "animate.css": "latest"
   },
   "resolutions": {
     "angular": "1.4.9"

@@ -30,7 +30,7 @@ cart.controller('cartCtrl', function($scope, $cookies, $location, cartSummaryFac
 		if(typeof $cookies.get('current_user') === "undefined") {
 			$location.path("/login");
 		} else {
-			$location.path("/checkout");
+			$location.path("/shipping");
 		}
 	};
 });
