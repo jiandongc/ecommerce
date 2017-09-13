@@ -2,15 +2,19 @@ package product.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import product.data.CategorySummaryData;
+import product.data.CategoryData;
 import product.domain.Category;
 import product.domain.Product;
-import product.mapper.CategorySummaryDataMapper;
+import product.mapper.CategoryDataMapper;
 import product.service.CategoryService;
 import product.service.ProductService;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by jiandong on 13/11/16.
@@ -22,22 +26,27 @@ public class CategoryController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-    private final CategorySummaryDataMapper categorySummaryDataMapper;
+    private final CategoryDataMapper categoryDataMapper;
 
     @Autowired
     public CategoryController(ProductService productService,
                               CategoryService categoryService,
-                              CategorySummaryDataMapper categorySummaryDataMapper){
+                              CategoryDataMapper categoryDataMapper){
         this.productService = productService;
         this.categoryService = categoryService;
-        this.categorySummaryDataMapper = categorySummaryDataMapper;
+        this.categoryDataMapper = categoryDataMapper;
     }
 
-    @RequestMapping(value = "/{id}", method= RequestMethod.GET)
-    public CategorySummaryData findCategorySummary(@PathVariable long id) {
-        final List<Product> products = productService.findByCategoryId(id);
-        final Map<Category, Integer> subCategories = productService.findProductTotalInSubCategories(id);
-        final List<Category> categoryTree = categoryService.findCategoryTree(id);
-        return categorySummaryDataMapper.getValue(products, subCategories, categoryTree);
+    @RequestMapping(value = "/{code}", method= RequestMethod.GET)
+    public CategoryData findCategoryByCode(@PathVariable String code) {
+        final Optional<Category> category = categoryService.findByCode(code);
+        if(category.isPresent()){
+            final List<Product> products = productService.findByCategoryCode(code);
+            final Map<Category, Integer> subCategories = productService.findProductTotalInSubCategories(code);
+            final List<Category> parentCategories = categoryService.findParentCategories(code);
+            return categoryDataMapper.getValue(category.get(), parentCategories, subCategories, products);
+        } else {
+            return null;
+        }
     }
 }

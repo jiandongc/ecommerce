@@ -1,18 +1,18 @@
 package product.repository;
 
+import static java.math.BigDecimal.TEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.Test;
 
-import product.domain.Brand;
-import product.domain.Category;
-import product.domain.Product;
+import product.domain.*;
 
 public class ProductRepositoryTest extends AbstractRepositoryTest{
 
@@ -25,64 +25,114 @@ public class ProductRepositoryTest extends AbstractRepositoryTest{
 	@Autowired
 	private BrandRepository brandRepository;
 
+	@Autowired
+	private ImageTypeRepository imageTypeRepository;
+
+	@Autowired
+	private KeyRepository keyRepository;
+
+	@Autowired
+	private AttributeRepository attributeRepository;
+
+	private Category category;
+	private Brand brand;
+	private ImageType imageType;
+	private Image image;
+	private Product parentProduct;
+	private Key key;
+	private Sku sku;
+	private Attribute attribute;
+
 	@Before
 	public void setUp(){
-		final Category category = new Category(1, "food", "delicious", "img/0005.jpg", 0);
+		category = new Category();
+		category.setHidden(false);
+		category.setName("food");
+		category.setDescription("delicious");
+		category.setImageUrl("img/0001.jpg");
+		category.setCode("FD");
 		categoryRepository.save(category);
-		final Brand brand = new Brand(1, "Walkers");
+
+		brand = new Brand();
+		brand.setName("Walkers");
 		brandRepository.save(brand);
+
+		imageType = new ImageType();
+		imageType.setType("thumbnail");
+		imageTypeRepository.save(imageType);
+
+		image = new Image();
+		image.setImageType(imageType);
+		image.setUrl("img/0002.jpg");
+
+		key = new Key();
+		key.setName("Color");
+		keyRepository.save(key);
+
+		attribute = new Attribute();
+		attribute.setKey(key);
+		attribute.setValue("Red");
+		attributeRepository.save(attribute);
+
+		sku = new Sku();
+		sku.setPrice(TEN);
+		sku.setStockQuantity(100);
+		sku.setSku("FD10039403_X");
+		sku.addAttribute(attribute);
 	}
 
 	@Test
-	public void shouldFindProductById(){
+	public void shouldSaveAndFindItByProductCode(){
 		// Given
-		final Category category = categoryRepository.findOne(1l);
-		final Brand brand = brandRepository.findOne(1l);
-		final Product product = new Product("Chester", 10d, "delicious", category, brand, "img/0001.jpg");
+		parentProduct = new Product();
+		parentProduct.setName("parent");
+		parentProduct.setCategory(category);
+		productRepository.save(parentProduct);
+
+		final Product product = new Product();
+		product.setName("Chester");
+		product.setDescription("delicious");
+		product.setCategory(category);
+		product.setBrand(brand);
+		product.addImage(image);
+		product.setParent(parentProduct);
+		product.addSku(sku);
 		productRepository.save(product);
-		
+
 		// When
-		final Product actualProduct = productRepository.findOne(product.getId());
-		
+		final String productCode = category.getCode() + String.format("%07d", product.getId());
+		final Optional<Product> actualProduct = productRepository.findByCode(productCode);
+
 		// Then
-		assertThat(product, is(actualProduct));
-	}
-	
-	@Test
-	public void shouldFindAllProducts(){
-		// Given
-		final Category category = categoryRepository.findOne(1l);
-		final Brand brand = brandRepository.findOne(1l);
-		final Product productOne = new Product("Chester1", 10d, "delicious", category, brand, "img/0001.jpg");
-		final Product productTwo = new Product("Chester2", 10d, "delicious", category, brand, "img/0002.jpg");
-		final Product productThree = new Product("Chester3", 10d, "delicious", category, brand, "img/0003.jpg");
-		productRepository.save(productOne);
-		productRepository.save(productTwo);
-		productRepository.save(productThree);
-		
-		// When
-		final List<Product> products = productRepository.findAll();
-		
-		// Then
-		assertThat(products, hasItems(productOne, productTwo, productThree));
+		assertThat(actualProduct.get(), is(product));
 	}
 
 	@Test
-	public void shouldFindProductsByCategoryId(){
+	public void shouldFindProductsByCategoryCode(){
 		// Given
-		final Category category = categoryRepository.findOne(1l);
-		final Brand brand = brandRepository.findOne(1l);
-		final Product productOne = new Product("Chester1", 10d, "delicious", category, brand, "img/0001.jpg");
-		final Product productTwo = new Product("Chester2", 10d, "delicious", category, brand, "img/0002.jpg");
-		final Product productThree = new Product("Chester3", 10d, "delicious", category, brand, "img/0003.jpg");
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("delicious");
+		productOne.setCategory(category);
 		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Coke");
+		productTwo.setDescription("yummy");
+		productTwo.setCategory(category);
 		productRepository.save(productTwo);
+
+		final Product productThree = new Product();
+		productThree.setName("Cake");
+		productThree.setDescription("getting fat");
+		productThree.setCategory(category);
 		productRepository.save(productThree);
 
 		// When
-		final List<Product> products = productRepository.findByCategoryId(1l);
+		final List<Product> products = productRepository.findByCategoryCode(category.getCode());
 
 		// Then
+		assertThat(products.size(), is(3));
 		assertThat(products, hasItems(productOne, productTwo, productThree));
 	}
 }

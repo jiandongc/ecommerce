@@ -3,18 +3,19 @@ package product.domain;
 import javax.persistence.*;
 
 /**
- * Created by jiandong on 13/11/16.
+ * Created by jiandong on 15/08/17.
  */
+
 @Entity
-@Table(name = "brand")
-public class Brand {
+@Table(name = "image_type")
+public class ImageType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
-    @Column(name = "name")
-    private String name;
+    @Column(name = "type")
+    private String type;
 
     public long getId() {
         return id;
@@ -24,12 +25,12 @@ public class Brand {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(String type) {
+        this.type = type;
     }
 
     @Override
@@ -37,14 +38,14 @@ public class Brand {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Brand brand = (Brand) o;
+        ImageType imageType = (ImageType) o;
 
-        return !(name != null ? !name.equals(brand.name) : brand.name != null);
+        return !(type != null ? !type.equals(imageType.type) : imageType.type != null);
 
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return type != null ? type.hashCode() : 0;
     }
 }

@@ -1,1 +1,0 @@
-CREATE SEQUENCE product_seq START 1;

@@ -2,32 +2,29 @@ package product.domain;
 
 import javax.persistence.*;
 
+import static javax.persistence.FetchType.EAGER;
+
 @Entity
 @Table(name = "category")
 public class Category {
 
 	@Id
-	@Column(name = "id", nullable = false)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
 	@Column(name = "name")
 	private String name;
 	@Column(name = "description")
 	private String description;
-	@Column(name = "imageurl")
+	@Column(name = "category_code")
+	private String code;
+	@Column(name = "image_url")
 	private String imageUrl;
-	@Column(name = "parentid")
-	private long parentId;
-
-	public Category(){
-	}
-
-	public Category(long id, String name, String description, String imageUrl, long parentId){
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.imageUrl = imageUrl;
-		this.parentId = parentId;
-	}
+	@Column(name = "hidden")
+	private boolean hidden;
+	@ManyToOne(fetch = EAGER)
+	@JoinColumn(name = "parent_id")
+	private Category parent;
 
 	public long getId() {
 		return id;
@@ -61,16 +58,32 @@ public class Category {
 		this.imageUrl = imageUrl;
 	}
 
-	public long getParentId() {
-		return parentId;
+	public boolean isHidden() {
+		return hidden;
 	}
 
-	public void setParentId(long parentId) {
-		this.parentId = parentId;
+	public void setHidden(boolean hidden) {
+		this.hidden = hidden;
 	}
 
-	public boolean isTopCategory () {
-		return parentId == 0l;
+	public Category getParent() {
+		return parent;
+	}
+
+	public void setParent(Category parent) {
+		this.parent = parent;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public boolean isTopCategory(){
+		return parent == null;
 	}
 
 	@Override
@@ -80,22 +93,24 @@ public class Category {
 
 		Category category = (Category) o;
 
-		if (id != category.id) return false;
-		if (parentId != category.parentId) return false;
+		if (hidden != category.hidden) return false;
 		if (name != null ? !name.equals(category.name) : category.name != null) return false;
 		if (description != null ? !description.equals(category.description) : category.description != null)
 			return false;
-		return !(imageUrl != null ? !imageUrl.equals(category.imageUrl) : category.imageUrl != null);
+		if (code != null ? !code.equals(category.code) : category.code != null) return false;
+		if (imageUrl != null ? !imageUrl.equals(category.imageUrl) : category.imageUrl != null) return false;
+		return !(parent != null ? !parent.equals(category.parent) : category.parent != null);
 
 	}
 
 	@Override
 	public int hashCode() {
-		int result = (int) (id ^ (id >>> 32));
-		result = 31 * result + (name != null ? name.hashCode() : 0);
+		int result = name != null ? name.hashCode() : 0;
 		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (code != null ? code.hashCode() : 0);
 		result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
-		result = 31 * result + (int) (parentId ^ (parentId >>> 32));
+		result = 31 * result + (hidden ? 1 : 0);
+		result = 31 * result + (parent != null ? parent.hashCode() : 0);
 		return result;
 	}
 }

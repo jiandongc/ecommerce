@@ -2,48 +2,40 @@ package product.domain;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "product")
 public class Product {
 	@Id
-	@Column(name = "id", nullable = false)
-	@SequenceGenerator(name = "product_seq", sequenceName = "product_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
 	@Column(name = "name")
 	private String name;
-	@Column(name = "unitprice")
-	private Double unitPrice;
 	@Column(name = "description")
 	private String description;
+	@Column(name = "product_code")
+	private String code;
 	@ManyToOne(fetch = EAGER)
-	@JoinColumn(name = "categoryid")
+	@JoinColumn(name = "category_id")
 	private Category category;
 	@ManyToOne(fetch = EAGER)
-	@JoinColumn(name = "brandid")
+	@JoinColumn(name = "brand_id")
 	private Brand brand;
-	@Column(name = "imageurl")
-	private String imageUrl;
-
-	Product() {
-		this(null, null, null, null, null, null);
-	}
-
-	public Product(String name, Double unitPrice, String description,
-			Category category, Brand brand, String imageUrl) {
-		this.name = name;
-		this.unitPrice = unitPrice;
-		this.description = description;
-		this.category = category;
-		this.brand = brand;
-		this.imageUrl = imageUrl;
-	}
-
-	public Product(String name) {
-		this.name = name;
-	}
+	@ManyToOne(fetch = LAZY)
+	@JoinColumn(name = "parent_id")
+	private Product parent;
+	@OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
+	private List<Image> images = new ArrayList<>();
+	@OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
+	private List<Sku> skus = new ArrayList<>();
 
 	public long getId() {
 		return id;
@@ -53,20 +45,36 @@ public class Product {
 		this.id = id;
 	}
 
+	public List<Sku> getSkus() {
+		return skus;
+	}
+
+	public void setSkus(List<Sku> skus) {
+		this.skus = skus;
+	}
+
+	public List<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(List<Image> images) {
+		this.images = images;
+	}
+
+	public Product getParent() {
+		return parent;
+	}
+
+	public void setParent(Product parent) {
+		this.parent = parent;
+	}
+
 	public String getName() {
 		return name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	public Double getUnitPrice() {
-		return unitPrice;
-	}
-
-	public void setUnitPrice(Double unitPrice) {
-		this.unitPrice = unitPrice;
 	}
 
 	public String getDescription() {
@@ -93,12 +101,27 @@ public class Product {
 		this.brand = brand;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public String getCode() {
+		return code;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setCode(String code) {
+		this.code = code;
+	}
+
+	public void addImage(Image image){
+		images.add(image);
+		image.setProduct(this);
+	}
+
+	public void addSku(Sku sku){
+		skus.add(sku);
+		sku.setProduct(this);
+	}
+
+	public String getMainImageUrl(){
+		final Optional<Image> mainImage = images.stream().filter(image -> "Main".equalsIgnoreCase(image.getImageTypeValue())).findFirst();
+		return mainImage.map(Image::getUrl).orElse(null);
 	}
 
 	@Override
@@ -108,25 +131,27 @@ public class Product {
 
 		Product product = (Product) o;
 
-		if (id != product.id) return false;
 		if (name != null ? !name.equals(product.name) : product.name != null) return false;
-		if (unitPrice != null ? !unitPrice.equals(product.unitPrice) : product.unitPrice != null) return false;
 		if (description != null ? !description.equals(product.description) : product.description != null) return false;
+		if (code != null ? !code.equals(product.code) : product.code != null) return false;
 		if (category != null ? !category.equals(product.category) : product.category != null) return false;
 		if (brand != null ? !brand.equals(product.brand) : product.brand != null) return false;
-		return !(imageUrl != null ? !imageUrl.equals(product.imageUrl) : product.imageUrl != null);
+		if (parent != null ? !parent.equals(product.parent) : product.parent != null) return false;
+		if (images != null ? !images.equals(product.images) : product.images != null) return false;
+		return !(skus != null ? !skus.equals(product.skus) : product.skus != null);
 
 	}
 
 	@Override
 	public int hashCode() {
-		int result = (int) (id ^ (id >>> 32));
-		result = 31 * result + (name != null ? name.hashCode() : 0);
-		result = 31 * result + (unitPrice != null ? unitPrice.hashCode() : 0);
+		int result = name != null ? name.hashCode() : 0;
 		result = 31 * result + (description != null ? description.hashCode() : 0);
+		result = 31 * result + (code != null ? code.hashCode() : 0);
 		result = 31 * result + (category != null ? category.hashCode() : 0);
 		result = 31 * result + (brand != null ? brand.hashCode() : 0);
-		result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+		result = 31 * result + (parent != null ? parent.hashCode() : 0);
+		result = 31 * result + (images != null ? images.hashCode() : 0);
+		result = 31 * result + (skus != null ? skus.hashCode() : 0);
 		return result;
 	}
 }

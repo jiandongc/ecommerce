@@ -1,1 +1,0 @@
-ALTER TABLE Product ADD COLUMN brandId integer REFERENCES Brand (id);

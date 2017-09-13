@@ -1,0 +1,1 @@
+ALTER TABLE category ADD COLUMN category_code varchar(50) unique;

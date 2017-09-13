@@ -10,9 +10,9 @@ import java.util.Optional;
  */
 public interface CategoryService {
 
-    Optional<Category> findById(Long id);
+    Optional<Category> findByCode(String code);
 
-    List<Category> findSubCategoriesByParentId(Long parentId);
+    List<Category> findSubCategories(String parentCode);
 
-    List<Category> findCategoryTree(Long id);
+    List<Category> findParentCategories(String code);
 }

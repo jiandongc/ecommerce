@@ -27,30 +27,31 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Category> findById(Long id) {
-        return categoryRepository.findById(id);
+    public Optional<Category> findByCode(String code) {
+        return categoryRepository.findByCode(code);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Category> findSubCategoriesByParentId(Long parentId) {
-        return categoryRepository.findByParentId(parentId);
+    public List<Category> findSubCategories(String parentCode) {
+        return categoryRepository.findSubCategoriesByCode(parentCode);
     }
 
+    /* return all parent categories + current category */
     @Override
-    public List<Category> findCategoryTree(Long id) {
-        final Optional<Category> categoryOptional = this.findById(id);
-        final Category category = categoryOptional.orElseThrow(() -> new IllegalArgumentException(format("Category Id : %s not found.", id)));
+    @Transactional(readOnly = true)
+    public List<Category> findParentCategories(String code) {
+        final Optional<Category> categoryOptional = this.findByCode(code);
+        final Category category = categoryOptional.orElseThrow(() -> new IllegalArgumentException(format("Category Code : %s not found.", code)));
 
         if (!category.isTopCategory()) {
-            long parentId = category.getParentId();
-            final List<Category> categoryTree = findCategoryTree(parentId);
-            categoryTree.add(category);
-            return categoryTree;
+            final List<Category> categories = this.findParentCategories(category.getParent().getCode());
+            categories.add(category);
+            return categories;
         } else {
-            final ArrayList<Category> categoryTree = new ArrayList<>();
-            categoryTree.add(category);
-            return categoryTree;
+            final ArrayList<Category> categories = new ArrayList<>();
+            categories.add(category);
+            return categories;
         }
     }
 }

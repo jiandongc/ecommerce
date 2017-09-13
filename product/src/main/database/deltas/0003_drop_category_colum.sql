@@ -1,1 +1,0 @@
-ALTER TABLE Product DROP COLUMN Category RESTRICT;

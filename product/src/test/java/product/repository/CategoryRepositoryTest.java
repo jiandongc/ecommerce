@@ -20,36 +20,58 @@ public class CategoryRepositoryTest extends AbstractRepositoryTest {
     private CategoryRepository categoryRepository;
 
     @Test
-    public void shouldFindCategoryById(){
+    public void shouldFindCategoryByCode(){
         // Given
-        final Category category = new Category(1, "food", "delicious", "img/0005.jpg", 0);
+        Category category = new Category();
+        category.setHidden(false);
+        category.setName("food");
+        category.setDescription("delicious");
+        category.setImageUrl("img/0001.jpg");
+        category.setCode("FD");
         categoryRepository.save(category);
 
         // When
-        final Optional<Category> actualCategory = categoryRepository.findById(1l);
+        final Optional<Category> actualCategory = categoryRepository.findByCode("FD");
 
         // Then
-        assertThat(actualCategory.isPresent(), is(true));
         assertThat(actualCategory.get(), is(category));
     }
 
     @Test
-    public void shouldFindSubCategoriesByParentId(){
+    public void shouldFindSubCategoriesByCode(){
         // Given
-        final Category categoryOne = new Category(2, "food", "delicious", "img/0005.jpg", 1);
-        final Category categoryTwo = new Category(3, "cloth", "delicious", "img/0006.jpg", 1);
-        final Category categoryThree = new Category(4, "makeup", "delicious", "img/0007.jpg", 1);
-        final Category categoryFour = new Category(5, "makeup", "delicious", "img/0007.jpg", 6);
-        categoryRepository.save(categoryOne);
-        categoryRepository.save(categoryTwo);
-        categoryRepository.save(categoryThree);
-        categoryRepository.save(categoryFour);
+        Category category = new Category();
+        category.setHidden(false);
+        category.setName("food");
+        category.setDescription("delicious");
+        category.setImageUrl("img/0001.jpg");
+        category.setCode("FD");
+        categoryRepository.save(category);
+
+        Category subCategory1 = new Category();
+        subCategory1.setName("crackers");
+        subCategory1.setCode("CR");
+        subCategory1.setParent(category);
+        categoryRepository.save(subCategory1);
+
+        Category subCategory2 = new Category();
+        subCategory2.setName("cake");
+        subCategory2.setCode("CA");
+        subCategory2.setParent(category);
+        categoryRepository.save(subCategory2);
+
+        Category subCategory3 = new Category();
+        subCategory3.setName("chocolate");
+        subCategory3.setCode("CH");
+        subCategory3.setParent(category);
+        categoryRepository.save(subCategory3);
 
         // When
-        final List<Category> subCategories = categoryRepository.findByParentId(1l);
+        final List<Category> subCategories = categoryRepository.findSubCategoriesByCode("FD");
 
         // Then
-        assertThat(subCategories, hasItems(categoryOne, categoryTwo, categoryThree));
+        assertThat(subCategories.size(), is(3));
+        assertThat(subCategories, hasItems(subCategory1, subCategory2, subCategory3));
     }
 
 }

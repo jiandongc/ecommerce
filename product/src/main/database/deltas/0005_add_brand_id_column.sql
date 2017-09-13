@@ -1,0 +1,1 @@
+ALTER TABLE product ADD COLUMN brand_id int REFERENCES brand(id);

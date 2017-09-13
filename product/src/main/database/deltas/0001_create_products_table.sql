@@ -1,9 +1,7 @@
-CREATE TABLE Product
+CREATE TABLE product
 (
-Id int PRIMARY KEY, 
-Name varchar(255),
-Description varchar(255),
-UnitPrice double precision,
-Category varchar(255),
-ImageUrl varchar(255)
+    id serial PRIMARY KEY,
+    name varchar(255) not null,
+    description text,
+    parent_id int null
 );

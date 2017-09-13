@@ -1,0 +1,1 @@
+ALTER TABLE product ADD COLUMN category_id int REFERENCES category(id) not null;

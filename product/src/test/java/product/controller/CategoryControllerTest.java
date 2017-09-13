@@ -1,124 +1,179 @@
 package product.controller;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import product.data.BrandData;
 import product.data.CategoryData;
-import product.data.CategorySummaryData;
-import product.data.ProductData;
-import product.domain.Brand;
-import product.domain.Category;
-import product.domain.Product;
-import product.repository.BrandRepository;
-import product.repository.CategoryRepository;
-import product.repository.ProductRepository;
+import product.domain.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
+
 
 /**
  * Created by jiandong on 13/11/16.
  */
 public class CategoryControllerTest extends AbstractControllerTest {
 
-    @Autowired
-    private ProductRepository productRepository;
-
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Autowired
-    private BrandRepository brandRepository;
-
     private final String BASE_URL = "http://localhost:8083/categories/";
-    private final RestTemplate rest = new TestRestTemplate();
+    private final TestRestTemplate rest = new TestRestTemplate();
+
+    @Before
+    public void setUp(){
+        this.cleanUp();
+    }
 
     @After
     public void after(){
-        productRepository.deleteAll();
-        categoryRepository.deleteAll();
-        brandRepository.deleteAll();
+        this.cleanUp();
     }
 
+    /*
+                            c1
+                            c2
+                            c3
+                 c4 		p1		   c5
+                 p2			        p3    p4
+    */
     @Test
-    public void shouldReturnCategorySummaryDataByCategoryId(){
+    public void shouldReturnCategoryDataByCode(){
         // Given
-        final Brand brandOne = new Brand(1, "Walkers");
-        final Brand brandTwo = new Brand(2, "Royal China");
-        final Category categoryOne = new Category(1, "food", "delicious", "img/0005.jpg", 0);
-        final Category categoryTwo = new Category(2, "cloth", "delicious", "img/0005.jpg", 1);
-        final Category categoryThree = new Category(3, "makeup", "delicious", "img/0005.jpg", 1);
-        final Category categoryFour = new Category(4, "kitchen", "delicious", "img/0005.jpg", 1);
-        final Product productOne = new Product("Chester1", 10d, "delicious", categoryTwo, brandOne, "img/0001.jpg");
-        final Product productTwo = new Product("Chester2", 10d, "delicious", categoryThree, brandTwo, "img/0002.jpg");
-        final Product productThree = new Product("Chester3", 10d, "delicious", categoryThree, brandTwo, "img/0003.jpg");
-        final Product productFour = new Product("Chester4", 10d, "delicious", categoryThree, brandTwo, "img/0004.jpg");
-        final Product productFive = new Product("Chester5", 10d, "delicious", categoryThree, brandOne, "img/0005.jpg");
-        final Product productSix = new Product("Chester6", 10d, "delicious", categoryFour, brandOne, "img/0006.jpg");
-        final Product productSeven = new Product("Chester7", 10d, "delicious", categoryFour, brandOne, "img/0007.jpg");
+        final Category c1 = new Category();
+        c1.setCode("c1");
+        c1.setName("c1");
+        categoryRepository.save(c1);
 
-        brandRepository.save(brandOne);
-        brandRepository.save(brandTwo);
-        categoryRepository.save(categoryOne);
-        categoryRepository.save(categoryTwo);
-        categoryRepository.save(categoryThree);
-        categoryRepository.save(categoryFour);
-        productRepository.save(productOne);
-        productRepository.save(productTwo);
-        productRepository.save(productThree);
-        productRepository.save(productFour);
-        productRepository.save(productFive);
-        productRepository.save(productSix);
-        productRepository.save(productSeven);
+        final Category c2 = new Category();
+        c2.setCode("c2");
+        c2.setName("c2");
+        c2.setParent(c1);
+        categoryRepository.save(c2);
 
-        // When
-        final ResponseEntity<CategorySummaryData> response = rest.getForEntity(BASE_URL + categoryOne.getId(), CategorySummaryData.class);
+        final Category c3 = new Category();
+        c3.setCode("c3");
+        c3.setName("c3");
+        c3.setParent(c2);
+        categoryRepository.save(c3);
 
-        // Then
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        final Category c4 = new Category();
+        c4.setCode("c4");
+        c4.setName("c4");
+        c4.setParent(c3);
+        categoryRepository.save(c4);
 
-        final BrandData brandDataOne = new BrandData(1, "Walkers");
-        final BrandData brandDataTwo = new BrandData(2, "Royal China");
-        assertThat(response.getBody().getBrands().size(), is(2));
-        assertThat(response.getBody().getBrands(), hasItems(brandDataOne, brandDataTwo));
+        final Category c5 = new Category();
+        c5.setCode("c5");
+        c5.setName("c5");
+        c5.setParent(c3);
+        categoryRepository.save(c5);
 
-        final ProductData productDataOne = new ProductData(productOne.getId(), "Chester1", 10d, "delicious", "cloth", "Walkers", "img/0001.jpg");
-        final ProductData productDataTwo = new ProductData(productTwo.getId(), "Chester2", 10d, "delicious", "makeup", "Royal China", "img/0002.jpg");
-        final ProductData productDataThree = new ProductData(productThree.getId(), "Chester3", 10d, "delicious", "makeup", "Royal China", "img/0003.jpg");
-        final ProductData productDataFour = new ProductData(productFour.getId(), "Chester4", 10d, "delicious", "makeup", "Royal China", "img/0004.jpg");
-        final ProductData productDataFive = new ProductData(productFive.getId(), "Chester5", 10d, "delicious", "makeup", "Walkers", "img/0005.jpg");
-        final ProductData productDataSix = new ProductData(productSix.getId(), "Chester6", 10d, "delicious", "kitchen", "Walkers", "img/0006.jpg");
-        final ProductData productDataSeven = new ProductData(productSeven.getId(), "Chester7", 10d, "delicious", "kitchen", "Walkers", "img/0007.jpg");
-        assertThat(response.getBody().getProducts().size(), is(7));
-        assertThat(response.getBody().getProducts(), hasItems(productDataOne, productDataTwo, productDataThree, productDataFour, productDataFive, productDataSix, productDataSeven));
+        final Product p1 = new Product();
+        p1.setCode("p1");
+        p1.setName("p1");
+        p1.setCategory(c3);
+        productRepository.save(p1);
 
-        final CategoryData subCategoryOne = new CategoryData(2, "cloth", 1);
-        final CategoryData subCategoryTwo = new CategoryData(3, "makeup", 4);
-        final CategoryData subCategoryThree = new CategoryData(4, "kitchen", 2);
-        assertThat(response.getBody().getSubCategories().size(), is(3));
-        assertThat(response.getBody().getSubCategories(), hasItems(subCategoryOne, subCategoryTwo, subCategoryThree));
+        final Product p2 = new Product();
+        p2.setCode("p2");
+        p2.setName("p2");
+        p2.setCategory(c4);
+        productRepository.save(p2);
 
-        final CategoryData currentCategory = new CategoryData(1, "food", 0);
-        assertThat(response.getBody().getParentCategories().size(), is(1));
-        assertThat(response.getBody().getParentCategories(), hasItems(currentCategory));
+        final Product p3 = new Product();
+        p3.setCode("p3");
+        p3.setName("p3");
+        p3.setCategory(c5);
+        productRepository.save(p3);
 
-        assertThat(response.getBody().getProductCount(), is(7));
-        assertThat(response.getBody().getCategoryName(), is("food"));
+        final Product p4 = new Product();
+        p4.setCode("p4");
+        p4.setName("p4");
+        p4.setCategory(c5);
+        productRepository.save(p4);
 
         // When & Then
-        final ResponseEntity<CategorySummaryData> responseTwo = rest.getForEntity(BASE_URL + categoryTwo.getId(), CategorySummaryData.class);
-        final CategoryData parentCategory = new CategoryData(1, "food", 0);
-        final CategoryData currentCategoryTwo = new CategoryData(2, "cloth", 0);
-        assertThat(responseTwo.getBody().getParentCategories().size(), is(2));
-        assertThat(responseTwo.getBody().getParentCategories().get(0), is(parentCategory));
-        assertThat(responseTwo.getBody().getParentCategories().get(1), is(currentCategoryTwo));
-        assertThat(responseTwo.getBody().getCategoryName(), is("cloth"));
+        final ResponseEntity<CategoryData> c1Response = rest.getForEntity(BASE_URL + "c1", CategoryData.class);
+        assertThat(c1Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c1Response.getBody().getName(), is("c1"));
+        assertThat(c1Response.getBody().getCode(), is("c1"));
+        assertThat(c1Response.getBody().getProductTotal(), is(4));
+        assertThat(c1Response.getBody().getParents().size(), is(1));
+        assertThat(c1Response.getBody().getParents().get(0).getName(), is("c1"));
+        assertThat(c1Response.getBody().getParents().get(0).getCode(), is("c1"));
+        assertThat(c1Response.getBody().getChildren().size(), is(1));
+        assertThat(c1Response.getBody().getChildren().get(0).getName(), is("c2"));
+        assertThat(c1Response.getBody().getChildren().get(0).getCode(), is("c2"));
+        assertThat(c1Response.getBody().getChildren().get(0).getProductTotal(), is(4));
+
+        final ResponseEntity<CategoryData> c2Response = rest.getForEntity(BASE_URL + "c2", CategoryData.class);
+        assertThat(c2Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c2Response.getBody().getName(), is("c2"));
+        assertThat(c2Response.getBody().getCode(), is("c2"));
+        assertThat(c2Response.getBody().getProductTotal(), is(4));
+        assertThat(c2Response.getBody().getParents().size(), is(2));
+        assertThat(c2Response.getBody().getParents().get(0).getName(), is("c1"));
+        assertThat(c2Response.getBody().getParents().get(0).getCode(), is("c1"));
+        assertThat(c2Response.getBody().getParents().get(1).getName(), is("c2"));
+        assertThat(c2Response.getBody().getParents().get(1).getCode(), is("c2"));
+        assertThat(c2Response.getBody().getChildren().size(), is(1));
+        assertThat(c2Response.getBody().getChildren().get(0).getName(), is("c3"));
+        assertThat(c2Response.getBody().getChildren().get(0).getCode(), is("c3"));
+        assertThat(c2Response.getBody().getChildren().get(0).getProductTotal(), is(4));
+
+        final ResponseEntity<CategoryData> c3Response = rest.getForEntity(BASE_URL + "c3", CategoryData.class);
+        assertThat(c3Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c3Response.getBody().getName(), is("c3"));
+        assertThat(c3Response.getBody().getCode(), is("c3"));
+        assertThat(c3Response.getBody().getProductTotal(), is(4));
+        assertThat(c3Response.getBody().getParents().size(), is(3));
+        assertThat(c3Response.getBody().getParents().get(0).getName(), is("c1"));
+        assertThat(c3Response.getBody().getParents().get(0).getCode(), is("c1"));
+        assertThat(c3Response.getBody().getParents().get(1).getName(), is("c2"));
+        assertThat(c3Response.getBody().getParents().get(1).getCode(), is("c2"));
+        assertThat(c3Response.getBody().getParents().get(2).getName(), is("c3"));
+        assertThat(c3Response.getBody().getParents().get(2).getCode(), is("c3"));
+        assertThat(c3Response.getBody().getChildren().size(), is(2));
+        assertThat(c3Response.getBody().getChildren().get(0).getName(), is("c4"));
+        assertThat(c3Response.getBody().getChildren().get(0).getCode(), is("c4"));
+        assertThat(c3Response.getBody().getChildren().get(0).getProductTotal(), is(1));
+        assertThat(c3Response.getBody().getChildren().get(1).getName(), is("c5"));
+        assertThat(c3Response.getBody().getChildren().get(1).getCode(), is("c5"));
+        assertThat(c3Response.getBody().getChildren().get(1).getProductTotal(), is(2));
+
+        final ResponseEntity<CategoryData> c4Response = rest.getForEntity(BASE_URL + "c4", CategoryData.class);
+        assertThat(c4Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c4Response.getBody().getName(), is("c4"));
+        assertThat(c4Response.getBody().getCode(), is("c4"));
+        assertThat(c4Response.getBody().getProductTotal(), is(1));
+        assertThat(c4Response.getBody().getParents().size(), is(4));
+        assertThat(c4Response.getBody().getParents().get(0).getName(), is("c1"));
+        assertThat(c4Response.getBody().getParents().get(0).getCode(), is("c1"));
+        assertThat(c4Response.getBody().getParents().get(1).getName(), is("c2"));
+        assertThat(c4Response.getBody().getParents().get(1).getCode(), is("c2"));
+        assertThat(c4Response.getBody().getParents().get(2).getName(), is("c3"));
+        assertThat(c4Response.getBody().getParents().get(2).getCode(), is("c3"));
+        assertThat(c4Response.getBody().getParents().get(3).getName(), is("c4"));
+        assertThat(c4Response.getBody().getParents().get(3).getCode(), is("c4"));
+        assertThat(c4Response.getBody().getChildren().size(), is(0));
+
+        final ResponseEntity<CategoryData> c5Response = rest.getForEntity(BASE_URL + "c5", CategoryData.class);
+        assertThat(c5Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c5Response.getBody().getName(), is("c5"));
+        assertThat(c5Response.getBody().getCode(), is("c5"));
+        assertThat(c5Response.getBody().getProductTotal(), is(2));
+        assertThat(c5Response.getBody().getParents().size(), is(4));
+        assertThat(c5Response.getBody().getParents().get(0).getName(), is("c1"));
+        assertThat(c5Response.getBody().getParents().get(0).getCode(), is("c1"));
+        assertThat(c5Response.getBody().getParents().get(1).getName(), is("c2"));
+        assertThat(c5Response.getBody().getParents().get(1).getCode(), is("c2"));
+        assertThat(c5Response.getBody().getParents().get(2).getName(), is("c3"));
+        assertThat(c5Response.getBody().getParents().get(2).getCode(), is("c3"));
+        assertThat(c5Response.getBody().getParents().get(3).getName(), is("c5"));
+        assertThat(c5Response.getBody().getParents().get(3).getCode(), is("c5"));
+        assertThat(c5Response.getBody().getChildren().size(), is(0));
     }
 
 }

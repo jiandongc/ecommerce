@@ -1,9 +1,9 @@
 var category = angular.module('category', ['ngRoute']);
 
 category.controller('categoryCtrl', function($scope, $http, $routeParams, cartService, environment) {
-	$http.get(environment.productUrl + '/categories/' + $routeParams.id).success(function(response){
+	$http.get(environment.productUrl + '/products/?cc=' + $routeParams.code).success(function(response){
     $scope.categoryname = response.categoryName;
-		$scope.products = response.products;
+		$scope.products = response;
     $scope.subcategories = response.subCategories;
     $scope.brands = response.brands;
     $scope.productcount = response.productCount;
@@ -43,7 +43,7 @@ category.controller('categoryCtrl', function($scope, $http, $routeParams, cartSe
 category.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/category/:id', {
+      when('/category/:code', {
         templateUrl: 'listing/category.html',
         controller: 'categoryCtrl'
       });

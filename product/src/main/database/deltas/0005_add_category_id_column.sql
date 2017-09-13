@@ -1,1 +1,0 @@
-ALTER TABLE Product ADD COLUMN categoryId integer REFERENCES Category (id);

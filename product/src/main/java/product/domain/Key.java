@@ -3,11 +3,12 @@ package product.domain;
 import javax.persistence.*;
 
 /**
- * Created by jiandong on 13/11/16.
+ * Created by jiandong on 14/08/17.
  */
+
 @Entity
-@Table(name = "brand")
-public class Brand {
+@Table(name = "attribute")
+public class Key {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,9 +38,9 @@ public class Brand {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Brand brand = (Brand) o;
+        Key key = (Key) o;
 
-        return !(name != null ? !name.equals(brand.name) : brand.name != null);
+        return !(name != null ? !name.equals(key.name) : key.name != null);
 
     }
 

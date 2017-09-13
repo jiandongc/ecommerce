@@ -12,8 +12,6 @@ import product.domain.Category;
 import product.domain.Product;
 import product.repository.ProductRepository;
 
-import static java.lang.String.format;
-
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -28,44 +26,33 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public Product findById(long Id) {
-        return productRepository.findOne(Id);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Product> findAll() {
-        return productRepository.findAll();
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<Product> findByCategoryId(long categoryId) {
-        final Optional<Category> categoryOptional = categoryService.findById(categoryId);
-        final Category category = categoryOptional.orElseThrow(() -> new IllegalArgumentException(format("Category Id : %s not found.", categoryId)));
-
-        final List<Product> products = productRepository.findByCategoryId(category.getId());
-
-        final List<Category> subCategories = this.categoryService.findSubCategoriesByParentId(categoryId);
+    public List<Product> findByCategoryCode(String categoryCode) {
+        final List<Product> products = this.productRepository.findByCategoryCode(categoryCode);
+        final List<Category> subCategories = this.categoryService.findSubCategories(categoryCode);
         final List<Product> subCategoriesProducts = subCategories.stream()
-                .map(subCategory -> this.findByCategoryId(subCategory.getId()))
+                .map(subCategory -> this.findByCategoryCode(subCategory.getCode()))
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
-
         return Stream.concat(products.stream(), subCategoriesProducts.stream())
                 .distinct()
                 .collect(Collectors.toList());
-
     }
 
     @Override
-    public Map<Category, Integer> findProductTotalInSubCategories(Long categoryId) {
-        final List<Category> subCategories = categoryService.findSubCategoriesByParentId(categoryId);
-        final Map<Category, Integer> categories = new HashMap<>();
+    @Transactional(readOnly = true)
+    public Map<Category, Integer> findProductTotalInSubCategories(String categoryCode) {
+        final List<Category> subCategories = this.categoryService.findSubCategories(categoryCode);
+        final Map<Category, Integer> categories = new LinkedHashMap<>();
         for(Category category : subCategories){
-            final List<Product> products = this.findByCategoryId(category.getId());
+            final List<Product> products = this.findByCategoryCode(category.getCode());
             categories.put(category, products.size());
         }
         return categories;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<Product> findByCode(String code) {
+        return productRepository.findByCode(code);
     }
 }

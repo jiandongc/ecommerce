@@ -7,11 +7,14 @@ import org.springframework.data.repository.query.Param;
 import product.domain.Product;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long>{
 
-    String FIND_PRODUCT_BY_CATEGORY_ID_SQL = "select * from product where categoryId = :categoryId";
+    @Query(value = "select * from product p " +
+            "join category c on p.category_id = c.id " +
+            "where c.category_code = :categoryCode", nativeQuery = true)
+    List<Product> findByCategoryCode(@Param("categoryCode") String categoryCode);
 
-    @Query(value = FIND_PRODUCT_BY_CATEGORY_ID_SQL, nativeQuery = true)
-    List<Product> findByCategoryId(@Param("categoryId") long categoryId);
+    Optional<Product> findByCode(String code);
 }
