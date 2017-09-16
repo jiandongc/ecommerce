@@ -5,7 +5,9 @@ import org.w3c.dom.Attr;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -84,6 +86,15 @@ public class Sku {
 
     public void addAttribute(Attribute attribute){
         attributes.add(attribute);
+    }
+
+    public Map<String, String> getMap(){
+        final Map<String, String> values = new HashMap<>();
+        values.put("sku", sku);
+        values.put("qty", stockQuantity.toString());
+        values.put("price", price.toString());
+        attributes.stream().forEach(attribute -> values.put(attribute.getKeyName(), attribute.getValue()));
+        return values;
     }
 
     @Override

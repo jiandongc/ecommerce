@@ -1,11 +1,16 @@
 package product.mapper;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import product.data.ProductData;
-import product.domain.Brand;
-import product.domain.Category;
-import product.domain.Product;
+import product.domain.*;
 
+import java.math.BigDecimal;
+import java.util.*;
+
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -18,18 +23,84 @@ public class ProductDataMapperTest {
 
     @Test
     public void shouldMapProductToProductData(){
-//        // Given
-//        final Category category = new Category(1, "food", "delicious", "img/0005.jpg", 0);
-//        final Brand brand = new Brand(1, "Walkers");
-//        final Product product = new Product("Chester", 10d, "delicious", category, brand, "img/0001.jpg");
-//
-//        // When
-//        final ProductData actual = mapper.getValue(product);
-//
-//        // Then
-//        final ProductData expected = new ProductData(product.getId(), "Chester", 10d, "delicious", "food", "Walkers", "img/0001.jpg");
-//        assertThat(actual, is(expected));
+        // Given
+        final Product product = new Product();
+        product.setCode("code");
+        product.setName("name");
+        product.setDescription("description");
 
+        final Image imageOne = new Image();
+        final ImageType imageTypeOne = new ImageType();
+        imageTypeOne.setType("main");
+        imageOne.setUrl("url one");
+        imageOne.setImageType(imageTypeOne);
+        product.addImage(imageOne);
+
+        final Image imageTwo = new Image();
+        final ImageType imageTypeTwo = new ImageType();
+        imageTypeTwo.setType("thumbnail");
+        imageTwo.setUrl("url two");
+        imageTwo.setImageType(imageTypeTwo);
+        product.addImage(imageTwo);
+
+        final Key color = new Key();
+        color.setName("Color");
+        final Key size = new Key();
+        size.setName("Size");
+
+        final Sku sku1 = new Sku();
+        sku1.setPrice(TEN);
+        sku1.setStockQuantity(100);
+        sku1.setSku("FD10039403_X");
+        final Attribute attribute1 = new Attribute();
+        attribute1.setKey(color);
+        attribute1.setValue("Red");
+        sku1.addAttribute(attribute1);
+        final Attribute attribute2 = new Attribute();
+        attribute2.setKey(size);
+        attribute2.setValue("XL");
+        sku1.addAttribute(attribute2);
+        product.addSku(sku1);
+
+        final Sku sku2 = new Sku();
+        sku2.setPrice(ONE);
+        sku2.setStockQuantity(99);
+        sku2.setSku("FD10039403_Y");
+        final Attribute attribute3 = new Attribute();
+        attribute3.setKey(color);
+        attribute3.setValue("Blue");
+        sku2.addAttribute(attribute3);
+        final Attribute attribute4 = new Attribute();
+        attribute4.setKey(size);
+        attribute4.setValue("XXL");
+        sku2.addAttribute(attribute4);
+        product.addSku(sku2);
+
+        // When
+        final ProductData actual = mapper.getValue(product);
+
+        // Then
+        final Map<String, List<String>> attributes = new HashMap<>();
+        attributes.put("Color", Arrays.asList("Red", "Blue"));
+        attributes.put("Size", Arrays.asList("XL", "XXL"));
+        final Map<String, String> variantOne = new HashMap<>();
+        variantOne.put("sku", "FD10039403_X");
+        variantOne.put("qty", "100");
+        variantOne.put("price", "10");
+        variantOne.put("Color", "Red");
+        variantOne.put("Size", "XL");
+        final Map<String, String> variantTwo = new HashMap<>();
+        variantTwo.put("sku", "FD10039403_Y");
+        variantTwo.put("qty", "99");
+        variantTwo.put("price", "1");
+        variantTwo.put("Color", "Blue");
+        variantTwo.put("Size", "XXL");
+        final List<Map<String, String>> variants = Arrays.asList(variantOne, variantTwo);
+        final Map<String, String> images = new HashMap<>();
+        images.put("main", "url one");
+        images.put("thumbnail", "url two");
+        final ProductData expected = new ProductData("code", "name", "description", attributes, variants, images);
+        assertThat(actual, is(expected));
     }
 
 }

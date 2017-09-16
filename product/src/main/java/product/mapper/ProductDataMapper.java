@@ -3,7 +3,6 @@ package product.mapper;
 import org.springframework.stereotype.Component;
 import product.data.ProductData;
 import product.domain.Product;
-
 /**
  * Created by jiandong on 13/11/16.
  */
@@ -12,14 +11,18 @@ import product.domain.Product;
 public class ProductDataMapper {
 
     public ProductData getValue(Product product) {
-        return new ProductData(
-//                product.getId(),
-//                product.getName(),
-//                product.getUnitPrice(),
-//                product.getDescription(),
-//                product.getCategory() != null ? product.getCategory().getName() : null,
-//                product.getBrand() != null ? product.getBrand().getName() : null,
-//                product.getImageUrl()
-        );
+        final ProductData.ProductDataBuilder builder = ProductData.builder()
+                .code(product.getCode())
+                .name(product.getName())
+                .description(product.getDescription());
+
+        product.getSkus().stream().forEach(sku -> {
+            builder.addVariant(sku.getMap());
+            sku.getAttributes().stream().forEach(attribute -> builder.addAttribute(attribute.getKeyName(), attribute.getValue()));
+        });
+
+        product.getImages().stream().forEach(image -> builder.addImage(image.getImageTypeValue(), image.getUrl()));
+
+        return builder.build();
     }
 }

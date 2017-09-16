@@ -97,10 +97,4 @@ public class ProductSimpleData {
             return new ProductSimpleData(name, description, code, imageUrl);
         }
     }
-
-
-
-
-
-
 }

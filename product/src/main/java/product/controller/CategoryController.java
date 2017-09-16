@@ -12,9 +12,6 @@ import product.service.ProductService;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Created by jiandong on 13/11/16.

@@ -1,56 +1,66 @@
 package product.data;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Created by jiandong on 13/11/16.
  */
 public class ProductData {
 
-    private long id;
-    private String name;
-    private double unitPrice;
-    private String description;
-    private String category;
-    private String brand;
-    private String imageUrl;
+    private final String code;
+    private final String name;
+    private final String description;
+    private final Map<String, List<String>> attributes;
+    private final List<Map<String, String>> variants;
+    private final Map<String, String> images;
 
-    public ProductData(){}
-
-    public ProductData(long id, String name, double unitPrice, String description, String category, String brand, String imageUrl) {
-        this.id = id;
+    @JsonCreator
+    public ProductData(@JsonProperty("code") String code,
+                       @JsonProperty("name") String name,
+                       @JsonProperty("description") String description,
+                       @JsonProperty("attributes") Map<String, List<String>> attributes,
+                       @JsonProperty("variants") List<Map<String, String>> variants,
+                       @JsonProperty("images") Map<String, String> images) {
+        this.code = code;
         this.name = name;
-        this.unitPrice = unitPrice;
         this.description = description;
-        this.category = category;
-        this.brand = brand;
-        this.imageUrl = imageUrl;
+        this.attributes = attributes;
+        this.variants = variants;
+        this.images = images;
     }
 
-    public long getId() {
-        return id;
+    public static ProductDataBuilder builder(){
+        return new ProductDataBuilder();
+    }
+
+    public String getCode() {
+        return code;
     }
 
     public String getName() {
         return name;
     }
 
-    public double getUnitPrice() {
-        return unitPrice;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public String getCategory() {
-        return category;
+    public Map<String, List<String>> getAttributes() {
+        return attributes;
     }
 
-    public String getBrand() {
-        return brand;
+    public List<Map<String, String>> getVariants() {
+        return variants;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public Map<String, String> getImages() {
+        return images;
     }
 
     @Override
@@ -60,28 +70,73 @@ public class ProductData {
 
         ProductData that = (ProductData) o;
 
-        if (id != that.id) return false;
-        if (Double.compare(that.unitPrice, unitPrice) != 0) return false;
+        if (code != null ? !code.equals(that.code) : that.code != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (category != null ? !category.equals(that.category) : that.category != null) return false;
-        if (brand != null ? !brand.equals(that.brand) : that.brand != null) return false;
-        return !(imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null);
+        if (attributes != null ? !attributes.equals(that.attributes) : that.attributes != null) return false;
+        if (variants != null ? !variants.equals(that.variants) : that.variants != null) return false;
+        return !(images != null ? !images.equals(that.images) : that.images != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result;
-        long temp;
-        result = (int) (id ^ (id >>> 32));
+        int result = code != null ? code.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        temp = Double.doubleToLongBits(unitPrice);
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (description != null ? description.hashCode() : 0);
-        result = 31 * result + (category != null ? category.hashCode() : 0);
-        result = 31 * result + (brand != null ? brand.hashCode() : 0);
-        result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
+        result = 31 * result + (variants != null ? variants.hashCode() : 0);
+        result = 31 * result + (images != null ? images.hashCode() : 0);
         return result;
+    }
+
+    public static class ProductDataBuilder {
+        private String code;
+        private String name;
+        private String description;
+        private Map<String, List<String>> attributes = new HashMap<>();
+        private List<Map<String, String>> variants = new ArrayList<>();
+        private Map<String, String> images = new HashMap<>();
+
+        public ProductDataBuilder code(String code){
+            this.code = code;
+            return this;
+        }
+
+        public ProductDataBuilder name(String name){
+            this.name = name;
+            return this;
+        }
+
+        public ProductDataBuilder description(String description){
+            this.description = description;
+            return this;
+        }
+
+        public ProductDataBuilder addAttribute(String key, String value){
+            if(attributes.containsKey(key)){
+                attributes.get(key).add(value);
+            } else {
+                final List<String> values = new ArrayList<>();
+                values.add(value);
+                attributes.put(key, values);
+            }
+
+            return this;
+        }
+
+        public ProductDataBuilder addVariant(Map<String, String> variant){
+            variants.add(variant);
+            return this;
+        }
+
+        public ProductDataBuilder addImage(String key, String value){
+            images.put(key, value);
+            return this;
+        }
+
+        public ProductData build(){
+            return new ProductData(code, name, description, attributes, variants, images);
+        }
     }
 }

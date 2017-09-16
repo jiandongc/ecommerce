@@ -46,6 +46,10 @@ public class Attribute {
         this.value = value;
     }
 
+    public String getKeyName(){
+        return key.getName();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -1,6 +1,7 @@
 package product.controller;
 
 import static java.math.BigDecimal.TEN;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
@@ -14,8 +15,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 
+import product.data.ProductData;
 import product.data.ProductSimpleData;
 import product.domain.*;
+
+import java.util.Arrays;
 
 
 public class ProductControllerTest extends AbstractControllerTest {
@@ -77,40 +81,29 @@ public class ProductControllerTest extends AbstractControllerTest {
 	}
 	
 	@Test
-	public void shouldGetProductById(){
-//		// Given
-//		final Category category = categoryRepository.findOne(1l);
-//		final Brand brand = brandRepository.findOne(1l);
-//		final Product product = new Product("Chester", 10d, "delicious", category, brand, "img/0001.jpg");
-//		productRepository.save(product);
-//
-//		// When
-//		final ResponseEntity<Product> response = rest.getForEntity(BASE_URL + product.getId(), Product.class);
-//
-//		// Then
-//		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-//		assertThat(response.getBody(), is(product));
-	}
-	
-	@Test
-	public void shouldFindAllProducts(){
-//		// Given
-//		final Category category = categoryRepository.findOne(1l);
-//		final Brand brand = brandRepository.findOne(1l);
-//		final Product productOne = new Product("Chester1", 10d, "delicious", category, brand, "img/0001.jpg");
-//		final Product productTwo = new Product("Chester2", 10d, "delicious", category, brand, "img/0002.jpg");
-//		final Product productThree = new Product("Chester3", 10d, "delicious", category, brand, "img/0003.jpg");
-//
-//		productRepository.save(productOne);
-//		productRepository.save(productTwo);
-//		productRepository.save(productThree);
-//
-//		// When
-//		final ResponseEntity<Product[]> response = rest.getForEntity(BASE_URL, Product[].class);
-//
-//		// Then
-//		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-//		assertThat(asList(response.getBody()), hasItems(productOne, productTwo, productThree));
+	public void shouldGetProductByCode(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.setBrand(brand);
+		productOne.addImage(image);
+		productOne.addSku(sku);
+		productRepository.save(productOne);
+
+		// When & Then
+		final Product p = productRepository.findOne(productOne.getId());
+		final ResponseEntity<ProductData> response = rest.getForEntity(BASE_URL + p.getCode(), ProductData.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getName(), is("Chester"));
+		assertThat(response.getBody().getDescription(), is("Chester description"));
+		assertThat(response.getBody().getImages().get("Main"), is("img/0002.jpg"));
+		assertThat(response.getBody().getAttributes().get("Color"), is(asList("Red")));
+		assertThat(response.getBody().getVariants().get(0).get("price"), is("10"));
+		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_X"));
+		assertThat(response.getBody().getVariants().get(0).get("Color"), is("Red"));
+		assertThat(response.getBody().getVariants().get(0).get("qty"), is("100"));
 	}
 
 	@Test
