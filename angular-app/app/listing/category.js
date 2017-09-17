@@ -1,22 +1,25 @@
 var category = angular.module('category', ['ngRoute']);
 
 category.controller('categoryCtrl', function($scope, $http, $routeParams, cartService, environment) {
-	$http.get(environment.productUrl + '/products/?cc=' + $routeParams.code).success(function(response){
-    $scope.categoryname = response.categoryName;
-		$scope.products = response;
-    $scope.subcategories = response.subCategories;
-    $scope.brands = response.brands;
-    $scope.productcount = response.productCount;
-    $scope.parentcategories = response.parentCategories;
-    $scope.selectedBrands = {};
-    $scope.property = 'id';
-    $scope.reverse = true;
-    $scope.processing = {};
+  $scope.processing = {};
+  $scope.selectedBrands = {};
+  $scope.property = 'id';
+  $scope.reverse = true;
 
+	$http.get(environment.productUrl + '/products/?cc=' + $routeParams.code).success(function(response){
+		$scope.products = response;
     angular.forEach($scope.products,function(value,index){
       value.quantity = 1;
     });
 	});
+
+  $http.get(environment.productUrl + '/categories/' + $routeParams.code).success(function(response){
+    $scope.code = response.code;
+    $scope.name = response.name;
+    $scope.productTotal = response.productTotal;
+    $scope.parentcategories = response.parents;
+    $scope.subcategories = response.children;
+  });
 
   $scope.brandfilter=function(item){
     return $scope.selectedBrands[item.brand] || $scope.noFilter($scope.selectedBrands);
@@ -35,7 +38,7 @@ category.controller('categoryCtrl', function($scope, $http, $routeParams, cartSe
 
   $scope.addItemToCart = function(product){
     cartService.addItem(product, function(){
-      $scope.processing[product.id]=false;
+      $scope.processing[product.code]=false;
     });
   };
 });

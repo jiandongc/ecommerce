@@ -1,21 +1,21 @@
 <div class="container">	
 	<ul class="breadcrumb category-crumb m-b-02">
   		<li><a href="#"><i class="glyphicon glyphicon-home"></i></a></li>
-  		<li ng-repeat="category in parentcategories"><a href="#/category/{{category.id}}">{{category.name}}</a></li>
+  		<li ng-repeat="category in parentcategories"><a href="#/category/{{category.code}}">{{category.name}}</a></li>
 	</ul>
 	<div class = "row">
 		<div class = "col-xs-3">
 			<div class="panel panel-default">
 				<div class="panel-heading filter-header" data-toggle="collapse" data-target="#subcategory">
-					<span class="pull-left">{{categoryname}}</span>
+					<span class="pull-left">{{name}}</span>
 					<span class="pull-right"><i class="glyphicon glyphicon-minus"></i></span>
 				</div>
 				<div id="subcategory" class="panel-collapse collapse in">
 					<ul class="list-group sub-category">
 						<div ng-repeat="category in subcategories">
 							<li class="list-group-item p-l-10 p-t-05 p-b-05">
-								<a href="#/category/{{category.id}}">{{category.name}}</a>
-								<span class="badge">{{category.productCount}}</span>
+								<a href="#/category/{{category.code}}">{{category.name}}</a>
+								<span class="badge">{{category.productTotal}}</span>
 							</li>
 						</div>
 					</ul>
@@ -51,19 +51,17 @@
 					</button>
 				</div>
 				<div class="col-xs-6">
-					<span class="label label-info fs-11 pull-right m-t-05">共{{productcount}}個商品</span>
+					<span class="label label-info fs-11 pull-right m-t-05">共{{productTotal}}個商品</span>
 				</div>
 			</div>
 			<div class="row product-list">
 				<div ng-repeat="product in products | filter:brandfilter | orderBy:property:reverse">
 					<div class = "col-xs-6 col-sm-4 p-b-20 light-border">
-						<a href="#/products/{{product.id}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
-						<a href="#/products/{{product.id}}"><span class="product-name">{{product.name}}</span></a>
+						<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
+						<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
 						<form class = "form-inline p-t-02">
-							<text class="product-price">£{{product.unitPrice}}</text>	
-							<button type="button" class="btn btn-sm pull-right btn-add-to-cart" ng-click="addItemToCart(product); processing[product.id]=true">
-								<i ng-show="processing[product.id]" class="fa fa-spinner fa-pulse fa-fw"></i> 加入購物車
-							</button>
+							<text class="product-price">£{{product.price}}</text>	
+							<button type="button" class="btn btn-sm pull-right btn-add-to-cart" ng-click="addItemToCart(product); processing[product.code]=true"><i ng-show="processing[product.code]" class="fa fa-spinner fa-pulse fa-fw"></i>加入購物車</button>
 						</form>
 					</div>
 				</div>
