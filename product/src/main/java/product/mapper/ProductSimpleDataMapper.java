@@ -16,8 +16,8 @@ public class ProductSimpleDataMapper {
         return ProductSimpleData.builder()
                 .code(product.getCode())
                 .name(product.getName())
-                .description(product.getDescription())
                 .imageUrl(product.getMainImageUrl())
+                .price(product.getMinPrice())
                 .build();
     }
 }

@@ -98,6 +98,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("Chester"));
 		assertThat(response.getBody().getDescription(), is("Chester description"));
+		assertThat(response.getBody().getPrice().toPlainString(), is("10"));
 		assertThat(response.getBody().getImages().get("Main"), is("img/0002.jpg"));
 		assertThat(response.getBody().getAttributes().get("Color"), is(asList("Red")));
 		assertThat(response.getBody().getVariants().get(0).get("price"), is("10"));
@@ -129,11 +130,10 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
 		assertThat(response.getBody()[0].getName(), is("Chester"));
-		assertThat(response.getBody()[0].getDescription(), is("Chester description"));
 		assertThat(response.getBody()[0].getCode(), startsWith("FD"));
 		assertThat(response.getBody()[0].getImageUrl(), startsWith("img/0002.jpg"));
+		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10"));
 		assertThat(response.getBody()[1].getName(), is("Shoes"));
-		assertThat(response.getBody()[1].getDescription(), is("Shoes description"));
 		assertThat(response.getBody()[1].getCode(), startsWith("FD"));
 	}
 }

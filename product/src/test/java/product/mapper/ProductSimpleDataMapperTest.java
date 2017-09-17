@@ -2,10 +2,10 @@ package product.mapper;
 
 import org.junit.Test;
 import product.data.ProductSimpleData;
-import product.domain.Image;
-import product.domain.ImageType;
-import product.domain.Product;
+import product.domain.*;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
@@ -39,11 +39,30 @@ public class ProductSimpleDataMapperTest {
         product.addImage(imageTwo);
         product.addImage(imageOne);
 
+
+        final Sku sku1 = new Sku();
+        sku1.setPrice(TEN);
+        sku1.setStockQuantity(100);
+        sku1.setSku("FD10039403_X");
+        product.addSku(sku1);
+
+        final Sku sku2 = new Sku();
+        sku2.setPrice(ONE);
+        sku2.setStockQuantity(99);
+        sku2.setSku("FD10039403_Y");
+        product.addSku(sku2);
+
+
         // When
         final ProductSimpleData actual = mapper.getValue(product);
 
         // Then
-        final ProductSimpleData expected = ProductSimpleData.builder().name("Chester").description("delicious").code("CH").imageUrl("url one").build();
+        final ProductSimpleData expected = ProductSimpleData.builder()
+                .name("Chester")
+                .code("CH")
+                .imageUrl("url one")
+                .price(ONE)
+                .build();
         assertThat(actual, is(expected));
 
     }

@@ -14,7 +14,8 @@ public class ProductDataMapper {
         final ProductData.ProductDataBuilder builder = ProductData.builder()
                 .code(product.getCode())
                 .name(product.getName())
-                .description(product.getDescription());
+                .description(product.getDescription())
+                .price(product.getMinPrice());
 
         product.getSkus().stream().forEach(sku -> {
             builder.addVariant(sku.getMap());

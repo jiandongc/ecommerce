@@ -2,6 +2,7 @@ package product.domain;
 
 import javax.persistence.*;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -122,6 +123,11 @@ public class Product {
 	public String getMainImageUrl(){
 		final Optional<Image> mainImage = images.stream().filter(image -> "Main".equalsIgnoreCase(image.getImageTypeValue())).findFirst();
 		return mainImage.map(Image::getUrl).orElse(null);
+	}
+
+	public BigDecimal getMinPrice(){
+		final Optional<Sku> sku = skus.stream().min((s1, s2) -> s1.getPrice().compareTo(s2.getPrice()));
+		return sku.map(Sku::getPrice).orElse(null);
 	}
 
 	@Override

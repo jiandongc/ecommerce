@@ -1,12 +1,9 @@
 package product.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Test;
 import product.data.ProductData;
 import product.domain.*;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 import static java.math.BigDecimal.ONE;
@@ -99,7 +96,7 @@ public class ProductDataMapperTest {
         final Map<String, String> images = new HashMap<>();
         images.put("main", "url one");
         images.put("thumbnail", "url two");
-        final ProductData expected = new ProductData("code", "name", "description", attributes, variants, images);
+        final ProductData expected = new ProductData("code", "name", "description", ONE, attributes, variants, images);
         assertThat(actual, is(expected));
     }
 
