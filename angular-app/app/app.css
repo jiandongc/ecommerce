@@ -24,14 +24,14 @@ html, body {
 }
 
 .product-list .product-price {
-	font-weight: bold;
-  font-size: 1.3em;
-	color: #324902;
+	font-weight: 400;
+  font-size: 1.1em;
+	color: #4c4445;
 }
 
 .product-list .product-name {
-	color: #1D2807;
-  font-size: 1.1em;
+	color: #4c4445;
+  font-weight: 300;
 }
 
 .product-list a:hover {
@@ -71,45 +71,58 @@ html, body {
  
 .btn-add-to-cart,
 .btn-add-to-cart:focus {
-	background-color: #536F19;
-	color: #E8E8E8;
-  margin-right: 5%;
+	background-color: #58CBD5;
+	color: #fff;
+  font-weight: 600;
+  text-transform: uppercase;
   font-size: 1.0em;
 }
 
 .btn-add-to-cart:hover {
-    color: #BB5B19;
+    opacity: 0.7;
 }
 
-.productDetail .productName {
-    color: #1D2807;
-    font-size: 1.6em;
-    text-transform: uppercase;
-    margin-bottom: 2.5%
+.product-detail .name {
+  color: #4c4445;
+  font-size: 1.5em;
+  line-height: 1.3;
+  width: 400px;
+  margin-bottom: 1.5%;
 }
 
-.productDetail .productType {
-    color: #1D2807;
-    font-size: 1em;
-    margin-bottom: 2.5%
+.product-detail .price {
+  color: #4c4445;
+  font-size: 1.5em;
+  margin-bottom: 1.5%
 }
 
-.productDetail .productDesc {
-    color: #1D2807;
-    font-size: 1em;
-    margin-bottom: 3%
+.product-detail .stock {
+  font-size: 1em;
+  margin-bottom: 2%;
+  /*margin-left: 2%;*/
 }
 
-.productDetail .quantity {
-	margin-left:90px;
-    width:60px;
-    height:40px;
+.product-detail .desc {
+  color: #4c4445;
+  font-weight: 300;
+  font-size: 0.9em;
+  width:400px;
+  margin-bottom: 2%;
 }
 
-.productDetail .productPrice {
-    color: #324902;
-    font-size: 2em;    
-    margin-right: 10%;
+.product-detail label {
+  color: #4c4445;
+  font-weight: 600;
+  font-size: 1em;
+}
+
+.product-detail select {
+  width:400px;
+}
+
+.product-detail .qty {
+	color: #4c4445;
+  font-weight: 300;
 }
 
 /* Category page */
@@ -130,12 +143,14 @@ html, body {
 }
 
 .sub-category a{
-    color: #333;
+  color: #333;
 }
 
 .category-crumb {
-    background: #fff;
-    font-size: 1.2em;
+  background: #fff;
+  font-size: 1.2em;
+  padding: 10px 0px;
+  margin-bottom: 0px;
 }
 
 .category-crumb a {

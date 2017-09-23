@@ -20,6 +20,7 @@ import product.data.ProductSimpleData;
 import product.domain.*;
 
 import java.util.Arrays;
+import java.util.HashSet;
 
 
 public class ProductControllerTest extends AbstractControllerTest {
@@ -98,9 +99,10 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("Chester"));
 		assertThat(response.getBody().getDescription(), is("Chester description"));
+		assertThat(response.getBody().getCategoryCode(), is("FD"));
 		assertThat(response.getBody().getPrice().toPlainString(), is("10"));
 		assertThat(response.getBody().getImages().get("Main"), is("img/0002.jpg"));
-		assertThat(response.getBody().getAttributes().get("Color"), is(asList("Red")));
+		assertThat(response.getBody().getAttributes().get("Color"), is(new HashSet<>(Arrays.asList("Red"))));
 		assertThat(response.getBody().getVariants().get(0).get("price"), is("10"));
 		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_X"));
 		assertThat(response.getBody().getVariants().get(0).get("Color"), is("Red"));

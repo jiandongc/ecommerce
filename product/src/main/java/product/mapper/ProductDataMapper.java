@@ -15,6 +15,7 @@ public class ProductDataMapper {
                 .code(product.getCode())
                 .name(product.getName())
                 .description(product.getDescription())
+                .categoryCode(product.getCategoryCode())
                 .price(product.getMinPrice());
 
         product.getSkus().stream().forEach(sku -> {

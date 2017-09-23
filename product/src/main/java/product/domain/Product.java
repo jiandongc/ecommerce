@@ -130,6 +130,10 @@ public class Product {
 		return sku.map(Sku::getPrice).orElse(null);
 	}
 
+	public String getCategoryCode(){
+		return category.getCode();
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;

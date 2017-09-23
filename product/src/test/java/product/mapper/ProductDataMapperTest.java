@@ -26,6 +26,10 @@ public class ProductDataMapperTest {
         product.setName("name");
         product.setDescription("description");
 
+        final Category category = new Category();
+        category.setCode("FH");
+        product.setCategory(category);
+
         final Image imageOne = new Image();
         final ImageType imageTypeOne = new ImageType();
         imageTypeOne.setType("main");
@@ -77,9 +81,9 @@ public class ProductDataMapperTest {
         final ProductData actual = mapper.getValue(product);
 
         // Then
-        final Map<String, List<String>> attributes = new HashMap<>();
-        attributes.put("Color", Arrays.asList("Red", "Blue"));
-        attributes.put("Size", Arrays.asList("XL", "XXL"));
+        final Map<String, Set<String>> attributes = new LinkedHashMap<>();
+        attributes.put("Color", new LinkedHashSet<>(Arrays.asList("Red", "Blue")));
+        attributes.put("Size", new LinkedHashSet<>(Arrays.asList("XL", "XXL")));
         final Map<String, String> variantOne = new HashMap<>();
         variantOne.put("sku", "FD10039403_X");
         variantOne.put("qty", "100");
@@ -96,7 +100,7 @@ public class ProductDataMapperTest {
         final Map<String, String> images = new HashMap<>();
         images.put("main", "url one");
         images.put("thumbnail", "url two");
-        final ProductData expected = new ProductData("code", "name", "description", ONE, attributes, variants, images);
+        final ProductData expected = new ProductData("code", "name", "description", "FH", ONE, attributes, variants, images);
         assertThat(actual, is(expected));
     }
 

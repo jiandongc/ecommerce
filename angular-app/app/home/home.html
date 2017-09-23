@@ -25,13 +25,12 @@
 	</div>
 	<div class="row product-list">
 		<div ng-repeat="product in c2 | limitTo:8">
-			<div class = "col-xs-6 col-sm-4 col-md-3 p-b-20 light-border">
+			<div class = "col-xs-6 col-sm-4 col-md-3 p-b-20">
 				<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 				<span class="icon"><img src="/images/new.png"></span>
 				<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
 				<form class = "form-inline p-t-02">
-					<text class="product-price">£{{product.price}}</text>
-					<button type="button" class="btn btn-sm pull-right btn-add-to-cart" ng-click="addItemToCart(product); processing[product.code]=true"><i ng-show="processing[product.code]" class="fa fa-spinner fa-pulse fa-fw"></i>加入購物車</button>
+					<text class="product-price">{{product.price | currency:"£"}}</text>
 				</form>
 			</div>
 		</div>
@@ -44,12 +43,11 @@
 	</div>
 	<div class="row product-list">
 		<div ng-repeat="product in c1 | limitTo:8">
-			<div class = "col-xs-6 col-sm-4 col-md-3 p-b-20 light-border">
+			<div class = "col-xs-6 col-sm-4 col-md-3 p-b-20">
 				<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 				<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
 				<form class = "form-inline p-t-02">
-					<text class="product-price">£{{product.price}}</text>
-					<button type="button" class="btn btn-sm pull-right btn-add-to-cart" ng-click="addItemToCart(product); processing[product.code]=true"><i ng-show="processing[product.code]" class="fa fa-spinner fa-pulse fa-fw"></i>加入購物車</button>
+					<text class="product-price">{{product.price | currency:"£"}}</text>
 				</form>
 			</div>
 		</div>

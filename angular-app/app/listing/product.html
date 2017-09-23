@@ -1,19 +1,32 @@
 <div class="container">
-	<div class = "row">
+	<ul class="breadcrumb category-crumb">
+  		<li><a href="#"><i class="glyphicon glyphicon-home"></i></a></li>
+  		<li ng-repeat="category in parentcategories"><a href="#/category/{{category.code}}">{{category.name}}</a></li>
+	</ul>
+	<div class = "row product-detail">
 		<div class = "col-xs-12 col-md-6">
-			<img ng-src="{{product.imageUrl}}" class="img-responsive">
+			<img src="{{product.images.Main}}" class="img-responsive">
 		</div>
-		<div class = "col-xs-12 col-md-6 productDetail">
-			<div class="productName">{{product.name}}</div>
-			<div class="productType">{{product.category}}</div>
-			<div class="productDesc">{{product.description}}</div>
-			<form class = "form-inline">
-				<div class="productPrice">£{{product.unitPrice}} GBP</text>
+		<div class = "col-xs-12 col-md-6">
+			<div class="name">{{product.name}}</div>
+			<div class="price">{{price | currency:"£"}}</div>
+			<div ng-show="qty" class="stock"><span class="stock label label-warning">{{qty}} left</span></div>
+			<div ng-hide="qty" class="stock"><span class="stock label label-warning">Items in stock</span></div>
+			<div class="desc">{{product.description}}</div>
+			<div ng-repeat="(attribute, values) in product.attributes">
 				<div class="form-group">
-					<input type="number" value="1" max="99" min="1" maxlength="2" class="quantity">
-					<button class="btn btn-add" type="submit"><span class="glyphicon glyphicon-cutlery"></span></button>
+  					<label for="{{attribute}}">{{attribute}}</label>
+  					<select class="form-control" id="{{attribute}}" ng-init="selected=''" ng-model="selected" ng-change="select(attribute, selected)">
+  						<option value="">Choose an Option...</option>
+  						<option ng-repeat="value in values" value="{{value}}">{{value}}</option>
+  					</select>
 				</div>
-			</form>
+			</div>
+			<button type="button" class="btn btn-lg btn-add-to-cart" ng-click="">
+				<i ng-show="processing[product.code]" class="fa fa-spinner fa-pulse fa-fw"></i>
+				Add to Bag <span class="glyphicon glyphicon-shopping-cart"></span>
+			</button>
+			
 		</div>
 	</div>
 </div>
