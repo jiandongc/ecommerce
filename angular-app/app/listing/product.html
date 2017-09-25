@@ -5,13 +5,22 @@
 	</ul>
 	<div class = "row product-detail">
 		<div class = "col-xs-12 col-md-6">
-			<img src="{{product.images.Main}}" class="img-responsive">
+			<div class="flexslider">
+  				<ul class="slides">
+    				<li data-thumb='{{product.images.Main[0]}}'>
+      					<img ng-src='{{product.images.Main[0]}}' />
+    				</li>
+    				<li ng-repeat='url in product.images.Detail' data-thumb='{{url}}' on-finish-init-slider>
+      					<img ng-src='{{url}}' />
+    				</li>
+  				</ul>
+			</div>	
 		</div>
 		<div class = "col-xs-12 col-md-6">
 			<div class="name">{{product.name}}</div>
 			<div class="price">{{price | currency:"£"}}</div>
-			<div ng-show="qty" class="stock"><span class="stock label label-warning">{{qty}} left</span></div>
-			<div ng-hide="qty" class="stock"><span class="stock label label-warning">Items in stock</span></div>
+			<div ng-show="lowqty" class="stock"><span class="stock label label-warning">{{lowqty}} left</span></div>
+			<div ng-hide="lowqty" class="stock"><span class="stock label label-warning">Items in stock</span></div>
 			<div class="desc">{{product.description}}</div>
 			<div ng-repeat="(attribute, values) in product.attributes">
 				<div class="form-group">
@@ -26,12 +35,6 @@
 				<i ng-show="processing[product.code]" class="fa fa-spinner fa-pulse fa-fw"></i>
 				Add to Bag <span class="glyphicon glyphicon-shopping-cart"></span>
 			</button>
-			
 		</div>
 	</div>
 </div>
-
-
-
-
-

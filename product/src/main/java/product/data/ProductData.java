@@ -18,7 +18,7 @@ public class ProductData {
     private final BigDecimal price;
     private final Map<String, Set<String>> attributes;
     private final List<Map<String, String>> variants;
-    private final Map<String, String> images;
+    private final Map<String, List<String>> images;
 
     @JsonCreator
     public ProductData(@JsonProperty("code") String code,
@@ -28,7 +28,7 @@ public class ProductData {
                        @JsonProperty("price") BigDecimal price,
                        @JsonProperty("attributes") Map<String, Set<String>> attributes,
                        @JsonProperty("variants") List<Map<String, String>> variants,
-                       @JsonProperty("images") Map<String, String> images) {
+                       @JsonProperty("images") Map<String, List<String>> images) {
         this.code = code;
         this.name = name;
         this.description = description;
@@ -71,7 +71,7 @@ public class ProductData {
         return variants;
     }
 
-    public Map<String, String> getImages() {
+    public Map<String, List<String>> getImages() {
         return images;
     }
 
@@ -114,7 +114,7 @@ public class ProductData {
         private BigDecimal price;
         private Map<String, Set<String>> attributes = new LinkedHashMap<>();
         private List<Map<String, String>> variants = new ArrayList<>();
-        private Map<String, String> images = new HashMap<>();
+        private Map<String, List<String>> images = new HashMap<>();
 
         public ProductDataBuilder code(String code){
             this.code = code;
@@ -159,7 +159,13 @@ public class ProductData {
         }
 
         public ProductDataBuilder addImage(String key, String value){
-            images.put(key, value);
+            if(images.containsKey(key)){
+                images.get(key).add(value);
+            } else {
+                final List<String> values = new ArrayList<>();
+                values.add(value);
+                images.put(key, values);
+            }
             return this;
         }
 

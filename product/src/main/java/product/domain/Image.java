@@ -24,6 +24,8 @@ public class Image {
     private ImageType imageType;
     @Column(name = "url")
     private String url;
+    @Column(name = "ordering")
+    private int ordering;
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
@@ -64,6 +66,14 @@ public class Image {
         return imageType.getType();
     }
 
+    public int getOrdering() {
+        return ordering;
+    }
+
+    public void setOrdering(int ordering) {
+        this.ordering = ordering;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -71,6 +81,7 @@ public class Image {
 
         Image image = (Image) o;
 
+        if (ordering != image.ordering) return false;
         if (imageType != null ? !imageType.equals(image.imageType) : image.imageType != null) return false;
         if (url != null ? !url.equals(image.url) : image.url != null) return false;
         return !(product != null ? !product.equals(image.product) : image.product != null);
@@ -81,6 +92,7 @@ public class Image {
     public int hashCode() {
         int result = imageType != null ? imageType.hashCode() : 0;
         result = 31 * result + (url != null ? url.hashCode() : 0);
+        result = 31 * result + ordering;
         result = 31 * result + (product != null ? product.hashCode() : 0);
         return result;
     }

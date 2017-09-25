@@ -31,7 +31,10 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private Category category;
 	private Brand brand;
 	private ImageType imageType;
+	private ImageType imageType2;
 	private Image image;
+	private Image image1;
+	private Image image2;
 	private Key key;
 	private Sku sku;
 	private Attribute attribute;
@@ -59,6 +62,21 @@ public class ProductControllerTest extends AbstractControllerTest {
 		image = new Image();
 		image.setImageType(imageType);
 		image.setUrl("img/0002.jpg");
+		image.setOrdering(1);
+
+		imageType2 = new ImageType();
+		imageType2.setType("thumbnail");
+		imageTypeRepository.save(imageType2);
+
+		image1 = new Image();
+		image1.setImageType(imageType2);
+		image1.setUrl("img/0003.jpg");
+		image1.setOrdering(1);
+
+		image2 = new Image();
+		image2.setImageType(imageType2);
+		image2.setUrl("img/0004.jpg");
+		image2.setOrdering(2);
 
 		key = new Key();
 		key.setName("Color");
@@ -90,6 +108,8 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setCategory(category);
 		productOne.setBrand(brand);
 		productOne.addImage(image);
+		productOne.addImage(image1);
+		productOne.addImage(image2);
 		productOne.addSku(sku);
 		productRepository.save(productOne);
 
@@ -101,7 +121,9 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getDescription(), is("Chester description"));
 		assertThat(response.getBody().getCategoryCode(), is("FD"));
 		assertThat(response.getBody().getPrice().toPlainString(), is("10"));
-		assertThat(response.getBody().getImages().get("Main"), is("img/0002.jpg"));
+		assertThat(response.getBody().getImages().get("Main").get(0), is("img/0002.jpg"));
+		assertThat(response.getBody().getImages().get("thumbnail").get(0), is("img/0003.jpg"));
+		assertThat(response.getBody().getImages().get("thumbnail").get(1), is("img/0004.jpg"));
 		assertThat(response.getBody().getAttributes().get("Color"), is(new HashSet<>(Arrays.asList("Red"))));
 		assertThat(response.getBody().getVariants().get(0).get("price"), is("10"));
 		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_X"));

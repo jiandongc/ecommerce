@@ -30,19 +30,27 @@ public class ProductDataMapperTest {
         category.setCode("FH");
         product.setCategory(category);
 
-        final Image imageOne = new Image();
+
         final ImageType imageTypeOne = new ImageType();
         imageTypeOne.setType("main");
+        final Image imageOne = new Image();
         imageOne.setUrl("url one");
         imageOne.setImageType(imageTypeOne);
+        imageOne.setOrdering(1);
         product.addImage(imageOne);
-
         final Image imageTwo = new Image();
+        imageTwo.setUrl("url two");
+        imageTwo.setImageType(imageTypeOne);
+        imageTwo.setOrdering(2);
+        product.addImage(imageTwo);
+
         final ImageType imageTypeTwo = new ImageType();
         imageTypeTwo.setType("thumbnail");
-        imageTwo.setUrl("url two");
-        imageTwo.setImageType(imageTypeTwo);
-        product.addImage(imageTwo);
+        final Image imageThree = new Image();
+        imageThree.setUrl("url three");
+        imageThree.setImageType(imageTypeTwo);
+        imageThree.setOrdering(1);
+        product.addImage(imageThree);
 
         final Key color = new Key();
         color.setName("Color");
@@ -97,9 +105,9 @@ public class ProductDataMapperTest {
         variantTwo.put("Color", "Blue");
         variantTwo.put("Size", "XXL");
         final List<Map<String, String>> variants = Arrays.asList(variantOne, variantTwo);
-        final Map<String, String> images = new HashMap<>();
-        images.put("main", "url one");
-        images.put("thumbnail", "url two");
+        final Map<String, List<String>> images = new HashMap<>();
+        images.put("main", Arrays.asList("url one", "url two"));
+        images.put("thumbnail", Arrays.asList("url three"));
         final ProductData expected = new ProductData("code", "name", "description", "FH", ONE, attributes, variants, images);
         assertThat(actual, is(expected));
     }

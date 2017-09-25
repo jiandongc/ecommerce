@@ -64,6 +64,7 @@ public class ProductRepositoryTest extends AbstractRepositoryTest{
 		image = new Image();
 		image.setImageType(imageType);
 		image.setUrl("img/0002.jpg");
+		image.setOrdering(1);
 
 		key = new Key();
 		key.setName("Color");

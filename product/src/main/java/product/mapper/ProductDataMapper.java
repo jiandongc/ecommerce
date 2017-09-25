@@ -23,7 +23,9 @@ public class ProductDataMapper {
             sku.getAttributes().stream().forEach(attribute -> builder.addAttribute(attribute.getKeyName(), attribute.getValue()));
         });
 
-        product.getImages().stream().forEach(image -> builder.addImage(image.getImageTypeValue(), image.getUrl()));
+        product.getImages().stream()
+                .sorted((i1, i2) -> Integer.compare(i1.getOrdering(), i2.getOrdering()))
+                .forEach(image -> builder.addImage(image.getImageTypeValue(), image.getUrl()));
 
         return builder.build();
     }
