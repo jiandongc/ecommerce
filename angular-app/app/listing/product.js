@@ -3,6 +3,10 @@ var productDetail = angular.module('productDetail', ['ngRoute']);
 productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout) {
 	$http.get(environment.productUrl + '/products/' + $routeParams.code).success(function(response){
 		$scope.product = response;
+
+    $http.get(environment.productUrl + '/products/color/' + $routeParams.code).success(function(response){
+      $scope.colorVariant = response;
+    });
     
     $http.get(environment.productUrl + '/categories/' + response.categoryCode).success(function(response){
       $scope.parentcategories = response.parents;
@@ -52,14 +56,6 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
     }
     return null;
   };
-
-  $scope.$on('initSlider', function() {
-      $('.flexslider').flexslider({
-            animation: 'slide', 
-            controlNav: 'thumbnails', 
-            slideshow: false
-          });
-  });
 });
 
 productDetail.directive('onFinishInitSlider', function ($timeout) {
@@ -70,13 +66,26 @@ productDetail.directive('onFinishInitSlider', function ($timeout) {
             $timeout(function () {
               $('.flexslider').flexslider({
                 animation: 'slide', 
-                controlNav: 'thumbnails', 
+                controlNav: 'thumbnails',
                 slideshow: false
               });
             });
           }
         }
     }
+});
+
+productDetail.directive('dynamic', function ($compile) {
+  return {
+    restrict: 'A',
+    replace: true,
+    link: function (scope, ele, attrs) {
+      scope.$watch(attrs.dynamic, function(html) {
+        ele.html(html);
+        $compile(ele.contents())(scope);
+      });
+    }
+  };
 });
 
 productDetail.config(['$routeProvider',

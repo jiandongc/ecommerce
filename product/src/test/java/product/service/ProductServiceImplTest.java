@@ -14,8 +14,10 @@ import product.domain.Category;
 import product.domain.Product;
 import product.repository.ProductRepository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ProductServiceImplTest {
 	private ProductRepository productRepository = mock(ProductRepository.class);
@@ -181,6 +183,40 @@ public class ProductServiceImplTest {
 		// When & Then
 		final Map<Category, Integer> c3Actual = productService.findProductTotalInSubCategories("C3");
 		assertThat(c3Actual.isEmpty(), is(true));
+	}
+
+	@Test
+	public void shouldReturnColorVariant(){
+		// Given
+		final Product p1 = new Product();
+		p1.setId(1);
+		p1.setCode("p1");
+		final Product p2 = new Product();
+		p2.setId(2);
+		p2.setCode("p2");
+		final Product p3 = new Product();
+		p3.setId(3);
+		p3.setCode("p3");
+
+		when(productRepository.findByCode("p1")).thenReturn(Optional.of(p1));
+		when(productRepository.findColorVariantIds(1L)).thenReturn(Arrays.asList(2, 3));
+		when(productRepository.findOne(2L)).thenReturn(p2);
+		when(productRepository.findOne(3L)).thenReturn(p3);
+
+		// Then
+		List<Product> products = productService.findColorVariant("p1");
+		assertThat(products.size(), is(2));
+		assertThat(products, hasItems(p2, p3));
+	}
+
+	@Test
+	public void shouldReturnEmptyListIfProductIsNotFound(){
+		// Given & When
+		when(productRepository.findByCode("p1")).thenReturn(Optional.empty());
+
+		// Then
+		List<Product> products = productService.findColorVariant("p1");
+		assertThat(products.size(), is(0));
 	}
 
 

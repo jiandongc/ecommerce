@@ -125,6 +125,11 @@ public class Product {
 		return mainImage.map(Image::getUrl).orElse(null);
 	}
 
+	public String getColorImageUrl(){
+		final Optional<Image> mainImage = images.stream().filter(image -> "Color".equalsIgnoreCase(image.getImageTypeValue())).findFirst();
+		return mainImage.map(Image::getUrl).orElse(null);
+	}
+
 	public BigDecimal getMinPrice(){
 		final Optional<Sku> sku = skus.stream().min((s1, s2) -> s1.getPrice().compareTo(s2.getPrice()));
 		return sku.map(Sku::getPrice).orElse(null);

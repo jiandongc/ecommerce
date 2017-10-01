@@ -55,4 +55,17 @@ public class ProductServiceImpl implements ProductService {
     public Optional<Product> findByCode(String code) {
         return productRepository.findByCode(code);
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findColorVariant(String code) {
+        final Optional<Product> product = this.findByCode(code);
+        if(product.isPresent()){
+            final List<Integer> ids = productRepository.findColorVariantIds(product.get().getId());
+            return ids.stream().map(id -> productRepository.findOne(Long.valueOf(id))).collect(Collectors.toList());
+        } else {
+            return Collections.emptyList();
+        }
+
+    }
 }

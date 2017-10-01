@@ -3,6 +3,7 @@ package product.repository;
 import static java.math.BigDecimal.TEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 
 import java.util.List;
@@ -33,6 +34,9 @@ public class ProductRepositoryTest extends AbstractRepositoryTest{
 
 	@Autowired
 	private AttributeRepository attributeRepository;
+
+	@Autowired
+	private ProductGroupRepository productGroupRepository;
 
 	private Category category;
 	private Brand brand;
@@ -136,4 +140,46 @@ public class ProductRepositoryTest extends AbstractRepositoryTest{
 		assertThat(products.size(), is(3));
 		assertThat(products, hasItems(productOne, productTwo, productThree));
 	}
+
+	@Test
+	public void shouldFindProductColorVariantIds(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("delicious");
+		productOne.setCategory(category);
+		productRepository.save(productOne);
+		productGroupRepository.addColorVariant(1, productOne.getId());
+
+		final Product productTwo = new Product();
+		productTwo.setName("Coke");
+		productTwo.setDescription("yummy");
+		productTwo.setCategory(category);
+		productRepository.save(productTwo);
+		productGroupRepository.addColorVariant(1, productTwo.getId());
+
+		final Product productThree = new Product();
+		productThree.setName("Cake");
+		productThree.setDescription("getting fat");
+		productThree.setCategory(category);
+		productRepository.save(productThree);
+		productGroupRepository.addColorVariant(1, productThree.getId());
+
+		// When & Then
+		final List<Integer> idsOne = productRepository.findColorVariantIds(productOne.getId());
+		assertThat(idsOne, hasSize(2));
+		assertThat(idsOne, hasItems((int)productTwo.getId(), (int)productThree.getId()));
+
+		// When & Then
+		final List<Integer> idsTwo = productRepository.findColorVariantIds(productTwo.getId());
+		assertThat(idsTwo, hasSize(2));
+		assertThat(idsTwo, hasItems((int)productOne.getId(), (int)productThree.getId()));
+
+		// When & Then
+		final List<Integer> idsThree = productRepository.findColorVariantIds(productThree.getId());
+		assertThat(idsThree, hasSize(2));
+		assertThat(idsThree, hasItems((int)productOne.getId(), (int)productTwo.getId()));
+
+	}
+
 }

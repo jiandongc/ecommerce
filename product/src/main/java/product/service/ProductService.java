@@ -11,4 +11,5 @@ public interface ProductService {
 	List<Product> findByCategoryCode(String categoryCode);
 	Map<Category, Integer> findProductTotalInSubCategories(String categoryCode);
 	Optional<Product> findByCode(String code);
+	List<Product> findColorVariant(String code);
 }

@@ -12,11 +12,20 @@ import product.domain.Product;
 @Component
 public class ProductSimpleDataMapper {
 
-    public ProductSimpleData getValue(Product product) {
+    public ProductSimpleData getValueWithMainImage(Product product) {
         return ProductSimpleData.builder()
                 .code(product.getCode())
                 .name(product.getName())
                 .imageUrl(product.getMainImageUrl())
+                .price(product.getMinPrice())
+                .build();
+    }
+
+    public ProductSimpleData getValueWithColorImage(Product product) {
+        return ProductSimpleData.builder()
+                .code(product.getCode())
+                .name(product.getName())
+                .imageUrl(product.getColorImageUrl())
                 .price(product.getMinPrice())
                 .build();
     }

@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import product.data.ProductData;
 import product.data.ProductSimpleData;
 import product.domain.Product;
 import product.mapper.ProductDataMapper;
@@ -35,7 +36,7 @@ public class ProductController {
 	@RequestMapping(method=RequestMethod.GET)
 	public List<ProductSimpleData> findProducts(@RequestParam(value = "cc", required = true) String categoryCode) {
 		return productService.findByCategoryCode(categoryCode).stream()
-				.map(simpleProductMapper::getValue).collect(Collectors.toList());
+				.map(simpleProductMapper::getValueWithMainImage).collect(Collectors.toList());
 	}
 	
     @RequestMapping(value = "/{code}", method=RequestMethod.GET)
@@ -48,5 +49,17 @@ public class ProductController {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
     }
+
+	@RequestMapping(value = "/color/{code}", method=RequestMethod.GET)
+	public ResponseEntity findColorVariant(@PathVariable String code){
+		final List<ProductSimpleData> products = productService.findColorVariant(code).stream()
+				.map(simpleProductMapper::getValueWithColorImage).collect(Collectors.toList());
+
+		if(!products.isEmpty()){
+			return new ResponseEntity<>(products, HttpStatus.OK);
+		} else {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+	}
     
 }

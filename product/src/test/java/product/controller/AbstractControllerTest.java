@@ -33,7 +33,11 @@ public abstract class AbstractControllerTest {
     @Autowired
     protected AttributeRepository attributeRepository;
 
+    @Autowired
+    protected ProductGroupRepository productGroupRepository;
+
     protected void cleanUp(){
+        productGroupRepository.deleteAll();
         productRepository.deleteAll();
         categoryRepository.deleteAll();
         brandRepository.deleteAll();

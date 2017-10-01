@@ -1,7 +1,6 @@
 package product.controller;
 
 import static java.math.BigDecimal.TEN;
-import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
@@ -159,5 +158,54 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10"));
 		assertThat(response.getBody()[1].getName(), is("Shoes"));
 		assertThat(response.getBody()[1].getCode(), startsWith("FD"));
+	}
+
+	@Test
+	public void shouldFindColorVariant(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productRepository.save(productOne);
+		productGroupRepository.addColorVariant(1, productOne.getId());
+
+		final Product productTwo = new Product();
+		productTwo.setName("Shoes");
+		productTwo.setDescription("Shoes description");
+		productTwo.setCategory(category);
+		productRepository.save(productTwo);
+		productGroupRepository.addColorVariant(1, productTwo.getId());
+
+		final Product productThree = new Product();
+		productThree.setName("Tea");
+		productThree.setDescription("English Tea");
+		productThree.setCategory(category);
+		productRepository.save(productThree);
+		productGroupRepository.addColorVariant(1, productThree.getId());
+
+		// When & Then
+		final Product p1 = productRepository.findOne(productOne.getId());
+		final ResponseEntity<ProductSimpleData[]> response = rest.getForEntity(BASE_URL + "color/" + p1.getCode(), ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(2));
+		assertThat(response.getBody()[0].getName(), is("Shoes"));
+		assertThat(response.getBody()[1].getName(), is("Tea"));
+
+		// When & Then
+		final Product p2 = productRepository.findOne(productTwo.getId());
+		final ResponseEntity<ProductSimpleData[]> response2 = rest.getForEntity(BASE_URL + "color/" + p2.getCode(), ProductSimpleData[].class);
+		assertThat(response2.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response2.getBody().length, is(2));
+		assertThat(response2.getBody()[0].getName(), is("Chester"));
+		assertThat(response2.getBody()[1].getName(), is("Tea"));
+
+		// When & Then
+		final Product p3 = productRepository.findOne(productThree.getId());
+		final ResponseEntity<ProductSimpleData[]> response3 = rest.getForEntity(BASE_URL + "color/" + p3.getCode(), ProductSimpleData[].class);
+		assertThat(response3.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response3.getBody().length, is(2));
+		assertThat(response3.getBody()[0].getName(), is("Chester"));
+		assertThat(response3.getBody()[1].getName(), is("Shoes"));
 	}
 }

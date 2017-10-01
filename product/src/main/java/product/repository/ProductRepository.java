@@ -17,4 +17,11 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     List<Product> findByCategoryCode(@Param("categoryCode") String categoryCode);
 
     Optional<Product> findByCode(String code);
+
+    @Query(value = "SELECT g2.product_id " +
+            "FROM product_group g1 " +
+            "JOIN product_group g2 ON g1.product_group = g2.product_group AND g1.product_id <> g2.product_id " +
+            "WHERE g1.type = 'Color' " +
+            "AND g1.product_id = :productId", nativeQuery = true)
+    List<Integer> findColorVariantIds(@Param("productId") long productId);
 }
