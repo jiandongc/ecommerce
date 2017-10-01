@@ -5,7 +5,7 @@
 		<span style="float: right;"><a href="#/category/mzg">查看更多</a></span>
 	</div>
 	<div class="row product-list">
-		<div ng-repeat="product in c2 | limitTo:8">
+		<div class="box" ng-repeat="product in c2 | limitTo:8">
 			<div class = "col-xs-6 col-sm-4 col-md-3 p-b-20">
 				<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 				<span class="icon"><img src="/images/new.png"></span>
@@ -23,7 +23,7 @@
 		<span style="float: right;"><a href="#/category/msg">查看更多</a></span>
 	</div>
 	<div class="row product-list">
-		<div ng-repeat="product in c1 | limitTo:8">
+		<div class="box" ng-repeat="product in c1 | limitTo:8">
 			<div class = "col-xs-6 col-sm-4 col-md-3 p-b-20">
 				<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 				<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>

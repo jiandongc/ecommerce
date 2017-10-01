@@ -55,7 +55,7 @@
 				</div>
 			</div>
 			<div class="row product-list">
-				<div ng-repeat="product in products | filter:brandfilter | orderBy:property:reverse">
+				<div class="box" ng-repeat="product in products | filter:brandfilter | orderBy:property:reverse">
 					<div class = "col-xs-6 col-sm-4 p-b-20">
 						<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 						<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
