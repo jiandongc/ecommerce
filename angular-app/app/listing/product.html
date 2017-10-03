@@ -21,21 +21,6 @@
 			<div class="price">{{price | currency:"£"}}</div>
 			<div ng-show="lowqty" class="stock"><span class="stock label label-warning">{{lowqty}} left</span></div>
 			<div ng-hide="lowqty" class="stock"><span class="stock label label-warning">Items in stock</span></div>
-			<div class="row social-icon">
-				<div class="col-xs-3">
-				<i class="fa fa-twitter fa-2x" aria-hidden="true"></i>
-				</div>
-				<div class="col-xs-3">
-				<i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i>
-				</div>
-				<div class="col-xs-3">
-				<i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
-				</div>
-				<div class="col-xs-3">
-				<i class="fa fa-pinterest fa-2x" aria-hidden="true"></i>
-				</div>
-			</div>
-
 			<div ng-show="colorVariant" class="row color-variant">
 				<div class="col-xs-3">
 					<img class="active" ng-src='{{product.images.Color[0]}}'/>
@@ -56,10 +41,28 @@
   					</select>
 				</div>
 			</div>
+
 			<button type="button" class="btn btn-lg btn-add-to-cart m-b-15" ng-click="">
 				<i ng-show="processing[product.code]" class="fa fa-spinner fa-pulse fa-fw"></i>
 				Add to Bag <span class="glyphicon glyphicon-shopping-cart"></span>
 			</button>
+
+			<div class="row social-icon">
+				<div class="col-xs-3">
+				<i class="fa fa-twitter fa-2x" aria-hidden="true"></i>
+				</div>
+				<div class="col-xs-3">
+				<i class="fa fa-facebook-official fa-2x" aria-hidden="true"></i>
+				</div>
+				<div class="col-xs-3">
+				<i class="fa fa-instagram fa-2x" aria-hidden="true"></i>
+				</div>
+				<div class="col-xs-3">
+				<i class="fa fa-pinterest fa-2x" aria-hidden="true"></i>
+				</div>
+			</div>
+
+
 			<div class="desc" dynamic="product.description"></div>
 		</div>
 	</div>
