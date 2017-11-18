@@ -84,8 +84,7 @@ public class Image {
         if (ordering != image.ordering) return false;
         if (imageType != null ? !imageType.equals(image.imageType) : image.imageType != null) return false;
         if (url != null ? !url.equals(image.url) : image.url != null) return false;
-        return !(product != null ? !product.equals(image.product) : image.product != null);
-
+        return !(product.getCode() != null ? !product.getCode().equals(image.product.getCode()) : image.product.getCode() != null);
     }
 
     @Override
@@ -93,7 +92,18 @@ public class Image {
         int result = imageType != null ? imageType.hashCode() : 0;
         result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + ordering;
-        result = 31 * result + (product != null ? product.hashCode() : 0);
+        result = 31 * result + (product.getCode() != null ? product.getCode().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "id=" + id +
+                ", imageType=" + imageType +
+                ", url='" + url + '\'' +
+                ", ordering=" + ordering +
+                ", product=" + product.getCode() +
+                '}';
     }
 }

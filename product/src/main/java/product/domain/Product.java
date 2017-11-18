@@ -14,6 +14,7 @@ import static javax.persistence.FetchType.LAZY;
 @Entity
 @Table(name = "product")
 public class Product {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
@@ -34,9 +35,13 @@ public class Product {
 	@JoinColumn(name = "parent_id")
 	private Product parent;
 	@OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
-	private List<Image> images = new ArrayList<>();
+	@OrderBy(value="ordering")
+	private List<Image> images;
 	@OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
-	private List<Sku> skus = new ArrayList<>();
+	private List<Sku> skus;
+	@ManyToMany(fetch = LAZY)
+	@JoinTable(name = "product_attribute_value", joinColumns = {@JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "attribute_value_id")})
+	private List<Attribute> attributes;
 
 	public long getId() {
 		return id;
@@ -110,14 +115,37 @@ public class Product {
 		this.code = code;
 	}
 
+	public List<Attribute> getAttributes() {
+		return attributes;
+	}
+
+	public void setAttributes(List<Attribute> attributes) {
+		this.attributes = attributes;
+	}
+
 	public void addImage(Image image){
+		if(images == null){
+			images = new ArrayList<>();
+		}
+
 		images.add(image);
 		image.setProduct(this);
 	}
 
 	public void addSku(Sku sku){
+		if(skus == null){
+			skus = new ArrayList<>();
+		}
+
 		skus.add(sku);
 		sku.setProduct(this);
+	}
+
+	public void addAttribute(Attribute attribute){
+		if(attributes == null){
+			attributes = new ArrayList<>();
+		}
+		attributes.add(attribute);
 	}
 
 	public String getMainImageUrl(){
@@ -153,8 +181,8 @@ public class Product {
 		if (brand != null ? !brand.equals(product.brand) : product.brand != null) return false;
 		if (parent != null ? !parent.equals(product.parent) : product.parent != null) return false;
 		if (images != null ? !images.equals(product.images) : product.images != null) return false;
-		return !(skus != null ? !skus.equals(product.skus) : product.skus != null);
-
+		if (skus != null ? !skus.equals(product.skus) : product.skus != null) return false;
+		return attributes != null ? attributes.equals(product.attributes) : product.attributes == null;
 	}
 
 	@Override
@@ -167,6 +195,23 @@ public class Product {
 		result = 31 * result + (parent != null ? parent.hashCode() : 0);
 		result = 31 * result + (images != null ? images.hashCode() : 0);
 		result = 31 * result + (skus != null ? skus.hashCode() : 0);
+		result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Product{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", code='" + code + '\'' +
+				", category=" + category +
+				", brand=" + brand +
+				", parent=" + parent +
+				", images=" + images +
+				", skus=" + skus +
+				", attributes=" + attributes +
+				'}';
 	}
 }

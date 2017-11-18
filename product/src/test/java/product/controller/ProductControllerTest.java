@@ -1,6 +1,7 @@
 package product.controller;
 
 import static java.math.BigDecimal.TEN;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 
 import product.data.ProductData;
+import product.data.ProductSearchData;
 import product.data.ProductSimpleData;
 import product.domain.*;
 
@@ -28,7 +30,6 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private final TestRestTemplate rest = new TestRestTemplate();
 
 	private Category category;
-	private Brand brand;
 	private ImageType imageType;
 	private ImageType imageType2;
 	private Image image;
@@ -42,17 +43,23 @@ public class ProductControllerTest extends AbstractControllerTest {
 	public void setUp(){
 		this.cleanUp();
 
+		key = new Key();
+		key.setName("Color");
+		keyRepository.save(key);
+
+		attribute = new Attribute();
+		attribute.setKey(key);
+		attribute.setValue("Red");
+		attributeRepository.save(attribute);
+
 		category = new Category();
 		category.setHidden(false);
 		category.setName("food");
 		category.setDescription("delicious");
 		category.setImageUrl("img/0001.jpg");
 		category.setCode("FD");
+		category.setFilterKeys(asList(key));
 		categoryRepository.save(category);
-
-		brand = new Brand();
-		brand.setName("Walkers");
-		brandRepository.save(brand);
 
 		imageType = new ImageType();
 		imageType.setType("Main");
@@ -77,15 +84,6 @@ public class ProductControllerTest extends AbstractControllerTest {
 		image2.setUrl("img/0004.jpg");
 		image2.setOrdering(2);
 
-		key = new Key();
-		key.setName("Color");
-		keyRepository.save(key);
-
-		attribute = new Attribute();
-		attribute.setKey(key);
-		attribute.setValue("Red");
-		attributeRepository.save(attribute);
-
 		sku = new Sku();
 		sku.setPrice(TEN);
 		sku.setStockQuantity(100);
@@ -105,7 +103,6 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
-		productOne.setBrand(brand);
 		productOne.addImage(image);
 		productOne.addImage(image1);
 		productOne.addImage(image2);
@@ -123,7 +120,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getImages().get("Main").get(0), is("img/0002.jpg"));
 		assertThat(response.getBody().getImages().get("thumbnail").get(0), is("img/0003.jpg"));
 		assertThat(response.getBody().getImages().get("thumbnail").get(1), is("img/0004.jpg"));
-		assertThat(response.getBody().getAttributes().get("Color"), is(new HashSet<>(Arrays.asList("Red"))));
+		assertThat(response.getBody().getAttributes().get("Color"), is(new HashSet<>(asList("Red"))));
 		assertThat(response.getBody().getVariants().get(0).get("price"), is("10"));
 		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_X"));
 		assertThat(response.getBody().getVariants().get(0).get("Color"), is("Red"));
@@ -137,7 +134,6 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
-		productOne.setBrand(brand);
 		productOne.addImage(image);
 		productOne.addSku(sku);
 		productRepository.save(productOne);
@@ -208,4 +204,47 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response3.getBody()[0].getName(), is("Chester"));
 		assertThat(response3.getBody()[1].getName(), is("Shoes"));
 	}
+
+	@Test
+	public void shouldFilterProductsInCategory(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.addAttribute(attribute);
+		productRepository.save(productOne);
+
+		// When & Then
+		String filterStr = "{\"color\":[\"red\"]}";
+		ResponseEntity<ProductSearchData> response = rest.getForEntity(
+				BASE_URL + "search/categories/FD?filter={filterStr}",
+				ProductSearchData.class, filterStr);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getProducts().size(), is(1));
+		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
+		assertThat(response.getBody().getFacets().size(), is(1));
+		assertThat(response.getBody().getFacets().get(0).getName(), is("color"));
+		assertThat(response.getBody().getFacets().get(0).isHasSelectedValue(), is(true));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().size(), is(1));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).getCount(), is(1));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).getName(), is("red"));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).isSelected(), is(true));
+
+
+		// When & Then
+		filterStr = "{}";
+		response = rest.getForEntity(BASE_URL + "search/categories/FD?filter={filterStr}", ProductSearchData.class, filterStr);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getProducts().size(), is(1));
+		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
+		assertThat(response.getBody().getFacets().size(), is(1));
+		assertThat(response.getBody().getFacets().get(0).getName(), is("color"));
+		assertThat(response.getBody().getFacets().get(0).isHasSelectedValue(), is(false));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().size(), is(1));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).getCount(), is(1));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).getName(), is("red"));
+		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).isSelected(), is(false));
+	}
+
 }

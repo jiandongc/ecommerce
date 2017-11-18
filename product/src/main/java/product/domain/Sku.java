@@ -1,7 +1,5 @@
 package product.domain;
 
-import org.w3c.dom.Attr;
-
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -28,9 +26,7 @@ public class Sku {
     @Column(name = "price")
     private BigDecimal price;
     @ManyToMany(fetch = LAZY)
-    @JoinTable(name = "sku_attribute_value",
-            joinColumns = {@JoinColumn(name = "sku_id")},
-            inverseJoinColumns = {@JoinColumn(name = "attribute_value_id")})
+    @JoinTable(name = "sku_attribute_value", joinColumns = {@JoinColumn(name = "sku_id")}, inverseJoinColumns = {@JoinColumn(name = "attribute_value_id")})
     private List<Attribute> attributes = new ArrayList<Attribute>();
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
@@ -108,8 +104,8 @@ public class Sku {
         if (stockQuantity != null ? !stockQuantity.equals(sku1.stockQuantity) : sku1.stockQuantity != null)
             return false;
         if (price != null ? !price.equals(sku1.price) : sku1.price != null) return false;
-        return !(attributes != null ? !attributes.equals(sku1.attributes) : sku1.attributes != null);
-
+        if (attributes != null ? !attributes.equals(sku1.attributes) : sku1.attributes != null) return false;
+        return product.getCode() != null ? product.getCode().equals(sku1.product.getCode()) : sku1.product.getCode() == null;
     }
 
     @Override
@@ -118,6 +114,19 @@ public class Sku {
         result = 31 * result + (stockQuantity != null ? stockQuantity.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + (attributes != null ? attributes.hashCode() : 0);
+        result = 31 * result + (product.getCode() != null ? product.getCode().hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Sku{" +
+                "id=" + id +
+                ", sku='" + sku + '\'' +
+                ", stockQuantity=" + stockQuantity +
+                ", price=" + price +
+                ", attributes=" + attributes +
+                ", product=" + product.getCode() +
+                '}';
     }
 }

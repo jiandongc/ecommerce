@@ -352,11 +352,11 @@ html, body {
     overflow-x: hidden;
 }
 
-ul.dropdown-menu{
+ul.scrollable-menu {
     width: 300px;
 }
 
-ul.dropdown-menu img{
+ul.scrollable-menu img{
     width: 100px;
     height: 100px;
     overflow: hidden;
@@ -365,31 +365,31 @@ ul.dropdown-menu img{
 	border-color: #F2F2F2;
 }
 
-ul.dropdown-menu .productPrice{
+ul.scrollable-menu .productPrice{
     margin-top: 2.5%;
 	font-weight: bold;
     color: #324902;
     font-size: 0.8em;
 } 
 
-ul.dropdown-menu .productName{
+ul.scrollable-menu .productName{
 	font-weight: bold;
     color: #1D2807;
     font-size: 0.8em;
     text-transform: uppercase;
 } 
 
-ul.dropdown-menu .productQty{
+ul.scrollable-menu .productQty{
     color: #324902;
     font-size: 0.8em;
 } 
 
-ul.dropdown-menu .btn-view {
+ul.scrollable-menu .btn-view {
 	background-color: #536F19;
 	color: #E8E8E8;
 }
 
-ul.dropdown-menu .btn-remove {
+ul.scrollable-menu .btn-remove {
 	margin-right: 15%;
 	color: #99AA77;
 }
@@ -616,6 +616,8 @@ ul.dropdown-menu .btn-remove {
 .m-b-25 { margin-bottom: 2.5em; }
 .m-b-30 { margin-bottom: 3.0em; }
 
+.fs-08 {font-size: 0.8em}
+.fs-09 {font-size: 0.9em}
 .fs-10 {font-size: 1.0em}
 .fs-11 {font-size: 1.1em}
 .fs-12 {font-size: 1.2em}

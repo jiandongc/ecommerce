@@ -12,10 +12,11 @@
     "angular-mocks": "~1.4",
     "angular-resource": "~1.4",
     "angular-cookies": "~1.4",
-    "bootstrap": "3.3.6",
+    "bootstrap": "3.3.7",
     "html5-boilerplate": "~4.3.0",
     "animate.css": "latest",
-    "flexslider": "2.6.4"
+    "flexslider": "2.6.4",
+    "checklist-model": "0.11.0"
   },
   "resolutions": {
     "angular": "1.4.9"

@@ -1,0 +1,1 @@
+ALTER TABLE category_filter_attribute ADD COLUMN ordering smallint;

@@ -2,7 +2,10 @@ package product.domain;
 
 import javax.persistence.*;
 
+import java.util.List;
+
 import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "category")
@@ -25,6 +28,10 @@ public class Category {
 	@ManyToOne(fetch = EAGER)
 	@JoinColumn(name = "parent_id")
 	private Category parent;
+	@ManyToMany(fetch = LAZY)
+	@JoinTable(name = "category_filter_attribute", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "attribute_id")})
+	@OrderColumn(name = "ordering")
+	private List<Key> filterKeys;
 
 	public long getId() {
 		return id;
@@ -82,9 +89,18 @@ public class Category {
 		this.code = code;
 	}
 
+	public List<Key> getFilterKeys() {
+		return filterKeys;
+	}
+
+	public void setFilterKeys(List<Key> filterKeys) {
+		this.filterKeys = filterKeys;
+	}
+
 	public boolean isTopCategory(){
 		return parent == null;
 	}
+
 
 	@Override
 	public boolean equals(Object o) {
@@ -99,8 +115,8 @@ public class Category {
 			return false;
 		if (code != null ? !code.equals(category.code) : category.code != null) return false;
 		if (imageUrl != null ? !imageUrl.equals(category.imageUrl) : category.imageUrl != null) return false;
-		return !(parent != null ? !parent.equals(category.parent) : category.parent != null);
-
+		if (parent != null ? !parent.equals(category.parent) : category.parent != null) return false;
+		return filterKeys != null ? filterKeys.equals(category.filterKeys) : category.filterKeys == null;
 	}
 
 	@Override
@@ -111,6 +127,21 @@ public class Category {
 		result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
 		result = 31 * result + (hidden ? 1 : 0);
 		result = 31 * result + (parent != null ? parent.hashCode() : 0);
+		result = 31 * result + (filterKeys != null ? filterKeys.hashCode() : 0);
 		return result;
+	}
+
+	@Override
+	public String toString() {
+		return "Category{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", description='" + description + '\'' +
+				", code='" + code + '\'' +
+				", imageUrl='" + imageUrl + '\'' +
+				", hidden=" + hidden +
+				", parent=" + parent +
+				", filterKeys=" + filterKeys +
+				'}';
 	}
 }

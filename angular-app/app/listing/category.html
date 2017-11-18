@@ -1,69 +1,76 @@
-<div class="container">	
-	<ul class="breadcrumb category-crumb m-b-02">
-  		<li><a href="#"><i class="glyphicon glyphicon-home"></i></a></li>
-  		<li ng-repeat="category in parentcategories"><a href="#/category/{{category.code}}">{{category.name}}</a></li>
-	</ul>
-	<div class = "row">
-		<div class = "col-xs-3">
-			<div class="panel panel-default">
-				<div class="panel-heading filter-header" data-toggle="collapse" data-target="#subcategory">
-					<span class="pull-left">{{name}}</span>
-					<span class="pull-right"><i class="glyphicon glyphicon-minus"></i></span>
-				</div>
-				<div id="subcategory" class="panel-collapse collapse in">
-					<ul class="list-group sub-category">
-						<div ng-repeat="category in subcategories">
-							<li class="list-group-item p-l-10 p-t-05 p-b-05">
-								<a href="#/category/{{category.code}}">{{category.name}}</a>
-								<span class="badge">{{category.productTotal}}</span>
-							</li>
-						</div>
-					</ul>
-				</div>
+<div class="container">
+	<div class="row">
+		<div class="col-xs-6">
+			<ul class="breadcrumb category-crumb m-b-02">
+				<li><a href="#"><i class="glyphicon glyphicon-home"></i></a></li>
+				<li ng-repeat="category in parentcategories"><a href="#/category/{{category.code}}">{{category.name}}</a></li>
+			</ul>
+		</div>
+		<div class="col-xs-6">
+			<span class="label label-info fs-10 pull-right m-t-10">{{productTotal}} products</span>
+		</div>
+	</div>
+	<div class="row m-b-10">
+		<div class="col-xs-6">
+			<div class="btn-group">
+				<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{name}} <span ng-if="subcategories.length" class="caret"></span>
+				</button>
+				<ul ng-if="subcategories.length" class="dropdown-menu">
+					<div ng-repeat="category in subcategories">
+                        <li class="m-l-05 p-t-05 p-b-02">
+                            <a href="#/category/{{category.code}}">{{category.name}}</a>
+                            <span style="color:grey">({{category.productTotal}})</span>
+                        </li>
+                    </div>
+				</ul>
 			</div>
-			<div class="panel panel-default">
-				<div class="panel-heading filter-header" data-toggle="collapse" data-target="#brand">
-					<span class="pull-left">品牌</span>
-					<span class="pull-right"><i class="glyphicon glyphicon-minus"></i></span>
-				</div>
-				<div id="brand" class="panel-collapse collapse in">
-					<div class="m-t-05 m-l-05">
-						<div ng-repeat="brand in brands">
-							<div class="checkbox">
-  								<label><input type="checkbox" data-ng-model="selectedBrands[brand.name]">{{brand.name}}</label>
-							</div>
-						</div>
-					</div>
-				</div>			
+			<div class="btn-group m-r-02" ng-repeat="facet in facets">
+				<button class="btn dropdown-toggle" ng-class="style($index)" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					{{facet.name}} <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li class="m-l-05" ng-repeat="facetValue in facet.facetValues">
+						<input type="checkbox" checklist-model="filters[facet.name]" checklist-value="facetValue.name" checklist-change="applyFilters()">
+						{{facetValue.name}} <span style="color:grey">({{facetValue.count}})</span>	
+					</li>
+				</ul>
 			</div>
-  		</div>
-		<div class = "col-xs-9">
-			<div class="row m-b-10">
-				<div class="col-xs-6">
-					<button class="btn btn-md fs-12" ng-class="property==='name' ? 'btn-sort-selected' : 'btn-sort'" ng-click="sortBy('name')">
-						Newness<i ng-class="property==='name' && reverse ? 'glyphicon glyphicon-arrow-down' : 'glyphicon glyphicon-arrow-up'"></i>
-					</button>
-					<button class="btn btn-md fs-12" ng-class="property==='id' ? 'btn-sort-selected' : 'btn-sort'" ng-click="sortBy('id')">
-						Popularity<i ng-class="property==='id' && reverse ? 'glyphicon glyphicon-arrow-down' : 'glyphicon glyphicon-arrow-up'"></i>
-					</button>
-					<button class="btn btn-md fs-12" ng-class="property==='unitPrice' ? 'btn-sort-selected' : 'btn-sort'" ng-click="sortBy('unitPrice')">
-						Price<i ng-class="property==='unitPrice' && reverse ? 'glyphicon glyphicon-arrow-down' : 'glyphicon glyphicon-arrow-up'"></i>
-					</button>
-				</div>
-				<div class="col-xs-6">
-					<span class="label label-info fs-11 pull-right m-t-05">{{productTotal}} results</span>
-				</div>
+		</div>
+		<div class="col-xs-6">
+			<div class="btn-group pull-right">
+				<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					Sort by <span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li class="m-l-05" data-label="pink">
+						<input type="checkbox" value="blue"> 
+						blue <span style="color:grey">(33)</span>
+					</li>
+					<li class="m-l-05" data-label="pink">
+						<input type="checkbox" value="red"> 
+						red <span style="color:grey">(21)</span>
+					</li>
+					<li class="m-l-05" data-label="pink">
+						<input type="checkbox" value="black"> 
+						black <span style="color:grey">(10)</span>
+					</li>
+					<li class="m-l-05" data-label="pink">
+						<input type="checkbox" value="pink"> 
+						pink <span style="color:grey">(43)</span>
+					</li>
+				</ul>
 			</div>
-			<div class="row product-list">
-				<div class="box" ng-repeat="product in products | filter:brandfilter | orderBy:property:reverse">
-					<div class = "col-xs-6 col-sm-4 p-b-20">
-						<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
-						<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
-						<form class = "form-inline p-t-02">
-							<text class="product-price">{{product.price | currency:"£"}}</text>
-						</form>
-					</div>
-				</div>
+		</div>
+	</div>
+	<div class="row product-list">
+		<div class="box" ng-repeat="product in products | filter:brandfilter | orderBy:property:reverse">
+			<div class = "col-xs-6 col-sm-4 p-b-20">
+				<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
+				<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
+				<form class = "form-inline p-t-02">
+					<text class="product-price">{{product.price | currency:"£"}}</text>
+				</form>
 			</div>
 		</div>
 	</div>
