@@ -6,6 +6,7 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
   $scope.filters = {};
   $scope.property = 'id';
   $scope.reverse = true;
+  $scope.sort = {display: "Our favourites", code: undefined};
 
   categoryService.findCategory($routeParams.code).success(function(response){
     $scope.code = response.code;
@@ -15,8 +16,8 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
     $scope.subcategories = response.children;
   });
 
-  $scope.findProducts = function(categoryCode, filters) {
-    categoryService.findProducts(categoryCode, filters).success(function(response){
+  $scope.findProducts = function(categoryCode, filters, sort) {
+    categoryService.findProducts(categoryCode, filters, sort).success(function(response){
       $scope.filters = {};
       $scope.products = response.products;
       $scope.facets = response.facets;
@@ -36,28 +37,7 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
     });
   }
 
-  $scope.findProducts($routeParams.code, $scope.filters);
-
-  $scope.brandfilter=function(item){
-    return $scope.selectedBrands[item.brand] || $scope.noFilter($scope.selectedBrands);
-  };
-
-  $scope.noFilter=function (filterObj){
-    return Object.keys(filterObj).every(function(key){
-     return !filterObj[key]; 
-    });
-  };
-
-  $scope.sortBy = function(property){
-    $scope.reverse = ($scope.property === property) ? !$scope.reverse : true;
-    $scope.property = property;
-  };
-
-  $scope.addItemToCart = function(product){
-    cartService.addItem(product, function(){
-      $scope.processing[product.code]=false;
-    });
-  };
+  $scope.findProducts($routeParams.code, $scope.filters, $scope.sort);
 
   $scope.applyFilters = function(){
     for(var key in $scope.filters){
@@ -65,8 +45,8 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
         delete $scope.filters[key];
       }
     }
-    $scope.findProducts($scope.code, $scope.filters);
-  };
+    $scope.findProducts($scope.code, $scope.filters, $scope.sort);
+  }
 
   $scope.style = function(value){
     if(value%3==0) {
@@ -76,14 +56,28 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
      } else {
         return "btn-danger";
      }
-  };
+  }
 
+  $scope.sortby = function(display, code){
+    $scope.sort = {display: display, code: code};
+    $scope.findProducts($scope.code, $scope.filters, $scope.sort);
+  }
 
 });
 
 category.service('categoryService', function($http, environment){
-  this.findProducts = function(categoryCode, filters) {
-    return $http.get(environment.productUrl + '/products/search/categories/' + categoryCode, {params: {filter: filters}});
+  this.findProducts = function(categoryCode, filters, sort) {
+    var params = {};
+    
+    if(typeof filters !== "undefined" && Object.keys(filters).length !== 0){
+      params['filter'] = filters;
+    }
+
+    if(typeof sort !== "undefined" && typeof sort.code !== "undefined"){
+      params['sort'] = sort.code;
+    }
+
+    return $http.get(environment.productUrl + '/products/search/categories/' + categoryCode, {params: params});
   };
 
   this.findCategory = function(categoryCode){

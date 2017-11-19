@@ -39,32 +39,19 @@
 		</div>
 		<div class="col-xs-6">
 			<div class="btn-group pull-right">
-				<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					Sort by <span class="caret"></span>
+				<button class="btn btn-info btn-sort dropdown-toggle" type="button" data-toggle="dropdown">
+					{{sort.display}}&nbsp;&nbsp;<span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu">
-					<li class="m-l-05" data-label="pink">
-						<input type="checkbox" value="blue"> 
-						blue <span style="color:grey">(33)</span>
-					</li>
-					<li class="m-l-05" data-label="pink">
-						<input type="checkbox" value="red"> 
-						red <span style="color:grey">(21)</span>
-					</li>
-					<li class="m-l-05" data-label="pink">
-						<input type="checkbox" value="black"> 
-						black <span style="color:grey">(10)</span>
-					</li>
-					<li class="m-l-05" data-label="pink">
-						<input type="checkbox" value="pink"> 
-						pink <span style="color:grey">(43)</span>
-					</li>
+					<li class="m-l-05"><a href="" ng-click="sortby('Our favourites')">Our favourites</a></li>
+					<li class="m-l-05"><a href="" ng-click="sortby('Price high to low', 'pricedesc')">Price high to low</a></li>
+					<li class="m-l-05"><a href="" ng-click="sortby('Price low to high', 'priceasc')">Price low to high</a></li>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<div class="row product-list">
-		<div class="box" ng-repeat="product in products | filter:brandfilter | orderBy:property:reverse">
+		<div class="box" ng-repeat="product in products">
 			<div class = "col-xs-6 col-sm-4 p-b-20">
 				<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 				<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>

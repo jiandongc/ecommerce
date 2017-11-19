@@ -34,4 +34,13 @@ public class FilterMapMapperTest {
         assertThat(filterMap.get("shape"), hasItems("squere", "triangle"));
     }
 
+    @Test
+    public void shouldReturnEmptyMapIfJsonStringIsNull(){
+        // When
+        final Map<String, List<String>> filterMap = mapper.getValue(null);
+
+        // Then
+        assertThat(filterMap.size(), is(0));
+    }
+
 }

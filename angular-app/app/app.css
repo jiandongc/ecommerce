@@ -202,26 +202,30 @@ html, body {
     font-size: 1.2em;
 }
 
-.btn-sort, 
-.btn-sort:focus {
-    background-color: #30638E;
-    color: #fff;
-    outline: 0;
+.btn-sort {
+  width: 160px !important;
 }
 
-.btn-sort:hover {
-    color: #FF5714;
+.select-style {
+    border: 1px solid #ccc;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+    background: #fafafa url("img/icon-select.png") no-repeat 90% 50%;
 }
 
-.btn-sort-selected,
-.btn-sort-selected:focus {
-    background-color: #DB3A34;
-    color: #fff;
-    outline: 0;
+.select-style select {
+    padding: 5px 8px;
+    width: 130%;
+    border: none;
+    box-shadow: none;
+    background: transparent;
+    background-image: none;
+    -webkit-appearance: none;
 }
 
-.btn-sort-selected:hover {
-    color: #7ba626;        
+.select-style select:focus {
+    outline: none;
 }
 
 .footer {

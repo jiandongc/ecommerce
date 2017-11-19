@@ -13,11 +13,15 @@ import product.mapper.FilterMapMapper;
 import product.mapper.ProductSimpleDataMapper;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ProductSearchServiceImpl implements ProductSearchService {
 
+    private static final String PRICE_DESC = "pricedesc";
+    private static final String PRICE_ASC = "priceasc";
     private final FilterMapMapper filterMapMapper;
     private final ProductSimpleDataMapper productMapper;
 
@@ -29,12 +33,13 @@ public class ProductSearchServiceImpl implements ProductSearchService {
     }
 
     @Override
-    public ProductSearchData filter(Category category, List<Product> allProducts, String filterJsonStr) {
+    public ProductSearchData filter(Category category, List<Product> allProducts, String filterJsonStr, String sort) {
         final Map<String, List<String>> filterMap = filterMapMapper.getValue(filterJsonStr);
-        final List<Product> products = this.filterProducts(allProducts, filterMap);
+        final List<Product> products = this.filter(allProducts, filterMap);
+        final List<Product> sortedProducts = this.sort(products, sort);
 
         final ProductSearchData.ProductSearchDataBuilder productSearchDataBuilder = ProductSearchData.builder();
-        for(Product product : products){
+        for(Product product : sortedProducts){
             productSearchDataBuilder.addProduct(productMapper.getValueWithMainImage(product));
         }
 
@@ -47,7 +52,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         return productSearchDataBuilder.build();
     }
 
-    private List<Product> filterProducts(List<Product> allProducts, Map<String, List<String>> filterMap){
+    private List<Product> filter(List<Product> allProducts, Map<String, List<String>> filterMap){
         return allProducts.stream().filter(product -> {
             for (Object o : filterMap.entrySet()) {
                 final Map.Entry pair = (Map.Entry) o;
@@ -55,11 +60,22 @@ public class ProductSearchServiceImpl implements ProductSearchService {
                 final List fieldValues = (List) pair.getValue();
                 boolean noneMatch = product.getAttributes().stream().noneMatch(attribute ->
                         attribute.getKeyName().equalsIgnoreCase(fieldName) && fieldValues.contains(attribute.getValue().toLowerCase()));
-
                 if (noneMatch) return false;
             }
             return true;
-        }).collect(Collectors.toList());
+        }).collect(toList());
+    }
+
+    private List<Product> sort(List<Product> products, String sort){
+        if(sort == null) return products;
+
+        switch (sort){
+            case PRICE_DESC :
+                return products.stream().sorted(comparing(Product::getMinPrice).reversed()).collect(toList());
+            case PRICE_ASC :
+                return products.stream().sorted(comparing(Product::getMinPrice)).collect(toList());
+            default: return products;
+        }
     }
 
     private Facet buildFacet(Key key, List<Product> allProducts, Map<String, List<String>> filterMap) {
@@ -68,7 +84,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         facetBuilder.hasSelectedValue(filterMap.containsKey(key.getName().toLowerCase()));
 
         final Map<String, List<String>> facetFilterMap = this.facetFilterMap(key, filterMap);
-        final List<Product> products = this.filterProducts(allProducts, facetFilterMap);
+        final List<Product> products = this.filter(allProducts, facetFilterMap);
 
         final Map<String, Integer> facetValueMap = new HashMap<>();
         for (Product product : products) {

@@ -2,6 +2,7 @@ package product.service;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mockito;
 import product.data.Facet;
 import product.data.FacetValue;
 import product.data.ProductSearchData;
@@ -13,13 +14,18 @@ import product.domain.Product;
 import product.mapper.FilterMapMapper;
 import product.mapper.ProductSimpleDataMapper;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.TEN;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ProductSearchServiceImplTest {
 
@@ -99,7 +105,7 @@ public class ProductSearchServiceImplTest {
                 "    \"brand\": [\"nike\", \"adidas\"]\n" +
                 "  }";
         ProductSearchData productSearchData
-                = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json);
+                = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json, null);
         // Then
         List<ProductSimpleData> products = productSearchData.getProducts();
         assertThat(products.size(), is(4));
@@ -127,7 +133,7 @@ public class ProductSearchServiceImplTest {
         json = "{\n" +
                 "    \"color\": [\"blue\"]\n" +
                 "  }";
-        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json);
+        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json, null);
         // Then
         products = productSearchData.getProducts();
         assertThat(products.size(), is(2));
@@ -152,7 +158,7 @@ public class ProductSearchServiceImplTest {
         json = "{\n" +
                 "    \"brand\": [\"nike\"]\n" +
                 "  }";
-        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json);
+        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json, null);
         // Then
         products = productSearchData.getProducts();
         assertThat(products.size(), is(2));
@@ -178,7 +184,7 @@ public class ProductSearchServiceImplTest {
                 "    \"color\": [\"red\"],\n" +
                 "    \"brand\": [\"nike\"]\n" +
                 "  }";
-        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json);
+        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json, null);
         // Then
         products = productSearchData.getProducts();
         assertThat(products.size(), is(1));
@@ -200,7 +206,7 @@ public class ProductSearchServiceImplTest {
 
         // When
         json = "{}";
-        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json);
+        productSearchData = searchService.filter(category, asList(redNike, redAdidas, redPuma, blueNike, blueAdidas, yellowAdidas), json, null);
         // Then
         products = productSearchData.getProducts();
         assertThat(products.size(), is(6));
@@ -224,6 +230,37 @@ public class ProductSearchServiceImplTest {
                 .addFacetValue(FacetValue.builder().name("puma").count(1).isSelected(false).build())
                 .build();
         assertThat(facets.get(1), is(brandFacet));
+    }
+
+    @Test
+    public void shouldSortProductsByPrice(){
+        // Given
+        final Category category = mock(Category.class);
+        final Product p1 = mock(Product.class);
+        when(p1.getMinPrice()).thenReturn(ONE);
+        when(p1.getName()).thenReturn("p1");
+        final Product p2 = mock(Product.class);
+        when(p2.getMinPrice()).thenReturn(TEN);
+        when(p2.getName()).thenReturn("p2");
+        final Product p3 = mock(Product.class);
+        when(p3.getMinPrice()).thenReturn(new BigDecimal(20));
+        when(p3.getName()).thenReturn("p3");
+
+        // When & Then
+        ProductSearchData productSearchData = searchService.filter(category, asList(p1, p2, p3), "{}", "pricedesc");
+        List<ProductSimpleData> products = productSearchData.getProducts();
+        assertThat(products.size(), is(3));
+        assertThat(products.get(0).getName(), is("p3"));
+        assertThat(products.get(1).getName(), is("p2"));
+        assertThat(products.get(2).getName(), is("p1"));
+
+        // When & Then
+        productSearchData = searchService.filter(category, asList(p1, p2, p3), "{}", "priceasc");
+        products = productSearchData.getProducts();
+        assertThat(products.size(), is(3));
+        assertThat(products.get(0).getName(), is("p1"));
+        assertThat(products.get(1).getName(), is("p2"));
+        assertThat(products.get(2).getName(), is("p3"));
     }
 
     private void setOtherProductProperties(Product product){

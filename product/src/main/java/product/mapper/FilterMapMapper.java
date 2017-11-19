@@ -26,8 +26,8 @@ public class FilterMapMapper {
                 }
                 filterMap.put(filedName, fieldValues);
             }
-        } catch (IOException exception){
-
+        } catch (Exception exception){
+            return new HashMap<>();
         }
         return filterMap;
     }

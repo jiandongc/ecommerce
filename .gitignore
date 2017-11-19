@@ -19,6 +19,7 @@ node_modules/
 bower_components/
 dist/
 config.js
+angular-app/package-lock.json
 
 # Mac OX
 .DS_Store

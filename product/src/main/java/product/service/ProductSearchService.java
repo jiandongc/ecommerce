@@ -7,5 +7,5 @@ import product.domain.Product;
 import java.util.List;
 
 public interface ProductSearchService {
-    ProductSearchData filter(Category category, List<Product> products, String filterJsonStr);
+    ProductSearchData filter(Category category, List<Product> products, String filterJsonStr, String sort);
 }

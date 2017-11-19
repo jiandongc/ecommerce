@@ -1,5 +1,6 @@
 package product.controller;
 
+import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.TEN;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -20,6 +21,7 @@ import product.data.ProductSearchData;
 import product.data.ProductSimpleData;
 import product.domain.*;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 
@@ -37,6 +39,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private Image image2;
 	private Key key;
 	private Sku sku;
+	private Sku sku2;
 	private Attribute attribute;
 
 	@Before
@@ -89,6 +92,12 @@ public class ProductControllerTest extends AbstractControllerTest {
 		sku.setStockQuantity(100);
 		sku.setSku("FD10039403_X");
 		sku.addAttribute(attribute);
+
+		sku2 = new Sku();
+		sku2.setPrice(ONE);
+		sku2.setStockQuantity(70);
+		sku2.setSku("FD10039403_Y");
+		sku2.addAttribute(attribute);
 	}
 
 	@After
@@ -233,8 +242,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 
 
 		// When & Then
-		filterStr = "{}";
-		response = rest.getForEntity(BASE_URL + "search/categories/FD?filter={filterStr}", ProductSearchData.class, filterStr);
+		response = rest.getForEntity(BASE_URL + "search/categories/FD", ProductSearchData.class, filterStr);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getProducts().size(), is(1));
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
@@ -245,6 +253,39 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).getCount(), is(1));
 		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).getName(), is("red"));
 		assertThat(response.getBody().getFacets().get(0).getFacetValues().get(0).isSelected(), is(false));
+	}
+
+	@Test
+	public void shouldSortProductByPrice(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.addSku(sku); // 10.0
+		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Book");
+		productTwo.setDescription("Good book");
+		productTwo.setCategory(category);
+		productTwo.addSku(sku2); // 1.0
+		productRepository.save(productTwo);
+
+		// When & Then
+		ResponseEntity<ProductSearchData> response = rest.getForEntity(BASE_URL + "search/categories/FD?sort=pricedesc", ProductSearchData.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getProducts().size(), is(2));
+		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
+		assertThat(response.getBody().getProducts().get(1).getName(), is("Book"));
+
+		// When & Then
+		response = rest.getForEntity(BASE_URL + "search/categories/FD?sort=priceasc", ProductSearchData.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getProducts().size(), is(2));
+		assertThat(response.getBody().getProducts().get(0).getName(), is("Book"));
+		assertThat(response.getBody().getProducts().get(1).getName(), is("Chester"));
+
 	}
 
 }

@@ -46,12 +46,13 @@ public class ProductController {
 
 	@RequestMapping(value = "/search/categories/{categoryCode}", method=RequestMethod.GET)
 	public ResponseEntity findProductsInCategory(@PathVariable String categoryCode,
-												 @RequestParam(value = "filter", required = false) String filterJsonStr) {
+												 @RequestParam(value = "filter", required = false) String filterJsonStr,
+												 @RequestParam(value = "sort", required = false) String sort) {
 
 		final List<Product> products = productService.findByCategoryCode(categoryCode);
 		final Optional<Category> categoryOptional = categoryService.findByCode(categoryCode);
 		final Category category = categoryOptional.orElseThrow(() -> new RuntimeException(String.format("Invalid Category Code %s", categoryCode)));
-		final ProductSearchData productSearchData = productSearchService.filter(category, products, filterJsonStr);
+		final ProductSearchData productSearchData = productSearchService.filter(category, products, filterJsonStr, sort);
 
 		if(!productSearchData.getProducts().isEmpty()){
 			return new ResponseEntity<>(productSearchData, HttpStatus.OK);
