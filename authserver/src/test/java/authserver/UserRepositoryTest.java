@@ -1,24 +1,22 @@
 package authserver;
 
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = Application.class)
-@WebAppConfiguration
-@IntegrationTest
+@SpringBootTest(classes = Application.class, webEnvironment= NONE)
 @Transactional
 public class UserRepositoryTest {
 	
@@ -31,18 +29,25 @@ public class UserRepositoryTest {
 	@Test
 	public void shouldFindCustomerByEmail(){
 		// Given
-		String sql = "INSERT INTO CUSTOMER (ID, NAME, EMAIL, PASSWORD) VALUES (nextval('CUSTOMER_SEQ'), 'CHEN', 'CHEN@GMAIL.COM', '12345')";
+		final String sql = "insert into customer (id, name, email, password) values (nextval('customer_seq'), 'chen', 'chen@gmail.com', '12345')";
 		jdbcTemplate.execute(sql);
-		
-		// When
-		User actualUser = userRepository.findCustomerByEmail("CHEN@GMAIL.COM");
-		
-		// Then
-		MatcherAssert.assertThat(actualUser.getUsername(), Matchers.is("CHEN@GMAIL.COM"));
-		MatcherAssert.assertThat(actualUser.getPassword(), Matchers.is("12345"));
-		
-	}
-	
 
-	
+		// When
+		Optional<ApplicationUser> applicationUserOptional = userRepository.findCustomerByEmail("chen@gmail.com");
+
+		// Then
+		assertThat(applicationUserOptional.isPresent(), is(true));
+		ApplicationUser applicationUser = applicationUserOptional.get();
+		assertThat(applicationUser.getUsername(), is("chen@gmail.com"));
+		assertThat(applicationUser.getPassword(), is("12345"));
+	}
+
+	@Test
+	public void shouldReturnEmptyOptionalIfCustomerNotFoundByEmail(){
+		// Given & When
+		Optional<ApplicationUser> applicationUserOptional = userRepository.findCustomerByEmail("non_found@gmail.com");
+
+		// Then
+		assertThat(applicationUserOptional.isPresent(), is(false));
+	}
 }

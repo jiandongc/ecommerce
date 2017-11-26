@@ -1,6 +1,5 @@
 package product.repository;
 
-import org.hibernate.collection.internal.PersistentBag;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;

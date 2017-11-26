@@ -4,16 +4,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.userdetails.User;
+import org.springframework.stereotype.Component;
 
-public class UserRowMapper implements RowMapper {
+@Component
+public class UserRowMapper implements RowMapper<ApplicationUser> {
 
     @Override
-    public Object mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final String email = rs.getString("EMAIL");
-        final String password = rs.getString("PASSWORD");
-        return new User(email, password, AuthorityUtils.NO_AUTHORITIES);
+    public ApplicationUser mapRow(ResultSet rs, int rowNum) throws SQLException {
+        final String email = rs.getString("email");
+        final String password = rs.getString("password");
+        return new ApplicationUser(email, password);
     }
 
 }
