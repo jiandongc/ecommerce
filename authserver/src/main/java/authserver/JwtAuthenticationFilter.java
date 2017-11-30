@@ -1,11 +1,13 @@
 package authserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -20,34 +22,28 @@ import java.util.Date;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS512;
 import static java.lang.Long.parseLong;
-import static org.springframework.security.core.authority.AuthorityUtils.NO_AUTHORITIES;
+import static java.lang.System.currentTimeMillis;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
     private final String secret;
     private final String expirationTime;
-    private final String tokenPrefix;
-    private final String headerString;
 
     public JwtAuthenticationFilter(AuthenticationManager authenticationManager,
                                    String secret,
-                                   String expirationTime,
-                                   String tokenPrefix,
-                                   String headerString) {
+                                   String expirationTime) {
         this.authenticationManager = authenticationManager;
         this.secret = secret;
         this.expirationTime = expirationTime;
-        this.tokenPrefix = tokenPrefix;
-        this.headerString = headerString;
     }
 
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest req, HttpServletResponse res) throws AuthenticationException {
+    public Authentication attemptAuthentication(HttpServletRequest req,
+                                                HttpServletResponse res) throws AuthenticationException {
         try {
             final ApplicationUser user = new ObjectMapper().readValue(req.getInputStream(), ApplicationUser.class);
-            return authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(), NO_AUTHORITIES));
+            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -58,11 +54,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             HttpServletResponse res,
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
-        final String token = Jwts.builder()
+
+        final JwtBuilder jwtBuilder = Jwts.builder().setSubject(((User) auth.getPrincipal()).getUsername())
                 .setSubject(((User) auth.getPrincipal()).getUsername())
-                .setExpiration(new Date(System.currentTimeMillis() + parseLong(expirationTime)))
                 .signWith(HS512, secret.getBytes())
-                .compact();
-        res.addCookie(new Cookie("access_token", token));
+                .claim("role", auth.getAuthorities());
+
+        if(auth.getAuthorities().size() == 1 & auth.getAuthorities().contains(new SimpleGrantedAuthority("guest"))){
+            jwtBuilder.setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime) * 365));
+        } else {
+            jwtBuilder.setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime)));
+        }
+
+        res.addCookie(new Cookie("access_token", jwtBuilder.compact()));
     }
 }

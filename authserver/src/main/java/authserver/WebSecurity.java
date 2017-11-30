@@ -23,10 +23,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     private String secret;
     @Value("${security.secret.expirationtime}")
     private String expirationTime;
-    @Value("${security.tokenprefix}")
-    private String tokenPrefix;
-    @Value("${security.headerstring}")
-    private String headerString;
+
 
     private final UserDetailsService userDetailsService;
 
@@ -55,14 +52,14 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(asList(hostUrl));
-        corsConfiguration.setAllowedMethods(asList("POST", "GET", "OPTIONS", "DELETE"));
-        corsConfiguration.setAllowedHeaders(asList("x-requested-with", "content-type", "accept", "authorization"));
+        corsConfiguration.setAllowedMethods(asList("POST", "OPTIONS"));
+        corsConfiguration.setAllowedHeaders(asList("content-type"));
         corsConfiguration.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
     }
 
     private JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        return new JwtAuthenticationFilter(this.authenticationManager(), secret, expirationTime, tokenPrefix, headerString);
+        return new JwtAuthenticationFilter(this.authenticationManager(), secret, expirationTime);
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.springframework.security.core.authority.AuthorityUtils.NO_AUTHORITIES;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
@@ -24,7 +24,12 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) {
         final ApplicationUser applicationUser = userRepository.findCustomerByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
-        return new User(applicationUser.getUsername(), applicationUser.getPassword(), NO_AUTHORITIES);
+        if(applicationUser.isGuest()){
+            return new User(applicationUser.getUsername(), applicationUser.getPassword(), createAuthorityList("guest"));
+        } else {
+            return new User(applicationUser.getUsername(), applicationUser.getPassword(), createAuthorityList("user"));
+        }
+
     }
 
 }
