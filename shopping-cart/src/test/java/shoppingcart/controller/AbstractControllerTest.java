@@ -1,5 +1,6 @@
 package shoppingcart.controller;
 
+import org.junit.After;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,9 +17,9 @@ public abstract class AbstractControllerTest {
     @Autowired
     protected JdbcTemplate jdbcTemplate;
 
-    protected void reset(){
+    @After
+    public void reset(){
         jdbcTemplate.update("delete from shopping_cart_item");
         jdbcTemplate.update("delete from shopping_cart");
     }
-
 }

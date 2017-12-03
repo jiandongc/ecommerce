@@ -13,11 +13,11 @@ public class ShoppingCartMapper implements RowMapper<ShoppingCart>{
 
     @Override
     public ShoppingCart mapRow(ResultSet rs, int i) throws SQLException {
-        ShoppingCart.ShoppingCartBuilder builder = ShoppingCart.builder();
-        builder.id(rs.getLong("id"));
-        builder.cartUid(UUID.fromString(rs.getString("cart_uid")));
-        builder.customerId(rs.getObject("customer_id") != null ? rs.getLong("customer_id") : null);
-        builder.creationTime(rs.getDate("creation_time"));
-        return builder.build();
+        return ShoppingCart.builder()
+                .id(rs.getLong("id"))
+                .cartUid(UUID.fromString(rs.getString("cart_uid")))
+                .customerId(rs.getObject("customer_id") != null ? rs.getLong("customer_id") : null)
+                .creationTime(rs.getDate("creation_time"))
+                .build();
     }
 }

@@ -7,10 +7,10 @@ import java.util.UUID;
 
 public final class ShoppingCart {
 
-    private final long id;
-    private final UUID cartUid;
-    private final Long customerId;
-    private final Date creationTime;
+    private long id;
+    private UUID cartUid;
+    private Long customerId;
+    private Date creationTime;
     private List<ShoppingCartItem> shoppingCartItems;
 
     private ShoppingCart(long id, UUID cartUid, Long customerId, Date creationTime) {
@@ -19,6 +19,8 @@ public final class ShoppingCart {
         this.customerId = customerId;
         this.creationTime = creationTime;
     }
+
+    public ShoppingCart(){}
 
     public static ShoppingCartBuilder builder(){
         return new ShoppingCartBuilder();
@@ -44,11 +46,15 @@ public final class ShoppingCart {
         return shoppingCartItems;
     }
 
-    public void addItem(ShoppingCartItem shoppingCartItem){
+    public void addItem(ShoppingCartItem cartItem){
         if(shoppingCartItems == null){
             shoppingCartItems = new ArrayList<>();
         }
-        shoppingCartItems.add(shoppingCartItem);
+        shoppingCartItems.add(cartItem);
+    }
+
+    public void setShoppingCartItems(List<ShoppingCartItem> shoppingCartItems) {
+        this.shoppingCartItems = shoppingCartItems;
     }
 
     @Override
@@ -102,8 +108,6 @@ public final class ShoppingCart {
         public ShoppingCart build(){
             return new ShoppingCart(id, cartUid, customerId, creationTime);
         }
-
-
 
     }
 }

@@ -1,21 +1,14 @@
 package shoppingcart.repository;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.transaction.annotation.Transactional;
-import shoppingcart.Application;
 import shoppingcart.domain.ShoppingCart;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
 
@@ -28,7 +21,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         final UUID uuid = shoppingCartRepository.create();
 
         // Then
-        final ShoppingCart shoppingCart = shoppingCartRepository.findByUUID(uuid);
+        final ShoppingCart shoppingCart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         assertThat(shoppingCart.getCartUid(), is(uuid));
     }
 
@@ -38,10 +31,18 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         final UUID uuid = shoppingCartRepository.create(1234L);
 
         // Then
-        final ShoppingCart shoppingCart = shoppingCartRepository.findByUUID(uuid);
+        final ShoppingCart shoppingCart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         assertThat(shoppingCart.getCartUid(), is(uuid));
         assertThat(shoppingCart.getCustomerId(), is(1234L));
+    }
 
+    @Test
+    public void shouldReturnEmptyOptionalIfCartUidIsNotFound(){
+        // Given & When
+        Optional<ShoppingCart> cart = shoppingCartRepository.findByUUID(UUID.randomUUID());
+
+        // Then
+        assertThat(cart.isPresent(), is(false));
     }
 
 }

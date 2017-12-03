@@ -33,11 +33,6 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         }
     }
 
-    @After
-    public void cleanup(){
-        this.reset();
-    }
-
     @Autowired
     private ShoppingCartRepository repository;
 
@@ -49,9 +44,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
-
         final UUID uuid = UUID.fromString(response.getBody());
-        final ShoppingCart shoppingCart = repository.findByUUID(uuid);
+        final ShoppingCart shoppingCart = repository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         assertThat(shoppingCart.getCartUid(), is(uuid));
         assertThat(shoppingCart.getCustomerId(), is(123L));
     }
@@ -64,9 +58,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
-
         final UUID uuid = UUID.fromString(response.getBody());
-        final ShoppingCart shoppingCart = repository.findByUUID(uuid);
+        final ShoppingCart shoppingCart = repository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));;
         assertThat(shoppingCart.getCartUid(), is(uuid));
         assertThat(shoppingCart.getCustomerId(), is(nullValue()));
     }

@@ -5,16 +5,18 @@ import java.util.Date;
 
 public class ShoppingCartItem {
 
-    private final long id;
-    private final String sku;
-    private final String name;
-    private final BigDecimal price;
-    private final int quantity;
-    private final String imageUrl;
-    private final Date creationTime;
-    private final Date lastUpdateTime;
+    private long id;
+    private long cartId;
+    private String sku;
+    private String name;
+    private BigDecimal price;
+    private int quantity;
+    private String imageUrl;
+    private Date creationTime;
+    private Date lastUpdateTime;
 
     public ShoppingCartItem(long id,
+                            long cartId,
                             String sku,
                             String name,
                             BigDecimal price,
@@ -23,6 +25,7 @@ public class ShoppingCartItem {
                             Date creationTime,
                             Date lastUpdateTime) {
         this.id = id;
+        this.cartId = cartId;
         this.sku = sku;
         this.name = name;
         this.price = price;
@@ -32,8 +35,18 @@ public class ShoppingCartItem {
         this.lastUpdateTime = lastUpdateTime;
     }
 
+    public ShoppingCartItem(){}
+
+    public static ShoppingCartItemBuilder builder(){
+        return new ShoppingCartItemBuilder();
+    }
+
     public long getId() {
         return id;
+    }
+
+    public long getCartId() {
+        return cartId;
     }
 
     public String getSku() {
@@ -71,6 +84,7 @@ public class ShoppingCartItem {
 
         ShoppingCartItem that = (ShoppingCartItem) o;
 
+        if (cartId != that.cartId) return false;
         if (quantity != that.quantity) return false;
         if (sku != null ? !sku.equals(that.sku) : that.sku != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -82,7 +96,8 @@ public class ShoppingCartItem {
 
     @Override
     public int hashCode() {
-        int result = sku != null ? sku.hashCode() : 0;
+        int result = (int) (cartId ^ (cartId >>> 32));
+        result = 31 * result + (sku != null ? sku.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + quantity;
@@ -90,5 +105,68 @@ public class ShoppingCartItem {
         result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
         result = 31 * result + (lastUpdateTime != null ? lastUpdateTime.hashCode() : 0);
         return result;
+    }
+
+    public static class ShoppingCartItemBuilder {
+        private long id;
+        private long cartId;
+        private String sku;
+        private String name;
+        private BigDecimal price;
+        private int quantity;
+        private String imageUrl;
+        private Date creationTime;
+        private Date lastUpdateTime;
+
+        public ShoppingCartItemBuilder id(long id){
+            this.id = id;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder cartId(long cartId){
+            this.cartId = cartId;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder sku(String sku){
+            this.sku = sku;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder name(String name){
+            this.name = name;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder price(BigDecimal price){
+            this.price = price;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder quantity(int quantity){
+            this.quantity = quantity;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder imageUrl(String imageUrl){
+            this.imageUrl = imageUrl;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder creationTime(Date creationTime){
+            this.creationTime = creationTime;
+            return this;
+        }
+
+        public ShoppingCartItemBuilder lastUpdateTime(Date lastUpdateTime){
+            this.lastUpdateTime = lastUpdateTime;
+            return this;
+        }
+
+        public ShoppingCartItem build(){
+            return new ShoppingCartItem(id, cartId, sku, name, price, quantity, imageUrl, creationTime, lastUpdateTime);
+        }
+
+
     }
 }
