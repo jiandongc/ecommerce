@@ -10,6 +10,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
@@ -25,8 +26,9 @@ public class ShoppingCartItemServiceImplTest {
         // Given
         final UUID cartUid = UUID.randomUUID();
         when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.of(ShoppingCart.builder().id(1L).cartUid(cartUid).build()));
-        final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").build();
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").sku("123X7").build();
         when(cartItemRepository.findByCartId(1L)).thenReturn(asList(cartItem));
+        when(cartItemRepository.findByCartIdAndSku(1L, "123X7")).thenReturn(empty());
 
         // When
         final ShoppingCart cart = service.createCartItem(cartUid, cartItem);
@@ -37,13 +39,29 @@ public class ShoppingCartItemServiceImplTest {
         assertThat(cart.getCartUid(), is(cartUid));
         assertThat(cart.getShoppingCartItems().size(), is(1));
         assertThat(cart.getShoppingCartItems().get(0).getName(), is("product"));
+        assertThat(cart.getShoppingCartItems().get(0).getSku(), is("123X7"));
+    }
+
+    @Test
+    public void shouldAddSameItemToACart(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.of(ShoppingCart.builder().id(1L).cartUid(cartUid).build()));
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").sku("123X7").build();
+        when(cartItemRepository.findByCartIdAndSku(1L, "123X7")).thenReturn(Optional.of(ShoppingCartItem.builder().quantity(2).build()));
+
+        // When
+        service.createCartItem(cartUid, cartItem);
+
+        // Then
+        verify(cartItemRepository, times(1)).updateQuantity(1L, cartItem, 3);
     }
 
     @Test(expected = RuntimeException.class)
     public void shouldThrowRuntimeExceptionIfCartUidIsNotFound(){
         // Given
         final UUID cartUid = UUID.randomUUID();
-        when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.empty());
+        when(cartRepository.findByUUID(cartUid)).thenReturn(empty());
         final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").build();
 
         // When

@@ -8,6 +8,7 @@ import shoppingcart.domain.ShoppingCartItem;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -29,7 +30,13 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
     @Transactional
     public ShoppingCart createCartItem(UUID cartUid, ShoppingCartItem cartItem) {
         final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
-        cartItemRepository.save(cart.getId(), cartItem);
+        final Optional<ShoppingCartItem> cartItemOptional = cartItemRepository.findByCartIdAndSku(cart.getId(), cartItem.getSku());
+        if(cartItemOptional.isPresent()){
+            cartItemRepository.updateQuantity(cart.getId(), cartItem, cartItemOptional.get().getQuantity() + 1);
+        } else {
+            cartItemRepository.save(cart.getId(), cartItem);
+        }
+
         cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId()));
         return cart;
     }
