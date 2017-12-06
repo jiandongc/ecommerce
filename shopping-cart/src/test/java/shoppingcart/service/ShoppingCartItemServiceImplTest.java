@@ -58,13 +58,43 @@ public class ShoppingCartItemServiceImplTest {
     }
 
     @Test(expected = RuntimeException.class)
-    public void shouldThrowRuntimeExceptionIfCartUidIsNotFound(){
+    public void shouldThrowRuntimeExceptionIfCartUidIsNotFoundWhenAddItem(){
         // Given
         final UUID cartUid = UUID.randomUUID();
         when(cartRepository.findByUUID(cartUid)).thenReturn(empty());
         final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").build();
 
         // When
-        service.createCartItem(UUID.randomUUID(), cartItem);
+        service.createCartItem(cartUid, cartItem);
+    }
+
+    @Test
+    public void shouldDeleteItemFromACart(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.of(ShoppingCart.builder().id(1L).cartUid(cartUid).build()));
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").sku("123X7").build();
+        when(cartItemRepository.findByCartId(1L)).thenReturn(asList(cartItem));
+
+        // When
+        ShoppingCart cart = service.deleteCartItem(cartUid, "12345");
+
+        // Then
+        verify(cartItemRepository).delete(1L, "12345");
+        assertThat(cart.getId(), is(1L));
+        assertThat(cart.getCartUid(), is(cartUid));
+        assertThat(cart.getShoppingCartItems().size(), is(1));
+        assertThat(cart.getShoppingCartItems().get(0).getName(), is("product"));
+        assertThat(cart.getShoppingCartItems().get(0).getSku(), is("123X7"));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void shouldThrowRuntimeExceptionIfCartUidIsNotFoundWhenDeleteItem(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        when(cartRepository.findByUUID(cartUid)).thenReturn(empty());
+
+        // When
+        service.deleteCartItem(cartUid, "12345");
     }
 }

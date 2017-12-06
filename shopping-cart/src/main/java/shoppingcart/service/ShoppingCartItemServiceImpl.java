@@ -40,4 +40,13 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId()));
         return cart;
     }
+
+    @Override
+    @Transactional
+    public ShoppingCart deleteCartItem(UUID cartUid, String sku) {
+        final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
+        cartItemRepository.delete(cart.getId(), sku);
+        cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId()));
+        return cart;
+    }
 }

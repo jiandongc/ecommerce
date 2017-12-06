@@ -13,6 +13,8 @@ import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
@@ -37,6 +39,12 @@ public class ShoppingCartItemController {
         } catch (Exception exception) {
             return new ResponseEntity<CartSummary>(CONFLICT);
         }
+    }
+
+    @RequestMapping(value = "{cartUid}/items", method = DELETE)
+    public ResponseEntity<CartSummary> deleteCartItem(@PathVariable UUID cartUid, @RequestBody String sku){
+        final ShoppingCart cart = cartItemService.deleteCartItem(cartUid, sku);
+        return new ResponseEntity<CartSummary>(cartSummaryMapper.map(cart), OK);
     }
 
 //    @RequestMapping(value = "{cartUid}/items", method = PATCH)

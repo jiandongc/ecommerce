@@ -21,9 +21,11 @@ import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public class ShoppingCartItemControllerTest extends AbstractControllerTest {
@@ -162,6 +164,47 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         assertThat(cartSummaryTwo.getBody().getTotalQuantity(), is(2));
         assertThat(cartSummaryTwo.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(11)));
         assertThat(cartSummaryTwo.getBody().getShoppingCart().getShoppingCartItems().size(), is(2));
+    }
+
+    @Test
+    public void shouldDeleteItemFromCart(){
+        // Given
+        final UUID cartUid = cartRepository.create();
+
+        final String itemOne = "{\n" +
+                "\"sku\": \"123456\",\n" +
+                "\"name\": \"kid's cloth\",\n" +
+                "\"price\": \"1\",\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\"\n" +
+                "}";
+
+        final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
+
+        final String itemTwo = "{\n" +
+                "\"sku\": \"654321\",\n" +
+                "\"name\": \"father's cloth\",\n" +
+                "\"price\": \"10\",\n" +
+                "\"imageUrl\": \"/father-cloth.jpeg\"\n" +
+                "}";
+
+        final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
+
+        // When & Then
+        final HttpEntity<String> skuOne = new HttpEntity<String>("123456", headers);
+        final ResponseEntity<CartSummary> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items", DELETE, skuOne, CartSummary.class);
+        assertThat(cartSummaryOne.getStatusCode(), is(OK));
+        assertThat(cartSummaryOne.getBody().getTotalQuantity(), is(1));
+        assertThat(cartSummaryOne.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(10)));
+        assertThat(cartSummaryOne.getBody().getShoppingCart().getShoppingCartItems().size(), is(1));
+
+        final HttpEntity<String> skuTwo = new HttpEntity<String>("654321", headers);
+        final ResponseEntity<CartSummary> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items", DELETE, skuTwo, CartSummary.class);
+        assertThat(cartSummaryTwo.getStatusCode(), is(OK));
+        assertThat(cartSummaryTwo.getBody().getTotalQuantity(), is(0));
+        assertThat(cartSummaryTwo.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(0)));
+        assertThat(cartSummaryTwo.getBody().getShoppingCart().getShoppingCartItems().size(), is(0));
 
     }
 

@@ -19,6 +19,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     private static final String INSERT_SQL = "insert into shopping_cart_item " +
             "(shopping_cart_id, sku, product_name, unit_price, image_url) values (?, ?, ?, ?, ?)";
     private static final String UPDATE_QTY_SQL = "update shopping_cart_item set quantity = ? where shopping_cart_id = ? and sku = ?";
+    private static final String DELETE_SQL = "delete from shopping_cart_item where shopping_cart_id = ? and sku = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final ShoppingCartItemMapper shoppingCartItemMapper;
@@ -51,5 +52,10 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
         } catch (Exception exc) {
             return empty();
         }
+    }
+
+    @Override
+    public void delete(long cartId, String sku) {
+        jdbcTemplate.update(DELETE_SQL, cartId, sku);
     }
 }

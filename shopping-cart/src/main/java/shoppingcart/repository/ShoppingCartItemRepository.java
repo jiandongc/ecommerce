@@ -10,4 +10,5 @@ public interface ShoppingCartItemRepository {
     void updateQuantity(long cartId, ShoppingCartItem cartItem, int quantity);
     List<ShoppingCartItem> findByCartId(long cartId);
     Optional<ShoppingCartItem> findByCartIdAndSku(long cartId, String sku);
+    void delete(long cartId, String sku);
 }

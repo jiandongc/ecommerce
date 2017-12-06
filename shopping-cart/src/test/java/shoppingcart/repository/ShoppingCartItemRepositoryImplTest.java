@@ -119,4 +119,41 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(shoppingCartItem.isPresent(), is(false));
     }
 
+    @Test
+    public void shouldDeleteAnItemFromAShoppingCart(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create();
+        final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .price(ONE)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .build();
+        shoppingCartItemRepository.save(cart.getId(), cartItem);
+        final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
+                .name("product2")
+                .price(TEN)
+                .sku("219283")
+                .imageUrl("/image2.jpeg")
+                .build();
+        shoppingCartItemRepository.save(cart.getId(), cartItem2);
+
+        // When & Then
+        shoppingCartItemRepository.delete(cart.getId(), "219283");
+        List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByCartId(cart.getId());
+        assertThat(cartItems.size(), is(1));
+        assertThat(cartItems.get(0).getName(), is("product"));
+        assertThat(cartItems.get(0).getPrice(), is(ONE));
+        assertThat(cartItems.get(0).getSku(), is("109283"));
+        assertThat(cartItems.get(0).getQuantity(), is(1));
+        assertThat(cartItems.get(0).getImageUrl(), is("/image.jpeg"));
+
+        // When & Then
+        shoppingCartItemRepository.delete(cart.getId(), "109283");
+        cartItems = shoppingCartItemRepository.findByCartId(cart.getId());
+        assertThat(cartItems.size(), is(0));
+
+    }
+
 }
