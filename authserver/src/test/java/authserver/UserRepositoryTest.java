@@ -1,5 +1,6 @@
 package authserver;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class UserRepositoryTest {
 	
 	@Autowired
 	private UserRepository userRepository;
+
+	@Before
+	public void setup(){
+		jdbcTemplate.update("delete from customer");
+	}
 	
 	@Test
 	public void shouldFindCustomerByEmail(){

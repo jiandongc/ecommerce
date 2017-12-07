@@ -7,7 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS512;
 import static java.lang.Long.parseLong;
@@ -55,12 +57,13 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
 
+        final List<String> roles = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
         final JwtBuilder jwtBuilder = Jwts.builder().setSubject(((User) auth.getPrincipal()).getUsername())
                 .setSubject(((User) auth.getPrincipal()).getUsername())
                 .signWith(HS512, secret.getBytes())
-                .claim("role", auth.getAuthorities());
+                .claim("roles", roles);
 
-        if(auth.getAuthorities().size() == 1 & auth.getAuthorities().contains(new SimpleGrantedAuthority("guest"))){
+        if(auth.getAuthorities().size() == 1 && roles.contains("guest")){
             jwtBuilder.setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime) * 365));
         } else {
             jwtBuilder.setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime)));
