@@ -19,6 +19,7 @@
 		<java.version>1.8</java.version>
 		<postgresql.version>9.1-901.jdbc4</postgresql.version>
 		<dbdeploy.version>3.0M3</dbdeploy.version>
+		<jjwt.version>0.7.0</jjwt.version>
 		<db.driver>org.postgresql.Driver</db.driver>
 		<db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
 		<dbdeploy.user>shoppingcart</dbdeploy.user>
@@ -37,6 +38,15 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>${jjwt.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>postgresql</groupId>

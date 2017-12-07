@@ -1,11 +1,9 @@
 package shoppingcart.controller;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import shoppingcart.data.CartSummary;
 import shoppingcart.domain.ShoppingCart;
@@ -26,28 +24,17 @@ import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public class ShoppingCartItemControllerTest extends AbstractControllerTest {
 
     private static final String BASE_URL = "http://localhost:8084/carts/";
     private final TestRestTemplate rest = new TestRestTemplate();
-    private HttpHeaders headers;
 
     @Autowired
     private ShoppingCartRepository cartRepository;
 
     @Autowired
     private ShoppingCartItemRepository itemRepository;
-
-    @Before
-    public void before() {
-        this.reset();
-        if (headers == null) {
-            headers = new HttpHeaders();
-            headers.setContentType(APPLICATION_JSON);
-        }
-    }
 
     @Test
     public void shouldAddItemToCart(){
