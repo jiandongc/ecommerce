@@ -2,6 +2,7 @@ package shoppingcart.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shoppingcart.data.CartSummary;
 import shoppingcart.domain.ShoppingCart;
@@ -30,6 +31,7 @@ public class ShoppingCartItemController {
         this.cartSummaryMapper = cartSummaryMapper;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}/items", method = POST)
     public ResponseEntity<CartSummary> createCartItem(@PathVariable UUID cartUid,
                                                       @RequestBody ShoppingCartItem cartItem){
@@ -41,6 +43,7 @@ public class ShoppingCartItemController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}/items", method = DELETE)
     public ResponseEntity<CartSummary> deleteCartItem(@PathVariable UUID cartUid, @RequestBody String sku){
         final ShoppingCart cart = cartItemService.deleteCartItem(cartUid, sku);

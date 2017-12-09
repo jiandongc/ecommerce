@@ -17,6 +17,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+import static java.util.stream.Collectors.toList;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
@@ -60,7 +62,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     .getBody();
 
             if (claims != null) {
-                final List<String> roles = (List<String>) claims.get("roles");
+                List<String> roles = (List<String>) claims.get("roles");
+                roles = roles.stream().map(role -> format("role_%s", role).toUpperCase()).collect(toList());
                 return new UsernamePasswordAuthenticationToken(
                         claims.getSubject(),
                         null,
