@@ -3,19 +3,15 @@ package customer.controller;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import org.apache.commons.codec.binary.Base64;
 import org.junit.Before;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.TestRestTemplate;
+import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import org.springframework.web.client.RestTemplate;
 
 import customer.domain.Customer;
 import customer.repository.CustomerRepository;
-
-import java.nio.charset.Charset;
 
 public class CustomerControllerTest extends AbstractControllerTest{
 	
@@ -23,17 +19,13 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	private CustomerRepository customerRepository;
 
 	private final String BASE_URL = "http://localhost:8081/customers";
-	private final RestTemplate rest = new TestRestTemplate();
+	private final TestRestTemplate rest = new TestRestTemplate();
 	private HttpHeaders headers = null;
 	
 	@Before
 	public void before(){
 		if (headers == null) {
 			headers = new HttpHeaders();
-			final String auth = "test:password";
-			final byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
-			final String authHeader = "Basic " + new String(encodedAuth);
-			headers.add("Authorization", authHeader);
 		}
 	}
 
