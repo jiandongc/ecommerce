@@ -1,5 +1,7 @@
 package customer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,7 +54,8 @@ public class Customer {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
+
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}

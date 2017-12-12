@@ -2,6 +2,7 @@ package customer.controller;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.Before;
 import org.junit.After;
@@ -14,29 +15,14 @@ import customer.domain.Customer;
 import customer.repository.CustomerRepository;
 
 public class CustomerControllerTest extends AbstractControllerTest{
-	
-	@Autowired
-	private CustomerRepository customerRepository;
 
 	private final String BASE_URL = "http://localhost:8081/customers";
 	private final TestRestTemplate rest = new TestRestTemplate();
-	private HttpHeaders headers = null;
-	
-	@Before
-	public void before(){
-		if (headers == null) {
-			headers = new HttpHeaders();
-		}
-	}
 
-	@After
-	public void after(){
-		customerRepository.deleteAll();
-	}
-	
 	@Test
 	public void shouldSaveCustomer(){
 		// Given
+		this.setGuestToken();
 		Customer customer = new Customer("Name", "Email", "Password");
 		
 		// When
@@ -47,12 +33,25 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("Name"));
 		assertThat(response.getBody().getEmail(), is("Email"));
-		assertThat(response.getBody().getPassword(), is("Password"));
+		assertThat(response.getBody().getPassword(), is(nullValue()));
+	}
+
+	@Test
+	public void shouldRejectRequestIfGuestTokenIsNotAvailable(){
+		Customer customer = new Customer("Name", "Email", "Password");
+
+		// When
+		final HttpEntity<Customer> payload = new HttpEntity<Customer>(customer, headers);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.POST, payload, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 	
 	@Test
 	public void shouldGetCustomerById(){
-		// Given 
+		// Given
+		this.setUserToken();
 		Customer customer = new Customer("Name", "Email", "Password");
 		customerRepository.save(customer);
 				
@@ -62,12 +61,30 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertThat(response.getBody(), is(customer));
+		assertThat(response.getBody().getName(), is("Name"));
+		assertThat(response.getBody().getEmail(), is("Email"));
+		assertThat(response.getBody().getPassword(), is(nullValue()));
+	}
+
+	@Test
+	public void shouldRejectGetCustomerByIdRequestWithGuestToken(){
+		// Given
+		this.setGuestToken();
+		Customer customer = new Customer("Name", "Email", "Password");
+		customerRepository.save(customer);
+
+		// When
+		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<Customer> response =  rest.exchange(BASE_URL + "/" + customer.getId(), HttpMethod.GET, httpEntity, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 	
 	@Test
 	public void shouldGetCustomerByEmail(){
-		// Given 
+		// Given
+		this.setUserToken();
 		Customer customer = new Customer("Name", "Email", "Password");
 		customerRepository.save(customer);
 				
@@ -77,7 +94,24 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertThat(response.getBody(), is(customer));
+		assertThat(response.getBody().getName(), is("Name"));
+		assertThat(response.getBody().getEmail(), is("Email"));
+		assertThat(response.getBody().getPassword(), is(nullValue()));
 	}
-	
+
+	@Test
+	public void shouldRejectGetCustomerByEmailRequestWithGuestToken(){
+		// Given
+		this.setGuestToken();
+		Customer customer = new Customer("Name", "Email", "Password");
+		customerRepository.save(customer);
+
+		// When
+		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL + "?email=" + customer.getEmail(), HttpMethod.GET, httpEntity, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+	}
+
 }

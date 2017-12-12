@@ -25,7 +25,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .anyRequest().permitAll().and()
+                .anyRequest().authenticated().and()
                 .addFilter(this.jwtAuthorizationFilter())
                 .sessionManagement()
                 .sessionCreationPolicy(STATELESS);
@@ -37,7 +37,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
         final CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(asList(hostUrl));
         corsConfiguration.setAllowedMethods(asList("POST", "DELETE", "GET", "OPTIONS"));
-        corsConfiguration.setAllowedHeaders(asList("content-type", "x-requested-with", "content-type"));
+        corsConfiguration.setAllowedHeaders(asList("content-type", "x-requested-with"));
         corsConfiguration.setMaxAge(3600L);
         source.registerCorsConfiguration("/**", corsConfiguration);
         return source;
