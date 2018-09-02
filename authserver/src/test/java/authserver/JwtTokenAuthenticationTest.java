@@ -53,8 +53,7 @@ public class JwtTokenAuthenticationTest {
         ResponseEntity<String> exchange = rest.exchange(BASE_URL, POST, data, String.class);
 
         // Then
-        assertThat(exchange.getHeaders().containsKey("Set-Cookie"), is(true));
-        assertThat(exchange.getHeaders().get("Set-Cookie").get(0).contains("access_token"), is(true));
+        assertThat(exchange.getHeaders().containsKey("Authentication"), is(true));
     }
 
     @Test(expected = ResourceAccessException.class)
@@ -69,7 +68,7 @@ public class JwtTokenAuthenticationTest {
                 "    \"password\": \"1234567\"\n" +
                 "  }";
         HttpEntity<String> data = new HttpEntity<>(json);
-        ResponseEntity<String> exchange = rest.exchange(BASE_URL, POST, data, String.class);
+        rest.exchange(BASE_URL, POST, data, String.class);
     }
 
     @Test(expected = ResourceAccessException.class)
@@ -84,7 +83,7 @@ public class JwtTokenAuthenticationTest {
                 "    \"password\": \"12345\"\n" +
                 "  }";
         HttpEntity<String> data = new HttpEntity<>(json);
-        ResponseEntity<String> exchange = rest.exchange(BASE_URL, POST, data, String.class);
+        rest.exchange(BASE_URL, POST, data, String.class);
     }
 
 }

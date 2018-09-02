@@ -24,12 +24,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) {
         final ApplicationUser applicationUser = userRepository.findCustomerByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
-        if(applicationUser.isGuest()){
-            return new User(applicationUser.getUsername(), applicationUser.getPassword(), createAuthorityList("guest"));
-        } else {
-            return new User(applicationUser.getUsername(), applicationUser.getPassword(), createAuthorityList("user"));
-        }
-
+        return new User(applicationUser.getUsername(), applicationUser.getPassword(), createAuthorityList("user"));
     }
 
 }

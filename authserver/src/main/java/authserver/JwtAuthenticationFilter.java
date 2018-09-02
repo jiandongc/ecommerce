@@ -58,17 +58,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             Authentication auth) throws IOException, ServletException {
 
         final List<String> roles = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
-        final JwtBuilder jwtBuilder = Jwts.builder().setSubject(((User) auth.getPrincipal()).getUsername())
+        final JwtBuilder jwtBuilder = Jwts.builder()
                 .setSubject(((User) auth.getPrincipal()).getUsername())
                 .signWith(HS512, secret.getBytes())
-                .claim("roles", roles);
+                .claim("roles", roles)
+                .setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime)));
 
-        if(auth.getAuthorities().size() == 1 && roles.contains("guest")){
-            jwtBuilder.setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime) * 365));
-        } else {
-            jwtBuilder.setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime)));
-        }
-
-        res.addCookie(new Cookie("access_token", jwtBuilder.compact()));
+        res.addHeader("Authentication", jwtBuilder.compact());
     }
 }

@@ -27,8 +27,4 @@ public final class ApplicationUser {
     public void setPassword(String password) {
         this.password = password;
     }
-
-    public boolean isGuest(){
-        return username.equals("guest");
-    }
 }
