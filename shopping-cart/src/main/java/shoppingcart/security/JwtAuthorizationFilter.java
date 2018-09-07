@@ -32,33 +32,24 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
-        if(req.getCookies() == null){
+        final String accessToken = req.getHeader("Authentication");
+
+        if (accessToken == null) {
             chain.doFilter(req, res);
             return;
         }
 
-        final Optional<Cookie> accessToken = Arrays.stream(req.getCookies())
-                .filter(cookie -> cookie.getName().equals("access_token"))
-                .findFirst();
-
-        if (!accessToken.isPresent()) {
-            chain.doFilter(req, res);
-            return;
-        }
-
-        final UsernamePasswordAuthenticationToken authentication = getAuthentication(accessToken.get());
+        final UsernamePasswordAuthenticationToken authentication = getAuthentication(accessToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(Cookie cookie) {
-        final String token = cookie.getValue();
-
-        if (token != null) {
+    private UsernamePasswordAuthenticationToken getAuthentication(String accessToken) {
+        if (accessToken != null) {
             // parse the token.
             final Claims claims = Jwts.parser()
                     .setSigningKey(secret.getBytes())
-                    .parseClaimsJws(token)
+                    .parseClaimsJws(accessToken)
                     .getBody();
 
             if (claims != null) {

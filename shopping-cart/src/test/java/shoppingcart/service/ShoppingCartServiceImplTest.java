@@ -1,6 +1,10 @@
 package shoppingcart.service;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 import shoppingcart.repository.ShoppingCartItemRepository;
@@ -15,11 +19,17 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class ShoppingCartServiceImplTest {
 
-    private ShoppingCartRepository cartRepository = mock(ShoppingCartRepository.class);
-    private ShoppingCartItemRepository cartItemRepository = mock(ShoppingCartItemRepository.class);
-    private ShoppingCartService service = new ShoppingCartServiceImpl(cartRepository, cartItemRepository);
+    @Mock
+    private ShoppingCartRepository cartRepository;
+
+    @Mock
+    private ShoppingCartItemRepository cartItemRepository;
+
+    @InjectMocks
+    private ShoppingCartServiceImpl service;
 
     @Test
     public void shouldCreateShoppingCartForGuest(){
@@ -56,4 +66,14 @@ public class ShoppingCartServiceImplTest {
         assertThat(shoppingCart.getShoppingCartItems().get(0).getSku(), is("123X7"));
     }
 
+    @Test
+    public void shouldUpdateCustomerId(){
+        // Given & When
+        final UUID cartUid = UUID.randomUUID();
+        service.updateCustomerId(cartUid, 123L);
+
+        // Then
+        verify(cartRepository, times(1)).updateCustomerId(cartUid,123L);
+        verify(cartRepository, times(1)).findByUUID(cartUid);
+    }
 }

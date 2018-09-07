@@ -1,6 +1,7 @@
 package shoppingcart.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,11 +13,13 @@ import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.CartSummaryMapper;
 import shoppingcart.service.ShoppingCartService;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 @RestController
 @RequestMapping("/carts")
@@ -49,6 +52,17 @@ public class ShoppingCartController {
             return new ResponseEntity<CartSummary>(cartSummaryMapper.map(shoppingCart), OK);
         } catch (RuntimeException exception) {
             return new ResponseEntity<CartSummary>(NOT_FOUND);
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{cartUid}", method = PUT)
+    public ResponseEntity updateCartCustomerId(@PathVariable UUID cartUid, @RequestBody Long customerId) {
+        final Optional<ShoppingCart> shoppingCart = shoppingCartService.updateCustomerId(cartUid, customerId);
+        if (shoppingCart.isPresent()) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
 }

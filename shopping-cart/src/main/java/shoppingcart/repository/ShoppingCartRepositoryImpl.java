@@ -15,6 +15,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
     private static final String INSERT_SQL = "insert into shopping_cart (cart_uid, customer_id) values (?, ?)";
     private static final String SELECT_BY_UUID_SQL = "select * from shopping_cart where cart_uid = ?";
+    private static final String UPDATE_CUSTOMER_ID = "update shopping_cart set customer_id = ? where cart_uid = ?";
 
     private final JdbcTemplate jdbcTemplate;
     private final ShoppingCartMapper shoppingCartMapper;
@@ -45,5 +46,10 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
         } catch (Exception e) {
             return empty();
         }
+    }
+
+    @Override
+    public int updateCustomerId(UUID cartUid, Long customerId) {
+        return jdbcTemplate.update(UPDATE_CUSTOMER_ID, customerId, cartUid);
     }
 }

@@ -9,4 +9,5 @@ public interface ShoppingCartRepository {
     UUID create();
     UUID create(long customerId);
     Optional<ShoppingCart> findByUUID(UUID uuid);
+    int updateCustomerId(UUID cartUid, Long customerId);
 }

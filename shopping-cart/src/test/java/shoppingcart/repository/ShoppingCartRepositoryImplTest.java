@@ -45,4 +45,16 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(cart.isPresent(), is(false));
     }
 
+    @Test
+    public void shouldUpdateShoppingCartCustomerId(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create();
+
+        // When
+        int rowUpdated = shoppingCartRepository.updateCustomerId(uuid, 123L);
+
+        // Then
+        assertThat(rowUpdated, is(1));
+        assertThat(shoppingCartRepository.findByUUID(uuid).get().getCustomerId(), is(123L));
+    }
 }

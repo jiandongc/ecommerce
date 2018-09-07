@@ -42,6 +42,10 @@ public final class ShoppingCart {
         return creationTime;
     }
 
+    public void setCustomerId(Long customerId) {
+        this.customerId = customerId;
+    }
+
     public List<ShoppingCartItem> getShoppingCartItems(){
         return shoppingCartItems;
     }

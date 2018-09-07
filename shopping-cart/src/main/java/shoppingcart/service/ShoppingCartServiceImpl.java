@@ -7,6 +7,7 @@ import shoppingcart.domain.ShoppingCart;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static java.lang.String.format;
@@ -39,8 +40,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional(readOnly = true)
     public ShoppingCart getShoppingCartByUid(UUID cartUid) {
-        final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
-        cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId()));
-        return cart;
+        final ShoppingCart shoppingCart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
+        shoppingCart.setShoppingCartItems(cartItemRepository.findByCartId(shoppingCart.getId()));
+        return shoppingCart;
+    }
+
+    @Override
+    @Transactional
+    public Optional<ShoppingCart> updateCustomerId(UUID cartUid, Long customerId) {
+        cartRepository.updateCustomerId(cartUid, customerId);
+        return cartRepository.findByUUID(cartUid);
     }
 }

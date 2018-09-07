@@ -1,5 +1,6 @@
 package shoppingcart.controller;
 
+import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -17,7 +18,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 
 public class ShoppingCartControllerTest extends AbstractControllerTest {
 
@@ -58,10 +58,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     @Test
     public void shouldRejectCreateShoppingCartRequestIfTokenIsExpired(){
         // Given
-        headers = new HttpHeaders();
-        headers.setContentType(APPLICATION_JSON);
         // user token which has been expired
-        headers.add("Cookie", "access_token=eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjoxNTEyNjg4NjQxfQ.ERFgX9cq2XmFAsdLiTl-LsapwNlBsoxmGD2nkY5Y66Izhpd8gasVd-Cjml9EQIj4KHMgpYbDl9CMgSo28LogHA");
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjoxNTEyNjg4NjQxfQ.ERFgX9cq2XmFAsdLiTl-LsapwNlBsoxmGD2nkY5Y66Izhpd8gasVd-Cjml9EQIj4KHMgpYbDl9CMgSo28LogHA");
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
 
         // When
@@ -117,6 +115,46 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(NOT_FOUND));
     }
 
+    @Test
+    public void shouldUpdateCustomerUid(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+        final UUID cartUid = repository.create();
 
+        // When
+        final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + cartUid.toString(), HttpMethod.PUT, payload, Void.class);
 
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(repository.findByUUID(cartUid).get().getCustomerId(), is(12345L));
+    }
+
+    @Test
+    public void shouldRejectUpdateCustomerUidRequestWithGuestToken(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
+        final UUID cartUid = repository.create();
+
+        // When
+        final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + cartUid.toString(), HttpMethod.PUT, payload, Void.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+        assertThat(repository.findByUUID(cartUid).get().getCustomerId(), CoreMatchers.nullValue());
+    }
+
+    @Test
+    public void shouldReturn403IfCartUidIsNotFoundForUpdateCustomerIdRequest(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+
+        // When
+        final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + UUID.randomUUID().toString(), HttpMethod.PUT, payload, Void.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+    }
 }
