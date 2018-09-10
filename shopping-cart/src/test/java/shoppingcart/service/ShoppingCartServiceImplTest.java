@@ -4,12 +4,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ public class ShoppingCartServiceImplTest {
     private ShoppingCartItemRepository cartItemRepository;
 
     @InjectMocks
-    private ShoppingCartServiceImpl service;
+    private ShoppingCartServiceImpl service = spy(new ShoppingCartServiceImpl());
 
     @Test
     public void shouldCreateShoppingCartForGuest(){
@@ -59,6 +61,8 @@ public class ShoppingCartServiceImplTest {
 
         // When
         final ShoppingCart shoppingCart = service.getShoppingCartByUid(cartUid);
+
+        // Then
         assertThat(shoppingCart.getId(), is(1L));
         assertThat(shoppingCart.getCartUid(), is(cartUid));
         assertThat(shoppingCart.getShoppingCartItems().size(), is(1));
@@ -68,12 +72,35 @@ public class ShoppingCartServiceImplTest {
 
     @Test
     public void shouldUpdateCustomerId(){
-        // Given & When
+        // Given
         final UUID cartUid = UUID.randomUUID();
+        final Long customerId = 123L;
+        final ShoppingCart shoppingCartOne = ShoppingCart.builder().cartUid(UUID.randomUUID()).build();
+        final ShoppingCart shoppingCartTwo = ShoppingCart.builder().cartUid(UUID.randomUUID()).build();
+        final ShoppingCart shoppingCartThree = ShoppingCart.builder().cartUid(cartUid).build();
+        when(cartRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(shoppingCartOne, shoppingCartTwo, shoppingCartThree));
+
+        // When
         service.updateCustomerId(cartUid, 123L);
 
         // Then
+        verify(service, times(1)).deleteShoppingCart(shoppingCartOne);
+        verify(service, times(1)).deleteShoppingCart(shoppingCartTwo);
         verify(cartRepository, times(1)).updateCustomerId(cartUid,123L);
         verify(cartRepository, times(1)).findByUUID(cartUid);
+    }
+
+    @Test
+    public void shouldDeleteShoppingCart(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        final ShoppingCart shoppingCart = ShoppingCart.builder().id(123L).cartUid(cartUid).build();
+
+        // When
+        service.deleteShoppingCart(shoppingCart);
+
+        // Then
+        verify(cartItemRepository, times(1)).deleteByCartId(123L);
+        verify(cartRepository, times(1)).delete(cartUid);
     }
 }

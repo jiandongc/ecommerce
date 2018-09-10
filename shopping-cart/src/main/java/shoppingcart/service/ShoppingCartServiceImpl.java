@@ -7,6 +7,7 @@ import shoppingcart.domain.ShoppingCart;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,15 +16,11 @@ import static java.lang.String.format;
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
-    private final ShoppingCartRepository cartRepository;
-    private final ShoppingCartItemRepository cartItemRepository;
+    @Autowired
+    private ShoppingCartRepository cartRepository;
 
     @Autowired
-    public ShoppingCartServiceImpl(ShoppingCartRepository cartRepository,
-                                   ShoppingCartItemRepository cartItemRepository) {
-        this.cartRepository = cartRepository;
-        this.cartItemRepository = cartItemRepository;
-    }
+    private ShoppingCartItemRepository cartItemRepository;
 
     @Override
     @Transactional
@@ -40,7 +37,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional(readOnly = true)
     public ShoppingCart getShoppingCartByUid(UUID cartUid) {
-        final ShoppingCart shoppingCart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
+        final ShoppingCart shoppingCart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("Shopping cart not found using CartUId [%s]", cartUid)));
         shoppingCart.setShoppingCartItems(cartItemRepository.findByCartId(shoppingCart.getId()));
         return shoppingCart;
     }
@@ -48,7 +45,17 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional
     public Optional<ShoppingCart> updateCustomerId(UUID cartUid, Long customerId) {
+        final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerId);
+        shoppingCarts.stream().filter(cart -> !cart.getCartUid().equals(cartUid))
+                .forEach(this::deleteShoppingCart);
         cartRepository.updateCustomerId(cartUid, customerId);
         return cartRepository.findByUUID(cartUid);
+    }
+
+    @Override
+    @Transactional
+    public void deleteShoppingCart(ShoppingCart shoppingCart){
+        cartItemRepository.deleteByCartId(shoppingCart.getId());
+        cartRepository.delete(shoppingCart.getCartUid());
     }
 }

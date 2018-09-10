@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import shoppingcart.domain.ShoppingCart;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,5 +57,40 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         // Then
         assertThat(rowUpdated, is(1));
         assertThat(shoppingCartRepository.findByUUID(uuid).get().getCustomerId(), is(123L));
+    }
+
+    @Test
+    public void shouldReturnShoppingCartByCustomerId(){
+        // Given
+        shoppingCartRepository.create(1234L);
+        shoppingCartRepository.create(1234L);
+
+        // When
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByCustomerId(1234L);
+
+        // Then
+        assertThat(shoppingCarts.size(), is(2));
+    }
+
+    @Test
+    public void shouldReturnEmptyListIfCartNotFoundUsingCustomerId(){
+        // Given & When
+        List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByCustomerId(9999L);
+
+        // Then
+        assertThat(shoppingCarts.size(), is(0));
+    }
+
+    @Test
+    public void shouldDeleteShoppingCartByUUID(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create(1234L);
+        assertThat(shoppingCartRepository.findByUUID(uuid).isPresent(), is(true));
+
+        // When
+        shoppingCartRepository.delete(uuid);
+
+        // Then
+        assertThat(shoppingCartRepository.findByUUID(uuid).isPresent(), is(false));
     }
 }

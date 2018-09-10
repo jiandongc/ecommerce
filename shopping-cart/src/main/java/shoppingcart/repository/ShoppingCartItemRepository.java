@@ -11,4 +11,5 @@ public interface ShoppingCartItemRepository {
     List<ShoppingCartItem> findByCartId(long cartId);
     Optional<ShoppingCartItem> findByCartIdAndSku(long cartId, String sku);
     void delete(long cartId, String sku);
+    int deleteByCartId(long cartId);
 }

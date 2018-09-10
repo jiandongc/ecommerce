@@ -103,7 +103,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldReturn404IfCartUidIsValid(){
+    public void shouldReturn404IfCartUidIsNotValid(){
         // Given
         final UUID cartUid = UUID.randomUUID();
 
@@ -116,18 +116,26 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldUpdateCustomerUid(){
+    public void shouldUpdateCustomerUidForTheCartUidAndDeleteOtherCarts(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
-        final UUID cartUid = repository.create();
+        final Long customerId = 12345L;
+        final UUID cartUidOne = repository.create(customerId);
+        final UUID cartUidTwo = repository.create(customerId);
+        final UUID cartUidThree = repository.create(customerId);
+        assertThat(repository.findByUUID(cartUidOne).isPresent(), is(true));
+        assertThat(repository.findByUUID(cartUidTwo).isPresent(), is(true));
+        assertThat(repository.findByUUID(cartUidThree).isPresent(), is(true));
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
-        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + cartUid.toString(), HttpMethod.PUT, payload, Void.class);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + cartUidOne.toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(repository.findByUUID(cartUid).get().getCustomerId(), is(12345L));
+        assertThat(repository.findByUUID(cartUidOne).get().getCustomerId(), is(12345L));
+        assertThat(repository.findByUUID(cartUidTwo).isPresent(), is(false));
+        assertThat(repository.findByUUID(cartUidThree).isPresent(), is(false));
     }
 
     @Test
@@ -138,7 +146,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
-        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + cartUid.toString(), HttpMethod.PUT, payload, Void.class);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + cartUid.toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -152,7 +160,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
-        final ResponseEntity<Void> response = rest.exchange(BASE_URL + "/" + UUID.randomUUID().toString(), HttpMethod.PUT, payload, Void.class);
+        final ResponseEntity<Void> response = rest.exchange(BASE_URL + UUID.randomUUID().toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));

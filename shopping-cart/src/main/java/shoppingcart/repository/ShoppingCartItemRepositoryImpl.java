@@ -19,16 +19,14 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     private static final String INSERT_SQL = "insert into shopping_cart_item " +
             "(shopping_cart_id, sku, product_name, unit_price, image_url) values (?, ?, ?, ?, ?)";
     private static final String UPDATE_QTY_SQL = "update shopping_cart_item set quantity = ? where shopping_cart_id = ? and sku = ?";
-    private static final String DELETE_SQL = "delete from shopping_cart_item where shopping_cart_id = ? and sku = ?";
-
-    private final JdbcTemplate jdbcTemplate;
-    private final ShoppingCartItemMapper shoppingCartItemMapper;
+    private static final String DELETE_BY_CART_ID_AND_SKU_SQL = "delete from shopping_cart_item where shopping_cart_id = ? and sku = ?";
+    private static final String DELETE_BY_CARA_ID_SQL = "delete from shopping_cart_item where shopping_cart_id = ?";
 
     @Autowired
-    public ShoppingCartItemRepositoryImpl(JdbcTemplate jdbcTemplate, ShoppingCartItemMapper shoppingCartItemMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.shoppingCartItemMapper = shoppingCartItemMapper;
-    }
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private ShoppingCartItemMapper shoppingCartItemMapper;
 
     @Override
     public void save(long cartId, ShoppingCartItem cartItem) {
@@ -36,7 +34,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     }
 
     @Override
-    public void updateQuantity(long cartId, ShoppingCartItem cartItem, int quantity){
+    public void updateQuantity(long cartId, ShoppingCartItem cartItem, int quantity) {
         jdbcTemplate.update(UPDATE_QTY_SQL, quantity, cartId, cartItem.getSku());
     }
 
@@ -56,6 +54,11 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
 
     @Override
     public void delete(long cartId, String sku) {
-        jdbcTemplate.update(DELETE_SQL, cartId, sku);
+        jdbcTemplate.update(DELETE_BY_CART_ID_AND_SKU_SQL, cartId, sku);
+    }
+
+    @Override
+    public int deleteByCartId(long cartId) {
+        return jdbcTemplate.update(DELETE_BY_CARA_ID_SQL, cartId);
     }
 }

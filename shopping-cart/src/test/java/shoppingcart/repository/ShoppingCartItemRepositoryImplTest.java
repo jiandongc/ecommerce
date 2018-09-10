@@ -153,7 +153,37 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         shoppingCartItemRepository.delete(cart.getId(), "109283");
         cartItems = shoppingCartItemRepository.findByCartId(cart.getId());
         assertThat(cartItems.size(), is(0));
+    }
 
+    @Test
+    public void shouldDeleteAllItemsForGivenCartId(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create();
+        final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .price(ONE)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .build();
+        shoppingCartItemRepository.save(cart.getId(), cartItem);
+        final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
+                .name("product2")
+                .price(TEN)
+                .sku("219283")
+                .imageUrl("/image2.jpeg")
+                .build();
+        shoppingCartItemRepository.save(cart.getId(), cartItem2);
+
+        List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByCartId(cart.getId());
+        assertThat(cartItems.size(), is(2));
+
+        // When
+        shoppingCartItemRepository.deleteByCartId(cart.getId());
+
+        // Then
+        cartItems = shoppingCartItemRepository.findByCartId(cart.getId());
+        assertThat(cartItems.size(), is(0));
     }
 
 }

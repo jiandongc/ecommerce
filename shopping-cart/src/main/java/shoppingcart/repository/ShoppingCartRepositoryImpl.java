@@ -1,10 +1,12 @@
 package shoppingcart.repository;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.ShoppingCartMapper;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -15,15 +17,15 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
     private static final String INSERT_SQL = "insert into shopping_cart (cart_uid, customer_id) values (?, ?)";
     private static final String SELECT_BY_UUID_SQL = "select * from shopping_cart where cart_uid = ?";
+    private static final String SELECT_BY_CUSTOMER_ID_SQL = "select * from shopping_cart where customer_id = ?";
     private static final String UPDATE_CUSTOMER_ID = "update shopping_cart set customer_id = ? where cart_uid = ?";
+    private static final String DELETE_BY_UUID_SQL = "delete from shopping_cart where cart_uid = ?";
 
-    private final JdbcTemplate jdbcTemplate;
-    private final ShoppingCartMapper shoppingCartMapper;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-    public ShoppingCartRepositoryImpl(JdbcTemplate jdbcTemplate, ShoppingCartMapper shoppingCartMapper) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.shoppingCartMapper = shoppingCartMapper;
-    }
+    @Autowired
+    private ShoppingCartMapper shoppingCartMapper;
 
     @Override
     public UUID create() {
@@ -49,7 +51,17 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     }
 
     @Override
+    public List<ShoppingCart> findByCustomerId(Long customerId) {
+        return jdbcTemplate.query(SELECT_BY_CUSTOMER_ID_SQL, shoppingCartMapper, customerId);
+    }
+
+    @Override
     public int updateCustomerId(UUID cartUid, Long customerId) {
         return jdbcTemplate.update(UPDATE_CUSTOMER_ID, customerId, cartUid);
+    }
+
+    @Override
+    public int delete(UUID cartUid) {
+        return jdbcTemplate.update(DELETE_BY_UUID_SQL, cartUid);
     }
 }
