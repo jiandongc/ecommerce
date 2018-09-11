@@ -1,9 +1,8 @@
 package product.controller;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import product.data.CategoryData;
@@ -11,6 +10,7 @@ import product.domain.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.springframework.http.HttpMethod.GET;
 
 
 /**
@@ -20,16 +20,6 @@ public class CategoryControllerTest extends AbstractControllerTest {
 
     private final String BASE_URL = "http://localhost:8083/categories/";
     private final TestRestTemplate rest = new TestRestTemplate();
-
-    @Before
-    public void setUp(){
-        this.cleanUp();
-    }
-
-    @After
-    public void after(){
-        this.cleanUp();
-    }
 
     /*
                             c1
@@ -95,7 +85,8 @@ public class CategoryControllerTest extends AbstractControllerTest {
         productRepository.save(p4);
 
         // When & Then
-        final ResponseEntity<CategoryData> c1Response = rest.getForEntity(BASE_URL + "c1", CategoryData.class);
+        final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<CategoryData> c1Response = rest.exchange(BASE_URL + "c1", GET, httpEntity, CategoryData.class);
         assertThat(c1Response.getStatusCode(), is(HttpStatus.OK));
         assertThat(c1Response.getBody().getName(), is("c1"));
         assertThat(c1Response.getBody().getCode(), is("c1"));
@@ -108,7 +99,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(c1Response.getBody().getChildren().get(0).getCode(), is("c2"));
         assertThat(c1Response.getBody().getChildren().get(0).getProductTotal(), is(4));
 
-        final ResponseEntity<CategoryData> c2Response = rest.getForEntity(BASE_URL + "c2", CategoryData.class);
+        final ResponseEntity<CategoryData> c2Response = rest.exchange(BASE_URL + "c2", GET, httpEntity, CategoryData.class);
         assertThat(c2Response.getStatusCode(), is(HttpStatus.OK));
         assertThat(c2Response.getBody().getName(), is("c2"));
         assertThat(c2Response.getBody().getCode(), is("c2"));
@@ -123,7 +114,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(c2Response.getBody().getChildren().get(0).getCode(), is("c3"));
         assertThat(c2Response.getBody().getChildren().get(0).getProductTotal(), is(4));
 
-        final ResponseEntity<CategoryData> c3Response = rest.getForEntity(BASE_URL + "c3", CategoryData.class);
+        final ResponseEntity<CategoryData> c3Response = rest.exchange(BASE_URL + "c3", GET, httpEntity, CategoryData.class);
         assertThat(c3Response.getStatusCode(), is(HttpStatus.OK));
         assertThat(c3Response.getBody().getName(), is("c3"));
         assertThat(c3Response.getBody().getCode(), is("c3"));
@@ -143,7 +134,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(c3Response.getBody().getChildren().get(1).getCode(), is("c5"));
         assertThat(c3Response.getBody().getChildren().get(1).getProductTotal(), is(2));
 
-        final ResponseEntity<CategoryData> c4Response = rest.getForEntity(BASE_URL + "c4", CategoryData.class);
+        final ResponseEntity<CategoryData> c4Response = rest.exchange(BASE_URL + "c4", GET, httpEntity, CategoryData.class);
         assertThat(c4Response.getStatusCode(), is(HttpStatus.OK));
         assertThat(c4Response.getBody().getName(), is("c4"));
         assertThat(c4Response.getBody().getCode(), is("c4"));
@@ -159,7 +150,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(c4Response.getBody().getParents().get(3).getCode(), is("c4"));
         assertThat(c4Response.getBody().getChildren().size(), is(0));
 
-        final ResponseEntity<CategoryData> c5Response = rest.getForEntity(BASE_URL + "c5", CategoryData.class);
+        final ResponseEntity<CategoryData> c5Response = rest.exchange(BASE_URL + "c5", GET, httpEntity, CategoryData.class);
         assertThat(c5Response.getStatusCode(), is(HttpStatus.OK));
         assertThat(c5Response.getBody().getName(), is("c5"));
         assertThat(c5Response.getBody().getCode(), is("c5"));

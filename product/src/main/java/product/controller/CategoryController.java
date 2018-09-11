@@ -1,6 +1,7 @@
 package product.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import product.data.CategoryData;
 import product.domain.Category;
@@ -34,6 +35,7 @@ public class CategoryController {
         this.categoryDataMapper = categoryDataMapper;
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "/{code}", method= RequestMethod.GET)
     public CategoryData findCategoryByCode(@PathVariable String code) {
         final Optional<Category> category = categoryService.findByCode(code);

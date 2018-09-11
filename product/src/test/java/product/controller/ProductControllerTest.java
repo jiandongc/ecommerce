@@ -6,12 +6,13 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.http.HttpMethod.GET;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -21,10 +22,7 @@ import product.data.ProductSearchData;
 import product.data.ProductSimpleData;
 import product.domain.*;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.HashSet;
-
 
 public class ProductControllerTest extends AbstractControllerTest {
 
@@ -44,8 +42,6 @@ public class ProductControllerTest extends AbstractControllerTest {
 
 	@Before
 	public void setUp(){
-		this.cleanUp();
-
 		key = new Key();
 		key.setName("Color");
 		keyRepository.save(key);
@@ -99,11 +95,6 @@ public class ProductControllerTest extends AbstractControllerTest {
 		sku2.setSku("FD10039403_Y");
 		sku2.addAttribute(attribute);
 	}
-
-	@After
-	public void after(){
-		this.cleanUp();
-	}
 	
 	@Test
 	public void shouldGetProductByCode(){
@@ -120,7 +111,8 @@ public class ProductControllerTest extends AbstractControllerTest {
 
 		// When & Then
 		final Product p = productRepository.findOne(productOne.getId());
-		final ResponseEntity<ProductData> response = rest.getForEntity(BASE_URL + p.getCode(), ProductData.class);
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<ProductData> response = rest.exchange(BASE_URL + p.getCode(), GET, httpEntity, ProductData.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("Chester"));
 		assertThat(response.getBody().getDescription(), is("Chester description"));
@@ -154,7 +146,8 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productRepository.save(productTwo);
 
 		// When & Then
-		final ResponseEntity<ProductSimpleData[]> response = rest.getForEntity(BASE_URL + "?cc=FD", ProductSimpleData[].class);
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?cc=FD", GET, httpEntity, ProductSimpleData[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
 		assertThat(response.getBody()[0].getName(), is("Chester"));
@@ -190,8 +183,9 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productGroupRepository.addColorVariant(1, productThree.getId());
 
 		// When & Then
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		final Product p1 = productRepository.findOne(productOne.getId());
-		final ResponseEntity<ProductSimpleData[]> response = rest.getForEntity(BASE_URL + "color/" + p1.getCode(), ProductSimpleData[].class);
+		final ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "color/" + p1.getCode(), GET, httpEntity, ProductSimpleData[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
 		assertThat(response.getBody()[0].getName(), is("Shoes"));
@@ -199,7 +193,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 
 		// When & Then
 		final Product p2 = productRepository.findOne(productTwo.getId());
-		final ResponseEntity<ProductSimpleData[]> response2 = rest.getForEntity(BASE_URL + "color/" + p2.getCode(), ProductSimpleData[].class);
+		final ResponseEntity<ProductSimpleData[]> response2 = rest.exchange(BASE_URL + "color/" + p2.getCode(), GET, httpEntity, ProductSimpleData[].class);
 		assertThat(response2.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response2.getBody().length, is(2));
 		assertThat(response2.getBody()[0].getName(), is("Chester"));
@@ -207,7 +201,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 
 		// When & Then
 		final Product p3 = productRepository.findOne(productThree.getId());
-		final ResponseEntity<ProductSimpleData[]> response3 = rest.getForEntity(BASE_URL + "color/" + p3.getCode(), ProductSimpleData[].class);
+		final ResponseEntity<ProductSimpleData[]> response3 = rest.exchange(BASE_URL + "color/" + p3.getCode(), GET, httpEntity, ProductSimpleData[].class);
 		assertThat(response3.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response3.getBody().length, is(2));
 		assertThat(response3.getBody()[0].getName(), is("Chester"));
@@ -224,11 +218,11 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.addAttribute(attribute);
 		productRepository.save(productOne);
 
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+
 		// When & Then
 		String filterStr = "{\"color\":[\"red\"]}";
-		ResponseEntity<ProductSearchData> response = rest.getForEntity(
-				BASE_URL + "search/categories/FD?filter={filterStr}",
-				ProductSearchData.class, filterStr);
+		ResponseEntity<ProductSearchData> response = rest.exchange(BASE_URL + "search/categories/FD?filter={filterStr}", GET, httpEntity, ProductSearchData.class, filterStr);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getProducts().size(), is(1));
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
@@ -242,7 +236,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 
 
 		// When & Then
-		response = rest.getForEntity(BASE_URL + "search/categories/FD", ProductSearchData.class, filterStr);
+		response = rest.exchange(BASE_URL + "search/categories/FD", GET, httpEntity, ProductSearchData.class, filterStr);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getProducts().size(), is(1));
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
@@ -272,20 +266,20 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.addSku(sku2); // 1.0
 		productRepository.save(productTwo);
 
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+
 		// When & Then
-		ResponseEntity<ProductSearchData> response = rest.getForEntity(BASE_URL + "search/categories/FD?sort=pricedesc", ProductSearchData.class);
+		ResponseEntity<ProductSearchData> response = rest.exchange(BASE_URL + "search/categories/FD?sort=pricedesc", GET, httpEntity, ProductSearchData.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getProducts().size(), is(2));
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
 		assertThat(response.getBody().getProducts().get(1).getName(), is("Book"));
 
 		// When & Then
-		response = rest.getForEntity(BASE_URL + "search/categories/FD?sort=priceasc", ProductSearchData.class);
+		response = rest.exchange(BASE_URL + "search/categories/FD?sort=priceasc", GET, httpEntity, ProductSearchData.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getProducts().size(), is(2));
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Book"));
 		assertThat(response.getBody().getProducts().get(1).getName(), is("Chester"));
-
 	}
-
 }

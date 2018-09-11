@@ -1,7 +1,5 @@
 package product.controller;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -9,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import product.data.ProductSearchData;
@@ -44,6 +43,7 @@ public class ProductController {
 		this.categoryService = categoryService;
 	}
 
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
 	@RequestMapping(value = "/search/categories/{categoryCode}", method=RequestMethod.GET)
 	public ResponseEntity findProductsInCategory(@PathVariable String categoryCode,
 												 @RequestParam(value = "filter", required = false) String filterJsonStr,
@@ -61,12 +61,14 @@ public class ProductController {
 		}
 	}
 
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
 	@RequestMapping(method=RequestMethod.GET)
 	public List<ProductSimpleData> findProducts(@RequestParam(value = "cc") String categoryCode) {
 		return productService.findByCategoryCode(categoryCode).stream()
 				.map(simpleProductMapper::getValueWithMainImage).collect(Collectors.toList());
 	}
-	
+
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "/{code}", method=RequestMethod.GET)
     public ResponseEntity findByCode(@PathVariable String code) {
 		final Optional<Product> product = productService.findByCode(code);
@@ -78,6 +80,7 @@ public class ProductController {
 		}
     }
 
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
 	@RequestMapping(value = "/color/{code}", method=RequestMethod.GET)
 	public ResponseEntity findColorVariant(@PathVariable String code){
 		final List<ProductSimpleData> products = productService.findColorVariant(code).stream()
