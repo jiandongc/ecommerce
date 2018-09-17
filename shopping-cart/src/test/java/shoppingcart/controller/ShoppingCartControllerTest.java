@@ -116,6 +116,68 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void shouldRetrieveShoppingCartByCustomerID(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+        final Long customerId = 100L;
+        final UUID cartUid = repository.create(customerId);
+        final String itemOne = "{\n" +
+                "\"sku\": \"123456\",\n" +
+                "\"name\": \"kid's cloth\",\n" +
+                "\"price\": \"1\",\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\"\n" +
+                "}";
+        final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
+        final String itemTwo = "{\n" +
+                "\"sku\": \"654321\",\n" +
+                "\"name\": \"father's cloth\",\n" +
+                "\"price\": \"10\",\n" +
+                "\"imageUrl\": \"/father-cloth.jpeg\"\n" +
+                "}";
+        final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
+
+        // When
+        final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
+        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + "?customerId=100", GET, payload, CartSummary.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(OK));
+        assertThat(response.getBody().getTotalQuantity(), is(3));
+        assertThat(response.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(21)));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().size(), is(2));
+    }
+
+    @Test
+    public void shouldReturn404IfNoShoppingCartIsFoundUsingCustomerId(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+
+        // When
+        final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
+        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + "?customerId=999", GET, payload, CartSummary.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(NOT_FOUND));
+    }
+
+    @Test
+    public void shouldRejectRetrieveShoppingCartByCustomerIdRequestWithGuestToken(){
+        // Given - set guest token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
+        repository.create(100L);
+
+        // When
+        final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
+        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + "?customerId=100", GET, payload, CartSummary.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+    }
+
+    @Test
     public void shouldUpdateCustomerUidForTheCartUidAndDeleteOtherCarts(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
@@ -140,7 +202,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldRejectUpdateCustomerUidRequestWithGuestToken(){
-        // Given - set user token
+        // Given - set guest token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
         final UUID cartUid = repository.create();
 

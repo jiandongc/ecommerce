@@ -9,7 +9,8 @@ public interface ShoppingCartService {
 
     UUID createShoppingCartForGuest();
     UUID createShoppingCartForUser(long customerId);
-    ShoppingCart getShoppingCartByUid(UUID cartUid);
+    Optional<ShoppingCart> getShoppingCartByUid(UUID cartUid);
+    Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId);
     Optional<ShoppingCart> updateCustomerId(UUID cartUid, Long customerId);
     void deleteShoppingCart(ShoppingCart shoppingCart);
 }

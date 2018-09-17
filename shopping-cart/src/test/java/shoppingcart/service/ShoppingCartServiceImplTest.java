@@ -4,7 +4,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
@@ -12,6 +11,7 @@ import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -60,14 +60,15 @@ public class ShoppingCartServiceImplTest {
         when(cartItemRepository.findByCartId(1L)).thenReturn(asList(cartItem));
 
         // When
-        final ShoppingCart shoppingCart = service.getShoppingCartByUid(cartUid);
+        final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByUid(cartUid);
 
         // Then
-        assertThat(shoppingCart.getId(), is(1L));
-        assertThat(shoppingCart.getCartUid(), is(cartUid));
-        assertThat(shoppingCart.getShoppingCartItems().size(), is(1));
-        assertThat(shoppingCart.getShoppingCartItems().get(0).getName(), is("product"));
-        assertThat(shoppingCart.getShoppingCartItems().get(0).getSku(), is("123X7"));
+        assertThat(shoppingCart.isPresent(), is(true));
+        assertThat(shoppingCart.get().getId(), is(1L));
+        assertThat(shoppingCart.get().getCartUid(), is(cartUid));
+        assertThat(shoppingCart.get().getShoppingCartItems().size(), is(1));
+        assertThat(shoppingCart.get().getShoppingCartItems().get(0).getName(), is("product"));
+        assertThat(shoppingCart.get().getShoppingCartItems().get(0).getSku(), is("123X7"));
     }
 
     @Test
@@ -102,5 +103,38 @@ public class ShoppingCartServiceImplTest {
         // Then
         verify(cartItemRepository, times(1)).deleteByCartId(123L);
         verify(cartRepository, times(1)).delete(cartUid);
+    }
+
+    @Test
+    public void shouldGetShoppingCartByCustomerId(){
+        // Given
+        final Long customerId = 100L;
+        when(cartRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(ShoppingCart.builder().id(1L).customerId(customerId).build()));
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").sku("123X7").build();
+        when(cartItemRepository.findByCartId(1L)).thenReturn(asList(cartItem));
+
+        // When
+        final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByCustomerId(customerId);
+
+        // Then
+        assertThat(shoppingCart.isPresent(), is(true));
+        assertThat(shoppingCart.get().getCustomerId(), is(100L));
+        assertThat(shoppingCart.get().getId(), is(1L));
+        assertThat(shoppingCart.get().getShoppingCartItems().size(), is(1));
+        assertThat(shoppingCart.get().getShoppingCartItems().get(0).getName(), is("product"));
+        assertThat(shoppingCart.get().getShoppingCartItems().get(0).getSku(), is("123X7"));
+    }
+
+    @Test
+    public void shouldGetEmptyIfNoShoppingCardIfFoundUsingCustomerId(){
+        // Given
+        final Long customerId = 100L;
+        when(cartRepository.findByCustomerId(customerId)).thenReturn(Collections.emptyList());
+
+        // When
+        final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByCustomerId(customerId);
+
+        // Then
+        assertThat(shoppingCart.isPresent(), is(false));
     }
 }

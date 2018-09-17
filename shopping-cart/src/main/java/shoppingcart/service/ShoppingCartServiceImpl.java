@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static java.lang.String.format;
-
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
 
@@ -36,10 +34,23 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional(readOnly = true)
-    public ShoppingCart getShoppingCartByUid(UUID cartUid) {
-        final ShoppingCart shoppingCart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("Shopping cart not found using CartUId [%s]", cartUid)));
-        shoppingCart.setShoppingCartItems(cartItemRepository.findByCartId(shoppingCart.getId()));
+    public Optional<ShoppingCart> getShoppingCartByUid(UUID cartUid) {
+        Optional<ShoppingCart> shoppingCart = cartRepository.findByUUID(cartUid);
+        shoppingCart.ifPresent(cart -> cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId())));
         return shoppingCart;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId) {
+        final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerId);
+        if(shoppingCarts.size() > 0){
+            final ShoppingCart shoppingCart = shoppingCarts.get(0);
+            shoppingCart.setShoppingCartItems(cartItemRepository.findByCartId(shoppingCart.getId()));
+            return Optional.of(shoppingCart);
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
