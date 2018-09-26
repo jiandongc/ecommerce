@@ -1,6 +1,6 @@
 package customer.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,6 +22,7 @@ public class Customer {
 	private String name;
 	@Column(name = "email")
 	private String email;
+	@JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "password")
 	private String password;
 	
@@ -55,7 +56,6 @@ public class Customer {
 		this.email = email;
 	}
 
-	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
