@@ -1,34 +1,68 @@
 var customer = angular.module('customer', ['ngRoute','ngResource']);
 
-customer.controller('loginCtrl', function($scope, customersFactory, authService, $rootScope) {
+customer.controller('loginCtrl', function($scope, authService, $rootScope) {
     
+    authService.assignGuestToken();
     $rootScope.loginError = false;
 
-	$scope.registerCustomer = function(){
+	$scope.login = function(credentials){
+        authService.authenticateUser(credentials);
+	};
+});
+
+customer.controller('registerCtrl', function($scope, authService, customerFactory) {
+    
+    authService.assignGuestToken();
+
+    $scope.registerCustomer = function(){
         var newCustomer = {
             name : $scope.customer.name,
             email : $scope.customer.email,
             password : $scope.customer.password
         };
-        customersFactory.save(newCustomer, function(data){
-            $scope.login(data);
+
+        customerFactory.save(newCustomer).then(function(data){
+            var credentials = {
+                email : data.email,
+                password : newCustomer.password
+            };
+            authService.authenticateUser(credentials);
         });
-	};
-
-	$scope.login = function(credentials){
-        authService.authenticateUser(credentials);
-	};
-
+    };
 });
 
-customer.controller('accountCtrl', function($scope, $routeParams, customersFactory){
-	customersFactory.get({id: $routeParams.id}, function(response){
-		$scope.customer = response;
-	});
+customer.controller('accountCtrl', function($scope, $routeParams, customerFactory){
+    customerFactory.getCustomerById($routeParams.id).then(function(response){
+        $scope.customer = response;
+    });
 });
 
-customer.factory('customersFactory', function($resource, environment){
-	return $resource(environment.customerUrl + '/customers/:id');
+customer.factory('customerFactory', function($http, environment){
+
+    var getCustomerByEmail = function(credentials){
+        return $http.get(environment.customerUrl + '/customers?email=' + credentials.email).then(function(response){
+            return response.data;
+        });
+    };
+
+    var getCustomerById = function(id){
+        return $http.get(environment.customerUrl + '/customers/' + id).then(function(response){
+            return response.data;
+        });
+    };
+
+    var save = function(customer){
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+        return $http.post(environment.customerUrl + '/customers', customer, configs).then(function(response){
+            return response.data;
+        });
+    }
+
+    return {
+        getCustomerByEmail: getCustomerByEmail,
+        getCustomerById: getCustomerById,
+        save: save
+    };
 });
 
 customer.directive('passwordMatch', [function () {
@@ -56,11 +90,13 @@ customer.config(
       when('/login', {
         templateUrl: 'customer/login.html',
         controller: 'loginCtrl'
+      }).when('/register', {
+        templateUrl: 'customer/register.html',
+        controller: 'registerCtrl'
       }).when('/account/:id', {
         templateUrl: 'customer/account.html',
         controller: 'accountCtrl'
       });
-
 });
 
 

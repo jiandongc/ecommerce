@@ -1,18 +1,20 @@
 var cart = angular.module('cart',[]);
 
-cart.controller('cartCtrl', function($scope, $cookies, $location, cartSummaryFactory) {
-	cartSummaryFactory.get({
-		cartuid: $cookies.get('cart_uid')
-	}, function(response) {
-		$scope.totalQuantity = response.totalQuantity;
-		$scope.totalPrice = response.totalPrice;
-		$scope.cartItems = response.cartItems;
-    $scope.forms = {};
-	}, function(error){
-		$scope.totalQuantity = null;
-		$scope.totalPrice = null;
-		$scope.cartItems = null;
-	});
+cart.controller('cartCtrl', function($scope, $cookies, $location, authService) {
+  authService.assignGuestToken();
+
+	// cartSummaryFactory.get({
+	// 	cartuid: $cookies.get('cart_uid')
+	// }, function(response) {
+	// 	$scope.totalQuantity = response.totalQuantity;
+	// 	$scope.totalPrice = response.totalPrice;
+	// 	$scope.cartItems = response.cartItems;
+ //    $scope.forms = {};
+	// }, function(error){
+	// 	$scope.totalQuantity = null;
+	// 	$scope.totalPrice = null;
+	// 	$scope.cartItems = null;
+	// });
 
 	$scope.checkout = function(){
     var valid = true;
@@ -35,31 +37,59 @@ cart.controller('cartCtrl', function($scope, $cookies, $location, cartSummaryFac
 	};
 });
 
-cart.factory('cartSummaryFactory', function($resource, environment){
-	return $resource(environment.orderUrl + '/anoncarts/summary/:cartuid');
-});
-
-cart.factory('anonCartFactory', function($resource, environment){
-	return $resource(environment.orderUrl + '/anoncarts/:cartuid');
-});
-
-cart.service('cartService', function($cookies, $rootScope, $timeout, anonCartFactory){
-   this.addItem = function(product, callback){
-   	var anonCartItem = {
-      productId : product.id,
-      productName : product.name, 
-      productPrice : product.unitPrice,
-      quantity : product.quantity,
-      imageUrl : product.imageUrl,
-      cartUid : $cookies.get('cart_uid')
-    };
-    	
-    anonCartFactory.save(anonCartItem, function(data){
-      $cookies.put('cart_uid', data.cartUid);
-      $rootScope.$broadcast('updateCartSummary', true);
-      $timeout(callback, 1000);
+cart.factory('shoppingCartFactory', function($http, environment){
+  var updateCustomerId = function(cartUid, customerId){
+    return $http.put(environment.shoppingCartUrl + '/carts/' + cartUid, customerId).then(function(response){
+      return response.data;
     });
-  };
+  }
+
+  var createShoppingCartForCustomer = function(customerId){
+    return $http.post(environment.shoppingCartUrl + '/carts', customerId).then(function(response){
+        return response.data;
+    }); 
+  }
+
+  var createShoppingCartForGuest = function(){
+    return $http.post(environment.shoppingCartUrl + '/carts').then(function(response){
+        return response.data;
+    }); 
+  }
+
+  var addItemToShoppingCart = function(name, price, imageUrl, sku, cartUid){
+    var configs = {headers: {'Content-Type' : 'application/json'}};
+    var cartItem = {
+      name: name, 
+      price: price,
+      imageUrl: imageUrl,
+      sku: sku
+    };
+
+    return $http.post(environment.shoppingCartUrl + '/carts/' + cartUid + '/items', cartItem, configs).then(function(response){
+        return response.data;
+    });
+  }
+
+  var getShoppingCart = function(cartUid){
+      return $http.get(environment.shoppingCartUrl + '/carts/' + cartUid).then(function(response){
+          return response.data;
+      });   
+  }
+
+  var getShoppingCartByCustomerId = function(customerId){
+      return $http.get(environment.shoppingCartUrl + '/carts/?customerId=' + customerId).then(function(response){
+          return response.data;
+      });
+  }
+
+  return {
+    updateCustomerId: updateCustomerId,
+    addItemToShoppingCart: addItemToShoppingCart,
+    createShoppingCartForCustomer: createShoppingCartForCustomer,
+    createShoppingCartForGuest: createShoppingCartForGuest,
+    getShoppingCart: getShoppingCart,
+    getShoppingCartByCustomerId: getShoppingCartByCustomerId
+  }
 });
 
 cart.config(

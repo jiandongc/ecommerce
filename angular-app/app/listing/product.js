@@ -1,6 +1,9 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
-productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout) {
+productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout, authService, shoppingCartFactory, $localstorage, $rootScope) {
+
+  authService.assignGuestToken();
+  
 	$http.get(environment.productUrl + '/products/' + $routeParams.code).success(function(response){
 		$scope.product = response;
 
@@ -15,6 +18,7 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
     $scope.price = response.price;
     if($scope.product.variants.length == 1){
       var variant = $scope.product.variants[0];
+      $scope.sku = variant.sku;
       if(variant.qty <= 10){
         $scope.lowqty = variant.qty;
       }
@@ -32,8 +36,10 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
 
     if(variant){
       $scope.price = variant.price;
+      $scope.sku = variant.sku;
     } else {
       $scope.price = $scope.product.price;
+      $scope.sku = undefined;
     }
 
     if(variant && variant.qty <= 10){
@@ -55,6 +61,33 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
       return variant;
     }
     return null;
+  };
+
+  $scope.addItemToCart = function(product){
+      var imageUrl = product.images.Main[0];
+      if(!$localstorage.containsKey("cart_uid")){
+          if($localstorage.containsKey("customer_id")){
+              shoppingCartFactory.createShoppingCartForCustomer($localstorage.get("customer_id")).then(function(cartUid){
+                  shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, cartUid).then(function(data){
+                      $localstorage.set('cart_uid', cartUid);
+                      $rootScope.$broadcast('updateCartSummary', true);
+                  });
+              }); 
+          } else {
+              shoppingCartFactory.createShoppingCartForGuest().then(function(cartUid){
+                  shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, cartUid).then(function(data){
+                      $localstorage.set('cart_uid', cartUid);
+                      $rootScope.$broadcast('updateCartSummary', true);
+                  });
+              }); 
+          }
+      } else {
+          var cartUid = $localstorage.get('cart_uid', undefined);
+          shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, cartUid).then(function(data){
+              $rootScope.$broadcast('updateCartSummary', true);
+          });  
+      }
+
   };
 });
 

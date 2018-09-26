@@ -268,7 +268,7 @@ html, body {
 	color: #45555f;
 }
 
-.login .textInputLength {
+.login .width-60 {
 	width: 60%;
 }
 
@@ -626,6 +626,8 @@ ul.scrollable-menu .btn-remove {
 .fs-11 {font-size: 1.1em}
 .fs-12 {font-size: 1.2em}
 .fs-13 {font-size: 1.3em}
+
+.fw-bold {font-weight: bold}
 
 .clearLeft {
   clear: left;

@@ -1,6 +1,6 @@
 var auth = angular.module('auth', ['ngCookies']);
 
-auth.factory('authService', function($http, $cookies, $location, $rootScope, $q, customersFactory, cartSummaryFactory, environment){
+auth.factory('authService', function($localstorage, $location, $rootScope, $q, authFactory, customerFactory, shoppingCartFactory){
 
 	var authenticateUser = function (credentials){
 		validateUser(credentials)
@@ -10,13 +10,8 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
 	};
 
     var validateUser = function(credentials){
-        var data = 'grant_type=password&username='+credentials.email+'&password='+credentials.password;
-        var configs = {headers: {'Content-Type' : 'application/x-www-form-urlencoded'}}
-        $cookies.put('access_token', 'Basic '+ btoa('client:secret'));
-
-        // return a derived promise 
-        return $http.post(environment.authServerUrl + '/uaa/oauth/token', data, configs).then(function(response){
-            $cookies.put('access_token', 'Bearer ' + response.data.access_token);
+        return authFactory.validateUser(credentials).then(function(response){
+            $localstorage.set('access_token', response.headers("Authentication"));
             return credentials;
         }, function(error){
             return $q.reject("authentication failed for user"); 
@@ -24,9 +19,9 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
     };
 
     var getCustomerByEmail = function(credentials){
-        return customersFactory.get({email:credentials.email}).$promise.then(function(customer){
-            $cookies.put('current_user', customer.name);
-            $cookies.put('customer_id', customer.id);
+        return customerFactory.getCustomerByEmail(credentials).then(function(customer){
+            $localstorage.set('current_user', customer.name);
+            $localstorage.set('customer_id', customer.id);
             return customer;
         }, function(error){
             return $q.reject("customer not found");
@@ -34,21 +29,20 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
     };
 
     var syncCustomerAndCart = function(customer) {
-        if(typeof $cookies.get('cart_uid') !== "undefined") {
-            var configs = {headers: {'Content-Type' : 'application/json'}};
-            var cartUid = $cookies.get('cart_uid');
-            return $http.put(environment.orderUrl + '/anoncarts/' + cartUid, customer.id, configs).then(function(response){
+        if($localstorage.containsKey('cart_uid')) {
+            var cartUid = $localstorage.get('cart_uid');
+            return shoppingCartFactory.updateCustomerId(cartUid, customer.id).then(function(response){
                 return customer;
             }, function(error){
-                return $q.reject("update shopping cart failed");
+                return customer;
             })
         } else {
-            return cartSummaryFactory.get({customerId:customer.id}).$promise.then(function(response){
-                $cookies.put('cart_uid', response.cartUid);
+            return shoppingCartFactory.getShoppingCartByCustomerId(customer.id).then(function(data){
+                $localstorage.set('cart_uid', data.shoppingCart.cartUid);
                 return customer;
             }, function(error){
                 return customer;
-            });
+            })
         }
     };
 
@@ -59,32 +53,36 @@ auth.factory('authService', function($http, $cookies, $location, $rootScope, $q,
 
     var loginFailed = function(error){
         $rootScope.loginError = true;
+        $rootScope.$broadcast('authenticationFaield');
     };
+
+    var assignGuestToken = function(){
+        if(!$localstorage.containsKey('access_token')) {
+            $localstorage.set('access_token', "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6MTg1MTI0ODI4MX0.UseykStWF5Qk6a_S65tLgSTDb2BAY1fDz0bEGeUr_EafioOE-I1cpGBwxt-gwLUYlYfo_bNr0PBuAIRVdHtYoQ");
+        }
+    }
 
 	return {
-        authenticateUser : authenticateUser
+        authenticateUser : authenticateUser,
+        assignGuestToken : assignGuestToken
     };
 });
 
-auth.factory('oauthTokenInterceptor', function($cookies, $location, $q){
-	var service = this;
+auth.factory('authFactory', function($http, environment){
+    var validateUser = function(credentials){
+        var data = {
+            username : credentials.email,
+            password : credentials.password
+        };
 
-    service.request = function(config) {
-    	config.headers.authorization = $cookies.get('access_token');
-    	return config;
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+
+        return $http.post(environment.authServerUrl + '/login', data, configs).then(function(response){
+            return response;
+        });
     };
 
-    service.responseError = function(response) {
-        if (response.status === 401) {
-        	$location.path("/login");
-        }
-        return $q.reject(response);
-    };
-    return service;
+    return {
+        validateUser: validateUser
+    }
 });
-
-
-
-auth.config(['$httpProvider', function($httpProvider) {  
-    $httpProvider.interceptors.push('oauthTokenInterceptor');
-}]);

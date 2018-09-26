@@ -1,63 +1,29 @@
 <div class="container">
 	<div class = "row login">
-
 		<div class="col-md-6">
 			<form name="loginForm" ng-submit="login(credentials)">
-				<h3>我有帐号</h3>
-				<div class="alert alert-danger textInputLength" ng-show="loginError">邮箱 / 密码 貌似有误</div>
-			  <div class="form-group">
-			    <label for="loginEmail">邮箱</label>
-			    <input type="email" id="loginEmail" class="form-control textInputLength" ng-model="credentials.email" placeholder="Enter email">
-			  </div>
-			  <div class="form-group">
-			    <label for="loginPassword">密码</label>
-			    <input type="password" id="loginPassword" class="form-control textInputLength" ng-model="credentials.password" placeholder="Enter Password">
-			  </div>
-				<button id="loginBtn" type="submit" class="btn btn-default">登录</button>
+				<h3>Sign in</h3>
+				<div class="alert alert-danger width-60" ng-show="loginError">
+					Uh on...Incorrect email / password.
+				</div>
+			  	<div class="form-group">
+			    	<label for="loginEmail">Email</label>
+			    	<input type="email" id="loginEmail" class="form-control width-60" ng-model="credentials.email" placeholder="Enter email">
+			  	</div>
+			  	<div class="form-group">
+			    	<label for="loginPassword">Password</label>
+			    	<input type="password" id="loginPassword" class="form-control width-60" ng-model="credentials.password" placeholder="Enter Password">
+			  	</div>
+				<button id="loginBtn" type="submit" class="btn btn-block width-60">Sign in</button>
+				<div class="m-t-05">
+					<a><u>Need help signing in?</u></a>
+				</div>
+				<div class="m-t-20">
+					<span class="fs-11 fw-bold">Don't have an account?</span>
+				</div>
+				<div class="m-t-05">
+					<a href="#/register"><u>Register now</u></a>
+				</div>
 			</form>
 		</div> 
-		<div class="col-md-6">
-			<form name="regForm" ng-submit="registerCustomer()" novalidate>
-				<h3>我来注册</h3>
-			  <div class="form-group" ng-class="{'has-error': regForm.registerName.$invalid && (regForm.registerName.$touched || regForm.$submitted) }">
-			    <label for="registerName">姓名</label>
-			    <input type="text" id="registerName" name="registerName" class="form-control textInputLength" ng-model="customer.name" placeholder="Enter name" required>
-					<div ng-show="regForm.registerName.$touched || regForm.$submitted">
-						<p ng-show="regForm.registerName.$error.required" class="help-block">请输入您的大名</p>
-					</div>
-			  </div>
-			  <div class="form-group" ng-class="{'has-error': regForm.registerEmail.$invalid && (regForm.registerEmail.$touched || regForm.$submitted) }">
-			    <label for="registerEmail">邮箱</label>
-			    <input type="email" id="registerEmail" name="registerEmail" class="form-control textInputLength" ng-model="customer.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
-					<div ng-show="regForm.registerEmail.$touched || regForm.$submitted">
-						<p ng-show="regForm.registerEmail.$error.required" class="help-block">请输入您的Email</p>
-						<p ng-show="regForm.registerEmail.$error.pattern" class="help-block">我肋个去，这是Email吗？</p>
-					</div>
-			  </div>
-			  <div class="form-group" ng-class="{'has-error': regForm.registerPassword.$invalid && (regForm.registerPassword.$touched || regForm.$submitted) }">
-			    <label for="registerPassword">密码</label>
-			    <input type="password" id="registerPassword" name="registerPassword" class="form-control textInputLength" ng-model="customer.password" ng-minlength="8" ng-maxlength="20" ng-pattern="/(?=.*[a-zA-Z])(?=.*[^a-zA-Z])/" placeholder="Enter Password" required>
-					<div ng-show="regForm.registerPassword.$touched || regForm.$submitted">
-						<p ng-show="regForm.registerPassword.$error.required" class="help-block">请设定您的密码</p>
-						<p ng-show="regForm.registerPassword.$error.minlength" class="help-block">密码太短，不太安全（至少8位）</p>
-						<p ng-show="regForm.registerPassword.$error.maxlength" class="help-block">密码这么长，能记得住吗（至多20位）</p>
-						<p ng-show="regForm.registerPassword.$error.pattern" class="help-block">密码必须具有至少“一个字母"和"一个数字或符号"</p>
-					</div>
-			  </div>
-			  <div class="form-group" ng-class="{'has-error': regForm.confirmPassword.$invalid && (regForm.confirmPassword.$touched || regForm.$submitted) }">
-			    <label for="confirmPassword">确认密码</label>
-			    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control textInputLength" ng-model="customer.confirmPassword" password-match="customer.password" placeholder="Confirm password" required>
-					<div ng-show="regForm.confirmPassword.$touched || regForm.$submitted">
-						<p ng-show="regForm.confirmPassword.$error.required" class="help-block">请确认您的密码</p>
-						<p ng-show="!regForm.confirmPassword.$error.required && regForm.confirmPassword.$error.unique" class="help-block">您的确认密码有误</p>
-					</div>
-			  </div>
-				<button id="registerBtn" type="submit" class="btn btn-default">注册</button>
-			</form>
-		</div> 
-
-
-		
-		
-	</div>
 </div>

@@ -6,8 +6,9 @@ home.service('productService', function($http, environment){
    };
 });
 
-home.controller('homeCtrl', function($scope, $http, environment, productService, cartService) {
+home.controller('homeCtrl', function($scope, $http, environment, productService, authService) {
   $scope.processing = {};
+  authService.assignGuestToken();
 
 	$http.get(environment.productUrl + '/products/?cc=msg').success(function(response) {
 		$scope.c1 = response;
@@ -22,12 +23,6 @@ home.controller('homeCtrl', function($scope, $http, environment, productService,
       value.quantity = 1;
     });
   });
-
-  $scope.addItemToCart = function(product){
-   	cartService.addItem(product, function(){
-    	$scope.processing[product.code]=false;
-    });
-  };
 });
 
 home.config(['$routeProvider',

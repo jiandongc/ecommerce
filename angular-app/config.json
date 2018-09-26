@@ -3,7 +3,7 @@
 		"environment" : {
 			"authServerUrl": "http://localhost:9999",
 			"customerUrl": "http://localhost:8081",
-			"orderUrl": "http://localhost:8082",
+			"shoppingCartUrl": "http://localhost:8084",
 			"productUrl": "http://localhost:8083"
 		}	
 	},
@@ -11,7 +11,7 @@
 		"environment" : {
 			"authServerUrl": "http://cawaiiauthservice.rap9ugageu.eu-west-1.elasticbeanstalk.com",
 			"customerUrl": "http://cawaiicustomerservice.zkmkymkcgi.eu-west-1.elasticbeanstalk.com",
-			"orderUrl": "http://cawaiiorderservice.zef6waiujn.eu-west-1.elasticbeanstalk.com",
+			"shoppingCartUrl": "http://cawaiiorderservice.zef6waiujn.eu-west-1.elasticbeanstalk.com",
 			"productUrl": "http://cawaiiproductservice.5ydhdu2x39.eu-west-1.elasticbeanstalk.com"
 		}	
 	}

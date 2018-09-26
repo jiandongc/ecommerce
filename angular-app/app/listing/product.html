@@ -35,14 +35,14 @@
 			<div ng-repeat="(attribute, values) in product.attributes">
 				<div class="form-group">
   					<label for="{{attribute}}">{{attribute}}</label>
-  					<select class="form-control" id="{{attribute}}" ng-init="selected=''" ng-model="selected" ng-change="select(attribute, selected)">
+  					<select class="form-control" id="{{attribute}}" ng-init="value=''" ng-model="value" ng-change="select(attribute, value)">
   						<option value="">Choose an Option...</option>
   						<option ng-repeat="value in values" value="{{value}}">{{value}}</option>
   					</select>
 				</div>
 			</div>
 
-			<button type="button" class="btn btn-lg btn-add-to-cart m-b-15" ng-click="">
+			<button type="button" class="btn btn-lg btn-add-to-cart m-b-15" ng-click="addItemToCart(product)">
 				<i ng-show="processing[product.code]" class="fa fa-spinner fa-pulse fa-fw"></i>
 				Add to Bag <span class="glyphicon glyphicon-shopping-cart"></span>
 			</button>
@@ -61,7 +61,6 @@
 				<i class="fa fa-pinterest fa-2x" aria-hidden="true"></i>
 				</div>
 			</div>
-
 
 			<div class="desc" dynamic="product.description"></div>
 		</div>
