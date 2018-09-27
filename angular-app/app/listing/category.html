@@ -3,7 +3,7 @@
 		<div class="col-xs-6">
 			<ul class="breadcrumb category-crumb m-b-02">
 				<li><a href="#"><i class="glyphicon glyphicon-home"></i></a></li>
-				<li ng-repeat="category in parentcategories"><a href="#/category/{{category.code}}">{{category.name}}</a></li>
+				<li ng-repeat="category in parentcategories"><a href="#!/category/{{category.code}}">{{category.name}}</a></li>
 			</ul>
 		</div>
 		<div class="col-xs-6">
@@ -19,7 +19,7 @@
 				<ul ng-if="subcategories.length" class="dropdown-menu">
 					<div ng-repeat="category in subcategories">
                         <li class="m-l-05 p-t-05 p-b-02">
-                            <a href="#/category/{{category.code}}">{{category.name}}</a>
+                            <a href="#!/category/{{category.code}}">{{category.name}}</a>
                             <span style="color:grey">({{category.productTotal}})</span>
                         </li>
                     </div>
@@ -53,8 +53,8 @@
 	<div class="row product-list">
 		<div class="box" ng-repeat="product in products">
 			<div class = "col-xs-6 col-sm-4 p-b-20">
-				<a href="#/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
-				<a href="#/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
+				<a href="#!/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
+				<a href="#!/products/{{product.code}}"><span class="product-name">{{product.name}}</span></a>
 				<form class = "form-inline p-t-02">
 					<text class="product-price">{{product.price | currency:"£"}}</text>
 				</form>

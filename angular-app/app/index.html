@@ -36,16 +36,16 @@
 				</div>
 				<div class="collpase navbar-collapse" id="navHeaderCollapse">
 					<ul class="nav navbar-nav navbar-left" ng-show="isNotCheckOutPage()">
-						<li><a href="#/category/msg">美食館</a></li>
-						<li><a href="#/category/mzg">美妝館</a></li>
-						<li><a href="#/home">特賣場</a></li>
+						<li><a href="#!/category/msg">美食館</a></li>
+						<li><a href="#!/category/mzg">美妝館</a></li>
+						<li><a href="#!/home">特賣場</a></li>
 					</ul>				
 					<ul class="nav navbar-nav navbar-right">
 						<li ng-show="currentUser" class="navbar-text">{{currentUser}}</li>
-						<li ng-show="currentUser"><a href="#/account/{{customerId}}"><span class="glyphicon glyphicon-user"></span></a></li>
-						<li ng-hide="currentUser"><a id="login" href="#/login"><span class="glyphicon glyphicon-user"></span></a></li>
+						<li ng-show="currentUser"><a href="#!/account/{{customerId}}"><span class="glyphicon glyphicon-user"></span></a></li>
+						<li ng-hide="currentUser"><a id="login" href="#!/login"><span class="glyphicon glyphicon-user"></span></a></li>
 						<li class="dropdown">
-							<a href="#/cart" class="dropdown-toggle">
+							<a href="#!/cart" class="dropdown-toggle">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 								<span ng-show="cartUid"> {{totalQuantity}} 件商品 £{{itemsSubTotal}} <span class="caret"></span></span>
 							</a>
@@ -70,7 +70,7 @@
 									</li>
 									<li class='divider'></li>
 								</div>										
-                				<li><a href='#/cart' class='btn btn-view'>我要結帳</a></li>
+                				<li><a href='#!/cart' class='btn btn-view'>我要結帳</a></li>
               				</ul>
 						</li>
 						<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>

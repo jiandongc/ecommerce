@@ -10,21 +10,23 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
 
   authService.assignGuestToken();
   
-  categoryService.findCategory($routeParams.code).success(function(response){
-    $scope.code = response.code;
-    $scope.name = response.name;
-    $scope.productTotal = response.productTotal;
-    $scope.parentcategories = response.parents;
-    $scope.subcategories = response.children;
+  categoryService.findCategory($routeParams.code).then(function(response){
+    var category = response.data;
+    $scope.code = category.code;
+    $scope.name = category.name;
+    $scope.productTotal = category.productTotal;
+    $scope.parentcategories = category.parents;
+    $scope.subcategories = category.children;
   });
 
   $scope.findProducts = function(categoryCode, filters, sort) {
-    categoryService.findProducts(categoryCode, filters, sort).success(function(response){
+    categoryService.findProducts(categoryCode, filters, sort).then(function(response){
+      var category = response.data;
       $scope.filters = {};
-      $scope.products = response.products;
-      $scope.facets = response.facets;
-      for(var i=0; i<response.facets.length; i++){
-        var facet = response.facets[i];
+      $scope.products = category.products;
+      $scope.facets = category.facets;
+      for(var i=0; i<category.facets.length; i++){
+        var facet = category.facets[i];
         if(!facet.hasSelectedValue) {continue;}
         var selected = [];
         for(var j=0; j<facet.facetValues.length; j++){

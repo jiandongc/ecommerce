@@ -1,7 +1,7 @@
 <div class="container">
 	<ul class="breadcrumb category-crumb">
   		<li><a href="#"><i class="glyphicon glyphicon-home"></i></a></li>
-  		<li ng-repeat="category in parentcategories"><a href="#/category/{{category.code}}">{{category.name}}</a></li>
+  		<li ng-repeat="category in parentcategories"><a href="#!/category/{{category.code}}">{{category.name}}</a></li>
 	</ul>
 	<div class = "row product-detail">
 		<div class = "col-xs-12 col-md-6">
@@ -26,7 +26,7 @@
 					<img class="active" ng-src='{{product.images.Color[0]}}'/>
 				</div>
 				<div class="col-xs-3" ng-repeat='variant in colorVariant'>
-					<a href="#/products/{{variant.code}}">
+					<a href="#!/products/{{variant.code}}">
 						<img ng-src='{{variant.imageUrl}}'/>
 					</a>
 				</div>

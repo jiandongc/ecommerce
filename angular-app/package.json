@@ -14,7 +14,7 @@
     "jshint": "latest",
     "karma": "^0.13",
     "karma-junit-reporter": "^0.2.2",
-    "protractor": "^2.5.0",
+    "protractor": "^5.4.1",
     "shelljs": "^0.2.6",
     "uglify-js": "latest"
   },

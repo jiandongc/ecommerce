@@ -4,18 +4,18 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
 
   authService.assignGuestToken();
   
-	$http.get(environment.productUrl + '/products/' + $routeParams.code).success(function(response){
-		$scope.product = response;
+	$http.get(environment.productUrl + '/products/' + $routeParams.code).then(function(response){
+		$scope.product = response.data;
 
-    $http.get(environment.productUrl + '/products/color/' + $routeParams.code).success(function(response){
-      $scope.colorVariant = response;
+    $http.get(environment.productUrl + '/products/color/' + $routeParams.code).then(function(response){
+      $scope.colorVariant = response.data;
     });
     
-    $http.get(environment.productUrl + '/categories/' + response.categoryCode).success(function(response){
-      $scope.parentcategories = response.parents;
+    $http.get(environment.productUrl + '/categories/' + response.categoryCode).then(function(response){
+      $scope.parentcategories = response.data.parents;
     });
 
-    $scope.price = response.price;
+    $scope.price = response.data.price;
     if($scope.product.variants.length == 1){
       var variant = $scope.product.variants[0];
       $scope.sku = variant.sku;
