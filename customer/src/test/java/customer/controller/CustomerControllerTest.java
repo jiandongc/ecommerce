@@ -32,7 +32,6 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getBody().getPassword(), is(nullValue()));
 
 		assertThat(customerRepository.findByEmail("jiandong.c@gmail.com").getPassword(), is("1234qwer"));
-
 	}
 
 	@Test
@@ -125,4 +124,25 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
 
+	@Test
+	public void shouldReturnConflictStatusCodeIfEmailAlreadyExists(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("chen");
+		customer.setEmail("jiandong.c@gmail.com");
+		customer.setPassword("1234asdf");
+		customerRepository.save(customer);
+
+		this.setGuestToken();
+		String customerJson = "{\"name\":\"jiandong\",\"email\":\"jiandong.c@gmail.com\",\"password\":\"1234qwer\"}";
+
+		// When
+		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.POST, payload, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
+		assertThat(response.getBody(), is(nullValue()));
+		assertThat(customerRepository.findByEmail("jiandong.c@gmail.com").getPassword(), is("1234asdf"));
+	}
 }

@@ -1,6 +1,8 @@
 package customer.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,8 +27,12 @@ public class CustomerController {
 
 	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
 	@RequestMapping(method=RequestMethod.POST)
-	public Customer save(@RequestBody Customer customer){
-		return customerService.save(customer);
+	public ResponseEntity save(@RequestBody Customer customer){
+		if(this.findByEmail(customer.getEmail()) != null){
+			return new ResponseEntity(HttpStatus.CONFLICT);
+		} else {
+			return new ResponseEntity<>(customerService.save(customer), HttpStatus.OK);
+		}
 	}
 
 	@PreAuthorize("hasAnyRole('ROLE_USER')")
