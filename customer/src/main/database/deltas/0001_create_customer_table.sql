@@ -1,7 +1,7 @@
-CREATE TABLE Customer
+CREATE TABLE customer
 (
-Id int PRIMARY KEY, 
-Name varchar(255),
-Email varchar(255),
-Password varchar(255)
+    id serial PRIMARY KEY,
+    name varchar(255) NOT NULL,
+    email varchar(255) NOT NULL,
+    password varchar(255) NOT NULL
 );

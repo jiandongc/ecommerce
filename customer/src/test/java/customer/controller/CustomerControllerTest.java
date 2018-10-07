@@ -51,7 +51,10 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	public void shouldGetCustomerById(){
 		// Given
 		this.setUserToken();
-		Customer customer = new Customer("Name", "Email", "Password");
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
 		customerRepository.save(customer);
 				
 		// When
@@ -69,7 +72,10 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	public void shouldRejectGetCustomerByIdRequestWithGuestToken(){
 		// Given
 		this.setGuestToken();
-		Customer customer = new Customer("Name", "Email", "Password");
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
 		customerRepository.save(customer);
 
 		// When
@@ -84,7 +90,10 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	public void shouldGetCustomerByEmail(){
 		// Given
 		this.setUserToken();
-		Customer customer = new Customer("Name", "Email", "Password");
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
 		customerRepository.save(customer);
 				
 		// When
@@ -102,7 +111,10 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	public void shouldRejectGetCustomerByEmailRequestWithGuestToken(){
 		// Given
 		this.setGuestToken();
-		Customer customer = new Customer("Name", "Email", "Password");
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
 		customerRepository.save(customer);
 
 		// When

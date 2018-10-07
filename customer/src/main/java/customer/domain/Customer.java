@@ -7,16 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "customer")
 public class Customer {
 	@Id
-	@Column(name = "id", nullable = false)
-	@SequenceGenerator(name = "customer_seq", sequenceName = "customer_seq")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customer_seq")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private long id;
 	@Column(name = "name")
 	private String name;
@@ -25,16 +23,6 @@ public class Customer {
 	@JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "password")
 	private String password;
-	
-	public Customer(){
-		this(null, null, null);
-	}
-	
-	public Customer(String name, String email, String password) {
-		this.name = name;
-		this.email = email;
-		this.password = password;
-	}
 	
 	public long getId() {
 		return id;

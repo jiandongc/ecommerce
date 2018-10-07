@@ -15,7 +15,10 @@ public class CustomerRepositoryTest extends AbstractRepositoryTest{
 	@Test
 	public void shouldSaveAndFindCustomer(){
 		// Given
-		Customer customer = new Customer("Name", "Email", "Password");
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
 		
 		// When
 		customerRepository.save(customer);
@@ -28,7 +31,10 @@ public class CustomerRepositoryTest extends AbstractRepositoryTest{
 	@Test
 	public void shouldFindCustomerByEmail(){
 		// Given
-		Customer customer = new Customer("Name", "Email", "Password");
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
 		
 		// When
 		customerRepository.save(customer);

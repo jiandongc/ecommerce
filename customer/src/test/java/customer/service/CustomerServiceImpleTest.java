@@ -18,7 +18,10 @@ public class CustomerServiceImpleTest {
 	@Test
 	public void shouldSaveCustomer(){
 		// Given
-		Customer customer = new Customer("Name", "Email", "Password");
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
 		
 		// When
 		customerService.save(customer);

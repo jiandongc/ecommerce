@@ -1,1 +1,0 @@
-CREATE SEQUENCE customer_seq START 1;
