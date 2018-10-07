@@ -1,18 +1,40 @@
 <div class="container">
 	<div class = "row login">
 		<div class="col-md-6">
-			<form name="loginForm" ng-submit="login(credentials)">
+			<form name="loginForm" ng-submit="loginForm.$valid && login(credentials)">
 				<h3>Sign in</h3>
-				<div class="alert alert-danger width-60" ng-show="loginError">
+				<div id="loginError" ng-show="loginError" class="alert alert-danger width-60">
 					Uh on...Incorrect email / password.
 				</div>
-			  	<div class="form-group">
+			  	<div class="form-group" ng-class="{'has-error': loginForm.loginEmail.$invalid && (loginForm.loginEmail.$touched || loginForm.$submitted) }">
 			    	<label for="loginEmail">Email</label>
-			    	<input type="email" id="loginEmail" class="form-control width-60" ng-model="credentials.email" placeholder="Enter email">
+			    	<input type="email" id="loginEmail" name="loginEmail" class="form-control width-60" ng-model="credentials.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+			    	<div id="loginEmailMsg" ng-show="loginForm.loginEmail.$touched || loginForm.$submitted">
+						<p ng-show="loginForm.loginEmail.$error.required" class="help-block">
+							Email is missing. Please check and try again.
+						</p>
+						<p ng-show="loginForm.loginEmail.$error.pattern" class="help-block">
+							Sorry, that email doesn’t look right. Please check it’s a proper email.
+						</p>
+					</div>
 			  	</div>
-			  	<div class="form-group">
+			  	<div class="form-group" ng-class="{'has-error': loginForm.loginPassword.$invalid && (loginForm.loginPassword.$touched || loginForm.$submitted) }">
 			    	<label for="loginPassword">Password</label>
-			    	<input type="password" id="loginPassword" class="form-control width-60" ng-model="credentials.password" placeholder="Enter Password">
+			    	<input type="password" id="loginPassword" name="loginPassword" class="form-control width-60" ng-model="credentials.password" ng-minlength="8" ng-maxlength="50" ng-pattern="/(?=.*\d)(?=.*[a-zA-Z])/" placeholder="Enter Password" required>
+			    	<div id="loginPasswordMsg" ng-show="loginForm.loginPassword.$touched || loginForm.$submitted">
+						<p ng-show="loginForm.loginPassword.$error.required" class="help-block">
+							Password is missing. Please check and try again.
+						</p>
+						<p ng-show="loginForm.loginPassword.$error.minlength" class="help-block">
+							Sorry, that password is too short. It needs to be eight characters or more.
+						</p>
+						<p ng-show="loginForm.loginPassword.$error.maxlength" class="help-block">
+							Sorry, that password is too long. It can’t be more than 50 characters.
+						</p>
+						<p ng-show="loginForm.loginPassword.$error.pattern" class="help-block">
+							Pasword must contain a letter and a number.
+						</p>
+					</div>
 			  	</div>
 				<button id="loginBtn" type="submit" class="btn btn-block width-60">Sign in</button>
 				<div class="m-t-05">
