@@ -109,6 +109,15 @@ describe('user registration page', function() {
         expect(headerBar.userName().getText()).toEqual('username');
     });
 
+    it('should not register with same email twice', function() {
+        // When
+        registrationPage.registerWith("anotherUser", "username@email.com", "5678ABCD", "5678ABCD");
+
+        // Then
+        expect(registrationPage.error.isDisplayed()).toEqual(true);
+        expect(registrationPage.error.getText()).toEqual('This the email address is already used.');
+    });
+
     it('successful logout', function() {
         // When
         headerBar.logoutBtn().click();

@@ -13,6 +13,8 @@ customer.controller('loginCtrl', function($scope, authService, $rootScope) {
 customer.controller('registerCtrl', function($scope, authService, customerFactory) {
     
     authService.assignGuestToken();
+    $scope.error = false;
+    $scope.errorMsg = "";
 
     $scope.registerCustomer = function(){
         var newCustomer = {
@@ -22,11 +24,19 @@ customer.controller('registerCtrl', function($scope, authService, customerFactor
         };
 
         customerFactory.save(newCustomer).then(function(data){
+            $scope.error = false;
             var credentials = {
                 email : data.email,
                 password : newCustomer.password
             };
             authService.authenticateUser(credentials);
+        }, function(error){
+            $scope.error = true;
+            if(error.status === 409){
+                $scope.errorMsg = "This the email address is already used.";
+            } else {
+                $scope.errorMsg = "Technical error, please contact site admin: jiandong.c@gmail.com";
+            }
         });
     };
 });

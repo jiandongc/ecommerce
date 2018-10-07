@@ -8,6 +8,7 @@ var RegistrationPage = {
 	registerEmailMsg: element(by.id("registerEmailMsg")),
 	registerPasswordMsg: element(by.id("registerPasswordMsg")),
 	confirmPasswordMsg: element(by.id("confirmPasswordMsg")),
+	error: element(by.id("error")),
 
 	registerWith: function(name, email, password, confirmPassword){
 		this.namelTextField.sendKeys(name);

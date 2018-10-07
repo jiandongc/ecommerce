@@ -47,7 +47,9 @@
 						<li class="dropdown">
 							<a href="#!/cart" class="dropdown-toggle">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
-								<span ng-show="cartUid"> {{totalQuantity}} 件商品 £{{itemsSubTotal}} <span class="caret"></span></span>
+								<span ng-show="cartUid"> 
+									{{totalQuantity}} items £{{itemsSubTotal}} <span class="caret"></span>
+								</span>
 							</a>
 							<ul class="dropdown-menu scrollable-menu">
 								<div ng-repeat="cartItem in cartItems | orderBy:'productId'">

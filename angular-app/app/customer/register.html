@@ -3,6 +3,7 @@
 		<div class="col-md-6">
 			<form name="regForm" ng-submit="regForm.$valid && registerCustomer()" novalidate>
 			  <h3>Register now</h3>
+			  <div id="error" ng-show="error" class="alert alert-danger width-60">{{errorMsg}}</div>
 			  <div class="form-group" ng-class="{'has-error': regForm.registerName.$invalid && (regForm.registerName.$touched || regForm.$submitted) }">
 			    <label for="registerName">Name</label>
 			    <input type="text" id="registerName" name="registerName" class="form-control width-60" ng-model="customer.name" placeholder="Enter name" required>
