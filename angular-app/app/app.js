@@ -11,7 +11,7 @@ var app = angular.module('store', [
 	'config'
 ]);
 
-app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory) {
+app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, authService) {
 	$scope.$watch(function() { return $localstorage.get('current_user', undefined);}, function(newValue, oldValue) {
 		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
 			$scope.currentUser = newValue;
@@ -47,20 +47,17 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		});
 	})
 
-	$scope.$on('authenticationFaield', function(event, args) {
-		$localstorage.clear();
-		$scope.cartUid = null;
-		$scope.totalQuantity = null;
-		$scope.totalPrice = null;
-		$scope.cartItems = null;		
-	})
-
-	$scope.logout = function() {
+	$scope.$on('reset', function(event, args) {
 		$localstorage.clear();
 		$scope.cartUid = null;
 		$scope.totalQuantity = null;
 		$scope.totalPrice = null;
 		$scope.cartItems = null;
+		authService.assignGuestToken();	
+	})
+
+	$scope.logout = function() {
+		$rootScope.$broadcast('reset');
 		$location.path("#");
 	}
 

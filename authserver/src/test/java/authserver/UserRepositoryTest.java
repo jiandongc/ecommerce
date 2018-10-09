@@ -35,7 +35,7 @@ public class UserRepositoryTest {
 	@Test
 	public void shouldFindCustomerByEmail(){
 		// Given
-		final String sql = "insert into customer (id, name, email, password) values (nextval('customer_seq'), 'chen', 'chen@gmail.com', '12345')";
+		final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '12345')";
 		jdbcTemplate.execute(sql);
 
 		// When

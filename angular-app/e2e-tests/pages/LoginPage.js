@@ -8,6 +8,8 @@ var LoginPage = {
 	loginError: element(by.id("loginError")),
 
 	loginWith: function(email, password){
+		this.emailTextField.clear();
+		this.passwordTextField.clear();
 		this.emailTextField.sendKeys(email);
 		this.passwordTextField.sendKeys(password);
         this.loginBtn.click();

@@ -91,10 +91,47 @@ describe('user login page', function() {
         expect(loginPage.loginError.getText()).toEqual('Uh on...Incorrect email / password.');
     });
 
-    it('successful login', function() {
+    it('unsuccessful login, and follow by successful login', function() {
+        // When
+        loginPage.loginWith("chen@gmail.com", "4321qwer");
+        // Then
+        expect(loginPage.loginError.isDisplayed()).toEqual(true);
+        expect(loginPage.loginError.getText()).toEqual('Uh on...Incorrect email / password.');
+
         // When
         loginPage.loginWith("chen@gmail.com", "1234qwer");
+        // Then
+        expect(headerBar.userName().isDisplayed()).toEqual(true);
+        expect(headerBar.accountLink().isDisplayed()).toEqual(true);
+        expect(headerBar.loginBtn().isDisplayed()).toEqual(false);
+        expect(headerBar.logoutBtn().isDisplayed()).toEqual(true);
+        expect(headerBar.userName().getText()).toEqual('chen');
+        expect(browser.getCurrentUrl()).toContain("/account");
+    });
 
+    it('successful login, logout, and login again', function() {
+        // When
+        loginPage.loginWith("chen@gmail.com", "1234qwer");
+        // Then
+        expect(headerBar.userName().isDisplayed()).toEqual(true);
+        expect(headerBar.accountLink().isDisplayed()).toEqual(true);
+        expect(headerBar.loginBtn().isDisplayed()).toEqual(false);
+        expect(headerBar.logoutBtn().isDisplayed()).toEqual(true);
+        expect(headerBar.userName().getText()).toEqual('chen');
+        expect(browser.getCurrentUrl()).toContain("/account");
+
+        // When
+        headerBar.logoutBtn().click();
+        // Then
+        expect(headerBar.userName().isDisplayed()).toEqual(false);
+        expect(headerBar.accountLink().isDisplayed()).toEqual(false);
+        expect(headerBar.loginBtn().isDisplayed()).toEqual(true);
+        expect(headerBar.logoutBtn().isDisplayed()).toEqual(false);
+        expect(browser.getCurrentUrl()).toContain("/home");        
+
+        // When
+        headerBar.loginBtn().click();
+        loginPage.loginWith("chen@gmail.com", "1234qwer");
         // Then
         expect(headerBar.userName().isDisplayed()).toEqual(true);
         expect(headerBar.accountLink().isDisplayed()).toEqual(true);

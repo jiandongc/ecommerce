@@ -1,9 +1,12 @@
 package authserver;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -24,7 +27,10 @@ import java.util.stream.Collectors;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS512;
 import static java.lang.Long.parseLong;
+import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
+import static java.util.stream.Collectors.toList;
+import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
@@ -43,12 +49,37 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest req,
                                                 HttpServletResponse res) throws AuthenticationException {
-        try {
-            final ApplicationUser user = new ObjectMapper().readValue(req.getInputStream(), ApplicationUser.class);
-            return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        if (this.hasRequiredAccessToken(req)) {
+            try {
+                final ApplicationUser user = new ObjectMapper().readValue(req.getInputStream(), ApplicationUser.class);
+                return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new AuthenticationServiceException("access token required");
         }
+    }
+
+    private boolean hasRequiredAccessToken(HttpServletRequest req) {
+        final String accessToken = req.getHeader("Authentication");
+
+        if(accessToken == null){
+            return false;
+        }
+
+        final Claims claims = Jwts.parser()
+                .setSigningKey(secret.getBytes())
+                .parseClaimsJws(accessToken)
+                .getBody();
+
+        if (claims == null) {
+            return false;
+        }
+
+        final List<String> roles = (List<String>) claims.get("roles");
+        return roles.stream().anyMatch(role -> role.equalsIgnoreCase("guest") || role.equalsIgnoreCase("user"));
     }
 
     @Override
@@ -57,7 +88,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication auth) throws IOException, ServletException {
 
-        final List<String> roles = auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        final List<String> roles = auth.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
         final JwtBuilder jwtBuilder = Jwts.builder()
                 .setSubject(((User) auth.getPrincipal()).getUsername())
                 .signWith(HS512, secret.getBytes())

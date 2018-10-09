@@ -53,7 +53,7 @@ auth.factory('authService', function($localstorage, $location, $rootScope, $q, a
 
     var loginFailed = function(error){
         $rootScope.loginError = true;
-        $rootScope.$broadcast('authenticationFaield');
+        $rootScope.$broadcast('reset');
     };
 
     var assignGuestToken = function(){

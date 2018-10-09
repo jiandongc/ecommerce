@@ -11,6 +11,11 @@ var RegistrationPage = {
 	error: element(by.id("error")),
 
 	registerWith: function(name, email, password, confirmPassword){
+		this.namelTextField.clear();
+		this.emailTextField.clear();
+		this.passwordTextField.clear();
+		this.confirmPasswordTextField.clear();
+
 		this.namelTextField.sendKeys(name);
 		this.emailTextField.sendKeys(email);
 		this.passwordTextField.sendKeys(password);
