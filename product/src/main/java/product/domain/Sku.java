@@ -2,10 +2,8 @@ package product.domain;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -84,12 +82,16 @@ public class Sku {
         attributes.add(attribute);
     }
 
-    public Map<String, String> getMap(){
+    public Map<String, String> getAsMap(){
         final Map<String, String> values = new HashMap<>();
         values.put("sku", sku);
         values.put("qty", stockQuantity.toString());
         values.put("price", price.toString());
-        attributes.stream().forEach(attribute -> values.put(attribute.getKeyName(), attribute.getValue()));
+        attributes.forEach(attribute -> values.put(attribute.getKeyName(), attribute.getValue()));
+        values.put("description", attributes.stream()
+                .map(attribute -> attribute.getKeyName() + ": " + attribute.getValue())
+                .collect(Collectors.joining(", "))
+        );
         return values;
     }
 

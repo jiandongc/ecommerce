@@ -98,12 +98,14 @@ public class ProductDataMapperTest {
         variantOne.put("price", "10");
         variantOne.put("Color", "Red");
         variantOne.put("Size", "XL");
+        variantOne.put("description", "Color: Red, Size: XL");
         final Map<String, String> variantTwo = new HashMap<>();
         variantTwo.put("sku", "FD10039403_Y");
         variantTwo.put("qty", "99");
         variantTwo.put("price", "1");
         variantTwo.put("Color", "Blue");
         variantTwo.put("Size", "XXL");
+        variantTwo.put("description", "Color: Blue, Size: XXL");
         final List<Map<String, String>> variants = Arrays.asList(variantOne, variantTwo);
         final Map<String, List<String>> images = new HashMap<>();
         images.put("main", Arrays.asList("url one", "url two"));

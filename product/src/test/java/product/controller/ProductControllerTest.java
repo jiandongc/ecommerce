@@ -126,6 +126,14 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_X"));
 		assertThat(response.getBody().getVariants().get(0).get("Color"), is("Red"));
 		assertThat(response.getBody().getVariants().get(0).get("qty"), is("100"));
+		assertThat(response.getBody().getVariants().get(0).get("description"), is("Color: Red"));
+	}
+
+	@Test
+	public void shouldReturn404IfProductCodeDoesNotExist(){
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<ProductData> response = rest.exchange(BASE_URL + "12345", GET, httpEntity, ProductData.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
 	}
 
 	@Test

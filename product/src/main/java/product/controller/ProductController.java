@@ -71,13 +71,9 @@ public class ProductController {
 	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "/{code}", method=RequestMethod.GET)
     public ResponseEntity findByCode(@PathVariable String code) {
-		final Optional<Product> product = productService.findByCode(code);
-
-		if(product.isPresent()){
-			return new ResponseEntity<>(productMapper.getValue(product.get()), HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		final Optional<Product> productOptional = productService.findByCode(code);
+		return productOptional.map(product -> new ResponseEntity<>(productMapper.getValue(product), HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
 	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")

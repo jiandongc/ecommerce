@@ -2,10 +2,11 @@ package product.mapper;
 
 import org.springframework.stereotype.Component;
 import product.data.ProductData;
+import product.domain.Image;
 import product.domain.Product;
-/**
- * Created by jiandong on 13/11/16.
- */
+
+import java.util.Comparator;
+
 
 @Component
 public class ProductDataMapper {
@@ -18,13 +19,13 @@ public class ProductDataMapper {
                 .categoryCode(product.getCategoryCode())
                 .price(product.getMinPrice());
 
-        product.getSkus().stream().forEach(sku -> {
-            builder.addVariant(sku.getMap());
-            sku.getAttributes().stream().forEach(attribute -> builder.addAttribute(attribute.getKeyName(), attribute.getValue()));
+        product.getSkus().forEach(sku -> {
+            builder.addVariant(sku.getAsMap());
+            sku.getAttributes().forEach(attribute -> builder.addAttribute(attribute.getKeyName(), attribute.getValue()));
         });
 
         product.getImages().stream()
-                .sorted((i1, i2) -> Integer.compare(i1.getOrdering(), i2.getOrdering()))
+                .sorted(Comparator.comparing(Image::getOrdering))
                 .forEach(image -> builder.addImage(image.getImageTypeValue(), image.getUrl()));
 
         return builder.build();
