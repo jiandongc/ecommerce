@@ -1,0 +1,1 @@
+ALTER TABLE shopping_cart_item ADD COLUMN description varchar(255);

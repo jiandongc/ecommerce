@@ -77,7 +77,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"sku\": \"123456\",\n" +
                 "\"name\": \"kid's cloth\",\n" +
                 "\"price\": \"1\",\n" +
-                "\"imageUrl\": \"/kid-cloth.jpeg\"\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\",\n" +
+                "\"description\": \"Size: S\"\n" +
                 "}";
         final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
         rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
@@ -85,7 +86,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"sku\": \"654321\",\n" +
                 "\"name\": \"father's cloth\",\n" +
                 "\"price\": \"10\",\n" +
-                "\"imageUrl\": \"/father-cloth.jpeg\"\n" +
+                "\"imageUrl\": \"/father-cloth.jpeg\",\n" +
+                "\"description\": \"Size: M\"\n" +
                 "}";
         final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
         rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
@@ -100,6 +102,10 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(response.getBody().getTotalQuantity(), is(3));
         assertThat(response.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(21)));
         assertThat(response.getBody().getShoppingCart().getShoppingCartItems().size(), is(2));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getSku(), is("123456"));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getDescription(), is("Size: S"));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getSku(), is("654321"));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getDescription(), is("Size: M"));
     }
 
     @Test
@@ -125,7 +131,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"sku\": \"123456\",\n" +
                 "\"name\": \"kid's cloth\",\n" +
                 "\"price\": \"1\",\n" +
-                "\"imageUrl\": \"/kid-cloth.jpeg\"\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\",\n" +
+                "\"description\": \"Size: S\"\n" +
                 "}";
         final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
         rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
@@ -133,7 +140,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"sku\": \"654321\",\n" +
                 "\"name\": \"father's cloth\",\n" +
                 "\"price\": \"10\",\n" +
-                "\"imageUrl\": \"/father-cloth.jpeg\"\n" +
+                "\"imageUrl\": \"/father-cloth.jpeg\",\n" +
+                "\"description\": \"Size: M\"\n" +
                 "}";
         final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
         rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
@@ -148,6 +156,10 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(response.getBody().getTotalQuantity(), is(3));
         assertThat(response.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(21)));
         assertThat(response.getBody().getShoppingCart().getShoppingCartItems().size(), is(2));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getSku(), is("123456"));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getDescription(), is("Size: S"));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getSku(), is("654321"));
+        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getDescription(), is("Size: M"));
     }
 
     @Test

@@ -20,6 +20,7 @@ public class ShoppingCartItemMapper implements RowMapper<ShoppingCartItem> {
                 .price(rs.getBigDecimal("unit_price"))
                 .quantity(rs.getInt("quantity"))
                 .imageUrl(rs.getString("image_url"))
+                .description(rs.getString("description"))
                 .creationTime(rs.getDate("creation_time"))
                 .lastUpdateTime(rs.getDate("last_update_time"))
                 .build();

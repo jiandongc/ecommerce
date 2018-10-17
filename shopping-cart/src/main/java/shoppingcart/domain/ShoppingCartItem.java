@@ -12,6 +12,7 @@ public class ShoppingCartItem {
     private BigDecimal price;
     private int quantity;
     private String imageUrl;
+    private String description;
     private Date creationTime;
     private Date lastUpdateTime;
 
@@ -22,6 +23,7 @@ public class ShoppingCartItem {
                             BigDecimal price,
                             int quantity,
                             String imageUrl,
+                            String description,
                             Date creationTime,
                             Date lastUpdateTime) {
         this.id = id;
@@ -31,6 +33,7 @@ public class ShoppingCartItem {
         this.price = price;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
+        this.description = description;
         this.creationTime = creationTime;
         this.lastUpdateTime = lastUpdateTime;
     }
@@ -69,6 +72,10 @@ public class ShoppingCartItem {
         return imageUrl;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public Date getCreationTime() {
         return creationTime;
     }
@@ -90,6 +97,7 @@ public class ShoppingCartItem {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
         if (imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null) return false;
+        if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (creationTime != null ? !creationTime.equals(that.creationTime) : that.creationTime != null) return false;
         return lastUpdateTime != null ? lastUpdateTime.equals(that.lastUpdateTime) : that.lastUpdateTime == null;
     }
@@ -102,6 +110,7 @@ public class ShoppingCartItem {
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + quantity;
         result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
         result = 31 * result + (lastUpdateTime != null ? lastUpdateTime.hashCode() : 0);
         return result;
@@ -115,6 +124,7 @@ public class ShoppingCartItem {
         private BigDecimal price;
         private int quantity;
         private String imageUrl;
+        private String description;
         private Date creationTime;
         private Date lastUpdateTime;
 
@@ -153,6 +163,11 @@ public class ShoppingCartItem {
             return this;
         }
 
+        public ShoppingCartItemBuilder description(String description){
+            this.description = description;
+            return this;
+        }
+
         public ShoppingCartItemBuilder creationTime(Date creationTime){
             this.creationTime = creationTime;
             return this;
@@ -164,7 +179,7 @@ public class ShoppingCartItem {
         }
 
         public ShoppingCartItem build(){
-            return new ShoppingCartItem(id, cartId, sku, name, price, quantity, imageUrl, creationTime, lastUpdateTime);
+            return new ShoppingCartItem(id, cartId, sku, name, price, quantity, imageUrl, description, creationTime, lastUpdateTime);
         }
 
 

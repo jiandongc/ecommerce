@@ -34,6 +34,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(ONE)
                 .sku("109283")
                 .imageUrl("/image.jpeg")
+                .description("Size: S")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
 
@@ -42,6 +43,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(TEN)
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
+                .description("Size: M")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem2);
 
@@ -53,11 +55,13 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(cartItems.get(0).getSku(), is("109283"));
         assertThat(cartItems.get(0).getQuantity(), is(1));
         assertThat(cartItems.get(0).getImageUrl(), is("/image.jpeg"));
+        assertThat(cartItems.get(0).getDescription(), is("Size: S"));
         assertThat(cartItems.get(1).getName(), is("product2"));
         assertThat(cartItems.get(1).getPrice(), is(TEN));
         assertThat(cartItems.get(1).getSku(), is("219283"));
         assertThat(cartItems.get(1).getQuantity(), is(1));
         assertThat(cartItems.get(1).getImageUrl(), is("/image2.jpeg"));
+        assertThat(cartItems.get(1).getDescription(), is("Size: M"));
     }
 
     @Test
@@ -70,6 +74,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(ONE)
                 .sku("109283")
                 .imageUrl("/image.jpeg")
+                .description("Size: S")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
 
@@ -84,6 +89,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(cartItems.get(0).getSku(), is("109283"));
         assertThat(cartItems.get(0).getQuantity(), is(10));
         assertThat(cartItems.get(0).getImageUrl(), is("/image.jpeg"));
+        assertThat(cartItems.get(0).getDescription(), is("Size: S"));
     }
 
     @Test
@@ -98,6 +104,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(ONE)
                 .sku("109283")
                 .imageUrl("/image.jpeg")
+                .description("Size: S")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
 
@@ -108,6 +115,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(shoppingCartItem.getSku(), is("109283"));
         assertThat(shoppingCartItem.getQuantity(), is(1));
         assertThat(shoppingCartItem.getImageUrl(), is("/image.jpeg"));
+        assertThat(shoppingCartItem.getDescription(), is("Size: S"));
     }
 
     @Test
@@ -129,6 +137,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(ONE)
                 .sku("109283")
                 .imageUrl("/image.jpeg")
+                .description("Size: S")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
         final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
@@ -136,6 +145,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(TEN)
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
+                .description("Size: M")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem2);
 
@@ -148,6 +158,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(cartItems.get(0).getSku(), is("109283"));
         assertThat(cartItems.get(0).getQuantity(), is(1));
         assertThat(cartItems.get(0).getImageUrl(), is("/image.jpeg"));
+        assertThat(cartItems.get(0).getDescription(), is("Size: S"));
 
         // When & Then
         shoppingCartItemRepository.delete(cart.getId(), "109283");
@@ -165,6 +176,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(ONE)
                 .sku("109283")
                 .imageUrl("/image.jpeg")
+                .description("Size: S")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
         final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
@@ -172,6 +184,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .price(TEN)
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
+                .description("Size: M")
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem2);
 
