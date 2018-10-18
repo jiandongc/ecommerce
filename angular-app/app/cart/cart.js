@@ -56,13 +56,14 @@ cart.factory('shoppingCartFactory', function($http, environment){
     }); 
   }
 
-  var addItemToShoppingCart = function(name, price, imageUrl, sku, cartUid){
+  var addItemToShoppingCart = function(name, price, imageUrl, sku, description, cartUid){
     var configs = {headers: {'Content-Type' : 'application/json'}};
     var cartItem = {
       name: name, 
       price: price,
       imageUrl: imageUrl,
-      sku: sku
+      sku: sku,
+      description: description
     };
 
     return $http.post(environment.shoppingCartUrl + '/carts/' + cartUid + '/items', cartItem, configs).then(function(response){

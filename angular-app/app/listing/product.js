@@ -19,6 +19,7 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
     if($scope.product.variants.length == 1){
       var variant = $scope.product.variants[0];
       $scope.sku = variant.sku;
+      $scope.description = variant.description;
       if(variant.qty <= 10){
         $scope.lowqty = variant.qty;
       }
@@ -37,9 +38,11 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
     if(variant){
       $scope.price = variant.price;
       $scope.sku = variant.sku;
+      $scope.description = variant.description;
     } else {
       $scope.price = $scope.product.price;
       $scope.sku = undefined;
+      $scope.description = undefined;
     }
 
     if(variant && variant.qty <= 10){
@@ -68,14 +71,14 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
       if(!$localstorage.containsKey("cart_uid")){
           if($localstorage.containsKey("customer_id")){
               shoppingCartFactory.createShoppingCartForCustomer($localstorage.get("customer_id")).then(function(cartUid){
-                  shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, cartUid).then(function(data){
+                  shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data){
                       $localstorage.set('cart_uid', cartUid);
                       $rootScope.$broadcast('updateCartSummary', true);
                   });
               }); 
           } else {
               shoppingCartFactory.createShoppingCartForGuest().then(function(cartUid){
-                  shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, cartUid).then(function(data){
+                  shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data){
                       $localstorage.set('cart_uid', cartUid);
                       $rootScope.$broadcast('updateCartSummary', true);
                   });
@@ -83,7 +86,7 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
           }
       } else {
           var cartUid = $localstorage.get('cart_uid', undefined);
-          shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, cartUid).then(function(data){
+          shoppingCartFactory.addItemToShoppingCart(product.name, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data){
               $rootScope.$broadcast('updateCartSummary', true);
           });  
       }

@@ -350,47 +350,59 @@ html, body {
 }
 
 /*dropdown menu*/
+.dropdown:hover .dropdown-menu {
+  display: block !important;
+}
+
 .scrollable-menu {
     height: auto;
-    max-height: 800px;
+    max-height: 700px;
     overflow-x: hidden;
 }
 
 ul.scrollable-menu {
-    width: 300px;
+    width: 400px;
 }
 
-ul.scrollable-menu img{
-    width: 100px;
-    height: 100px;
-    overflow: hidden;
+ul.scrollable-menu img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
 	border-style: solid;
 	border-width: 0.5px;
 	border-color: #F2F2F2;
 }
 
-ul.scrollable-menu .productPrice{
-    margin-top: 2.5%;
-	font-weight: bold;
-    color: #324902;
-    font-size: 0.8em;
-} 
-
 ul.scrollable-menu .productName{
+  font-weight: bold;
+  color: #1D2807;
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+
+ul.scrollable-menu .productDescription{
+  margin-top: 2.5%;
+  color: #1D2807;
+  font-size: 0.8em;
+}
+
+ul.scrollable-menu .productPrice{
+  margin-top: 2.5%;
 	font-weight: bold;
-    color: #1D2807;
-    font-size: 0.8em;
-    text-transform: uppercase;
-} 
+  color: #324902;
+  font-size: 0.8em;
+}
 
 ul.scrollable-menu .productQty{
-    color: #324902;
-    font-size: 0.8em;
+  margin-top: 2.5%;
+  color: #324902;
+  font-size: 0.8em;
 } 
 
 ul.scrollable-menu .btn-view {
 	background-color: #536F19;
 	color: #E8E8E8;
+  font-weight: bold;
 }
 
 ul.scrollable-menu .btn-remove {
