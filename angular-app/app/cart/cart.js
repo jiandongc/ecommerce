@@ -83,13 +83,20 @@ cart.factory('shoppingCartFactory', function($http, environment){
       });
   }
 
+  var deleteItemFromShoppingCart = function(cartUid, sku){
+      return $http.delete(environment.shoppingCartUrl + '/carts/' + cartUid + '/items/' + sku).then(function(response){
+          return response.data;
+      }); 
+  }
+
   return {
     updateCustomerId: updateCustomerId,
     addItemToShoppingCart: addItemToShoppingCart,
     createShoppingCartForCustomer: createShoppingCartForCustomer,
     createShoppingCartForGuest: createShoppingCartForGuest,
     getShoppingCart: getShoppingCart,
-    getShoppingCartByCustomerId: getShoppingCartByCustomerId
+    getShoppingCartByCustomerId: getShoppingCartByCustomerId,
+    deleteItemFromShoppingCart: deleteItemFromShoppingCart
   }
 });
 

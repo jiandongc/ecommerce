@@ -30,8 +30,8 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 	$scope.$on('updateCartSummary', function(event, showDropDown) {
 		shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(data){
 			$scope.cartUid = data.shoppingCart.cartUid;
-			$scope.totalQuantity = data.totalQuantity;
-			$scope.itemsSubTotal = data.itemsSubTotal;
+			$scope.totalQuantity = (data.totalQuantity != 0 ? data.totalQuantity : null);
+			$scope.itemsSubTotal = (data.itemsSubTotal != 0 ? data.itemsSubTotal : null);
 			$scope.cartItems = data.shoppingCart.shoppingCartItems;
 			if(showDropDown === true){
 				var dropdown = $('ul.nav li.dropdown').find('.dropdown-menu');
@@ -62,13 +62,9 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 	}
 
 	$scope.removeItem = function(cartItem){
-		// var configs = {headers: {'Content-Type' : 'application/json'}};
-		// $http.delete(environment.orderUrl + '/anoncarts/' + cartItem.cartUid + '/cartItems/' + cartItem.productId, configs).then(function(response){
-		// 	$rootScope.$broadcast('updateCartSummary', false);
-		// 	if($location.path().endsWith('/cart')){$route.reload();}
-		// }, function(error){
-		// 	alert('Delete failed');
-		// });
+		shoppingCartFactory.deleteItemFromShoppingCart($scope.cartUid, cartItem.sku).then(function(response){
+			$rootScope.$broadcast('updateCartSummary', false);
+		});
 	}
 
 	$scope.updateItem = function(cartItem){

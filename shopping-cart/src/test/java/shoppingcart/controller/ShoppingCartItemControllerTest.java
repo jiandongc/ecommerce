@@ -165,7 +165,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "\"imageUrl\": \"/kid-cloth.jpeg\"\n" +
                 "}";
 
-        final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
+        final HttpEntity<String> itemOnePayload = new HttpEntity<>(itemOne, headers);
         rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
 
         final String itemTwo = "{\n" +
@@ -175,19 +175,18 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "\"imageUrl\": \"/father-cloth.jpeg\"\n" +
                 "}";
 
-        final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
+        final HttpEntity<String> itemTwoPayload = new HttpEntity<>(itemTwo, headers);
         rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
 
         // When & Then
-        final HttpEntity<String> skuOne = new HttpEntity<String>("123456", headers);
-        final ResponseEntity<CartSummary> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items", DELETE, skuOne, CartSummary.class);
+        final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        final ResponseEntity<CartSummary> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items/123456", DELETE, httpEntity, CartSummary.class);
         assertThat(cartSummaryOne.getStatusCode(), is(OK));
         assertThat(cartSummaryOne.getBody().getTotalQuantity(), is(1));
         assertThat(cartSummaryOne.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(10)));
         assertThat(cartSummaryOne.getBody().getShoppingCart().getShoppingCartItems().size(), is(1));
 
-        final HttpEntity<String> skuTwo = new HttpEntity<String>("654321", headers);
-        final ResponseEntity<CartSummary> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items", DELETE, skuTwo, CartSummary.class);
+        final ResponseEntity<CartSummary> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items/654321", DELETE, httpEntity, CartSummary.class);
         assertThat(cartSummaryTwo.getStatusCode(), is(OK));
         assertThat(cartSummaryTwo.getBody().getTotalQuantity(), is(0));
         assertThat(cartSummaryTwo.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(0)));

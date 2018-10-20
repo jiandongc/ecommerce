@@ -44,8 +44,8 @@ public class ShoppingCartItemController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
-    @RequestMapping(value = "{cartUid}/items", method = DELETE)
-    public ResponseEntity<CartSummary> deleteCartItem(@PathVariable UUID cartUid, @RequestBody String sku){
+    @RequestMapping(value = "{cartUid}/items/{sku}", method = DELETE)
+    public ResponseEntity<CartSummary> deleteCartItem(@PathVariable UUID cartUid, @PathVariable String sku){
         final ShoppingCart cart = cartItemService.deleteCartItem(cartUid, sku);
         return new ResponseEntity<CartSummary>(cartSummaryMapper.map(cart), OK);
     }
