@@ -19,8 +19,7 @@ import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.springframework.http.HttpMethod.DELETE;
-import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.*;
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
@@ -194,6 +193,41 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
 
     }
 
+    @Test
+    public void shouldUpdateCartItemQuantity(){
+        // Given
+        final UUID cartUid = cartRepository.create();
 
+        final String item = "{\n" +
+                "\"sku\": \"123456\",\n" +
+                "\"name\": \"kid's cloth\",\n" +
+                "\"price\": \"1\",\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\"\n" +
+                "}";
 
+        final HttpEntity<String> itemPayload = new HttpEntity<>(item, headers);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemPayload, CartSummary.class);
+
+        // When
+        final String updatedItem = "{\n" +
+                "\"sku\": \"123456\",\n" +
+                "\"name\": \"kid's cloth\",\n" +
+                "\"price\": \"1\",\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\",\n" +
+                "\"quantity\": \"10\"\n" +
+                "}";
+        final HttpEntity<String> updatedItemPayload = new HttpEntity<>(updatedItem, headers);
+        ResponseEntity<Void> response = rest.exchange(BASE_URL + cartUid.toString() + "/items", PUT, updatedItemPayload, Void.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(OK));
+        final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final List<ShoppingCartItem> cartItems = itemRepository.findByCartId(cart.getId());
+        assertThat(cartItems.size(), is(1));
+        assertThat(cartItems.get(0).getSku(), is("123456"));
+        assertThat(cartItems.get(0).getName(), is("kid's cloth"));
+        assertThat(cartItems.get(0).getPrice(), is(BigDecimal.valueOf(1)));
+        assertThat(cartItems.get(0).getImageUrl(), is("/kid-cloth.jpeg"));
+        assertThat(cartItems.get(0).getQuantity(), is(10));
+    }
 }

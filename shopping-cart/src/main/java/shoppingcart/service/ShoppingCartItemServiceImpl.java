@@ -32,7 +32,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
         final Optional<ShoppingCartItem> cartItemOptional = cartItemRepository.findByCartIdAndSku(cart.getId(), cartItem.getSku());
         if(cartItemOptional.isPresent()){
-            cartItemRepository.updateQuantity(cart.getId(), cartItem, cartItemOptional.get().getQuantity() + 1);
+            cartItemRepository.updateQuantity(cart.getId(), cartItem.getSku(), cartItemOptional.get().getQuantity() + 1);
         } else {
             cartItemRepository.save(cart.getId(), cartItem);
         }
@@ -48,5 +48,10 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         cartItemRepository.delete(cart.getId(), sku);
         cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId()));
         return cart;
+    }
+
+    @Override
+    public void updateQuantity(UUID cartUid, String sku, Integer quantity) {
+        cartRepository.findByUUID(cartUid).ifPresent(cart -> cartItemRepository.updateQuantity(cart.getId(), sku, quantity));
     }
 }

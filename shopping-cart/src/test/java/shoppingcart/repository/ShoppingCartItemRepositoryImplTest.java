@@ -79,7 +79,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         shoppingCartItemRepository.save(cart.getId(), cartItem);
 
         // When
-        shoppingCartItemRepository.updateQuantity(cart.getId(), cartItem, 10);
+        shoppingCartItemRepository.updateQuantity(cart.getId(), "109283", 10);
 
         // Then
         final List<ShoppingCartItem> cartItems = shoppingCartItemRepository.findByCartId(cart.getId());

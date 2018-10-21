@@ -54,7 +54,7 @@ public class ShoppingCartItemServiceImplTest {
         service.createCartItem(cartUid, cartItem);
 
         // Then
-        verify(cartItemRepository, times(1)).updateQuantity(1L, cartItem, 3);
+        verify(cartItemRepository, times(1)).updateQuantity(1L, "123X7", 3);
     }
 
     @Test(expected = RuntimeException.class)
@@ -96,5 +96,31 @@ public class ShoppingCartItemServiceImplTest {
 
         // When
         service.deleteCartItem(cartUid, "12345");
+    }
+
+    @Test
+    public void shouldUpdateCartItemQuantity(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.of(ShoppingCart.builder().id(1L).cartUid(cartUid).build()));
+
+        // When
+        service.updateQuantity(cartUid, "sku", 10);
+
+        // Then
+        verify(cartItemRepository).updateQuantity(1L, "sku", 10);
+    }
+
+    @Test
+    public void shouldNotUpdateQuantityIfCartIsNotFound(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.empty());
+
+        // When
+        service.updateQuantity(cartUid, "sku", 10);
+
+        // Then
+        verifyZeroInteractions(cartItemRepository);
     }
 }

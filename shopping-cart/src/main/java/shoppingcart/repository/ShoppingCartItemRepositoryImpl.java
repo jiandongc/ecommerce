@@ -34,8 +34,8 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     }
 
     @Override
-    public void updateQuantity(long cartId, ShoppingCartItem cartItem, int quantity) {
-        jdbcTemplate.update(UPDATE_QTY_SQL, quantity, cartId, cartItem.getSku());
+    public void updateQuantity(long cartId, String sku, int quantity) {
+        jdbcTemplate.update(UPDATE_QTY_SQL, quantity, cartId, sku);
     }
 
     @Override
