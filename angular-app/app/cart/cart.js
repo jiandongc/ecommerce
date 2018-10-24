@@ -1,39 +1,40 @@
 var cart = angular.module('cart',[]);
 
-cart.controller('cartCtrl', function($scope, $cookies, $location, authService) {
+cart.controller('cartCtrl', function($scope, $rootScope, authService, shoppingCartFactory, $localstorage, $timeout) {
   authService.assignGuestToken();
+$scope.forms = {};
 
-	// cartSummaryFactory.get({
-	// 	cartuid: $cookies.get('cart_uid')
-	// }, function(response) {
-	// 	$scope.totalQuantity = response.totalQuantity;
-	// 	$scope.totalPrice = response.totalPrice;
-	// 	$scope.cartItems = response.cartItems;
- //    $scope.forms = {};
-	// }, function(error){
-	// 	$scope.totalQuantity = null;
-	// 	$scope.totalPrice = null;
-	// 	$scope.cartItems = null;
-	// });
+  $scope.updateItem = function(cartItem){
+    if(cartItem.quantity == undefined){
+        $timeout(function() {
+          $rootScope.$broadcast('updateCartSummary', false);
+        }, 3000);
+    } else {
+        var cartUid = $localstorage.get('cart_uid');
+        shoppingCartFactory.updateShoppingCartItem(cartUid, cartItem).then(function(response){
+            $rootScope.$broadcast('updateCartSummary', false);
+        });
+    }
+  }
 
 	$scope.checkout = function(){
-    var valid = true;
-    angular.forEach($scope.cartItems, function(value, index){
-      var name = 'update_'+index;
-      if($scope.forms[name].$invalid && valid == true){
-        valid = false;
-      }
-    });
+  //   var valid = true;
+  //   angular.forEach($scope.cartItems, function(value, index){
+  //     var name = 'update_'+index;
+  //     if($scope.forms[name].$invalid && valid == true){
+  //       valid = false;
+  //     }
+  //   });
 
-    if(valid == false){
-      return;
-    }
+  //   if(valid == false){
+  //     return;
+  //   }
 
-		if(typeof $cookies.get('current_user') === "undefined") {
-			$location.path("/login");
-		} else {
-			$location.path("/shipping");
-		}
+		// if(typeof $cookies.get('current_user') === "undefined") {
+		// 	$location.path("/login");
+		// } else {
+		// 	$location.path("/shipping");
+		// }
 	};
 });
 
@@ -57,7 +58,6 @@ cart.factory('shoppingCartFactory', function($http, environment){
   }
 
   var addItemToShoppingCart = function(name, price, imageUrl, sku, description, cartUid){
-    var configs = {headers: {'Content-Type' : 'application/json'}};
     var cartItem = {
       name: name, 
       price: price,
@@ -66,7 +66,7 @@ cart.factory('shoppingCartFactory', function($http, environment){
       description: description
     };
 
-    return $http.post(environment.shoppingCartUrl + '/carts/' + cartUid + '/items', cartItem, configs).then(function(response){
+    return $http.post(environment.shoppingCartUrl + '/carts/' + cartUid + '/items', cartItem).then(function(response){
         return response.data;
     });
   }
@@ -89,6 +89,12 @@ cart.factory('shoppingCartFactory', function($http, environment){
       }); 
   }
 
+  var updateShoppingCartItem = function(cartUid, cartItem){
+      return $http.put(environment.shoppingCartUrl + '/carts/' + cartUid + '/items', cartItem).then(function(response){
+        return response.data;
+      });   
+  }
+
   return {
     updateCustomerId: updateCustomerId,
     addItemToShoppingCart: addItemToShoppingCart,
@@ -96,7 +102,8 @@ cart.factory('shoppingCartFactory', function($http, environment){
     createShoppingCartForGuest: createShoppingCartForGuest,
     getShoppingCart: getShoppingCart,
     getShoppingCartByCustomerId: getShoppingCartByCustomerId,
-    deleteItemFromShoppingCart: deleteItemFromShoppingCart
+    deleteItemFromShoppingCart: deleteItemFromShoppingCart,
+    updateShoppingCartItem: updateShoppingCartItem
   }
 });
 

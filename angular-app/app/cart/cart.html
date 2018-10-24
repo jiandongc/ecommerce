@@ -14,15 +14,15 @@
 		</tr>
 		</thread>
 		<tbody>
-     	<tr ng-repeat="cartItem in cartItems | orderBy:'productId'">
+     	<tr ng-repeat="cartItem in cartItems">
      		<td>
      			<table>
      				<tr>
      					<td rowspan="2"><img class="img-responsive product" ng-src="{{cartItem.imageUrl}}"></td>
-     					<td>{{cartItem.productName}}</td>
+     					<td>{{cartItem.name}}</td>
      				</tr>
      				<tr>
-     					<td><a href ng-click="removeItem(cartItem)">删除</a></td>
+     					<td><a href ng-click="removeItem(cartItem)">Delete</a></td>
      				</tr>
      			</table>
      		</td>
@@ -30,24 +30,23 @@
                     <div class="p-t-10 row">
                          <div class="col-xs-6">
                               <ng-form name="forms.update_{{$index}}">
-                                   <input type="number" class="form-control" name="quantity" ng-model="cartItem.quantity" min="1" max="50" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 5000, blur: 0}}">
+                                   <input type="number" class="form-control" name="quantity" ng-model="cartItem.quantity" min="1" max="10" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 5000, blur: 500}}">
+                                   <div class="m-t-10" ng-show="forms.update_{{$index}}.quantity.$invalid">
+                                        <span class="label label-warning fs-10" ng-show="forms.update_{{$index}}.quantity.$error.min">Minimum 1 item</span>
+                                        <span class="label label-warning fs-10" ng-show="forms.update_{{$index}}.quantity.$error.max">Maximum 10 items</span>
+                                   </div>
                               </ng-form>
-                              
-                              <div class="m-t-10" ng-show="forms.update_{{$index}}.quantity.$invalid">
-                                   <span class="label label-warning fs-12" ng-show="forms.update_{{$index}}.quantity.$error.min">至少1件</span>
-                                   <span class="label label-warning fs-12" ng-show="forms.update_{{$index}}.quantity.$error.max">限購50件</span>
-                              </div>
                          </div>
                     </div>
      		</td>
      		<td>
-                    <div class="p-t-10 p-b-30">单价: £{{cartItem.productPrice}}</div>
-                    <div>小计: £{{cartItem.subTotal}}</div>
+                    <div class="p-t-10 p-b-30">单价: {{cartItem.price | currency:'£'}}</div>
+                    <div>小计: {{cartItem.price * cartItem.quantity | currency:'£'}}</div>
      		</td>
 		</tr>
 		<tr>
 			<th colspan="2"></th>
-			<th class="p-l-30">商品合计: £{{totalPrice}}</th>
+			<th class="p-l-30">商品合计: {{itemsSubTotal | currency:'£'}}</th>
 		</tr>
 		</tbody>
 	</table>

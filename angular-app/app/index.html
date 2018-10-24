@@ -48,7 +48,7 @@
 							<a href="#!/cart" class="dropdown-toggle">
 								<span class="glyphicon glyphicon-shopping-cart"></span>
 								<span ng-show="cartUid && totalQuantity"> 
-									{{totalQuantity}} items £{{itemsSubTotal}} <span class="caret"></span>
+									{{totalQuantity}} items {{itemsSubTotal | currency:'£'}} <span class="caret"></span>
 								</span>
 							</a>
 							<ul class="dropdown-menu scrollable-menu">
@@ -61,7 +61,7 @@
 											<div class = "col-md-7">
 												<div class="productName">{{cartItem.name}}</div>
 												<div class="productDescription">{{cartItem.description}}</div>
-												<div class="productPrice">£{{cartItem.price}}</div>
+												<div class="productPrice">{{cartItem.price | currency:'£'}}</div>
 												<div class="productQty">Qty {{cartItem.quantity}}</div>
 											</div>
 											<div class = "col-md-1">
@@ -73,7 +73,7 @@
 									</li>
 									<li class='divider'></li>
 								</div>										
-                				<li><a href='#!/cart' class='btn btn-view'>Checkout</a></li>
+                				<li><a href='#!/cart' class='btn btn-view'>View Basket</a></li>
               				</ul>
 						</li>
 						<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>

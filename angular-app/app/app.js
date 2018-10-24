@@ -67,22 +67,6 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		});
 	}
 
-	$scope.updateItem = function(cartItem){
-		// if (typeof cartItem.quantity === "undefined"){
-		// 	return;
-		// }
-
-		// var configs = {headers: {'Content-Type' : 'application/json'}};
-		// $http.patch(environment.orderUrl + '/anoncarts/' + cartItem.cartUid + '/items?productId=' + cartItem.productId, cartItem, configs).then(function(response){
-		// 	//$rootScope.$broadcast('updateCartSummary', false);
-		// 	if($location.path().endsWith('/cart')){$route.reload();}
-		// }, function(error){
-		// 	alert(error.status);
-		// 	alert(error.data);
-		// 	alert('Update failed');
-		// });
-	}
-
 	$scope.isNotCheckOutPage = function(){
 		if($location.path().indexOf('checkout') > -1){
 			return false;	
