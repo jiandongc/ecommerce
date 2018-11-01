@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import shoppingcart.data.CartSummary;
+import shoppingcart.data.CartData;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 import shoppingcart.repository.ShoppingCartItemRepository;
@@ -49,18 +49,18 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
-        ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartSummary.class);
+        ResponseEntity<CartData> response = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
-        assertThat(response.getBody().getTotalQuantity(), is(1));
-        assertThat(response.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(10.99)));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().size(), is(1));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getSku(), is("123456"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getName(), is("kid's cloth"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getPrice(), is(BigDecimal.valueOf(10.99)));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getImageUrl(), is("/cloth.jpeg"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getQuantity(), is(1));
+        assertThat(response.getBody().getQuantity(), is(1));
+        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(10.99)));
+        assertThat(response.getBody().getCartItems().size(), is(1));
+        assertThat(response.getBody().getCartItems().get(0).getSku(), is("123456"));
+        assertThat(response.getBody().getCartItems().get(0).getName(), is("kid's cloth"));
+        assertThat(response.getBody().getCartItems().get(0).getPrice(), is(BigDecimal.valueOf(10.99)));
+        assertThat(response.getBody().getCartItems().get(0).getThumbnail(), is("/cloth.jpeg"));
+        assertThat(response.getBody().getCartItems().get(0).getQuantity(), is(1));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
-        ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + randomUUID().toString() + "/items", POST, payload, CartSummary.class);
+        ResponseEntity<CartData> response = rest.exchange(BASE_URL + randomUUID().toString() + "/items", POST, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(CONFLICT));
@@ -96,16 +96,16 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<String> payload = new HttpEntity<String>(json, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartSummary.class);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartSummary.class);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartSummary.class);
-        ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartData.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartData.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartData.class);
+        ResponseEntity<CartData> response = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
-        assertThat(response.getBody().getTotalQuantity(), is(4));
-        assertThat(response.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(43.96)));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().size(), is(1));
+        assertThat(response.getBody().getQuantity(), is(4));
+        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(43.96)));
+        assertThat(response.getBody().getCartItems().size(), is(1));
         final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final List<ShoppingCartItem> cartItems = itemRepository.findByCartId(cart.getId());
         assertThat(cartItems.size(), is(1));
@@ -131,11 +131,11 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
 
         // When & Then
-        final ResponseEntity<CartSummary> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
+        final ResponseEntity<CartData> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartData.class);
         assertThat(cartSummaryOne.getStatusCode(), is(CREATED));
-        assertThat(cartSummaryOne.getBody().getTotalQuantity(), is(1));
-        assertThat(cartSummaryOne.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(1)));
-        assertThat(cartSummaryOne.getBody().getShoppingCart().getShoppingCartItems().size(), is(1));
+        assertThat(cartSummaryOne.getBody().getQuantity(), is(1));
+        assertThat(cartSummaryOne.getBody().getSubTotal(), is(BigDecimal.valueOf(1)));
+        assertThat(cartSummaryOne.getBody().getCartItems().size(), is(1));
 
         final String itemTwo = "{\n" +
                 "\"sku\": \"654321\",\n" +
@@ -145,11 +145,11 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "}";
 
         final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
-        final ResponseEntity<CartSummary> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
+        final ResponseEntity<CartData> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartData.class);
         assertThat(cartSummaryTwo.getStatusCode(), is(CREATED));
-        assertThat(cartSummaryTwo.getBody().getTotalQuantity(), is(2));
-        assertThat(cartSummaryTwo.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(11)));
-        assertThat(cartSummaryTwo.getBody().getShoppingCart().getShoppingCartItems().size(), is(2));
+        assertThat(cartSummaryTwo.getBody().getQuantity(), is(2));
+        assertThat(cartSummaryTwo.getBody().getSubTotal(), is(BigDecimal.valueOf(11)));
+        assertThat(cartSummaryTwo.getBody().getCartItems().size(), is(2));
     }
 
     @Test
@@ -165,7 +165,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "}";
 
         final HttpEntity<String> itemOnePayload = new HttpEntity<>(itemOne, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartData.class);
 
         final String itemTwo = "{\n" +
                 "\"sku\": \"654321\",\n" +
@@ -175,21 +175,21 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "}";
 
         final HttpEntity<String> itemTwoPayload = new HttpEntity<>(itemTwo, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartData.class);
 
         // When & Then
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-        final ResponseEntity<CartSummary> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items/123456", DELETE, httpEntity, CartSummary.class);
+        final ResponseEntity<CartData> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items/123456", DELETE, httpEntity, CartData.class);
         assertThat(cartSummaryOne.getStatusCode(), is(OK));
-        assertThat(cartSummaryOne.getBody().getTotalQuantity(), is(1));
-        assertThat(cartSummaryOne.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(10)));
-        assertThat(cartSummaryOne.getBody().getShoppingCart().getShoppingCartItems().size(), is(1));
+        assertThat(cartSummaryOne.getBody().getQuantity(), is(1));
+        assertThat(cartSummaryOne.getBody().getSubTotal(), is(BigDecimal.valueOf(10)));
+        assertThat(cartSummaryOne.getBody().getCartItems().size(), is(1));
 
-        final ResponseEntity<CartSummary> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items/654321", DELETE, httpEntity, CartSummary.class);
+        final ResponseEntity<CartData> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items/654321", DELETE, httpEntity, CartData.class);
         assertThat(cartSummaryTwo.getStatusCode(), is(OK));
-        assertThat(cartSummaryTwo.getBody().getTotalQuantity(), is(0));
-        assertThat(cartSummaryTwo.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(0)));
-        assertThat(cartSummaryTwo.getBody().getShoppingCart().getShoppingCartItems().size(), is(0));
+        assertThat(cartSummaryTwo.getBody().getQuantity(), is(0));
+        assertThat(cartSummaryTwo.getBody().getSubTotal(), is(BigDecimal.valueOf(0)));
+        assertThat(cartSummaryTwo.getBody().getCartItems().size(), is(0));
 
     }
 
@@ -206,7 +206,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "}";
 
         final HttpEntity<String> itemPayload = new HttpEntity<>(item, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemPayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemPayload, CartData.class);
 
         // When
         final String updatedItem = "{\n" +

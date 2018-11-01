@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
-import shoppingcart.data.CartSummary;
+import shoppingcart.data.CartData;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.repository.ShoppingCartRepository;
 
@@ -81,7 +81,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"description\": \"Size: S\"\n" +
                 "}";
         final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartData.class);
         final String itemTwo = "{\n" +
                 "\"sku\": \"654321\",\n" +
                 "\"name\": \"father's cloth\",\n" +
@@ -90,22 +90,22 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"description\": \"Size: M\"\n" +
                 "}";
         final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartData.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartData.class);
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
-        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + cartUid.toString(), GET, payload, CartSummary.class);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + cartUid.toString(), GET, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
-        assertThat(response.getBody().getTotalQuantity(), is(3));
-        assertThat(response.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(21)));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().size(), is(2));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getSku(), is("123456"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getDescription(), is("Size: S"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getSku(), is("654321"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getDescription(), is("Size: M"));
+        assertThat(response.getBody().getQuantity(), is(3));
+        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(21)));
+        assertThat(response.getBody().getCartItems().size(), is(2));
+        assertThat(response.getBody().getCartItems().get(0).getSku(), is("123456"));
+        assertThat(response.getBody().getCartItems().get(0).getDescription(), is("Size: S"));
+        assertThat(response.getBody().getCartItems().get(1).getSku(), is("654321"));
+        assertThat(response.getBody().getCartItems().get(1).getDescription(), is("Size: M"));
     }
 
     @Test
@@ -115,7 +115,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
-        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + cartUid.toString(), GET, payload, CartSummary.class);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + cartUid.toString(), GET, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(NOT_FOUND));
@@ -135,7 +135,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"description\": \"Size: S\"\n" +
                 "}";
         final HttpEntity<String> itemOnePayload = new HttpEntity<String>(itemOne, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartData.class);
         final String itemTwo = "{\n" +
                 "\"sku\": \"654321\",\n" +
                 "\"name\": \"father's cloth\",\n" +
@@ -144,22 +144,22 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"description\": \"Size: M\"\n" +
                 "}";
         final HttpEntity<String> itemTwoPayload = new HttpEntity<String>(itemTwo, headers);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
-        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartSummary.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartData.class);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartData.class);
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
-        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + "?customerId=100", GET, payload, CartSummary.class);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + "?customerId=100", GET, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
-        assertThat(response.getBody().getTotalQuantity(), is(3));
-        assertThat(response.getBody().getItemsSubTotal(), is(BigDecimal.valueOf(21)));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().size(), is(2));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getSku(), is("123456"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(0).getDescription(), is("Size: S"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getSku(), is("654321"));
-        assertThat(response.getBody().getShoppingCart().getShoppingCartItems().get(1).getDescription(), is("Size: M"));
+        assertThat(response.getBody().getQuantity(), is(3));
+        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(21)));
+        assertThat(response.getBody().getCartItems().size(), is(2));
+        assertThat(response.getBody().getCartItems().get(0).getSku(), is("123456"));
+        assertThat(response.getBody().getCartItems().get(0).getDescription(), is("Size: S"));
+        assertThat(response.getBody().getCartItems().get(1).getSku(), is("654321"));
+        assertThat(response.getBody().getCartItems().get(1).getDescription(), is("Size: M"));
     }
 
     @Test
@@ -169,7 +169,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
-        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + "?customerId=999", GET, payload, CartSummary.class);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + "?customerId=999", GET, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(NOT_FOUND));
@@ -183,7 +183,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
-        final ResponseEntity<CartSummary> response = rest.exchange(BASE_URL + "?customerId=100", GET, payload, CartSummary.class);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + "?customerId=100", GET, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
