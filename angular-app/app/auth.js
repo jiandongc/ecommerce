@@ -38,7 +38,7 @@ auth.factory('authService', function($localstorage, $location, $rootScope, $q, a
             })
         } else {
             return shoppingCartFactory.getShoppingCartByCustomerId(customer.id).then(function(data){
-                $localstorage.set('cart_uid', data.shoppingCart.cartUid);
+                $localstorage.set('cart_uid', data.cartUid);
                 return customer;
             }, function(error){
                 return customer;

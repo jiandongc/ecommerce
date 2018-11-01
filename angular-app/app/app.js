@@ -29,10 +29,10 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 
 	$scope.$on('updateCartSummary', function(event, showDropDown) {
 		shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(data){
-			$scope.cartUid = data.shoppingCart.cartUid;
-			$scope.totalQuantity = (data.totalQuantity != 0 ? data.totalQuantity : null);
-			$scope.itemsSubTotal = (data.itemsSubTotal != 0 ? data.itemsSubTotal : null);
-			$scope.cartItems = data.shoppingCart.shoppingCartItems;
+			$scope.cartUid = data.cartUid;
+			$scope.totalQuantity = (data.quantity != 0 ? data.quantity : null);
+			$scope.itemsSubTotal = (data.subTotal != 0 ? data.subTotal : null);
+			$scope.cartItems = data.cartItems;
 			if(showDropDown === true){
 				var dropdown = $('ul.nav li.dropdown').find('.dropdown-menu');
 				dropdown.stop(true, true).fadeIn(1000, "swing", function(){
