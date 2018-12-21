@@ -6,7 +6,6 @@ import shoppingcart.data.CartItemData;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,9 +13,7 @@ import java.util.stream.Collectors;
 public class CartDataMapper {
 
     public CartData map(ShoppingCart shoppingCart) {
-        final BigDecimal subTotal = shoppingCart.getShoppingCartItems().stream()
-                .map(cartItem -> cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        final Double subTotal = shoppingCart.getShoppingCartItems().stream().mapToDouble(cartItem -> cartItem.getPrice() * cartItem.getQuantity()).sum();
         final int quantity = shoppingCart.getShoppingCartItems().stream().mapToInt(ShoppingCartItem::getQuantity).sum();
         final List<CartItemData> cartItems = shoppingCart.getShoppingCartItems().stream().map(cartItem ->
                 CartItemData.builder()
@@ -26,6 +23,7 @@ public class CartDataMapper {
                         .quantity(cartItem.getQuantity())
                         .sku(cartItem.getSku())
                         .thumbnail(cartItem.getImageUrl())
+                        .code(cartItem.getCode())
                         .build()
         ).collect(Collectors.toList());
 

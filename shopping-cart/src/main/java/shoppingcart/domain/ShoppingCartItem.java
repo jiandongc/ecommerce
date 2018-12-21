@@ -1,26 +1,27 @@
 package shoppingcart.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 public class ShoppingCartItem {
 
     private long id;
     private long cartId;
+    private String code;
     private String sku;
     private String name;
-    private BigDecimal price;
+    private Double price;
     private int quantity;
     private String imageUrl;
     private String description;
     private Date creationTime;
     private Date lastUpdateTime;
 
-    public ShoppingCartItem(long id,
+    private ShoppingCartItem(long id,
                             long cartId,
+                            String code,
                             String sku,
                             String name,
-                            BigDecimal price,
+                            Double price,
                             int quantity,
                             String imageUrl,
                             String description,
@@ -28,6 +29,7 @@ public class ShoppingCartItem {
                             Date lastUpdateTime) {
         this.id = id;
         this.cartId = cartId;
+        this.code = code;
         this.sku = sku;
         this.name = name;
         this.price = price;
@@ -52,6 +54,10 @@ public class ShoppingCartItem {
         return cartId;
     }
 
+    public String getCode(){
+        return code;
+    }
+
     public String getSku() {
         return sku;
     }
@@ -60,7 +66,7 @@ public class ShoppingCartItem {
         return name;
     }
 
-    public BigDecimal getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -91,8 +97,10 @@ public class ShoppingCartItem {
 
         ShoppingCartItem that = (ShoppingCartItem) o;
 
+        if (id != that.id) return false;
         if (cartId != that.cartId) return false;
         if (quantity != that.quantity) return false;
+        if (code != null ? !code.equals(that.code) : that.code != null) return false;
         if (sku != null ? !sku.equals(that.sku) : that.sku != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
@@ -104,7 +112,9 @@ public class ShoppingCartItem {
 
     @Override
     public int hashCode() {
-        int result = (int) (cartId ^ (cartId >>> 32));
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (int) (cartId ^ (cartId >>> 32));
+        result = 31 * result + (code != null ? code.hashCode() : 0);
         result = 31 * result + (sku != null ? sku.hashCode() : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
@@ -119,9 +129,10 @@ public class ShoppingCartItem {
     public static class ShoppingCartItemBuilder {
         private long id;
         private long cartId;
+        private String code;
         private String sku;
         private String name;
-        private BigDecimal price;
+        private Double price;
         private int quantity;
         private String imageUrl;
         private String description;
@@ -138,6 +149,11 @@ public class ShoppingCartItem {
             return this;
         }
 
+        public ShoppingCartItemBuilder code(String code){
+            this.code = code;
+            return this;
+        }
+
         public ShoppingCartItemBuilder sku(String sku){
             this.sku = sku;
             return this;
@@ -148,7 +164,7 @@ public class ShoppingCartItem {
             return this;
         }
 
-        public ShoppingCartItemBuilder price(BigDecimal price){
+        public ShoppingCartItemBuilder price(Double price){
             this.price = price;
             return this;
         }
@@ -179,7 +195,7 @@ public class ShoppingCartItem {
         }
 
         public ShoppingCartItem build(){
-            return new ShoppingCartItem(id, cartId, sku, name, price, quantity, imageUrl, description, creationTime, lastUpdateTime);
+            return new ShoppingCartItem(id, cartId, code, sku, name, price, quantity, imageUrl, description, creationTime, lastUpdateTime);
         }
 
 

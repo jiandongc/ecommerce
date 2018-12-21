@@ -3,20 +3,19 @@ package shoppingcart.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public final class CartData {
 
     private final Integer quantity;
-    private final BigDecimal subTotal;
+    private final Double subTotal;
     private final String cartUid;
     private final Long customerId;
     private final List<CartItemData> cartItems;
 
     @JsonCreator
     private CartData(@JsonProperty("quantity") Integer quantity,
-                     @JsonProperty("subTotal") BigDecimal subTotal,
+                     @JsonProperty("subTotal") Double subTotal,
                      @JsonProperty("cartUid") String cartUid,
                      @JsonProperty("customerId") Long customerId,
                      @JsonProperty("cartItems") List<CartItemData> cartItems) {
@@ -35,7 +34,7 @@ public final class CartData {
         return quantity;
     }
 
-    public BigDecimal getSubTotal() {
+    public Double getSubTotal() {
         return subTotal;
     }
 
@@ -53,7 +52,7 @@ public final class CartData {
 
     public static class Builder {
         private Integer quantity;
-        private BigDecimal subTotal;
+        private Double subTotal;
         private String cartUid;
         private Long customerId;
         private List<CartItemData> cartItems;
@@ -63,7 +62,7 @@ public final class CartData {
             return this;
         }
 
-        public Builder subTotal(BigDecimal subTotal) {
+        public Builder subTotal(Double subTotal) {
             this.subTotal = subTotal;
             return this;
         }

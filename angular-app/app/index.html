@@ -56,10 +56,14 @@
                                 	<li>
                 						<div class="row">
 											<div class="col-md-4">
-												<img class="img-responsive p-l-05" ng-src="{{cartItem.thumbnail}}">
+												<a href="#!/products/{{cartItem.code}}">
+													<img class="img-responsive p-l-05" ng-src="{{cartItem.thumbnail}}">
+												</a>
 											</div>
 											<div class = "col-md-7">
-												<div class="productName">{{cartItem.name}}</div>
+												<a href="#!/products/{{cartItem.code}}">
+													<div class="productName">{{cartItem.name}}</div>
+												</a>
 												<div class="productDescription">{{cartItem.description}}</div>
 												<div class="productPrice">{{cartItem.price | currency:'£'}}</div>
 												<div class="productQty">Qty {{cartItem.quantity}}</div>
