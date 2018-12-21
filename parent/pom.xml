@@ -17,9 +17,10 @@
     <modules>
         <module>../authserver</module>
         <module>../customer</module>
-        <module>../order</module>
+<!--        <module>../order</module>-->
         <module>../product</module>
-        <module>../integration-test</module>
+        <module>../shopping-cart</module>
+        <!--<module>../integration-test</module>-->
     </modules>
 
 </project>

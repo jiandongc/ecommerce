@@ -100,7 +100,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(OK));
         assertThat(response.getBody().getQuantity(), is(3));
-        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(21)));
+        assertThat(response.getBody().getSubTotal().compareTo(BigDecimal.valueOf(21)), is(0));
         assertThat(response.getBody().getCartItems().size(), is(2));
         assertThat(response.getBody().getCartItems().get(0).getSku(), is("123456"));
         assertThat(response.getBody().getCartItems().get(0).getDescription(), is("Size: S"));

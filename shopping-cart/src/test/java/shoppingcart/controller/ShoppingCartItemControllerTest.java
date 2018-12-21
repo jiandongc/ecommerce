@@ -17,6 +17,7 @@ import java.util.UUID;
 
 import static java.util.UUID.randomUUID;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.*;
@@ -182,7 +183,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         final ResponseEntity<CartData> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items/123456", DELETE, httpEntity, CartData.class);
         assertThat(cartSummaryOne.getStatusCode(), is(OK));
         assertThat(cartSummaryOne.getBody().getQuantity(), is(1));
-        assertThat(cartSummaryOne.getBody().getSubTotal(), is(BigDecimal.valueOf(10)));
+        assertThat(cartSummaryOne.getBody().getSubTotal().compareTo(BigDecimal.valueOf(10)), is(0));
         assertThat(cartSummaryOne.getBody().getCartItems().size(), is(1));
 
         final ResponseEntity<CartData> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items/654321", DELETE, httpEntity, CartData.class);
@@ -226,7 +227,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         assertThat(cartItems.size(), is(1));
         assertThat(cartItems.get(0).getSku(), is("123456"));
         assertThat(cartItems.get(0).getName(), is("kid's cloth"));
-        assertThat(cartItems.get(0).getPrice(), is(BigDecimal.valueOf(1)));
+        assertThat(cartItems.get(0).getPrice().compareTo(BigDecimal.valueOf(1)), is(0));
         assertThat(cartItems.get(0).getImageUrl(), is("/kid-cloth.jpeg"));
         assertThat(cartItems.get(0).getQuantity(), is(10));
     }
