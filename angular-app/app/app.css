@@ -63,7 +63,6 @@ html, body {
   }
 }
 
-
 .product-header {
     font-size: 1.2em;
     background: #d9d9d9;
@@ -422,14 +421,20 @@ ul.scrollable-menu .btn-remove {
     padding-bottom: 3%;
 }
 
-.cart img.product{
-    width: 130px;
-    height: 130px;
-    overflow: hidden;
+.cart .product-name {
+    color: #4c4445;
+    font-size: 1.0em;
+    font-weight: bold;
 }
 
-.cart .padding-left{
-    padding-left: 3%; 
+.cart .product-sku {
+    color: grey; 
+    font-weight: 200;
+    text-transform: uppercase;
+}
+
+.cart .product-desc {
+    font-weight: 300;
 }
 
 .cart .margin-top{
@@ -640,6 +645,7 @@ ul.scrollable-menu .btn-remove {
 .fs-13 {font-size: 1.3em}
 
 .fw-bold {font-weight: bold}
+.fw-light {font-weight: 200}
 
 .clearLeft {
   clear: left;

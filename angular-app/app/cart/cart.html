@@ -1,55 +1,59 @@
 <div class="container cart">
-	<div class="row">
-		<div class="title col-md-10">我的購物車</div>
+	<div class="row m-b-10">
+		<div class="title col-md-10">Bag {{totalQuantity}} itme(s) : {{itemsSubTotal | currency:'£'}}</div>
 		<div class="title col-md-2">
-			<button type="button" class="btn btn-md pull-right btn-checkout" ng-click="checkout()">结帐</button>
+			<button type="button" class="btn btn-md pull-right btn-checkout" ng-click="checkout()">Checkout</button>
 		</div>
 	</div>
-	<table class="table table-bordered" width="100%">
-		<thead>
-		<tr>
-			<th width = "60%">商品</th>
-			<th width = "20%">数量</th>
-			<th width = "20%">价格</th>
-		</tr>
-		</thread>
-		<tbody>
-     	<tr ng-repeat="cartItem in cartItems">
-     		<td>
-     			<table>
-     				<tr>
-     					<td rowspan="2"><img class="img-responsive product" ng-src="{{cartItem.thumbnail}}"></td>
-     					<td>{{cartItem.name}}</td>
-     				</tr>
-     				<tr>
-     					<td><a href ng-click="removeItem(cartItem)">Delete</a></td>
-     				</tr>
-     			</table>
-     		</td>
-     		<td>
-                    <div class="p-t-10 row">
+
+     <div class="row">
+          <div ng-repeat="cartItem in cartItems">
+               <div class = "col-xs-12 col-sm-6">
+                    <div class="row"> 
                          <div class="col-xs-6">
-                              <ng-form name="forms.update_{{$index}}">
-                                   <input type="number" class="form-control" name="quantity" ng-model="cartItem.quantity" min="1" max="10" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 5000, blur: 500}}">
-                                   <div class="m-t-10" ng-show="forms.update_{{$index}}.quantity.$invalid">
-                                        <span class="label label-warning fs-10" ng-show="forms.update_{{$index}}.quantity.$error.min">Minimum 1 item</span>
-                                        <span class="label label-warning fs-10" ng-show="forms.update_{{$index}}.quantity.$error.max">Maximum 10 items</span>
+                              <a href="#!/products/{{cartItem.code}}"><img class="img-responsive thumbnail" ng-src="{{cartItem.thumbnail}}"></a>
+                         </div>
+                         <div class="col-xs-6">
+                              <div class="row">
+                                   <div class="col-xs-12">
+                                        <a href="#!/products/{{cartItem.code}}"><span class="product-name">{{cartItem.name}}</span></a>
                                    </div>
-                              </ng-form>
+                              </div>
+                              <div class="row m-b-05">
+                                   <div class="col-xs-12">
+                                        <span class="product-sku">#{{cartItem.sku}}</span>
+                                   </div>
+                              </div>
+                              <div class="row m-b-02">
+                                   <div class="col-xs-12">
+                                        <span class="product-desc">{{cartItem.description}}</span>
+                                   </div>
+                              </div>
+                              <div class="row m-b-02">
+                                   <div class="col-xs-12">
+                                        <span style="color:grey" class="fw-light">Price (each):&nbsp&nbsp</span>{{cartItem.price | currency:'£'}}
+                                   </div>
+                              </div>
+                              <div class="row m-b-02">
+                                   <div class="col-xs-12">
+                                        <span style="color:grey" class="fw-light">Qty:&nbsp&nbsp</span><select ng-model="cartItem.quantity" ng-options="n for n in [1,2,3,4,5,6,7,8,9,10]" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 1000, blur: 500}}"></select>
+                                   </div>
+                              </div>
+                              <div class="row m-b-05">
+                                   <div class="col-xs-12">
+                                        <span style="color:grey" class="fw-light">Sub-total:&nbsp&nbsp</span>{{cartItem.price * cartItem.quantity | currency:'£'}}
+                                   </div>
+                              </div>
+                              <div class="row">
+                                   <div class="col-xs-12">
+                                        <a href ng-click="removeItem(cartItem)">Remove</a>
+                                   </div>
+                              </div>
                          </div>
                     </div>
-     		</td>
-     		<td>
-                    <div class="p-t-10 p-b-30">单价: {{cartItem.price | currency:'£'}}</div>
-                    <div>小计: {{cartItem.price * cartItem.quantity | currency:'£'}}</div>
-     		</td>
-		</tr>
-		<tr>
-			<th colspan="2"></th>
-			<th class="p-l-30">商品合计: {{itemsSubTotal | currency:'£'}}</th>
-		</tr>
-		</tbody>
-	</table>
+               </div>
+          </div>
+     </div>
      <div class="row">
           <div class="col-md-6">
                <div class="panel panel-default">
