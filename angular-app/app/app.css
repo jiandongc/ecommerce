@@ -287,6 +287,7 @@ html, body {
 
 /* account page */
 .account {
+  padding-top: 16px;
 	color: #45555f;
 }
 
@@ -298,6 +299,13 @@ html, body {
 	font-size: 1.3em;
 	font-weight: bold;
 	padding-bottom: 3%;
+}
+
+.account .top-nav .active a,
+.account .top-nav .active a:hover {
+    background-color: #337AB3;
+    color: #fff;
+    font-weight: 600;
 }
 
 .address {

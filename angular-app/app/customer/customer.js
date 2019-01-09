@@ -104,7 +104,19 @@ customer.config(
         templateUrl: 'customer/register.html',
         controller: 'registerCtrl'
       }).when('/account/:id', {
-        templateUrl: 'customer/account.html',
+        templateUrl: 'customer/profile.html',
+        controller: 'accountCtrl'
+      }).when('/account/:id/edit', {
+        templateUrl: 'customer/profile-edit.html',
+        controller: 'accountCtrl'
+      }).when('/account/:id/change-password', {
+        templateUrl: 'customer/password-change.html',
+        controller: 'accountCtrl'
+      }).when('/account/:id/address-book', {
+        templateUrl: 'customer/address-book.html',
+        controller: 'accountCtrl'
+      }).when('/account/:id/orders', {
+        templateUrl: 'customer/orders.html',
         controller: 'accountCtrl'
       });
 });

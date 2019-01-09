@@ -1,8 +1,7 @@
 var cart = angular.module('cart',[]);
 
-cart.controller('cartCtrl', function($scope, $rootScope, authService, shoppingCartFactory, $localstorage, $timeout) {
+cart.controller('cartCtrl', function($scope, $rootScope, authService, shoppingCartFactory, $localstorage, $timeout, $location) {
   authService.assignGuestToken();
-$scope.forms = {};
 
   $scope.updateItem = function(cartItem){
     if(cartItem.quantity == undefined){
@@ -18,23 +17,11 @@ $scope.forms = {};
   }
 
 	$scope.checkout = function(){
-  //   var valid = true;
-  //   angular.forEach($scope.cartItems, function(value, index){
-  //     var name = 'update_'+index;
-  //     if($scope.forms[name].$invalid && valid == true){
-  //       valid = false;
-  //     }
-  //   });
-
-  //   if(valid == false){
-  //     return;
-  //   }
-
-		// if(typeof $cookies.get('current_user') === "undefined") {
-		// 	$location.path("/login");
-		// } else {
-		// 	$location.path("/shipping");
-		// }
+		if(typeof $localstorage.get('cart_uid', undefined) !== "undefined") {
+			$location.path("/shipping");
+		} else {
+			$location.path("/login");
+		}
 	};
 });
 

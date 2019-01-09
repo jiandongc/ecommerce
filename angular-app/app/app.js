@@ -18,6 +18,12 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		}
 	})
 
+	$scope.$watch(function() { return $localstorage.get('customer_id', undefined);}, function(newValue, oldValue) {
+		if (typeof $scope.customerId === "undefined" || newValue !== oldValue) {
+			$scope.customerId = newValue;
+		}
+	})
+
 	$scope.$watch(function() { return $localstorage.get('cart_uid', undefined);}, function(newValue, oldValue) {
 		if (typeof $scope.cartUid === "undefined" || newValue !== oldValue) {
 			$scope.cartUid = $localstorage.get('cart_uid', undefined);

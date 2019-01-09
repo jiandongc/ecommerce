@@ -1,78 +1,61 @@
 <div class="container account">
-	<div class = "row">
-		<div class = "col-xs-12 col-md-6">
-			<div class = "title">个人信息</div>
-			<table class="table borderless">
-     		<tr>
-			    <td>姓名 : </td>
-			    <td id="customerName">{{customer.name}}</td>
-			  </tr>
-     		<tr>
-			    <td>邮箱 : </td>
-			    <td id="customerEmail">{{customer.email}}</td>
-			  </tr>
-     		<tr>
-			    <td>密码 : </td>
-			    <td><a href="#">重设密码</a></td>
-			  </tr>
-			</table>
-		</div>
-		<div class = "col-xs-12 col-md-6">
-			<div class = "title">我的地址</div>
-				<div class = "row">
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
-					</div>
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
-					</div>
-				</div>
-				<div class = "row">
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
-					</div>
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
-					</div>
-				</div>
-		</div>
+	<div class="row">
+		<ul class="nav nav-pills top-nav">
+  			<li role="presentation"><a href="#!/account/{{customerId}}">Profile</a></li>
+  			<li role="presentation"><a href="#!/account/{{customerId}}/orders">My Orders</a></li>
+  			<li role="presentation" class="active"><a href="#">Address Book</a></li>
+		</ul>
 	</div>
 	<div class = "row">
-		<div class = "col-xs-12">
-			<div class = "title">我的订单</div>
-			
+		<div class = "col-xs-12 col-md-6">
+				<div class = "row">
+					<div class = "col-xs-12 col-md-6 address">
+						<div class = "row">
+							<div class = "col-xs-8 name">Jiandong Chen</div>
+							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
+						</div>
+						<div class = "line">22 Brampton House</div>
+						<div class = "line">17 Albatross Way</div>
+						<div class = "line">London, SE16 7EB</div>
+						<div class = "line">United Kingdom</div>
+						<div class = "line">T: 07745324432</div>
+					</div>
+					<div class = "col-xs-12 col-md-6 address">
+						<div class = "row">
+							<div class = "col-xs-8 name">Jiandong Chen</div>
+							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
+						</div>
+						<div class = "line">22 Brampton House</div>
+						<div class = "line">17 Albatross Way</div>
+						<div class = "line">London, SE16 7EB</div>
+						<div class = "line">United Kingdom</div>
+						<div class = "line">T: 07745324432</div>
+					</div>
+				</div>
+				<div class = "row">
+					<div class = "col-xs-12 col-md-6 address">
+						<div class = "row">
+							<div class = "col-xs-8 name">Jiandong Chen</div>
+							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
+						</div>
+						<div class = "line">22 Brampton House</div>
+						<div class = "line">17 Albatross Way</div>
+						<div class = "line">London, SE16 7EB</div>
+						<div class = "line">United Kingdom</div>
+						<div class = "line">T: 07745324432</div>
+					</div>
+					<div class = "col-xs-12 col-md-6 address">
+						<div class = "row">
+							<div class = "col-xs-8 name">Jiandong Chen</div>
+							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
+						</div>
+						<div class = "line">22 Brampton House</div>
+						<div class = "line">17 Albatross Way</div>
+						<div class = "line">London, SE16 7EB</div>
+						<div class = "line">United Kingdom</div>
+						<div class = "line">T: 07745324432</div>
+					</div>
+				</div>
 		</div>
 	</div>
 </div>

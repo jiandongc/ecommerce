@@ -1,0 +1,42 @@
+<div class="container account">
+	<div class="row">
+		<ul class="nav nav-pills top-nav">
+  			<li role="presentation" class="active"><a href="#!/account/{{customerId}}">Profile</a></li>
+  			<li role="presentation"><a href="#!/account/{{customerId}}/orders">My Orders</a></li>
+  			<li role="presentation"><a href="#!/account/{{customerId}}/address-book">Address Book</a></li>
+		</ul>
+	</div>
+	<div class = "row">
+		<div class = "col-xs-12 col-md-6">
+			<table class="table">
+				<tr>
+			    	<td>Title :</td>
+			    	<td>Mr</td>
+				</tr>
+     			<tr>
+			    	<td>Name :</td>
+			    	<td id="customerName">{{customer.name}}</td>
+				</tr>
+     			<tr>
+			    	<td>Email :</td>
+			    	<td id="customerEmail">{{customer.email}}</td>
+				</tr>
+     			<tr>
+			    	<td>Password :</td>
+			    	<td>*****</td>
+				</tr>
+				<tr>
+			    	<td>Mobile :</td>
+			    	<td>07745324432</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<a href="#!/account/{{customer.id}}/edit" class="btn btn-primary">Update details</a>			
+						<a href="#!/account/{{customer.id}}/change-password" class="btn btn-primary">Change password</a>
+					</td>
+				</tr>
+
+			</table>
+		</div>
+	</div>
+</div>
