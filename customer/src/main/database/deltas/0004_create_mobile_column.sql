@@ -1,0 +1,1 @@
+ALTER TABLE customer ADD COLUMN mobile varchar(20);

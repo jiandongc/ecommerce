@@ -19,7 +19,13 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	public void shouldSaveCustomer(){
 		// Given
 		this.setGuestToken();
-		String customerJson = "{\"name\":\"jiandong\",\"email\":\"jiandong.c@gmail.com\",\"password\":\"1234qwer\"}";
+		String customerJson = "{" +
+				"\"name\":\"jiandong\"," +
+				"\"title\":\"Mr\"," +
+				"\"email\":\"jiandong.c@gmail.com\"," +
+				"\"mobile\":\"07736473343\"," +
+				"\"password\":\"1234qwer\"" +
+				"}";
 		
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
@@ -28,7 +34,9 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("jiandong"));
+		assertThat(response.getBody().getTitle(), is("Mr"));
 		assertThat(response.getBody().getEmail(), is("jiandong.c@gmail.com"));
+		assertThat(response.getBody().getMobile(), is("07736473343"));
 		assertThat(response.getBody().getPassword(), is(nullValue()));
 
 		assertThat(customerRepository.findByEmail("jiandong.c@gmail.com").getPassword(), is("1234qwer"));
@@ -36,7 +44,13 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 	@Test
 	public void shouldRejectRequestIfGuestTokenIsNotAvailable(){
-		String customerJson = "{\"name\":\"jiandong\",\"email\":\"jiandong.c@gmail.com\",\"password\":\"1234qwer\"}";
+		String customerJson = "{" +
+			"\"name\":\"jiandong\"," +
+			"\"title\":\"Mr\"," +
+			"\"email\":\"jiandong.c@gmail.com\"," +
+			"\"mobile\":\"07736473343\"," +
+			"\"password\":\"1234qwer\"" +
+			"}";
 
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
@@ -52,6 +66,8 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setUserToken();
 		Customer customer = new Customer();
 		customer.setName("Name");
+		customer.setTitle("Mr");
+		customer.setMobile("07736473343");
 		customer.setEmail("Email");
 		customer.setPassword("Password");
 		customerRepository.save(customer);
@@ -63,7 +79,9 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("Name"));
+		assertThat(response.getBody().getTitle(), is("Mr"));
 		assertThat(response.getBody().getEmail(), is("Email"));
+		assertThat(response.getBody().getMobile(), is("07736473343"));
 		assertThat(response.getBody().getPassword(), is(nullValue()));
 	}
 
@@ -73,6 +91,8 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setGuestToken();
 		Customer customer = new Customer();
 		customer.setName("Name");
+		customer.setTitle("Mr");
+		customer.setMobile("07736473343");
 		customer.setEmail("Email");
 		customer.setPassword("Password");
 		customerRepository.save(customer);
@@ -91,6 +111,8 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setUserToken();
 		Customer customer = new Customer();
 		customer.setName("Name");
+		customer.setTitle("Mr");
+		customer.setMobile("07736473343");
 		customer.setEmail("Email");
 		customer.setPassword("Password");
 		customerRepository.save(customer);
@@ -102,7 +124,9 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("Name"));
+		assertThat(response.getBody().getTitle(), is("Mr"));
 		assertThat(response.getBody().getEmail(), is("Email"));
+		assertThat(response.getBody().getMobile(), is("07736473343"));
 		assertThat(response.getBody().getPassword(), is(nullValue()));
 	}
 
@@ -112,6 +136,8 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setGuestToken();
 		Customer customer = new Customer();
 		customer.setName("Name");
+		customer.setTitle("Mr");
+		customer.setMobile("07736473343");
 		customer.setEmail("Email");
 		customer.setPassword("Password");
 		customerRepository.save(customer);
