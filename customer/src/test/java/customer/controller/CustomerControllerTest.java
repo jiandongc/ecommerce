@@ -59,7 +59,98 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
 	}
-	
+
+	@Test
+	public void shouldUpdateCustomer(){
+		// Given
+		this.setUserToken();
+		Customer customer = new Customer();
+		customer.setName("mark");
+		customer.setTitle(null);
+		customer.setMobile("07736473343");
+		customer.setEmail("mark@gmail.com");
+		customer.setPassword("Password");
+		customerRepository.save(customer);
+
+		String customerJson = "{" +
+				"\"id\":\"" + customer.getId() + "\"," +
+				"\"name\":\"jiandong\"," +
+				"\"title\":\"Mr\"," +
+				"\"email\":\"jiandong.c@gmail.com\"," +
+				"\"mobile\":\"07736473346\"" +
+				"}";
+
+		// When
+		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.PUT, payload, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+
+		final Customer updatedCustomer = customerRepository.findOne(customer.getId());
+		assertThat(updatedCustomer.getName(), is("jiandong"));
+		assertThat(updatedCustomer.getTitle(), is("Mr"));
+		assertThat(updatedCustomer.getEmail(), is("jiandong.c@gmail.com"));
+		assertThat(updatedCustomer.getMobile(), is("07736473346"));
+		assertThat(updatedCustomer.getPassword(), is("Password"));
+	}
+
+	@Test
+	public void shouldNotUpdateEmailToOneThatHasAlreadyBeenUsed(){
+		// Given
+		this.setUserToken();
+		Customer mark = new Customer();
+		mark.setName("mark");
+		mark.setTitle(null);
+		mark.setMobile("07736473343");
+		mark.setEmail("mark@gmail.com");
+		mark.setPassword("Password");
+		customerRepository.save(mark);
+
+		Customer lee = new Customer();
+		lee.setName("mark");
+		lee.setTitle(null);
+		lee.setMobile("07736473343");
+		lee.setEmail("lee@gmail.com");
+		lee.setPassword("Password");
+		customerRepository.save(lee);
+
+		String customerJson = "{" +
+				"\"id\":\"" + mark.getId() + "\"," +
+				"\"name\":\"jiandong\"," +
+				"\"title\":\"Mr\"," +
+				"\"email\":\"lee@gmail.com\"," +
+				"\"mobile\":\"07736473346\"" +
+				"}";
+
+		// When
+		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.PUT, payload, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
+	}
+
+	@Test
+	public void shouldRejectUpdateCustomerRequestWithGuestToken(){
+		// Given
+		this.setGuestToken();
+		String customerJson = "{" +
+				"\"id\":\"1\"," +
+				"\"name\":\"jiandong\"," +
+				"\"title\":\"Mr\"," +
+				"\"email\":\"lee@gmail.com\"," +
+				"\"mobile\":\"07736473346\"" +
+				"}";
+
+		// When
+		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.PUT, payload, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
+	}
+
 	@Test
 	public void shouldGetCustomerById(){
 		// Given
