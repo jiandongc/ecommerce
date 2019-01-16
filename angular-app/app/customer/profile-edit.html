@@ -1,61 +1,91 @@
 <div class="container account">
 	<div class="row">
 		<ul class="nav nav-pills top-nav">
-  			<li role="presentation" class="active"><a href="#!/account/{{customerId}}">Profile</a></li>
-  			<li role="presentation"><a href="#!/account/{{customerId}}/orders">My Orders</a></li>
-  			<li role="presentation"><a href="#!/account/{{customerId}}/address-book">Address Book</a></li>
+			<li role="presentation" class="active"><a href="#!/account/{{customerId}}">Profile</a></li>
+			<li role="presentation"><a href="#!/account/{{customerId}}/orders">My Orders</a></li>
+			<li role="presentation"><a href="#!/account/{{customerId}}/address-book">Address Book</a></li>
 		</ul>
 	</div>
 	<div class = "row">
 		<div class = "col-xs-12 col-md-6">
-			<table class="table">
-				<tr>
-			    	<td>
-			    		<div class="p-t-05">Title :</div>
-			    	</td>
-			    	<td>
-			    		<select class="form-control" id="sel1">
-    						<option>Mr</option>
-    						<option>Mrs</option>
-    						<option>Miss</option>
-    						<option>Ms</option>
-    						<option>Dr.</option>
-    						<option>Rev.</option>
-  						</select>
-			    	</td>
-				</tr>
-     			<tr>
-			    	<td>
-			    		<div class="p-t-05">Name :</div>
-			    	</td>
-			    	<td>
-			    		<input type="text" id="customerName" class="form-control" ng-model="customer.name">
-			    	</td>
-				</tr>
-     			<tr>
-			    	<td>
-			    		<div class="p-t-05">Email :</div>
-			    	</td>
-			    	<td>
-			    		<input type="text" id="customerEmail" class="form-control" ng-model="customer.email">
-			    	</td>
-				</tr>
-				<tr>
-			    	<td>
-			    		<div class="p-t-05">Mobile :</div>
-			    	</td>
-			    	<td>
-			    		<input type="text" id="customerMobile" class="form-control" ng-model="customer.mobile">
-			    	</td>
-				</tr>
-				<tr>
-					<td colspan="2">
-						<a href="#!/account/{{customer.id}}" class="btn btn-primary">Cancel</a>			
-						<a href="" class="btn btn-primary">Save Changes</a>
-					</td>
-				</tr>
+			<div id="error" ng-show="error" class="alert alert-danger width-60">{{errorMsg}}</div>
+			<form name="userform" novalidate>
+				<table class="table">
+					<tr>
+						<td>
+							<div class="p-t-05">Title :</div>
+						</td>
+						<td>
+							<select class="form-control" id="customerTitle" ng-model="customer.title">
+								<option value="" disabled selected>Please select</option>
+								<option>Mr</option>
+								<option>Mrs</option>
+								<option>Miss</option>
+								<option>Ms</option>
+								<option>Dr.</option>
+								<option>Rev.</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="p-t-05">Name :</div>
+						</td>
+						<td>
+							<div ng-class="{'has-error': userform.name.$invalid && (userform.name.$touched || userform.$submitted) }">
+								<input type="text" id="name" name="name" class="form-control" ng-model="customer.name" placeholder="Enter name" required>
+								<div id="nameMsg" ng-show="userform.name.$touched || userform.$submitted">
+									<p ng-show="userform.name.$error.required" class="help-block">
+										Username is missing. Please check and try again.
+									</p>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="p-t-05">Email :</div>
+						</td>
+						<td>
+							<div ng-class="{'has-error': userform.email.$invalid && (userform.email.$touched || userform.$submitted) }">
+								<input type="text" id="email" name="email" class="form-control" ng-model="customer.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+								<div id="emailMsg" ng-show="userform.email.$touched || userform.$submitted">
+									<p ng-show="userform.email.$error.required" class="help-block">
+										Email is missing. Please check and try again.
+									</p>
+									<p ng-show="userform.email.$error.pattern" class="help-block">
+										Sorry, that email doesn’t look right. Please check it’s a proper email.
+									</p>
+								</div>
+							</div>
+							
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="p-t-05">Mobile :</div>
+						</td>
+						<td>
+							<div ng-class="{'has-error': userform.mobile.$invalid && (userform.mobile.$touched || userform.$submitted) }">
+								<input type="text" id="mobile" name="mobile" class="form-control" ng-model="customer.mobile" ng-pattern="/^(?:0|\+?44)(?:\d\s?){9,10}$/" placeholder="Enter mobile">
+								<div id="mobileMsg" ng-show="userform.mobile.$touched || userform.$submitted">
+									<p ng-show="userform.mobile.$error.pattern" class="help-block">
+										Mobile is invalid. Please enter a valid UK number.
+									</p>
+								</div>
+							</div>
+							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<a href="#!/account/{{customer.id}}" class="btn btn-primary">Cancel</a>			
+							<a href="" class="btn btn-primary" ng-click="updateProfile()">Save Changes</a>
+						</td>
+					</tr>
 
-			</table>
+				</table>
+			</form>
 		</div>
 	</div>
 </div>

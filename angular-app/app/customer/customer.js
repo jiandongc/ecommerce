@@ -1,17 +1,17 @@
 var customer = angular.module('customer', ['ngRoute','ngResource']);
 
 customer.controller('loginCtrl', function($scope, authService, $rootScope) {
-    
+
     authService.assignGuestToken();
     $rootScope.loginError = false;
 
-	$scope.login = function(credentials){
+    $scope.login = function(credentials){
         authService.authenticateUser(credentials);
-	};
+    };
 });
 
 customer.controller('registerCtrl', function($scope, authService, customerFactory) {
-    
+
     authService.assignGuestToken();
     $scope.error = false;
     $scope.errorMsg = "";
@@ -19,7 +19,9 @@ customer.controller('registerCtrl', function($scope, authService, customerFactor
     $scope.registerCustomer = function(){
         var newCustomer = {
             name : $scope.customer.name,
+            title: $scope.customer.title,
             email : $scope.customer.email,
+            mobile : $scope.customer.mobile,
             password : $scope.customer.password
         };
 
@@ -47,6 +49,29 @@ customer.controller('accountCtrl', function($scope, $routeParams, customerFactor
     });
 });
 
+customer.controller('profileEditCtrl', function($scope, $routeParams, $location, $localstorage, customerFactory){
+    customerFactory.getCustomerById($routeParams.id).then(function(response){
+        $scope.customer = response;
+    });
+
+    $scope.updateProfile = function(){
+        customerFactory.update($scope.customer).then(function(data){
+            $scope.error = false;
+            $localstorage.set('current_user', data.name);
+            $localstorage.set('customer_id', data.id);
+            $location.path("/account/" + data.id);
+        }, function(error){
+            $scope.error = true;
+            if(error.status === 409){
+                $scope.errorMsg = "This the email address is already used.";
+            } else {
+                $scope.errorMsg = "Technical error, please contact site admin: jiandong.c@gmail.com";
+            }
+        });
+    };
+
+});
+
 customer.factory('customerFactory', function($http, environment){
 
     var getCustomerByEmail = function(credentials){
@@ -66,12 +91,20 @@ customer.factory('customerFactory', function($http, environment){
         return $http.post(environment.customerUrl + '/customers', customer, configs).then(function(response){
             return response.data;
         });
+    };
+
+    var update = function(customer){
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+        return $http.put(environment.customerUrl + '/customers', customer, configs).then(function(response){
+            return response.data;
+        });
     }
 
     return {
         getCustomerByEmail: getCustomerByEmail,
         getCustomerById: getCustomerById,
-        save: save
+        save: save,
+        update: update
     };
 });
 
@@ -87,8 +120,8 @@ customer.directive('passwordMatch', [function () {
                 return e1 == e2;
             };
             scope.$watch(checker, function (n) {
-                 control.$setValidity("unique", n);
-            });
+               control.$setValidity("unique", n);
+           });
         }
     };
 }]);
@@ -97,28 +130,28 @@ customer.config(
   function($routeProvider) {
 
     $routeProvider.
-      when('/login', {
+    when('/login', {
         templateUrl: 'customer/login.html',
         controller: 'loginCtrl'
-      }).when('/register', {
+    }).when('/register', {
         templateUrl: 'customer/register.html',
         controller: 'registerCtrl'
-      }).when('/account/:id', {
+    }).when('/account/:id', {
         templateUrl: 'customer/profile.html',
         controller: 'accountCtrl'
-      }).when('/account/:id/edit', {
+    }).when('/account/:id/edit', {
         templateUrl: 'customer/profile-edit.html',
-        controller: 'accountCtrl'
-      }).when('/account/:id/change-password', {
+        controller: 'profileEditCtrl'
+    }).when('/account/:id/change-password', {
         templateUrl: 'customer/password-change.html',
         controller: 'accountCtrl'
-      }).when('/account/:id/address-book', {
+    }).when('/account/:id/address-book', {
         templateUrl: 'customer/address-book.html',
         controller: 'accountCtrl'
-      }).when('/account/:id/orders', {
+    }).when('/account/:id/orders', {
         templateUrl: 'customer/orders.html',
         controller: 'accountCtrl'
-      });
+    });
 });
 
 

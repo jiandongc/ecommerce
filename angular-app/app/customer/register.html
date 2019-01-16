@@ -4,12 +4,33 @@
 			<form name="regForm" ng-submit="regForm.$valid && registerCustomer()" novalidate>
 			  <h3>Register now</h3>
 			  <div id="error" ng-show="error" class="alert alert-danger width-60">{{errorMsg}}</div>
+			  <div class="form-group">
+			    <label for="registerTitle">Title</label>
+			    <select class="form-control width-60" id="registerTitle" name="registerTitle" ng-model="customer.title">
+			    			<option value="" disabled selected>Please select</option>
+    						<option>Mr</option>
+    						<option>Mrs</option>
+    						<option>Miss</option>
+    						<option>Ms</option>
+    						<option>Dr.</option>
+    						<option>Rev.</option>
+  				</select>
+			  </div>
 			  <div class="form-group" ng-class="{'has-error': regForm.registerName.$invalid && (regForm.registerName.$touched || regForm.$submitted) }">
 			    <label for="registerName">Name</label>
 			    <input type="text" id="registerName" name="registerName" class="form-control width-60" ng-model="customer.name" placeholder="Enter name" required>
 				<div id="registerNameMsg" ng-show="regForm.registerName.$touched || regForm.$submitted">
 					<p ng-show="regForm.registerName.$error.required" class="help-block">
 						Username is missing. Please check and try again.
+					</p>
+				</div>
+			  </div>
+			  <div class="form-group" ng-class="{'has-error': regForm.registerMobile.$invalid && (regForm.registerMobile.$touched || regForm.$submitted) }">
+			    <label for="registerMobile">Mobile Number</label>
+			    <input type="text" id="registerMobile" name="registerMobile" class="form-control width-60" ng-model="customer.mobile" ng-pattern="/^(?:0|\+?44)(?:\d\s?){9,10}$/" placeholder="Enter mobile">
+				<div id="registerMobileMsg" ng-show="regForm.registerMobile.$touched || regForm.$submitted">
+					<p ng-show="regForm.registerMobile.$error.pattern" class="help-block">
+						Mobile is invalid. Please enter a valid UK number.
 					</p>
 				</div>
 			  </div>
