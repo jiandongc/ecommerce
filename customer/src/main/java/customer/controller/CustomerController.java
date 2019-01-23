@@ -1,5 +1,6 @@
 package customer.controller;
 
+import customer.domain.Address;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import customer.domain.Customer;
 import customer.service.CustomerService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/customers")
@@ -55,8 +58,13 @@ public class CustomerController {
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Customer findById(@PathVariable long id) {
-        Customer customer = customerService.findById(id);
-        return customer;
+        return customerService.findById(id);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{id}/addresses", method = RequestMethod.GET)
+    public List<Address> findAddressesByCustomerId(@PathVariable long id){
+        return customerService.findAddressesByCustomerId(id);
     }
 
 }

@@ -1,5 +1,7 @@
 package customer.service;
 
+import customer.domain.Address;
+import customer.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -7,15 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import customer.domain.Customer;
 import customer.repository.CustomerRepository;
 
+import java.util.List;
+
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
+    @Autowired
     private CustomerRepository customerRepository;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
-    }
+    private AddressRepository addressRepository;
 
     @Override
     @Transactional
@@ -56,6 +59,12 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     public Customer findByEmail(String email) {
         return customerRepository.findByEmail(email);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Address> findAddressesByCustomerId(Long customerId) {
+        return addressRepository.findByCustomerId(customerId);
     }
 
 }

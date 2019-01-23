@@ -1,14 +1,13 @@
 package customer.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import java.util.Objects;
+import javax.persistence.*;
+import java.util.*;
+
+import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.LAZY;
 
 @Entity
 @Table(name = "customer")
@@ -28,6 +27,9 @@ public class Customer {
 	@JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
 	@Column(name = "password")
 	private String password;
+	@JsonIgnore
+	@OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
+	private List<Address> addresses = new ArrayList<>();
 
 	public long getId() {
 		return id;
@@ -71,6 +73,15 @@ public class Customer {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public List<Address> getAddresses() {
+		return addresses;
+	}
+
+	public void addAddress(Address address){
+		this.addresses.add(address);
+		address.setCustomer(this);
 	}
 
 	@Override

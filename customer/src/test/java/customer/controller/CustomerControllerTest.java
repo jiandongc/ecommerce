@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
+import customer.domain.Address;
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
@@ -261,5 +262,53 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
 		assertThat(response.getBody(), is(nullValue()));
 		assertThat(customerRepository.findByEmail("jiandong.c@gmail.com").getPassword(), is("1234asdf"));
+	}
+
+	@Test
+	public void shouldGetAddressesByCustomerId(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+
+		Address addressOne = new Address();
+		addressOne.setTitle("Mr.");
+		addressOne.setFirstName("John");
+		addressOne.setLastName("O'Shea");
+		addressOne.setAddressLine1("2 Sally Lane");
+		addressOne.setCity("Manchester");
+		addressOne.setCountry("United Kingdom");
+		addressOne.setPostcode("M1 2DD");
+		addressOne.setDefaultAddress(true);
+		customer.addAddress(addressOne);
+
+		Address addressTwo = new Address();
+		addressTwo.setTitle("Mr.");
+		addressTwo.setFirstName("John");
+		addressTwo.setLastName("O'Shea");
+		addressTwo.setAddressLine1("17 London Road");
+		addressTwo.setCity("London");
+		addressTwo.setCountry("United Kingdom");
+		addressTwo.setPostcode("BR1 7DE");
+		addressTwo.setDefaultAddress(false);
+		customer.addAddress(addressTwo);
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<Address[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", HttpMethod.GET, httpEntity, Address[].class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(2));
+		assertThat(response.getBody()[0].getFirstName(), is("John"));
+		assertThat(response.getBody()[0].getAddressLine1(), is("2 Sally Lane"));
+		assertThat(response.getBody()[0].getPostcode(), is("M1 2DD"));
+		assertThat(response.getBody()[1].getFirstName(), is("John"));
+		assertThat(response.getBody()[1].getAddressLine1(), is("17 London Road"));
+		assertThat(response.getBody()[1].getPostcode(), is("BR1 7DE"));
 	}
 }

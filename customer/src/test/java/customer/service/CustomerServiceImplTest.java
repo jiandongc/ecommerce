@@ -2,21 +2,31 @@ package customer.service;
 
 import static java.lang.Long.valueOf;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import customer.repository.AddressRepository;
 import org.junit.Test;
 
 import customer.domain.Customer;
 import customer.repository.CustomerRepository;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
+public class CustomerServiceImplTest {
 
-public class CustomerServiceImpleTest {
-	
-	private CustomerRepository customerRepository = mock(CustomerRepository.class);
-	private CustomerService customerService = new CustomerServiceImpl(customerRepository);
+	@Mock
+	private CustomerRepository customerRepository;
+
+	@Mock
+	private AddressRepository addressRepository;
+
+	@InjectMocks
+	private CustomerServiceImpl customerService;
 	
 	@Test
 	public void shouldSaveCustomer(){
@@ -105,6 +115,14 @@ public class CustomerServiceImpleTest {
 		customerService.findByEmail(email);
 		// Then
 		verify(customerRepository).findByEmail(email);
+	}
+
+	@Test
+	public void shouldFindAddressesByCustomerId(){
+		// When
+		customerService.findAddressesByCustomerId(1L);
+		// Then
+		verify(addressRepository).findByCustomerId(1L);
 	}
 
 }
