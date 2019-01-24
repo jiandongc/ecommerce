@@ -1,10 +1,13 @@
 package customer.service;
 
 import static java.lang.Long.valueOf;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import customer.domain.Address;
 import customer.repository.AddressRepository;
 import org.junit.Test;
 
@@ -123,6 +126,25 @@ public class CustomerServiceImplTest {
 		customerService.findAddressesByCustomerId(1L);
 		// Then
 		verify(addressRepository).findByCustomerId(1L);
+	}
+
+	@Test
+	public void shouldAddNewAddressAndModifyDefaultAccordingly(){
+		// Given
+		Customer customer = new Customer();
+		Address existingAddress = new Address();
+		existingAddress.setDefaultAddress(true);
+		customer.addAddress(existingAddress);
+		Address newAddress = new Address();
+		newAddress.setDefaultAddress(true);
+		when(customerRepository.findOne(1L)).thenReturn(customer);
+
+		// When
+		customerService.addAddress(1L, newAddress);
+
+		// Then
+		assertThat(customer.getAddresses().get(0).isDefaultAddress(), is(false));
+		assertThat(customer.getAddresses().get(1).isDefaultAddress(), is(true));
 	}
 
 }

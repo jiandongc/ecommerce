@@ -11,6 +11,8 @@ import org.springframework.http.*;
 
 import customer.domain.Customer;
 
+import java.util.List;
+
 public class CustomerControllerTest extends AbstractControllerTest{
 
 	private final String BASE_URL = "http://localhost:8081/customers";
@@ -310,5 +312,82 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getBody()[1].getFirstName(), is("John"));
 		assertThat(response.getBody()[1].getAddressLine1(), is("17 London Road"));
 		assertThat(response.getBody()[1].getPostcode(), is("BR1 7DE"));
+	}
+
+	@Test
+	public void shouldAddNewAddress(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+
+		Address addressOne = new Address();
+		addressOne.setTitle("Mr.");
+		addressOne.setFirstName("John");
+		addressOne.setLastName("O'Shea");
+		addressOne.setAddressLine1("2 Sally Lane");
+		addressOne.setCity("Manchester");
+		addressOne.setCountry("United Kingdom");
+		addressOne.setPostcode("M1 2DD");
+		addressOne.setDefaultAddress(true);
+		customer.addAddress(addressOne);
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When (add new address as default)
+		this.setUserToken();
+		String addressJson = "{" +
+				"\"title\":\"Mr.\"," +
+				"\"firstName\":\"John\"," +
+				"\"lastName\":\"O'Shea\"," +
+				"\"mobile\":null," +
+				"\"addressLine1\":\"17 London Road\"," +
+				"\"addressLine2\":null," +
+				"\"addressLine3\":null," +
+				"\"city\":\"London\"," +
+				"\"country\":\"United Kingdom\"," +
+				"\"postcode\":\"BR1 7DE\"," +
+				"\"defaultAddress\":true" +
+				"}";
+		HttpEntity<String> payload = new HttpEntity<String>(addressJson, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", HttpMethod.POST, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		List<Address> addresses = addressRepository.findByCustomerId(savedCustomer.getId());
+		assertThat(addresses.size(), is(2));
+		Address firstAddress = addresses.stream().filter(address -> address.getPostcode().equals("M1 2DD")).findFirst().get();
+		assertThat(firstAddress.isDefaultAddress(), is(false));
+		Address newAddress = addresses.stream().filter(address -> address.getPostcode().equals("BR1 7DE")).findFirst().get();
+		assertThat(newAddress.isDefaultAddress(), is(true));
+
+		// When (add another new address as non default)
+		addressJson = "{" +
+				"\"title\":\"Mr.\"," +
+				"\"firstName\":\"John\"," +
+				"\"lastName\":\"O'Shea\"," +
+				"\"mobile\":null," +
+				"\"addressLine1\":\"17 London Road\"," +
+				"\"addressLine2\":null," +
+				"\"addressLine3\":null," +
+				"\"city\":\"London\"," +
+				"\"country\":\"United Kingdom\"," +
+				"\"postcode\":\"SE9 7TT\"," +
+				"\"defaultAddress\":false" +
+				"}";
+		payload = new HttpEntity<String>(addressJson, headers);
+		response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", HttpMethod.POST, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		addresses = addressRepository.findByCustomerId(savedCustomer.getId());
+		assertThat(addresses.size(), is(3));
+		firstAddress = addresses.stream().filter(address -> address.getPostcode().equals("M1 2DD")).findFirst().get();
+		assertThat(firstAddress.isDefaultAddress(), is(false));
+		Address secondAddress = addresses.stream().filter(address -> address.getPostcode().equals("BR1 7DE")).findFirst().get();
+		assertThat(secondAddress.isDefaultAddress(), is(true));
+		newAddress = addresses.stream().filter(address -> address.getPostcode().equals("SE9 7TT")).findFirst().get();
+		assertThat(newAddress.isDefaultAddress(), is(false));
 	}
 }

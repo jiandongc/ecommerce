@@ -67,4 +67,15 @@ public class CustomerServiceImpl implements CustomerService {
         return addressRepository.findByCustomerId(customerId);
     }
 
+    @Override
+    @Transactional
+    public Address addAddress(Long customerId, Address newAddress) {
+        final Customer customer = customerRepository.findOne(customerId);
+        if(newAddress.isDefaultAddress()){
+            customer.getAddresses().forEach(address -> address.setDefaultAddress(false));
+        }
+        customer.addAddress(newAddress);
+        return newAddress;
+    }
+
 }

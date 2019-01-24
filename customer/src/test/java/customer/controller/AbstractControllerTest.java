@@ -1,5 +1,6 @@
 package customer.controller;
 
+import customer.repository.AddressRepository;
 import customer.repository.CustomerRepository;
 import org.junit.After;
 import org.junit.Before;
@@ -20,6 +21,9 @@ public abstract class AbstractControllerTest {
 
     @Autowired
     CustomerRepository customerRepository;
+
+    @Autowired
+    AddressRepository addressRepository;
 
     HttpHeaders headers = null;
 
