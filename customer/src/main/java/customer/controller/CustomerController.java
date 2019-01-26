@@ -73,4 +73,14 @@ public class CustomerController {
         return customerService.addAddress(id, address);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{id}/addresses/{addressId}", method = RequestMethod.PUT)
+    public ResponseEntity updateAddress(@PathVariable long id, @PathVariable long addressId, @RequestBody Address address){
+        try {
+            return new ResponseEntity<>(customerService.updateAddress(id, addressId, address), HttpStatus.OK);
+        } catch (IllegalArgumentException exe) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
 }

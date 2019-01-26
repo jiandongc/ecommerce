@@ -12,4 +12,5 @@ public interface CustomerService {
 	Customer findByEmail(String email);
 	List<Address> findAddressesByCustomerId(Long customerId);
 	Address addAddress(Long customerId, Address address);
+	Address updateAddress(Long customerId, Long addressId, Address address);
 }

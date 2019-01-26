@@ -10,6 +10,7 @@ import customer.domain.Customer;
 import customer.repository.CustomerRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -76,6 +77,36 @@ public class CustomerServiceImpl implements CustomerService {
         }
         customer.addAddress(newAddress);
         return newAddress;
+    }
+
+    @Override
+    @Transactional
+    public Address updateAddress(Long customerId, Long addressId, Address address) {
+        final Customer customer = customerRepository.findOne(customerId);
+        final List<Address> addresses = customer.getAddresses();
+        final Optional<Address> savedAddress = addresses.stream().filter(a -> a.getId() == addressId).findFirst();
+
+        savedAddress.ifPresent(a -> {
+            a.setTitle(address.getTitle());
+            a.setFirstName(address.getFirstName());
+            a.setLastName(address.getLastName());
+            a.setMobile(address.getMobile());
+            a.setAddressLine1(address.getAddressLine1());
+            a.setAddressLine2(address.getAddressLine2());
+            a.setAddressLine3(address.getAddressLine3());
+            a.setCity(address.getCity());
+            a.setCountry(address.getCountry());
+            a.setPostcode(address.getPostcode());
+            a.setDefaultAddress(address.isDefaultAddress());
+        });
+
+        savedAddress.orElseThrow(() -> new IllegalArgumentException("Address not found"));
+
+        if (address.isDefaultAddress()) {
+            addresses.stream().filter(a -> a.getId() != addressId).forEach(a -> a.setDefaultAddress(false));
+        }
+
+        return savedAddress.get();
     }
 
 }

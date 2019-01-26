@@ -129,7 +129,7 @@ public class CustomerServiceImplTest {
 	}
 
 	@Test
-	public void shouldAddNewAddressAndModifyDefaultAccordingly(){
+	public void shouldAddNewAddressAndModifyDefaultPropertyAccordingly(){
 		// Given
 		Customer customer = new Customer();
 		Address existingAddress = new Address();

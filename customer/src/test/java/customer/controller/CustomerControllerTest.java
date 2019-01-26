@@ -390,4 +390,104 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		newAddress = addresses.stream().filter(address -> address.getPostcode().equals("SE9 7TT")).findFirst().get();
 		assertThat(newAddress.isDefaultAddress(), is(false));
 	}
+
+	@Test
+	public void shouldUpdateAddress(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+
+		Address addressOne = new Address();
+		addressOne.setTitle("Mr.");
+		addressOne.setFirstName("John");
+		addressOne.setLastName("O'Shea");
+		addressOne.setAddressLine1("2 Sally Lane");
+		addressOne.setCity("Manchester");
+		addressOne.setCountry("United Kingdom");
+		addressOne.setPostcode("M1 2DD");
+		addressOne.setDefaultAddress(true);
+		customer.addAddress(addressOne);
+
+		Address addressTwo = new Address();
+		addressTwo.setTitle("Mr.");
+		addressTwo.setFirstName("John");
+		addressTwo.setLastName("O'Shea");
+		addressTwo.setAddressLine1("17 London Road");
+		addressTwo.setCity("London");
+		addressTwo.setCountry("United Kingdom");
+		addressTwo.setPostcode("BR1 7DE");
+		addressTwo.setDefaultAddress(false);
+		customer.addAddress(addressTwo);
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When (update addressTwo)
+		this.setUserToken();
+		String addressJson = "{" +
+				"\"title\":\"Mr.\"," +
+				"\"firstName\":\"John_NEW\"," +
+				"\"lastName\":\"O'Shea_NEW\"," +
+				"\"mobile\":\"00000000\"," +
+				"\"addressLine1\":\"17 London Road_NEW\"," +
+				"\"addressLine2\":\"17 London Road_NEW\"," +
+				"\"addressLine3\":null," +
+				"\"city\":\"London\"," +
+				"\"country\":\"United Kingdom\"," +
+				"\"postcode\":\"BR1 7BB\"," +
+				"\"defaultAddress\":true" +
+				"}";
+		HttpEntity<String> payload = new HttpEntity<String>(addressJson, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/" + addressTwo.getId(), HttpMethod.PUT, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		addressOne = addressRepository.findOne(addressOne.getId());
+		assertThat(addressOne.isDefaultAddress(), is(false));
+		addressTwo = addressRepository.findOne(addressTwo.getId());
+		assertThat(addressTwo.getTitle(), is("Mr."));
+		assertThat(addressTwo.getFirstName(), is("John_NEW"));
+		assertThat(addressTwo.getLastName(), is("O'Shea_NEW"));
+		assertThat(addressTwo.getMobile(), is("00000000"));
+		assertThat(addressTwo.getAddressLine1(), is("17 London Road_NEW"));
+		assertThat(addressTwo.getAddressLine2(), is("17 London Road_NEW"));
+		assertThat(addressTwo.getAddressLine3(), is(nullValue()));
+		assertThat(addressTwo.getCity(), is("London"));
+		assertThat(addressTwo.getCountry(), is("United Kingdom"));
+		assertThat(addressTwo.getPostcode(), is("BR1 7BB"));
+		assertThat(addressTwo.isDefaultAddress(), is(true));
+	}
+
+	@Test
+	public void shouldReceiveErrorCodeIfAddressIsNotFound(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When (update addressTwo)
+		this.setUserToken();
+		String addressJson = "{" +
+				"\"title\":\"Mr.\"," +
+				"\"firstName\":\"John_NEW\"," +
+				"\"lastName\":\"O'Shea_NEW\"," +
+				"\"mobile\":\"00000000\"," +
+				"\"addressLine1\":\"17 London Road_NEW\"," +
+				"\"addressLine2\":\"17 London Road_NEW\"," +
+				"\"addressLine3\":null," +
+				"\"city\":\"London\"," +
+				"\"country\":\"United Kingdom\"," +
+				"\"postcode\":\"BR1 7BB\"," +
+				"\"defaultAddress\":true" +
+				"}";
+		HttpEntity<String> payload = new HttpEntity<String>(addressJson, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/123", HttpMethod.PUT, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
+	}
 }
