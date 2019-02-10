@@ -69,6 +69,12 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Address findAddressById(Long addressId) {
+        return addressRepository.findOne(addressId);
+    }
+
+    @Override
     @Transactional
     public Address addAddress(Long customerId, Address newAddress) {
         final Customer customer = customerRepository.findOne(customerId);

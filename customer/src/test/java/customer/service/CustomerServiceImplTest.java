@@ -129,6 +129,14 @@ public class CustomerServiceImplTest {
 	}
 
 	@Test
+	public void shouldFindAddressById(){
+		// When
+		customerService.findAddressById(1L);
+		// Then
+		verify(addressRepository).findOne(1L);
+	}
+
+	@Test
 	public void shouldAddNewAddressAndModifyDefaultPropertyAccordingly(){
 		// Given
 		Customer customer = new Customer();

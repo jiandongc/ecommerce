@@ -26,7 +26,8 @@
 				<div class = "line">{{address.country}}</div>
 				<div class = "line">T: {{address.mobile}}</div>
 				<div style="position: absolute; bottom: 1.5em;">
-					<a href="#">Edit</a> | <a href="#">Remove</a>
+					<a href="#!/account/{{customerId}}/address/{{address.id}}/edit">Edit</a> | 
+					<a href="#">Remove</a>
 				</div>
 			</div>
 		</div>
@@ -40,7 +41,9 @@
 				<div class = "line">{{address.country}}</div>
 				<div class = "line">T: {{address.mobile}}</div>
 				<div style="position: absolute; bottom: 1.5em;">
-					<a href="#">Edit</a> | <a href="#">Remove</a> | <a href="#">Set as Default</a>
+					<a href="#!/account/{{customerId}}/address/{{address.id}}/edit">Edit</a> | 
+					<a href="#">Remove</a> | 
+					<a href ng-click="setAsDefault(address)">Set as Default</a>
 				</div>
 			</div>
 		</div>

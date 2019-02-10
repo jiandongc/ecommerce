@@ -9,7 +9,7 @@
 	<div class = "row">
 		<div class = "col-xs-12 col-md-6">
 			<div id="error" ng-show="error" class="alert alert-danger width-60">{{errorMsg}}</div>
-			<form name="addressForm" role="form" ng-submit="addressForm.$valid && addAddress(address)">
+			<form name="addressForm" role="form" ng-submit="addressForm.$valid && updateAddress(address)">
 				<table class="table">
 					<tr>
 						<td width="40%">
@@ -134,7 +134,7 @@
 					<tr>
 						<td colspan="2">
 							<a href="#!/account/{{customer.id}}/address-book" class="btn btn-primary">Cancel</a>			
-							<button type="submit" class="btn btn-primary">Add address</button>
+							<button type="submit" class="btn btn-primary">Update address</button>
 						</td>
 					</tr>
 				</table>

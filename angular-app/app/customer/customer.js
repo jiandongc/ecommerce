@@ -71,11 +71,39 @@ customer.controller('profileEditCtrl', function($scope, $routeParams, $location,
     };
 });
 
-customer.controller('addressBookCtrl', function($scope, $routeParams, $location, customerFactory){
+customer.controller('addressBookCtrl', function($scope, $routeParams, $route, customerFactory){
     customerFactory.getAddressesById($routeParams.id).then(function(response){
-        console.log(response);
+        $scope.customer = {id : $routeParams.id};
         $scope.addresses = response;
     });
+
+    $scope.setAsDefault = function(address){
+        address.defaultAddress = true;
+        customerFactory.updateAddress($scope.customer.id, address).then(function(data){
+            $scope.error = false;
+            $route.reload();
+        }, function(error){
+            $scope.error = true;
+            $scope.errorMsg = error;
+        })
+    }
+});
+
+customer.controller('editAddressCtrl', function($scope, $routeParams, $location, customerFactory){
+    customerFactory.getAddressById($routeParams.id, $routeParams.addressId).then(function(response){
+        $scope.customer = {id : $routeParams.id};
+        $scope.address = response;
+    });
+
+    $scope.updateAddress = function(address){
+        customerFactory.updateAddress($scope.customer.id, address).then(function(data){
+            $scope.error = false;
+            $location.path("/account/" + $scope.customer.id + "/address-book");
+        }, function(error){
+            $scope.error = true;
+            $scope.errorMsg = error;
+        })
+    }
 });
 
 customer.controller('addAddressCtrl', function($scope, $routeParams, $location, customerFactory){
@@ -133,9 +161,22 @@ customer.factory('customerFactory', function($http, environment){
         });
     };
 
+    var getAddressById = function(customerId, addressId){
+        return $http.get(environment.customerUrl + '/customers/' + customerId + '/addresses/' + addressId).then(function(response){
+            return response.data;
+        });
+    };
+
     var addAddress = function(customerId, address){
         var configs = {headers: {'Content-Type' : 'application/json'}};
         return $http.post(environment.customerUrl + '/customers/' + customerId + '/addresses', address, configs).then(function(response){
+            return response.data;
+        });
+    };
+
+    var updateAddress = function(customerId, address){
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+        return $http.put(environment.customerUrl + '/customers/' + customerId + '/addresses/' + address.id, address, configs).then(function(response){
             return response.data;
         });
     };
@@ -146,7 +187,9 @@ customer.factory('customerFactory', function($http, environment){
         save: save,
         update: update,
         getAddressesById: getAddressesById,
-        addAddress: addAddress
+        getAddressById: getAddressById,
+        addAddress: addAddress,
+        updateAddress: updateAddress
     };
 });
 
@@ -193,6 +236,9 @@ customer.config(
     }).when('/account/:id/add-address', {
         templateUrl: 'customer/add-address.html',
         controller: 'addAddressCtrl'
+    }).when('/account/:id/address/:addressId/edit', {
+        templateUrl: 'customer/edit-address.html',
+        controller: 'editAddressCtrl'
     }).when('/account/:id/orders', {
         templateUrl: 'customer/orders.html',
         controller: 'accountCtrl'

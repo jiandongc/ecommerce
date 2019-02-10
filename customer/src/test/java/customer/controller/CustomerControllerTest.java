@@ -313,6 +313,38 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	}
 
 	@Test
+	public void shouldGetAddressesByAddressId(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+
+		Address address = new Address();
+		address.setTitle("Mr.");
+		address.setName("John");
+		address.setAddressLine1("2 Sally Lane");
+		address.setCity("Manchester");
+		address.setCountry("United Kingdom");
+		address.setPostcode("M1 2DD");
+		address.setDefaultAddress(true);
+		customer.addAddress(address);
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<Address> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/" + address.getId(), HttpMethod.GET, httpEntity, Address.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getName(), is("John"));
+		assertThat(response.getBody().getAddressLine1(), is("2 Sally Lane"));
+		assertThat(response.getBody().getPostcode(), is("M1 2DD"));
+	}
+
+	@Test
 	public void shouldAddNewAddress(){
 		// Given
 		Customer customer = new Customer();

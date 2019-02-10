@@ -68,6 +68,12 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{id}/addresses/{addressId}", method = RequestMethod.GET)
+    public Address findAddressById(@PathVariable long addressId){
+        return customerService.findAddressById(addressId);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}/addresses", method = RequestMethod.POST)
     public Address addAddress(@PathVariable long id, @RequestBody Address address) {
         return customerService.addAddress(id, address);
