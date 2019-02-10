@@ -88,8 +88,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         savedAddress.ifPresent(a -> {
             a.setTitle(address.getTitle());
-            a.setFirstName(address.getFirstName());
-            a.setLastName(address.getLastName());
+            a.setName(address.getName());
             a.setMobile(address.getMobile());
             a.setAddressLine1(address.getAddressLine1());
             a.setAddressLine2(address.getAddressLine2());

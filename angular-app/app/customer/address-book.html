@@ -1,61 +1,48 @@
 <div class="container account">
 	<div class="row">
 		<ul class="nav nav-pills top-nav">
-  			<li role="presentation"><a href="#!/account/{{customerId}}">Profile</a></li>
-  			<li role="presentation"><a href="#!/account/{{customerId}}/orders">My Orders</a></li>
-  			<li role="presentation" class="active"><a href="#">Address Book</a></li>
+			<li role="presentation"><a href="#!/account/{{customerId}}">Profile</a></li>
+			<li role="presentation"><a href="#!/account/{{customerId}}/orders">My Orders</a></li>
+			<li role="presentation" class="active"><a href="#">Address Book</a></li>
 		</ul>
 	</div>
-	<div class = "row">
-		<div class = "col-xs-12 col-md-6">
-				<div class = "row">
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
-					</div>
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
+	<div class="row address">
+		<div class = "col-xs-12 col-md-4 m-b-15" style="height:250px;">
+			<a href="#!/account/{{customerId}}/add-address">
+				<div class="p-15 dashed-border" style="height: 100%; width: 100%;">
+					<div class="add-new">
+						<div class="icon m-b-05"><span class="glyphicon glyphicon-plus fa-2x"></span></div>
+						<div class="text fs-13">Add Address</div>
 					</div>
 				</div>
-				<div class = "row">
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
-					</div>
-					<div class = "col-xs-12 col-md-6 address">
-						<div class = "row">
-							<div class = "col-xs-8 name">Jiandong Chen</div>
-							<div class = "col-xs-4"><a href = "#"><span class="glyphicon glyphicon-pencil"></span></a> <a href = "#"><span class="glyphicon glyphicon-remove"></span></a></div>
-						</div>
-						<div class = "line">22 Brampton House</div>
-						<div class = "line">17 Albatross Way</div>
-						<div class = "line">London, SE16 7EB</div>
-						<div class = "line">United Kingdom</div>
-						<div class = "line">T: 07745324432</div>
-					</div>
+			</a>
+		</div>
+		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: true}" style="height:250px;">
+			<div class="p-15 border" style="height: 100%; width: 100%">
+				<div class = "name">{{address.title}} {{address.name}}</div>
+				<div class = "line">{{address.addressLine1}}</div>
+				<div class = "line">{{address.addressLine2}}</div>
+				<div class = "line">{{address.city}}, {{address.postcode}}</div>
+				<div class = "line">{{address.country}}</div>
+				<div class = "line">T: {{address.mobile}}</div>
+				<div style="position: absolute; bottom: 1.5em;">
+					<a href="#">Edit</a> | <a href="#">Remove</a>
 				</div>
+			</div>
+		</div>
+
+		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: false}" style="height:250px;">
+			<div class="p-15 border" style="height: 100%; width: 100%">
+				<div class = "name">{{address.title}} {{address.name}}</div>
+				<div class = "line">{{address.addressLine1}}</div>
+				<div class = "line">{{address.addressLine2}}</div>
+				<div class = "line">{{address.city}}, {{address.postcode}}</div>
+				<div class = "line">{{address.country}}</div>
+				<div class = "line">T: {{address.mobile}}</div>
+				<div style="position: absolute; bottom: 1.5em;">
+					<a href="#">Edit</a> | <a href="#">Remove</a> | <a href="#">Set as Default</a>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

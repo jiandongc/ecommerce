@@ -13,7 +13,7 @@
 				<table class="table">
 					<tr>
 						<td>
-							<div class="p-t-05">Title :</div>
+							<div class="p-t-05 required-field">Title </div>
 						</td>
 						<td>
 							<select class="form-control" id="customerTitle" ng-model="customer.title">
@@ -29,11 +29,11 @@
 					</tr>
 					<tr>
 						<td>
-							<div class="p-t-05">Name :</div>
+							<div class="p-t-05 required-field">Name </div>
 						</td>
 						<td>
 							<div ng-class="{'has-error': userform.name.$invalid && (userform.name.$touched || userform.$submitted) }">
-								<input type="text" id="name" name="name" class="form-control" ng-model="customer.name" placeholder="Enter name" required>
+								<input type="text" id="name" name="name" class="form-control" ng-model="customer.name" required>
 								<div id="nameMsg" ng-show="userform.name.$touched || userform.$submitted">
 									<p ng-show="userform.name.$error.required" class="help-block">
 										Username is missing. Please check and try again.
@@ -44,11 +44,11 @@
 					</tr>
 					<tr>
 						<td>
-							<div class="p-t-05">Email :</div>
+							<div class="p-t-05 required-field">Email </div>
 						</td>
 						<td>
 							<div ng-class="{'has-error': userform.email.$invalid && (userform.email.$touched || userform.$submitted) }">
-								<input type="text" id="email" name="email" class="form-control" ng-model="customer.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+								<input type="text" id="email" name="email" class="form-control" ng-model="customer.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required>
 								<div id="emailMsg" ng-show="userform.email.$touched || userform.$submitted">
 									<p ng-show="userform.email.$error.required" class="help-block">
 										Email is missing. Please check and try again.
@@ -63,11 +63,11 @@
 					</tr>
 					<tr>
 						<td>
-							<div class="p-t-05">Mobile :</div>
+							<div class="p-t-05">Mobile</div>
 						</td>
 						<td>
 							<div ng-class="{'has-error': userform.mobile.$invalid && (userform.mobile.$touched || userform.$submitted) }">
-								<input type="text" id="mobile" name="mobile" class="form-control" ng-model="customer.mobile" ng-pattern="/^(?:0|\+?44)(?:\d\s?){9,10}$/" placeholder="Enter mobile">
+								<input type="text" id="mobile" name="mobile" class="form-control" ng-model="customer.mobile" ng-pattern="/^(?:0|\+?44)(?:\d\s?){9,10}$/">
 								<div id="mobileMsg" ng-show="userform.mobile.$touched || userform.$submitted">
 									<p ng-show="userform.mobile.$error.pattern" class="help-block">
 										Mobile is invalid. Please enter a valid UK number.

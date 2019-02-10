@@ -308,11 +308,32 @@ html, body {
     font-weight: 600;
 }
 
-.address {
-	font-family: 'Lato', sans-serif;
-  font-size: 1.1em;
-	letter-spacing: 0.01em;
-  color: #505050;
+.address .border {
+  border: 1px solid #C0C0C0;
+  border-radius: 4px;
+}
+
+.address .dashed-border {
+  border: 1px dashed #C0C0C0;
+  border-radius: 4px;
+}
+
+.address .add-new {
+  position: absolute; 
+  top: 50%; 
+  left: 50%; 
+  transform: translate(-50%, -50%);
+} 
+
+.address .add-new .icon {
+  text-align: center;
+  color: #E5E8E8;
+}
+
+.address .add-new .text {
+  text-align: center;
+  font-weight: 700;
+  color: #767676;
 }
 
 .address-selected {
@@ -665,4 +686,9 @@ ul.scrollable-menu .btn-remove {
 
 .border {
   border-style: solid;
+}
+
+.required-field::after {
+    content: "*";
+    color: red;
 }

@@ -276,8 +276,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		Address addressOne = new Address();
 		addressOne.setTitle("Mr.");
-		addressOne.setFirstName("John");
-		addressOne.setLastName("O'Shea");
+		addressOne.setName("John");
 		addressOne.setAddressLine1("2 Sally Lane");
 		addressOne.setCity("Manchester");
 		addressOne.setCountry("United Kingdom");
@@ -287,8 +286,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		Address addressTwo = new Address();
 		addressTwo.setTitle("Mr.");
-		addressTwo.setFirstName("John");
-		addressTwo.setLastName("O'Shea");
+		addressTwo.setName("John");
 		addressTwo.setAddressLine1("17 London Road");
 		addressTwo.setCity("London");
 		addressTwo.setCountry("United Kingdom");
@@ -306,10 +304,10 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
-		assertThat(response.getBody()[0].getFirstName(), is("John"));
+		assertThat(response.getBody()[0].getName(), is("John"));
 		assertThat(response.getBody()[0].getAddressLine1(), is("2 Sally Lane"));
 		assertThat(response.getBody()[0].getPostcode(), is("M1 2DD"));
-		assertThat(response.getBody()[1].getFirstName(), is("John"));
+		assertThat(response.getBody()[1].getName(), is("John"));
 		assertThat(response.getBody()[1].getAddressLine1(), is("17 London Road"));
 		assertThat(response.getBody()[1].getPostcode(), is("BR1 7DE"));
 	}
@@ -324,8 +322,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		Address addressOne = new Address();
 		addressOne.setTitle("Mr.");
-		addressOne.setFirstName("John");
-		addressOne.setLastName("O'Shea");
+		addressOne.setName("John");
 		addressOne.setAddressLine1("2 Sally Lane");
 		addressOne.setCity("Manchester");
 		addressOne.setCountry("United Kingdom");
@@ -339,8 +336,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setUserToken();
 		String addressJson = "{" +
 				"\"title\":\"Mr.\"," +
-				"\"firstName\":\"John\"," +
-				"\"lastName\":\"O'Shea\"," +
+				"\"name\":\"John\"," +
 				"\"mobile\":null," +
 				"\"addressLine1\":\"17 London Road\"," +
 				"\"addressLine2\":null," +
@@ -365,8 +361,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When (add another new address as non default)
 		addressJson = "{" +
 				"\"title\":\"Mr.\"," +
-				"\"firstName\":\"John\"," +
-				"\"lastName\":\"O'Shea\"," +
+				"\"name\":\"John\"," +
 				"\"mobile\":null," +
 				"\"addressLine1\":\"17 London Road\"," +
 				"\"addressLine2\":null," +
@@ -401,8 +396,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		Address addressOne = new Address();
 		addressOne.setTitle("Mr.");
-		addressOne.setFirstName("John");
-		addressOne.setLastName("O'Shea");
+		addressOne.setName("John");
 		addressOne.setAddressLine1("2 Sally Lane");
 		addressOne.setCity("Manchester");
 		addressOne.setCountry("United Kingdom");
@@ -412,8 +406,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		Address addressTwo = new Address();
 		addressTwo.setTitle("Mr.");
-		addressTwo.setFirstName("John");
-		addressTwo.setLastName("O'Shea");
+		addressTwo.setName("John");
 		addressTwo.setAddressLine1("17 London Road");
 		addressTwo.setCity("London");
 		addressTwo.setCountry("United Kingdom");
@@ -427,8 +420,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setUserToken();
 		String addressJson = "{" +
 				"\"title\":\"Mr.\"," +
-				"\"firstName\":\"John_NEW\"," +
-				"\"lastName\":\"O'Shea_NEW\"," +
+				"\"name\":\"John_NEW\"," +
 				"\"mobile\":\"00000000\"," +
 				"\"addressLine1\":\"17 London Road_NEW\"," +
 				"\"addressLine2\":\"17 London Road_NEW\"," +
@@ -447,8 +439,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(addressOne.isDefaultAddress(), is(false));
 		addressTwo = addressRepository.findOne(addressTwo.getId());
 		assertThat(addressTwo.getTitle(), is("Mr."));
-		assertThat(addressTwo.getFirstName(), is("John_NEW"));
-		assertThat(addressTwo.getLastName(), is("O'Shea_NEW"));
+		assertThat(addressTwo.getName(), is("John_NEW"));
 		assertThat(addressTwo.getMobile(), is("00000000"));
 		assertThat(addressTwo.getAddressLine1(), is("17 London Road_NEW"));
 		assertThat(addressTwo.getAddressLine2(), is("17 London Road_NEW"));
@@ -473,8 +464,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setUserToken();
 		String addressJson = "{" +
 				"\"title\":\"Mr.\"," +
-				"\"firstName\":\"John_NEW\"," +
-				"\"lastName\":\"O'Shea_NEW\"," +
+				"\"name\":\"John_NEW\"," +
 				"\"mobile\":\"00000000\"," +
 				"\"addressLine1\":\"17 London Road_NEW\"," +
 				"\"addressLine2\":\"17 London Road_NEW\"," +

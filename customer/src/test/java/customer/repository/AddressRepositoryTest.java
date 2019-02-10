@@ -28,8 +28,7 @@ public class AddressRepositoryTest extends AbstractRepositoryTest {
 
         Address addressOne = new Address();
         addressOne.setTitle("Mr.");
-        addressOne.setFirstName("John");
-        addressOne.setLastName("O'Shea");
+        addressOne.setName("John");
         addressOne.setAddressLine1("2 Sally Lane");
         addressOne.setCity("Manchester");
         addressOne.setCountry("United Kingdom");
@@ -39,8 +38,7 @@ public class AddressRepositoryTest extends AbstractRepositoryTest {
 
         Address addressTwo = new Address();
         addressTwo.setTitle("Mr.");
-        addressTwo.setFirstName("John");
-        addressTwo.setLastName("O'Shea");
+        addressTwo.setName("John");
         addressTwo.setAddressLine1("17 London Road");
         addressTwo.setCity("London");
         addressTwo.setCountry("United Kingdom");
