@@ -31,7 +31,7 @@
 			</div>
 		</div>
 
-		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: false}" style="height:250px;">
+		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: false} | orderBy: '-id'" style="height:250px;">
 			<div class="p-15 border" style="height: 100%; width: 100%">
 				<div class = "name">{{address.title}} {{address.name}}</div>
 				<div class = "line">{{address.addressLine1}}</div>
