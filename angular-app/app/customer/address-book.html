@@ -27,7 +27,7 @@
 				<div class = "line">T: {{address.mobile}}</div>
 				<div style="position: absolute; bottom: 1.5em;">
 					<a href="#!/account/{{customerId}}/address/{{address.id}}/edit">Edit</a> | 
-					<a href="#">Remove</a>
+					<a href ng-click="removeAddress(address)">Remove</a>
 				</div>
 			</div>
 		</div>
@@ -42,7 +42,7 @@
 				<div class = "line">T: {{address.mobile}}</div>
 				<div style="position: absolute; bottom: 1.5em;">
 					<a href="#!/account/{{customerId}}/address/{{address.id}}/edit">Edit</a> | 
-					<a href="#">Remove</a> | 
+					<a href ng-click="removeAddress(address)">Remove</a> | 
 					<a href ng-click="setAsDefault(address)">Set as Default</a>
 				</div>
 			</div>

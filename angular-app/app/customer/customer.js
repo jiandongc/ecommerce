@@ -86,6 +86,16 @@ customer.controller('addressBookCtrl', function($scope, $routeParams, $route, cu
             $scope.error = true;
             $scope.errorMsg = error;
         })
+    };
+
+    $scope.removeAddress = function(address){
+        customerFactory.removeAddress($scope.customer.id, address).then(function(data){
+            $scope.error = false;
+            $route.reload();
+        }, function(error){
+            $scope.error = true;
+            $scope.errorMsg = error;
+        })
     }
 });
 
@@ -181,6 +191,12 @@ customer.factory('customerFactory', function($http, environment){
         });
     };
 
+    var removeAddress = function(customerId, address){
+        return $http.delete(environment.customerUrl + '/customers/' + customerId + '/addresses/' + address.id).then(function(response){
+            return response.data;
+        });
+    };
+
     return {
         getCustomerByEmail: getCustomerByEmail,
         getCustomerById: getCustomerById,
@@ -189,7 +205,8 @@ customer.factory('customerFactory', function($http, environment){
         getAddressesById: getAddressesById,
         getAddressById: getAddressById,
         addAddress: addAddress,
-        updateAddress: updateAddress
+        updateAddress: updateAddress,
+        removeAddress: removeAddress
     };
 });
 
