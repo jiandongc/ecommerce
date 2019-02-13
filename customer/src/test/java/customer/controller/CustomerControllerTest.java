@@ -512,4 +512,52 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
 	}
+
+	@Test
+	public void shouldRemoveAddress(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+
+		Address address = new Address();
+		address.setTitle("Mr.");
+		address.setName("John");
+		address.setAddressLine1("2 Sally Lane");
+		address.setCity("Manchester");
+		address.setCountry("United Kingdom");
+		address.setPostcode("M1 2DD");
+		address.setDefaultAddress(true);
+		customer.addAddress(address);
+
+		customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/addresses/" + address.getId(), HttpMethod.DELETE, httpEntity, Object.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(addressRepository.findOne(address.getId()), is(nullValue()));
+	}
+
+	@Test
+	public void shouldReturn404IfTheAddressToRemoveIsNotFound(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+		customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/addresses/12345", HttpMethod.DELETE, httpEntity, Object.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+	}
 }

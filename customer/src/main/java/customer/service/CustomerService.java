@@ -14,4 +14,5 @@ public interface CustomerService {
 	Address findAddressById(Long addressId);
 	Address addAddress(Long customerId, Address address);
 	Address updateAddress(Long customerId, Long addressId, Address address);
+	void removeAddress(Long addressId);
 }

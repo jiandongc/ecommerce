@@ -114,4 +114,10 @@ public class CustomerServiceImpl implements CustomerService {
         return savedAddress.get();
     }
 
+    @Override
+    @Transactional
+    public void removeAddress(Long addressId) {
+        addressRepository.delete(addressId);
+    }
+
 }

@@ -155,4 +155,12 @@ public class CustomerServiceImplTest {
 		assertThat(customer.getAddresses().get(1).isDefaultAddress(), is(true));
 	}
 
+	@Test
+	public void shouldRemoveAddress(){
+		// When
+		customerService.removeAddress(1L);
+		// Then
+		verify(addressRepository).delete(1L);
+	}
+
 }

@@ -89,4 +89,17 @@ public class CustomerController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{id}/addresses/{addressId}", method = RequestMethod.DELETE)
+    public ResponseEntity removeAddress(@PathVariable long addressId){
+        final Address address = customerService.findAddressById(addressId);
+        if(address != null){
+            customerService.removeAddress(addressId);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
 }
