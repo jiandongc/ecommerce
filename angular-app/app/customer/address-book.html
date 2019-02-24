@@ -19,12 +19,12 @@
 		</div>
 		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: true}" style="height:250px;">
 			<div class="p-15 border" style="height: 100%; width: 100%">
-				<div class = "name">{{address.title}} {{address.name}}</div>
-				<div class = "line">{{address.addressLine1}}</div>
-				<div class = "line">{{address.addressLine2}}</div>
-				<div class = "line">{{address.city}}, {{address.postcode}}</div>
-				<div class = "line">{{address.country}}</div>
-				<div class = "line">T: {{address.mobile}}</div>
+				<div class="name">{{address.title}} {{address.name}}</div>
+				<div>{{address.addressLine1}}</div>
+				<div>{{address.addressLine2}}</div>
+				<div>{{address.city}}, {{address.postcode}}</div>
+				<div>{{address.country}}</div>
+				<div>T: {{address.mobile}}</div>
 				<div style="position: absolute; bottom: 1.5em;">
 					<a href="#!/account/{{customerId}}/address/{{address.id}}/edit">Edit</a> | 
 					<a href ng-click="removeAddress(address)">Remove</a>
@@ -34,12 +34,12 @@
 
 		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: false} | orderBy: '-id'" style="height:250px;">
 			<div class="p-15 border" style="height: 100%; width: 100%">
-				<div class = "name">{{address.title}} {{address.name}}</div>
-				<div class = "line">{{address.addressLine1}}</div>
-				<div class = "line">{{address.addressLine2}}</div>
-				<div class = "line">{{address.city}}, {{address.postcode}}</div>
-				<div class = "line">{{address.country}}</div>
-				<div class = "line">T: {{address.mobile}}</div>
+				<div class="name">{{address.title}} {{address.name}}</div>
+				<div>{{address.addressLine1}}</div>
+				<div>{{address.addressLine2}}</div>
+				<div>{{address.city}}, {{address.postcode}}</div>
+				<div>{{address.country}}</div>
+				<div>T: {{address.mobile}}</div>
 				<div style="position: absolute; bottom: 1.5em;">
 					<a href="#!/account/{{customerId}}/address/{{address.id}}/edit">Edit</a> | 
 					<a href ng-click="removeAddress(address)">Remove</a> | 

@@ -1,43 +1,16 @@
 var checkout = angular.module('checkout',[]);
 
-checkout.controller('shippingCtrl', function($scope, $location) {
-	$scope.addresses = [
-		{
-			id : 1,
-			fullname : "Jiandong Chen",
-			address1 : "22 Brampton House",
-			address2 : "17 Albatross Way",
-			city : "London",
-			postcode : "SE16 7EB",
-			country : "United Kingdom",
-			phone : "07745324432",
-			primary : false
-		}, {
-			id : 2,
-			fullname : "Yujie Sun",
-			address1 : "22 Brampton House, 17 Albatross Way",
-			city : "London",
-			postcode : "SE16 7EB",
-			country : "United Kingdom",
-			phone : "07745324432",
-			primary : true
-		}, {
-			id : 3,
-			fullname : "Joe Smith",
-			address1 : "1 St Mary at Hill",
-			city : "London",
-			postcode : "EC3M 1BU",
-			country : "United Kingdom",
-			phone : "02072610002",
-			primary : false
-		}
-	];
+checkout.controller('shippingCtrl', function($scope, $location, $localstorage, customerFactory) {
+	var customerId = $localstorage.get("customer_id");
 
-	angular.forEach($scope.addresses, function(address, index){
-      if(address.primary){
-		$scope.selected=index;      		
-		$scope.address=address;
-      }
+	customerFactory.getAddressesById(customerId).then(function(response){
+        $scope.addresses = response;
+		$scope.selected = 0;
+        angular.forEach($scope.addresses, function(address, index){
+      		if(address.defaultAddress){   		
+				$scope.address = address;
+      		}
+    	});
     });
 
 	$scope.select=function(index, address){

@@ -1,12 +1,13 @@
 <div class="container cart">
-	<div class="row">
-		<div class="title col-md-10">Bag {{totalQuantity}} itme(s) : {{itemsSubTotal | currency:'£'}}</div>
-		<div class="title col-md-2">
-			<button type="button" class="btn btn-md pull-right btn-checkout" ng-click="checkout()">Checkout</button>
-		</div>
-	</div>
-
      <div class="row">
+          <div class = "col-xs-12 m-b-20">
+               <div class="pull-right">
+                    <div class="title m-b-05">
+                         Bag {{totalQuantity}} itme(s): <span style="color: #B12704">{{itemsSubTotal | currency:'£'}}</span>
+                    </div>
+                    <button type="button" class="btn btn-md btn-checkout pull-right" ng-click="checkout()">Proceed to Checkout</button>
+               </div>
+          </div>
           <div ng-repeat="cartItem in cartItems">
                <div class = "col-xs-12 col-sm-6">
                     <div class="row"> 
@@ -31,17 +32,17 @@
                               </div>
                               <div class="row m-b-02">
                                    <div class="col-xs-12">
-                                        <span style="color:grey" class="fw-light">Price (each):&nbsp&nbsp</span>{{cartItem.price | currency:'£'}}
+                                        <span class="fw-light">Price (each):&nbsp&nbsp</span>{{cartItem.price | currency:'£'}}
                                    </div>
                               </div>
                               <div class="row m-b-02">
                                    <div class="col-xs-12">
-                                        <span style="color:grey" class="fw-light">Qty:&nbsp&nbsp</span><select ng-model="cartItem.quantity" ng-options="n for n in [1,2,3,4,5,6,7,8,9,10]" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 1000, blur: 500}}"></select>
+                                        <span class="fw-light">Quantity:&nbsp&nbsp</span><select ng-model="cartItem.quantity" ng-options="n for n in [1,2,3,4,5,6,7,8,9,10]" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 1000, blur: 500}}"></select>
                                    </div>
                               </div>
                               <div class="row m-b-05">
                                    <div class="col-xs-12">
-                                        <span style="color:grey" class="fw-light">Sub-total:&nbsp&nbsp</span>{{cartItem.price * cartItem.quantity | currency:'£'}}
+                                        <span class="fw-light">Sub-total:&nbsp&nbsp</span>{{cartItem.price * cartItem.quantity | currency:'£'}}
                                    </div>
                               </div>
                               <div class="row">
@@ -112,7 +113,7 @@
           </div>
           <div class="title col-md-8"></div>
           <div class="title col-md-2">
-               <button type="button" class="btn btn-checkout" ng-click="checkout()">Checkout</button>
+               <button type="button" class="btn btn-checkout" ng-click="checkout()">Proceed to Checkout</button>
           </div>
      </div>
 </div>
