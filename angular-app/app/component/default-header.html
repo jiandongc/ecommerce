@@ -1,0 +1,65 @@
+<div class="header navbar navbar-default navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<div class="p-t-05 p-b-05" style="text-align: center;">
+				<a href="#" class = "p-t-05 p-b-05" style="text-align: center;">
+					<img src = "/images/isaac_logo.png" style="max-height: 33.22px;">
+				</a>
+			</div>				
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target= "#navHeaderCollapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+		</div>
+		<div class="collpase navbar-collapse" id="navHeaderCollapse">
+			<ul class="nav navbar-nav navbar-left">
+				<li><a href="#!/category/msg">美食館</a></li>
+				<li><a href="#!/category/mzg">美妝館</a></li>
+				<li><a href="#!/home">特賣場</a></li>
+			</ul>				
+			<ul class="nav navbar-nav navbar-right">
+				<li ng-show="currentUser" class="navbar-text">{{currentUser}}</li>
+				<li ng-show="currentUser"><a href="#!/account/{{customerId}}"><span class="glyphicon glyphicon-user"></span></a></li>
+				<li ng-hide="currentUser"><a id="login" href="#!/login"><span class="glyphicon glyphicon-user"></span></a></li>
+				<li class="dropdown">
+					<a href="#!/cart" class="dropdown-toggle">
+						<span class="glyphicon glyphicon-shopping-cart"></span>
+						<span ng-show="cartUid && totalQuantity"> 
+							{{totalQuantity}} items {{itemsSubTotal | currency:'£'}} <span class="caret"></span>
+						</span>
+					</a>
+					<ul class="dropdown-menu scrollable-menu">
+						<div ng-repeat="cartItem in cartItems | orderBy:'productId'">
+							<li>
+								<div class="row">
+									<div class="col-md-4">
+										<a href="#!/products/{{cartItem.code}}">
+											<img class="img-responsive p-l-05" ng-src="{{cartItem.thumbnail}}">
+										</a>
+									</div>
+									<div class = "col-md-7">
+										<a href="#!/products/{{cartItem.code}}">
+											<div class="productName">{{cartItem.name}}</div>
+										</a>
+										<div class="productDescription">{{cartItem.description}}</div>
+										<div class="productPrice">{{cartItem.price | currency:'£'}}</div>
+										<div class="productQty">Qty {{cartItem.quantity}}</div>
+									</div>
+									<div class = "col-md-1">
+										<a href ng-click="removeItem(cartItem)">
+											<span class="glyphicon glyphicon-remove pull-right btn-remove"></span>
+										</a>
+									</div>
+								</div>
+							</li>
+							<li class='divider'></li>
+						</div>										
+						<li><a href='#!/cart' class='btn btn-view'>View Basket</a></li>
+					</ul>
+				</li>
+				<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
+			</ul>				
+		</div>
+	</div>
+</div>
