@@ -1,90 +1,30 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta content="width=device-width, initial-scale=1.0" name="viewport">
-		<meta charset="UTF-8">
-		<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-		<!-- <link href="dist/cawaii.css" rel="stylesheet" type="text/css"/> -->
-		<link href="app.css" rel="stylesheet" type="text/css"/>
-		<link href="bower_components/animate.css/animate.css" rel="stylesheet" type="text/css"/>
-		<link href="bower_components/flexslider/flexslider.css" rel="stylesheet" type="text/css"/>
-		<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
-		<title>卡哇伊-你的英倫伴侶</title>
-		<script src="bower_components/jquery/dist/jquery.min.js"></script>
-		<script src="bower_components/flexslider/jquery.flexslider-min.js"></script>
-		<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-		<script src="bower_components/angular/angular.min.js"></script>
-		<script src="bower_components/angular-route/angular-route.min.js"></script>
-		<script src="bower_components/angular-resource/angular-resource.min.js"></script>
-		<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
-		<script src='bower_components/checklist-model/checklist-model.js'></script>
-		<script src="https://use.fontawesome.com/d44b252fcd.js"></script>
-		<script src="dist/cawaii.js"></script>
-	</head>
+<head>
+	<meta content="width=device-width, initial-scale=1.0" name="viewport">
+	<meta charset="UTF-8">
+	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+	<!-- <link href="dist/cawaii.css" rel="stylesheet" type="text/css"/> -->
+	<link href="app.css" rel="stylesheet" type="text/css"/>
+	<link href="bower_components/animate.css/animate.css" rel="stylesheet" type="text/css"/>
+	<link href="bower_components/flexslider/flexslider.css" rel="stylesheet" type="text/css"/>
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+	<title>卡哇伊-你的英倫伴侶</title>
+	<script src="bower_components/jquery/dist/jquery.min.js"></script>
+	<script src="bower_components/flexslider/jquery.flexslider-min.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="bower_components/angular/angular.min.js"></script>
+	<script src="bower_components/angular-route/angular-route.min.js"></script>
+	<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+	<script src='bower_components/checklist-model/checklist-model.js'></script>
+	<script src="https://use.fontawesome.com/d44b252fcd.js"></script>
+	<script src="dist/cawaii.js"></script>
+</head>
 
-	<body>
+<body>
 	<div ng-app="store" ng-controller="appCtrl" id="store">
-		<div class="header navbar navbar-default navbar-fixed-top">
-			<div class="container-fluid">
-				<div class="navbar-header">					
-					<a href="#" class = "navbar-brand"><img src = "/images/logo5.png" style="width:78px"></a>
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target= "#navHeaderCollapse">
-		        		<span class="icon-bar"></span>
-    		    		<span class="icon-bar"></span>
-    		    		<span class="icon-bar"></span>
-					</button>
-				</div>
-				<div class="collpase navbar-collapse" id="navHeaderCollapse">
-					<ul class="nav navbar-nav navbar-left" ng-show="isNotCheckOutPage()">
-						<li><a href="#!/category/msg">美食館</a></li>
-						<li><a href="#!/category/mzg">美妝館</a></li>
-						<li><a href="#!/home">特賣場</a></li>
-					</ul>				
-					<ul class="nav navbar-nav navbar-right">
-						<li ng-show="currentUser" class="navbar-text">{{currentUser}}</li>
-						<li ng-show="currentUser"><a href="#!/account/{{customerId}}"><span class="glyphicon glyphicon-user"></span></a></li>
-						<li ng-hide="currentUser"><a id="login" href="#!/login"><span class="glyphicon glyphicon-user"></span></a></li>
-						<li class="dropdown">
-							<a href="#!/cart" class="dropdown-toggle">
-								<span class="glyphicon glyphicon-shopping-cart"></span>
-								<span ng-show="cartUid && totalQuantity"> 
-									{{totalQuantity}} items {{itemsSubTotal | currency:'£'}} <span class="caret"></span>
-								</span>
-							</a>
-							<ul class="dropdown-menu scrollable-menu">
-								<div ng-repeat="cartItem in cartItems | orderBy:'productId'">
-                                	<li>
-                						<div class="row">
-											<div class="col-md-4">
-												<a href="#!/products/{{cartItem.code}}">
-													<img class="img-responsive p-l-05" ng-src="{{cartItem.thumbnail}}">
-												</a>
-											</div>
-											<div class = "col-md-7">
-												<a href="#!/products/{{cartItem.code}}">
-													<div class="productName">{{cartItem.name}}</div>
-												</a>
-												<div class="productDescription">{{cartItem.description}}</div>
-												<div class="productPrice">{{cartItem.price | currency:'£'}}</div>
-												<div class="productQty">Qty {{cartItem.quantity}}</div>
-											</div>
-											<div class = "col-md-1">
-												<a href ng-click="removeItem(cartItem)">
-													<span class="glyphicon glyphicon-remove pull-right btn-remove"></span>
-												</a>
-											</div>
-										</div>
-									</li>
-									<li class='divider'></li>
-								</div>										
-                				<li><a href='#!/cart' class='btn btn-view'>View Basket</a></li>
-              				</ul>
-						</li>
-						<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>
-					</ul>				
-				</div>
-			</div>
-		</div>
+        <div ng-include src="'component/' + template.header"></div>
 
 		<div class="container-fluid">
 			<div class="row">
@@ -95,43 +35,9 @@
 				<div class="col-lg-2 hidden-lg-down"></div>
 			</div>
 		</div>
-		
 
-		<div class = "footer" ng-show="isNotCheckOutPage()">
-			<div class = "footerContent section">
-  				<div class="footerColumn">
-        			<h3>Products</h3>
-        			<ul>
-						<li>New in store</li>
-						<li>Current offers</li>
-					</ul>
-    			</div>     
-    			<div class="footerColumn">
-	        		<h3>Questions and Contact</h3>
-        			<ul>
-						<li>Customer service</li>
-						<li>Terms</li>
-						<li>Faq</li>
-						<li>Contact</li>
-					</ul>
-    			</div>  
-    			<div class="footerColumn">
-        			<h3>Connect with us</h3>
-        			<ul>
-						<li>Facebook</li>
-						<li>Twitter</li>
-						<li>Blog</li>
-						<li>Newsletter</li>
-					</ul>
-    			</div>  
-    			<div class="footerColumn">
-        			<h3>About us</h3>
-        			<ul>
-						<li>About Albert & Lynette</li>
-					</ul>
-    			</div>   
-			</div>
-		</div>
+		<div ng-include src="'component/' + template.footer"></div>
+		
 	</div>
-	</body>
+</body>
 </html>

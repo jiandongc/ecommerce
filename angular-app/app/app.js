@@ -12,6 +12,9 @@ var app = angular.module('store', [
 ]);
 
 app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, authService) {
+
+    $scope.template = {header: "default-header.html", footer: "default-footer.html"};
+
 	$scope.$watch(function() { return $localstorage.get('current_user', undefined);}, function(newValue, oldValue) {
 		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
 			$scope.currentUser = newValue;
@@ -62,6 +65,11 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		authService.assignGuestToken();	
 	})
 
+	$scope.$on('$routeChangeStart', function($event, next, current) { 
+   		$scope.template.header = 'default-header.html';
+		$scope.template.footer = 'default-footer.html';
+ 	});
+
 	$scope.logout = function() {
 		$rootScope.$broadcast('reset');
 		$location.path("#");
@@ -71,14 +79,6 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		shoppingCartFactory.deleteItemFromShoppingCart($scope.cartUid, cartItem.sku).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);
 		});
-	}
-
-	$scope.isNotCheckOutPage = function(){
-		if($location.path().indexOf('checkout') > -1){
-			return false;	
-		} else {
-			return true;	
-		}
 	}
 });
 

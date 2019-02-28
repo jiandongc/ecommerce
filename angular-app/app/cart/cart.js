@@ -1,6 +1,10 @@
 var cart = angular.module('cart',[]);
 
 cart.controller('cartCtrl', function($scope, $rootScope, authService, shoppingCartFactory, $localstorage, $timeout, $location) {
+
+  $scope.template.header = 'cart-header.html';
+  $scope.template.footer = 'default-footer.html';
+
   authService.assignGuestToken();
 
   $scope.updateItem = function(cartItem){

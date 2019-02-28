@@ -502,6 +502,13 @@ ul.scrollable-menu .btn-remove {
 }
 
 /* checkout page */
+
+#branding-container {
+    font-size: 12px;
+    font-weight: 300;
+    color: #000 !important;
+}
+
 .checkout {
     padding-top: 8px;
     padding-bottom: 8px;

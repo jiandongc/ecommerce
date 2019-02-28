@@ -1,6 +1,10 @@
 var checkout = angular.module('checkout',[]);
 
 checkout.controller('shippingCtrl', function($scope, $location, $localstorage, customerFactory) {
+
+	$scope.template.header = 'checkout-header.html';
+	$scope.template.footer = 'default-footer.html';
+
 	var customerId = $localstorage.get("customer_id");
 
 	customerFactory.getAddressesById(customerId).then(function(response){
