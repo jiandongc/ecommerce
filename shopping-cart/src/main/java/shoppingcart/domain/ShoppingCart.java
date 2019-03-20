@@ -1,9 +1,6 @@
 package shoppingcart.domain;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public final class ShoppingCart {
 
@@ -12,6 +9,8 @@ public final class ShoppingCart {
     private Long customerId;
     private Date creationTime;
     private List<ShoppingCartItem> shoppingCartItems;
+    private Address billingAddress;
+    private Address shippingAddress;
 
     private ShoppingCart(long id, UUID cartUid, Long customerId, Date creationTime) {
         this.id = id;
@@ -61,26 +60,38 @@ public final class ShoppingCart {
         this.shoppingCartItems = shoppingCartItems;
     }
 
+    public Address getBillingAddress() {
+        return billingAddress;
+    }
+
+    public void setBillingAddress(Address billingAddress) {
+        this.billingAddress = billingAddress;
+    }
+
+    public Address getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public void setShippingAddress(Address shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         ShoppingCart that = (ShoppingCart) o;
-
-        if (cartUid != null ? !cartUid.equals(that.cartUid) : that.cartUid != null) return false;
-        if (customerId != null ? !customerId.equals(that.customerId) : that.customerId != null) return false;
-        if (creationTime != null ? !creationTime.equals(that.creationTime) : that.creationTime != null) return false;
-        return shoppingCartItems != null ? shoppingCartItems.equals(that.shoppingCartItems) : that.shoppingCartItems == null;
+        return Objects.equals(cartUid, that.cartUid) &&
+                Objects.equals(customerId, that.customerId) &&
+                Objects.equals(creationTime, that.creationTime) &&
+                Objects.equals(shoppingCartItems, that.shoppingCartItems) &&
+                Objects.equals(billingAddress, that.billingAddress) &&
+                Objects.equals(shippingAddress, that.shippingAddress);
     }
 
     @Override
     public int hashCode() {
-        int result = cartUid != null ? cartUid.hashCode() : 0;
-        result = 31 * result + (customerId != null ? customerId.hashCode() : 0);
-        result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
-        result = 31 * result + (shoppingCartItems != null ? shoppingCartItems.hashCode() : 0);
-        return result;
+        return Objects.hash(cartUid, customerId, creationTime, shoppingCartItems, billingAddress, shippingAddress);
     }
 
     public static class ShoppingCartBuilder {

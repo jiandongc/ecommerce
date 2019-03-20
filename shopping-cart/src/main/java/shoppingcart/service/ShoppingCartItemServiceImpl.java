@@ -28,7 +28,7 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
 
     @Override
     @Transactional
-    public ShoppingCart createCartItem(UUID cartUid, ShoppingCartItem cartItem) {
+    public void createCartItem(UUID cartUid, ShoppingCartItem cartItem) {
         final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
         final Optional<ShoppingCartItem> cartItemOptional = cartItemRepository.findByCartIdAndSku(cart.getId(), cartItem.getSku());
         if(cartItemOptional.isPresent()){
@@ -36,21 +36,16 @@ public class ShoppingCartItemServiceImpl implements ShoppingCartItemService {
         } else {
             cartItemRepository.save(cart.getId(), cartItem);
         }
-
-        cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId()));
-        return cart;
     }
 
     @Override
     @Transactional
-    public ShoppingCart deleteCartItem(UUID cartUid, String sku) {
-        final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException(format("CartUId %s not found", cartUid)));
-        cartItemRepository.delete(cart.getId(), sku);
-        cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId()));
-        return cart;
+    public void deleteCartItem(UUID cartUid, String sku) {
+        cartRepository.findByUUID(cartUid).ifPresent(cart -> cartItemRepository.delete(cart.getId(), sku));
     }
 
     @Override
+    @Transactional
     public void updateQuantity(UUID cartUid, String sku, Integer quantity) {
         cartRepository.findByUUID(cartUid).ifPresent(cart -> cartItemRepository.updateQuantity(cart.getId(), sku, quantity));
     }

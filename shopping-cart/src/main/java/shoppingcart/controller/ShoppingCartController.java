@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shoppingcart.data.CartData;
+import shoppingcart.domain.Address;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.CartDataMapper;
 import shoppingcart.service.ShoppingCartService;
@@ -36,33 +37,43 @@ public class ShoppingCartController {
     @RequestMapping(method = POST, produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<String> createShoppingCart(@RequestBody(required = false) Long customerId){
         if(customerId != null){
-            return new ResponseEntity<String>(shoppingCartService.createShoppingCartForUser(customerId).toString(), CREATED);
+            return new ResponseEntity<>(shoppingCartService.createShoppingCartForUser(customerId).toString(), CREATED);
         } else {
-            return new ResponseEntity<String>(shoppingCartService.createShoppingCartForGuest().toString(), CREATED);
+            return new ResponseEntity<>(shoppingCartService.createShoppingCartForGuest().toString(), CREATED);
         }
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}", method = GET)
     public ResponseEntity<CartData> getShoppingCartByUid(@PathVariable UUID cartUid){
-        final Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByUid(cartUid);
-        return shoppingCart.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
+        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(method = GET)
     public ResponseEntity<CartData> getShoppingCartByCustomerId(@RequestParam(value = "customerId") Long customerId){
-        final Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByCustomerId(customerId);
-        return shoppingCart.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByCustomerId(customerId);
+        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "{cartUid}", method = PUT)
-    public ResponseEntity updateCartCustomerId(@PathVariable UUID cartUid, @RequestBody Long customerId) {
-        final Optional<ShoppingCart> shoppingCart = shoppingCartService.updateCustomerId(cartUid, customerId);
-        return shoppingCart.map(cart -> new ResponseEntity(HttpStatus.OK))
-                .orElse(new ResponseEntity(HttpStatus.NOT_FOUND));
+    public ResponseEntity<CartData> updateCartCustomerId(@PathVariable UUID cartUid, @RequestBody Long customerId) {
+        shoppingCartService.updateCustomerId(cartUid, customerId);
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
+        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+                .orElse(new ResponseEntity<>(NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "{cartUid}/address", method = POST)
+    public ResponseEntity<CartData> addAddress(@PathVariable UUID cartUid, @RequestBody Address address){
+        shoppingCartService.addAddress(cartUid, address);
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
+        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+                .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 }

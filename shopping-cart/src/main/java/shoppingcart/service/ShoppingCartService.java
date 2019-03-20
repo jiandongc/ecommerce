@@ -1,5 +1,6 @@
 package shoppingcart.service;
 
+import shoppingcart.domain.Address;
 import shoppingcart.domain.ShoppingCart;
 
 import java.util.Optional;
@@ -11,6 +12,7 @@ public interface ShoppingCartService {
     UUID createShoppingCartForUser(long customerId);
     Optional<ShoppingCart> getShoppingCartByUid(UUID cartUid);
     Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId);
-    Optional<ShoppingCart> updateCustomerId(UUID cartUid, Long customerId);
+    void updateCustomerId(UUID cartUid, Long customerId);
     void deleteShoppingCart(ShoppingCart shoppingCart);
+    void addAddress(UUID cartUid, Address address);
 }

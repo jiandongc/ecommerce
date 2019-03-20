@@ -19,9 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.*;
-import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 public class ShoppingCartItemControllerTest extends AbstractControllerTest {
 
@@ -81,7 +79,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         ResponseEntity<CartData> response = rest.exchange(BASE_URL + randomUUID().toString() + "/items", POST, payload, CartData.class);
 
         // Then
-        assertThat(response.getStatusCode(), is(CONFLICT));
+        assertThat(response.getStatusCode(), is(NOT_FOUND));
         assertThat(response.getBody(), is(nullValue()));
     }
 

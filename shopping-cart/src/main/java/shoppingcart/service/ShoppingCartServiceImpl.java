@@ -3,6 +3,7 @@ package shoppingcart.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shoppingcart.domain.Address;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
@@ -35,9 +36,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Override
     @Transactional(readOnly = true)
     public Optional<ShoppingCart> getShoppingCartByUid(UUID cartUid) {
-        Optional<ShoppingCart> shoppingCart = cartRepository.findByUUID(cartUid);
-        shoppingCart.ifPresent(cart -> cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId())));
-        return shoppingCart;
+        final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
+        cartOptional.ifPresent(cart -> cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId())));
+        cartOptional.ifPresent(cart -> cart.setShippingAddress(cartRepository.findAddress(cart.getId(), "Shipping").orElse(null)));
+        cartOptional.ifPresent(cart -> cart.setBillingAddress(cartRepository.findAddress(cart.getId(), "Billing").orElse(null)));
+        return cartOptional;
     }
 
     @Override
@@ -47,6 +50,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if(shoppingCarts.size() > 0){
             final ShoppingCart shoppingCart = shoppingCarts.get(0);
             shoppingCart.setShoppingCartItems(cartItemRepository.findByCartId(shoppingCart.getId()));
+            shoppingCart.setShippingAddress(cartRepository.findAddress(shoppingCart.getId(), "Shipping").orElse(null));
+            shoppingCart.setBillingAddress(cartRepository.findAddress(shoppingCart.getId(), "Billing").orElse(null));
             return Optional.of(shoppingCart);
         } else {
             return Optional.empty();
@@ -55,12 +60,11 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public Optional<ShoppingCart> updateCustomerId(UUID cartUid, Long customerId) {
+    public void updateCustomerId(UUID cartUid, Long customerId) {
         final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerId);
         shoppingCarts.stream().filter(cart -> !cart.getCartUid().equals(cartUid))
                 .forEach(this::deleteShoppingCart);
         cartRepository.updateCustomerId(cartUid, customerId);
-        return cartRepository.findByUUID(cartUid);
     }
 
     @Override
@@ -68,5 +72,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void deleteShoppingCart(ShoppingCart shoppingCart){
         cartItemRepository.deleteByCartId(shoppingCart.getId());
         cartRepository.delete(shoppingCart.getCartUid());
+    }
+
+    @Override
+    @Transactional
+    public void addAddress(UUID cartUid, Address address){
+        final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
+        cartOptional.ifPresent(cart -> cartRepository.addAddress(cart.getId(), address));
     }
 }

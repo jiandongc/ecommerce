@@ -1,0 +1,1 @@
+ALTER TABLE address ADD CONSTRAINT address_type_constraint UNIQUE (shopping_cart_id, address_type);

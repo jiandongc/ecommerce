@@ -12,18 +12,24 @@ public final class CartData {
     private final String cartUid;
     private final Long customerId;
     private final List<CartItemData> cartItems;
+    private final AddressData shipping;
+    private final AddressData billing;
 
     @JsonCreator
     private CartData(@JsonProperty("quantity") Integer quantity,
                      @JsonProperty("subTotal") Double subTotal,
                      @JsonProperty("cartUid") String cartUid,
                      @JsonProperty("customerId") Long customerId,
-                     @JsonProperty("cartItems") List<CartItemData> cartItems) {
+                     @JsonProperty("cartItems") List<CartItemData> cartItems,
+                     @JsonProperty("shipping") AddressData shipping,
+                     @JsonProperty("billing") AddressData billing) {
         this.quantity = quantity;
         this.subTotal = subTotal;
         this.cartUid = cartUid;
         this.customerId = customerId;
         this.cartItems = cartItems;
+        this.shipping = shipping;
+        this.billing = billing;
     }
 
     public static Builder builder(){
@@ -50,12 +56,22 @@ public final class CartData {
         return cartItems;
     }
 
+    public AddressData getShipping() {
+        return shipping;
+    }
+
+    public AddressData getBilling() {
+        return billing;
+    }
+
     public static class Builder {
         private Integer quantity;
         private Double subTotal;
         private String cartUid;
         private Long customerId;
         private List<CartItemData> cartItems;
+        private AddressData shipping;
+        private AddressData billing;
 
         public Builder quantity(Integer quantity) {
             this.quantity = quantity;
@@ -82,8 +98,18 @@ public final class CartData {
             return this;
         }
 
+        public Builder shipping(AddressData shipping) {
+            this.shipping = shipping;
+            return this;
+        }
+
+        public Builder billing(AddressData billing) {
+            this.billing = billing;
+            return this;
+        }
+
         public CartData build(){
-            return new CartData(quantity, subTotal, cartUid, customerId, cartItems);
+            return new CartData(quantity, subTotal, cartUid, customerId, cartItems, shipping, billing);
         }
     }
 }

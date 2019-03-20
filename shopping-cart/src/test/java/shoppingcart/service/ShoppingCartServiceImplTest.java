@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import shoppingcart.domain.Address;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 import shoppingcart.repository.ShoppingCartItemRepository;
@@ -58,6 +59,12 @@ public class ShoppingCartServiceImplTest {
         when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.of(ShoppingCart.builder().id(1L).cartUid(cartUid).build()));
         final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").sku("123X7").build();
         when(cartItemRepository.findByCartId(1L)).thenReturn(asList(cartItem));
+        final Address shippingAddress = new Address();
+        shippingAddress.setPostcode("SE6 7DE");
+        when(cartRepository.findAddress(1L, "Shipping")).thenReturn(Optional.of(shippingAddress));
+        final Address billingAddress = new Address();
+        billingAddress.setPostcode("SE7 7DE");
+        when(cartRepository.findAddress(1L, "Billing")).thenReturn(Optional.of(billingAddress));
 
         // When
         final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByUid(cartUid);
@@ -69,6 +76,8 @@ public class ShoppingCartServiceImplTest {
         assertThat(shoppingCart.get().getShoppingCartItems().size(), is(1));
         assertThat(shoppingCart.get().getShoppingCartItems().get(0).getName(), is("product"));
         assertThat(shoppingCart.get().getShoppingCartItems().get(0).getSku(), is("123X7"));
+        assertThat(shoppingCart.get().getShippingAddress().getPostcode(), is("SE6 7DE"));
+        assertThat(shoppingCart.get().getBillingAddress().getPostcode(), is("SE7 7DE"));
     }
 
     @Test
@@ -88,7 +97,6 @@ public class ShoppingCartServiceImplTest {
         verify(service, times(1)).deleteShoppingCart(shoppingCartOne);
         verify(service, times(1)).deleteShoppingCart(shoppingCartTwo);
         verify(cartRepository, times(1)).updateCustomerId(cartUid,123L);
-        verify(cartRepository, times(1)).findByUUID(cartUid);
     }
 
     @Test
@@ -112,6 +120,12 @@ public class ShoppingCartServiceImplTest {
         when(cartRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(ShoppingCart.builder().id(1L).customerId(customerId).build()));
         final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").sku("123X7").build();
         when(cartItemRepository.findByCartId(1L)).thenReturn(asList(cartItem));
+        final Address shippingAddress = new Address();
+        shippingAddress.setPostcode("SE6 7DE");
+        when(cartRepository.findAddress(1L, "Shipping")).thenReturn(Optional.of(shippingAddress));
+        final Address billingAddress = new Address();
+        billingAddress.setPostcode("SE7 7DE");
+        when(cartRepository.findAddress(1L, "Billing")).thenReturn(Optional.of(billingAddress));
 
         // When
         final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByCustomerId(customerId);
@@ -123,6 +137,8 @@ public class ShoppingCartServiceImplTest {
         assertThat(shoppingCart.get().getShoppingCartItems().size(), is(1));
         assertThat(shoppingCart.get().getShoppingCartItems().get(0).getName(), is("product"));
         assertThat(shoppingCart.get().getShoppingCartItems().get(0).getSku(), is("123X7"));
+        assertThat(shoppingCart.get().getShippingAddress().getPostcode(), is("SE6 7DE"));
+        assertThat(shoppingCart.get().getBillingAddress().getPostcode(), is("SE7 7DE"));
     }
 
     @Test
@@ -136,5 +152,19 @@ public class ShoppingCartServiceImplTest {
 
         // Then
         assertThat(shoppingCart.isPresent(), is(false));
+    }
+
+    @Test
+    public void shouldAddAddress(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        final Address address = new Address();
+        when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.of(ShoppingCart.builder().id(1L).cartUid(cartUid).build()));
+
+        // When
+        service.addAddress(cartUid, address);
+
+        // Then
+        verify(cartRepository).addAddress(1L, address);
     }
 }
