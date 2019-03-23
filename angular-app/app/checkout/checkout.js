@@ -1,9 +1,10 @@
 var checkout = angular.module('checkout',[]);
 
-checkout.controller('shippingCtrl', function($scope, $location, $localstorage, customerFactory) {
+checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
 
 	$scope.template.header = 'checkout-header.html';
 	$scope.template.footer = 'default-footer.html';
+	$scope.saveAddressLoading = false;
 
 	var customerId = $localstorage.get("customer_id");
 
@@ -22,8 +23,27 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, c
 		$scope.address=address;
 	};
 
-	$scope.continue = function(){
-		$location.path("/delivery");
+	$scope.saveAddress = function(address){
+		$scope.saveAddressLoading = true;
+		var cartUid = $localstorage.get('cart_uid');
+		var addressData = {
+			addressType: 'Shipping',
+      		name: address.name, 
+      		title: address.title,
+      		mobile: address.mobile,
+      		addressLine1: address.addressLine1,
+      		addressLine2: address.addressLine2,
+      		addressLine3: address.addressLine3,
+      		city: address.city,
+      		country: address.country,
+      		postcode: address.postcode
+    	};
+
+		shoppingCartFactory.addAddress(cartUid, addressData).then(function(response){
+            $rootScope.$broadcast('updateCartSummary', false);
+            $scope.saveAddressLoading = false;
+            $location.path("/delivery");
+        });
 	}
 });
 

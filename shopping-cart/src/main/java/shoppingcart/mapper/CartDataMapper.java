@@ -44,8 +44,7 @@ public class CartDataMapper {
 
     private AddressData map(Address address){
         return AddressData.builder()
-                .firstName(address.getFirstName())
-                .lastName(address.getLastName())
+                .name(address.getName())
                 .title(address.getTitle())
                 .mobile(address.getMobile())
                 .addressLine1(address.getAddressLine1())

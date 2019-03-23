@@ -26,10 +26,10 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     private static final String UPDATE_CUSTOMER_ID = "UPDATE shopping_cart SET customer_id = ? WHERE cart_uid = ?";
     private static final String DELETE_BY_UUID_SQL = "DELETE FROM shopping_cart where cart_uid = ?";
     private static final String INSERT_ADDRESS_SQL = "INSERT INTO address " +
-            "(address_type, title, first_name, last_name, mobile, address_line_1, address_line_2, address_line_3, city, country, post_code, shopping_cart_id) " +
-            "VALUES (:address_type, :title, :first_name, :last_name, :mobile, :address_line_1, :address_line_2, :address_line_3, :city, :country, :post_code, :shopping_cart_id) " +
+            "(address_type, title, name, mobile, address_line_1, address_line_2, address_line_3, city, country, post_code, shopping_cart_id) " +
+            "VALUES (:address_type, :title, :name, :mobile, :address_line_1, :address_line_2, :address_line_3, :city, :country, :post_code, :shopping_cart_id) " +
             "ON CONFLICT ON CONSTRAINT address_type_constraint " +
-            "DO UPDATE SET title=EXCLUDED.title, first_name=EXCLUDED.first_name, last_name=EXCLUDED.last_name, mobile=EXCLUDED.mobile, address_line_1=EXCLUDED.address_line_1, " +
+            "DO UPDATE SET title=EXCLUDED.title, name=EXCLUDED.name, mobile=EXCLUDED.mobile, address_line_1=EXCLUDED.address_line_1, " +
             "address_line_2=EXCLUDED.address_line_2, address_line_3=EXCLUDED.address_line_3, city=EXCLUDED.city, country=EXCLUDED.country, post_code=EXCLUDED.post_code ";
     private static final String SELECT_ADDRESS_SQL = "SELECT * FROM address WHERE shopping_cart_id=? AND address_type=?";
 
@@ -88,8 +88,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("address_type", address.getAddressType(), Types.VARCHAR);
         namedParameters.addValue("title", address.getTitle(), Types.VARCHAR);
-        namedParameters.addValue("first_name", address.getFirstName(), Types.VARCHAR);
-        namedParameters.addValue("last_name", address.getLastName(), Types.VARCHAR);
+        namedParameters.addValue("name", address.getName(), Types.VARCHAR);
         namedParameters.addValue("mobile", address.getMobile(), Types.VARCHAR);
         namedParameters.addValue("address_line_1", address.getAddressLine1(), Types.VARCHAR);
         namedParameters.addValue("address_line_2", address.getAddressLine2(), Types.VARCHAR);

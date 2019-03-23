@@ -104,8 +104,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         final Address address = new Address();
         address.setAddressType("Shipping");
         address.setTitle("Mr.");
-        address.setFirstName("John");
-        address.setLastName("Smart");
+        address.setName("John");
         address.setAddressLine1("10 Kings Road");
         address.setAddressLine2("South Harrow");
         address.setCity("London");

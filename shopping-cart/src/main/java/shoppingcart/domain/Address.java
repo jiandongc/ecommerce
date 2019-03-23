@@ -7,8 +7,7 @@ public class Address {
     private long id;
     private long cartId;
     private String addressType;
-    private String firstName;
-    private String lastName;
+    private String name;
     private String title;
     private String mobile;
     private String addressLine1;
@@ -42,20 +41,12 @@ public class Address {
         this.addressType = addressType;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getTitle() {
@@ -129,8 +120,7 @@ public class Address {
         Address address = (Address) o;
         return cartId == address.cartId &&
                 Objects.equals(addressType, address.addressType) &&
-                Objects.equals(firstName, address.firstName) &&
-                Objects.equals(lastName, address.lastName) &&
+                Objects.equals(name, address.name) &&
                 Objects.equals(title, address.title) &&
                 Objects.equals(mobile, address.mobile) &&
                 Objects.equals(addressLine1, address.addressLine1) &&
@@ -143,6 +133,6 @@ public class Address {
 
     @Override
     public int hashCode() {
-        return Objects.hash(cartId, addressType, firstName, lastName, title, mobile, addressLine1, addressLine2, addressLine3, city, country, postcode);
+        return Objects.hash(cartId, addressType, name, title, mobile, addressLine1, addressLine2, addressLine3, city, country, postcode);
     }
 }

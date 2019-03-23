@@ -5,8 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AddressData {
 
-    private final String firstName;
-    private final String lastName;
+    private final String name;
     private final String title;
     private final String mobile;
     private final String addressLine1;
@@ -17,8 +16,7 @@ public class AddressData {
     private final String postcode;
 
     @JsonCreator
-    private AddressData(@JsonProperty("firstName") String firstName,
-                       @JsonProperty("lastName") String lastName,
+    private AddressData(@JsonProperty("name") String name,
                        @JsonProperty("title") String title,
                        @JsonProperty("mobile") String mobile,
                        @JsonProperty("addressLine1") String addressLine1,
@@ -27,8 +25,7 @@ public class AddressData {
                        @JsonProperty("city") String city,
                        @JsonProperty("country") String country,
                        @JsonProperty("postcode") String postcode) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+        this.name = name;
         this.title = title;
         this.mobile = mobile;
         this.addressLine1 = addressLine1;
@@ -43,12 +40,8 @@ public class AddressData {
         return new AddressData.Builder();
     }
 
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
+    public String getName() {
+        return name;
     }
 
     public String getTitle() {
@@ -84,8 +77,7 @@ public class AddressData {
     }
 
     public static class Builder {
-        private String firstName;
-        private String lastName;
+        private String name;
         private String title;
         private String mobile;
         private String addressLine1;
@@ -95,13 +87,8 @@ public class AddressData {
         private String country;
         private String postcode;
 
-        public Builder firstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public Builder lastName(String lastName) {
-            this.lastName = lastName;
+        public Builder name(String name) {
+            this.name = name;
             return this;
         }
 
@@ -146,7 +133,7 @@ public class AddressData {
         }
 
         public AddressData build(){
-            return new AddressData(firstName, lastName, title, mobile, addressLine1, addressLine2, addressLine3, city, country, postcode);
+            return new AddressData(name, title, mobile, addressLine1, addressLine2, addressLine3, city, country, postcode);
         }
     }
 }

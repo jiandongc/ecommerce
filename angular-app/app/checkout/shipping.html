@@ -35,7 +35,10 @@
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-4" ng-show="selected===$index">
-                                    <button class="btn btn-block btn-style-primary" ng-click="continue()">Deliver to this address</button>
+                                    <button class="btn btn-block btn-style-primary" ng-click="saveAddress(address)">
+                                        <span ng-show="saveAddressLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                                        Deliver to this address
+                                    </button>
                                     <button class="btn btn-block btn-style-secondary" data-toggle="modal" data-target="#addressform">
                                         Edit address
                                     </button>

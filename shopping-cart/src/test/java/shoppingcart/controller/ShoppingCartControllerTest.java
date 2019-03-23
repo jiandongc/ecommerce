@@ -249,8 +249,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // When - add shipping address
         final String shipping = "{\n" +
                 "\"addressType\": \"Shipping\",\n" +
-                "\"firstName\": \"John\",\n" +
-                "\"lastName\": \"Smith\",\n" +
+                "\"name\": \"John\",\n" +
                 "\"title\": \"Mr.\",\n" +
                 "\"mobile\": \"12345678\",\n" +
                 "\"addressLine1\": \"addressLine1\",\n" +
@@ -261,18 +260,17 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"postcode\": \"EF1 8HD\"\n" +
                 "}";
         final HttpEntity<String> shippingPayload = new HttpEntity<>(shipping, headers);
-        final ResponseEntity<CartData> shippingResponse = rest.exchange(BASE_URL + cartUid.toString() + "/address", POST, shippingPayload, CartData.class);
+        final ResponseEntity<CartData> shippingResponse = rest.exchange(BASE_URL + cartUid.toString() + "/addresses", POST, shippingPayload, CartData.class);
 
         // Then
         assertThat(shippingResponse.getStatusCode(), is(HttpStatus.OK));
-        assertThat(shippingResponse.getBody().getShipping().getFirstName(), is("John"));
+        assertThat(shippingResponse.getBody().getShipping().getName(), is("John"));
         assertThat(shippingResponse.getBody().getShipping().getPostcode(), is("EF1 8HD"));
 
         // When - add billing address
         final String billing = "{\n" +
                 "\"addressType\": \"Billing\",\n" +
-                "\"firstName\": \"Mary\",\n" +
-                "\"lastName\": \"Smith\",\n" +
+                "\"name\": \"Mary\",\n" +
                 "\"title\": \"Mr.\",\n" +
                 "\"mobile\": \"12345678\",\n" +
                 "\"addressLine1\": \"addressLine1\",\n" +
@@ -283,18 +281,17 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"postcode\": \"EF2 8HD\"\n" +
                 "}";
         final HttpEntity<String> billingPayload = new HttpEntity<>(billing, headers);
-        final ResponseEntity<CartData> billingResponse = rest.exchange(BASE_URL + cartUid.toString() + "/address", POST, billingPayload, CartData.class);
+        final ResponseEntity<CartData> billingResponse = rest.exchange(BASE_URL + cartUid.toString() + "/addresses", POST, billingPayload, CartData.class);
 
         // Then
         assertThat(billingResponse.getStatusCode(), is(HttpStatus.OK));
-        assertThat(billingResponse.getBody().getBilling().getFirstName(), is("Mary"));
+        assertThat(billingResponse.getBody().getBilling().getName(), is("Mary"));
         assertThat(billingResponse.getBody().getBilling().getPostcode(), is("EF2 8HD"));
 
         // When - update billing address
         final String billingUpdate = "{\n" +
                 "\"addressType\": \"Billing\",\n" +
-                "\"firstName\": \"Conor\",\n" +
-                "\"lastName\": \"Smith\",\n" +
+                "\"name\": \"Conor\",\n" +
                 "\"title\": \"Mr.\",\n" +
                 "\"mobile\": \"12345678\",\n" +
                 "\"addressLine1\": \"addressLine1\",\n" +
@@ -305,11 +302,11 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"postcode\": \"EF3 8HD\"\n" +
                 "}";
         final HttpEntity<String> billingUpdatePayload = new HttpEntity<>(billingUpdate, headers);
-        final ResponseEntity<CartData> billingUpdatePayloadResponse = rest.exchange(BASE_URL + cartUid.toString() + "/address", POST, billingUpdatePayload, CartData.class);
+        final ResponseEntity<CartData> billingUpdatePayloadResponse = rest.exchange(BASE_URL + cartUid.toString() + "/addresses", POST, billingUpdatePayload, CartData.class);
 
         // Then
         assertThat(billingUpdatePayloadResponse.getStatusCode(), is(HttpStatus.OK));
-        assertThat(billingUpdatePayloadResponse.getBody().getBilling().getFirstName(), is("Conor"));
+        assertThat(billingUpdatePayloadResponse.getBody().getBilling().getName(), is("Conor"));
         assertThat(billingUpdatePayloadResponse.getBody().getBilling().getPostcode(), is("EF3 8HD"));
     }
 }

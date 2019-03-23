@@ -17,8 +17,7 @@ public class AddressMapper implements RowMapper<Address> {
         address.setCartId(rs.getLong("shopping_cart_id"));
         address.setAddressType(rs.getString("address_type"));
         address.setTitle(rs.getString("title"));
-        address.setFirstName(rs.getString("first_name"));
-        address.setLastName(rs.getString("last_name"));
+        address.setName(rs.getString("name"));
         address.setMobile(rs.getString("mobile"));
         address.setAddressLine1(rs.getString("address_line_1"));
         address.setAddressLine2(rs.getString("address_line_2"));

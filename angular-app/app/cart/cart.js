@@ -87,6 +87,12 @@ cart.factory('shoppingCartFactory', function($http, environment){
       });   
   }
 
+  var addAddress = function(cartUid, address) {
+      return $http.post(environment.shoppingCartUrl + '/carts/' + cartUid + '/addresses', address).then(function(response){
+        return response.data;
+      }); 
+  };
+
   return {
     updateCustomerId: updateCustomerId,
     addItemToShoppingCart: addItemToShoppingCart,
@@ -95,7 +101,8 @@ cart.factory('shoppingCartFactory', function($http, environment){
     getShoppingCart: getShoppingCart,
     getShoppingCartByCustomerId: getShoppingCartByCustomerId,
     deleteItemFromShoppingCart: deleteItemFromShoppingCart,
-    updateShoppingCartItem: updateShoppingCartItem
+    updateShoppingCartItem: updateShoppingCartItem,
+    addAddress: addAddress
   }
 });
 

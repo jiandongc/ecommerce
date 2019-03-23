@@ -69,7 +69,7 @@ public class ShoppingCartController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "{cartUid}/address", method = POST)
+    @RequestMapping(value = "{cartUid}/addresses", method = POST)
     public ResponseEntity<CartData> addAddress(@PathVariable UUID cartUid, @RequestBody Address address){
         shoppingCartService.addAddress(cartUid, address);
         final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
