@@ -48,6 +48,10 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $
 });
 
 checkout.controller('deliveryCtrl', function($scope, $location) {
+
+	$scope.template.header = 'checkout-header.html';
+	$scope.template.footer = 'default-footer.html';
+
 	$scope.deliverOptions = [
 		{
 			id : 1,
