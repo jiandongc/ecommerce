@@ -549,19 +549,14 @@ ul.scrollable-menu .btn-remove {
   border-top: 1px solid #e5e5e5
 }
 
-.checkout .deliveryOption {
-  font-family: 'Lato', sans-serif;
+.checkout .deliveryOption .eta {
+  color: #090;
+  font-weight: bold;
 }
 
 .checkout .deliveryOption .desc {
-  font-weight: bold;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: #505050;
-}
-
-.checkout .deliveryOption .cost {
-  color: #536F19;
+  font-weight: 400;
+  color: #888;
 }
 
 .payment {

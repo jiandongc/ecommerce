@@ -55,31 +55,24 @@ checkout.controller('deliveryCtrl', function($scope, $location) {
 	$scope.deliverOptions = [
 		{
 			id : 1,
-			description : "Standard Delivery",
-			info : "Receive it by Monday 3 July",
+			desc : "Standard Delivery",
+			eta : "Thursday, Mar. 28 - Friday, Mar. 29",
 			cost : 2.75,
 			primary : true
 		}, {
 			id : 2,
-			description : "Tracked Express Delivery",
-			info : "Receive it by Friday 30 June",
+			desc : "Tracked Express Delivery",
+			eta : "Saturday, Mar. 30 - Monday, April 1",
 			cost : 6.95,
 			primary : false
 		}, {
 			id : 3,
-			description : "Saturday Delivery",
-			info : "Receive it by Saturday 1 July",
+			desc : "FREE Delivery",
+			eta : "Friday, Mar. 29",
 			cost : 10.95,
 			primary : false
 		}
 	];
-
-	angular.forEach($scope.deliverOptions, function(deliverOption, index){
-      if(deliverOption.primary){
-		$scope.selected=index;      		
-		$scope.deliverOption=deliverOption;
-      }
-    });
 
     $scope.select=function(index, deliverOption){
 		$scope.selected=index;
