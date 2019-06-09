@@ -1,13 +1,13 @@
 package shoppingcart.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shoppingcart.data.CartData;
 import shoppingcart.domain.Address;
+import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.CartDataMapper;
 import shoppingcart.service.ShoppingCartService;
@@ -72,6 +72,15 @@ public class ShoppingCartController {
     @RequestMapping(value = "{cartUid}/addresses", method = POST)
     public ResponseEntity<CartData> addAddress(@PathVariable UUID cartUid, @RequestBody Address address){
         shoppingCartService.addAddress(cartUid, address);
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
+        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+                .orElse(new ResponseEntity<>(NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "{cartUid}/deliveryoption", method = POST)
+    public ResponseEntity<CartData> addDeliveryOption(@PathVariable UUID cartUid, @RequestBody DeliveryOption deliveryOption){
+        shoppingCartService.addDeliveryOption(cartUid, deliveryOption);
         final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
         return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));

@@ -1,6 +1,7 @@
 package shoppingcart.service;
 
 import shoppingcart.domain.Address;
+import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 
 import java.util.Optional;
@@ -15,4 +16,5 @@ public interface ShoppingCartService {
     void updateCustomerId(UUID cartUid, Long customerId);
     void deleteShoppingCart(ShoppingCart shoppingCart);
     void addAddress(UUID cartUid, Address address);
+    void addDeliveryOption(UUID cartUid, DeliveryOption deliveryOption);
 }

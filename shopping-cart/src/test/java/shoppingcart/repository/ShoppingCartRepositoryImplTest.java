@@ -4,6 +4,7 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import shoppingcart.domain.Address;
+import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 
 import java.util.List;
@@ -12,6 +13,8 @@ import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
 
@@ -136,5 +139,49 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(addressOptional.get().getTitle(), Matchers.is("Mrs."));
         assertThat(addressOptional.get().getPostcode(), Matchers.is("SH13TT"));
         assertThat(addressOptional.get().getAddressLine1(), Matchers.is("11 Kings Road"));
+    }
+
+    @Test
+    public void shouldAddDeliveryOption(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create(1234L);
+        final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final DeliveryOption deliveryOption = DeliveryOption.builder()
+                .method("FREE Delivery")
+                .charge(1.1d)
+                .minDaysRequired(3)
+                .maxDaysRequired(5)
+                .cartId(cart.getId())
+                .build();
+
+        // When
+        shoppingCartRepository.addDeliveryOption(cart.getId(), deliveryOption);
+
+        // Then
+        DeliveryOption actual = shoppingCartRepository.findDeliveryOption(cart.getId()).get();
+        assertThat(actual.getMethod(), Matchers.is("FREE Delivery"));
+        assertThat(actual.getCharge(), Matchers.is(1.1d));
+        assertThat(actual.getMinDaysRequired(), Matchers.is(3));
+        assertThat(actual.getMaxDaysRequired(), Matchers.is(5));
+        assertThat(actual.getCreationTime(), Matchers.is(notNullValue()));
+        assertThat(actual.getLastUpdateTime(), Matchers.is(nullValue()));
+
+        // Given - Update delivery option
+        deliveryOption.setMethod("Express Delivery");
+        deliveryOption.setCharge(2.9d);
+        deliveryOption.setMinDaysRequired(1);
+        deliveryOption.setMaxDaysRequired(2);
+
+        // When
+        shoppingCartRepository.addDeliveryOption(cart.getId(), deliveryOption);
+
+        // Then
+        actual = shoppingCartRepository.findDeliveryOption(cart.getId()).get();
+        assertThat(actual.getMethod(), Matchers.is("Express Delivery"));
+        assertThat(actual.getCharge(), Matchers.is(2.9d));
+        assertThat(actual.getMinDaysRequired(), Matchers.is(1));
+        assertThat(actual.getMaxDaysRequired(), Matchers.is(2));
+        assertThat(actual.getCreationTime(), Matchers.is(notNullValue()));
+        assertThat(actual.getLastUpdateTime(), Matchers.is(notNullValue()));
     }
 }

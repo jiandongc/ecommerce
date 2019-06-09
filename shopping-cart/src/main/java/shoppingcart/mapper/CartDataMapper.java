@@ -4,7 +4,9 @@ import org.springframework.stereotype.Component;
 import shoppingcart.data.AddressData;
 import shoppingcart.data.CartData;
 import shoppingcart.data.CartItemData;
+import shoppingcart.data.DeliveryOptionData;
 import shoppingcart.domain.Address;
+import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 
@@ -30,6 +32,7 @@ public class CartDataMapper {
         ).collect(Collectors.toList());
         final AddressData shipping = shoppingCart.getShippingAddress() != null ? map(shoppingCart.getShippingAddress()) : null;
         final AddressData billing = shoppingCart.getBillingAddress() != null ? map(shoppingCart.getBillingAddress()) : null;
+        final DeliveryOptionData deliveryOptionData = shoppingCart.getDeliveryOption() != null ? map(shoppingCart.getDeliveryOption()) : null;
 
         return CartData.builder()
                 .cartUid(shoppingCart.getCartUid().toString())
@@ -39,6 +42,7 @@ public class CartDataMapper {
                 .cartItems(cartItems)
                 .shipping(shipping)
                 .billing(billing)
+                .deliveryOption(deliveryOptionData)
                 .build();
     }
 
@@ -53,6 +57,15 @@ public class CartDataMapper {
                 .city(address.getCity())
                 .country(address.getCountry())
                 .postcode(address.getPostcode())
+                .build();
+    }
+
+    private DeliveryOptionData map(DeliveryOption deliveryOption){
+        return DeliveryOptionData.builder()
+                .method(deliveryOption.getMethod())
+                .charge(deliveryOption.getCharge())
+                .minDays(deliveryOption.getMinDaysRequired())
+                .maxDays(deliveryOption.getMaxDaysRequired())
                 .build();
     }
 }

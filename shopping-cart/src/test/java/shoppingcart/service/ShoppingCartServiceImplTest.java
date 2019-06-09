@@ -6,6 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import shoppingcart.domain.Address;
+import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 import shoppingcart.repository.ShoppingCartItemRepository;
@@ -65,6 +66,8 @@ public class ShoppingCartServiceImplTest {
         final Address billingAddress = new Address();
         billingAddress.setPostcode("SE7 7DE");
         when(cartRepository.findAddress(1L, "Billing")).thenReturn(Optional.of(billingAddress));
+        final DeliveryOption deliveryOption = DeliveryOption.builder().method("Free Delivery").build();
+        when(cartRepository.findDeliveryOption(1L)).thenReturn(Optional.of(deliveryOption));
 
         // When
         final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByUid(cartUid);
@@ -78,6 +81,7 @@ public class ShoppingCartServiceImplTest {
         assertThat(shoppingCart.get().getShoppingCartItems().get(0).getSku(), is("123X7"));
         assertThat(shoppingCart.get().getShippingAddress().getPostcode(), is("SE6 7DE"));
         assertThat(shoppingCart.get().getBillingAddress().getPostcode(), is("SE7 7DE"));
+        assertThat(shoppingCart.get().getDeliveryOption().getMethod(), is("Free Delivery"));
     }
 
     @Test
@@ -166,5 +170,19 @@ public class ShoppingCartServiceImplTest {
 
         // Then
         verify(cartRepository).addAddress(1L, address);
+    }
+
+    @Test
+    public void shouldAddDeliveryOption(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        final DeliveryOption deliveryOption = DeliveryOption.builder().build();
+        when(cartRepository.findByUUID(cartUid)).thenReturn(Optional.of(ShoppingCart.builder().id(1L).cartUid(cartUid).build()));
+
+        // When
+        service.addDeliveryOption(cartUid, deliveryOption);
+
+        // Then
+        verify(cartRepository).addDeliveryOption(1L, deliveryOption);
     }
 }

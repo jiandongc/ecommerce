@@ -6,8 +6,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import shoppingcart.domain.Address;
+import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.AddressMapper;
+import shoppingcart.mapper.DeliveryOptionMapper;
 import shoppingcart.mapper.ShoppingCartMapper;
 
 import java.sql.Types;
@@ -32,6 +34,13 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
             "DO UPDATE SET title=EXCLUDED.title, name=EXCLUDED.name, mobile=EXCLUDED.mobile, address_line_1=EXCLUDED.address_line_1, " +
             "address_line_2=EXCLUDED.address_line_2, address_line_3=EXCLUDED.address_line_3, city=EXCLUDED.city, country=EXCLUDED.country, post_code=EXCLUDED.post_code ";
     private static final String SELECT_ADDRESS_SQL = "SELECT * FROM address WHERE shopping_cart_id=? AND address_type=?";
+    private static final String INSERT_DELIVERY_OPTION_SQL = "INSERT INTO delivery_option " +
+            "(method, charge, min_days_required, max_days_required, shopping_cart_id) " +
+            "VALUES (:method, :charge, :min_days_required, :max_days_required, :shopping_cart_id) " +
+            "ON CONFLICT ON CONSTRAINT delivery_option_constraint " +
+            "DO UPDATE SET method=EXCLUDED.method, charge=EXCLUDED.charge, min_days_required=EXCLUDED.min_days_required, max_days_required=EXCLUDED.max_days_required, last_update_time=now()";
+    private static final String SELECT_DELIVERY_OPTION_SQL = "SELECT * FROM delivery_option WHERE shopping_cart_id=?";
+
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -44,6 +53,9 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private DeliveryOptionMapper deliveryOptionMapper;
 
     @Override
     public UUID create() {
@@ -104,6 +116,26 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     public Optional<Address> findAddress(long cartId, String addressType) {
         try {
             return Optional.of(jdbcTemplate.queryForObject(SELECT_ADDRESS_SQL, addressMapper, cartId, addressType));
+        } catch (Exception e) {
+            return empty();
+        }
+    }
+
+    @Override
+    public void addDeliveryOption(long cartId, DeliveryOption deliveryOption) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("method", deliveryOption.getMethod(), Types.VARCHAR);
+        namedParameters.addValue("charge", deliveryOption.getCharge(), Types.DOUBLE);
+        namedParameters.addValue("min_days_required", deliveryOption.getMinDaysRequired(), Types.INTEGER);
+        namedParameters.addValue("max_days_required", deliveryOption.getMaxDaysRequired(), Types.INTEGER);
+        namedParameters.addValue("shopping_cart_id", cartId, Types.INTEGER);
+        namedParameterJdbcTemplate.update(INSERT_DELIVERY_OPTION_SQL, namedParameters);
+    }
+
+    @Override
+    public Optional<DeliveryOption> findDeliveryOption(long cartId) {
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(SELECT_DELIVERY_OPTION_SQL, deliveryOptionMapper, cartId));
         } catch (Exception e) {
             return empty();
         }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shoppingcart.domain.Address;
+import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
@@ -40,6 +41,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartOptional.ifPresent(cart -> cart.setShoppingCartItems(cartItemRepository.findByCartId(cart.getId())));
         cartOptional.ifPresent(cart -> cart.setShippingAddress(cartRepository.findAddress(cart.getId(), "Shipping").orElse(null)));
         cartOptional.ifPresent(cart -> cart.setBillingAddress(cartRepository.findAddress(cart.getId(), "Billing").orElse(null)));
+        cartOptional.ifPresent(cart -> cart.setDeliveryOption(cartRepository.findDeliveryOption(cart.getId()).orElse(null)));
         return cartOptional;
     }
 
@@ -79,5 +81,12 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void addAddress(UUID cartUid, Address address){
         final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
         cartOptional.ifPresent(cart -> cartRepository.addAddress(cart.getId(), address));
+    }
+
+    @Override
+    @Transactional
+    public void addDeliveryOption(UUID cartUid, DeliveryOption deliveryOption) {
+        final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
+        cartOptional.ifPresent(cart -> cartRepository.addDeliveryOption(cart.getId(), deliveryOption));
     }
 }

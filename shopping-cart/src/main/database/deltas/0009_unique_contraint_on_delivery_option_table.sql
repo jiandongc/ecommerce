@@ -1,0 +1,1 @@
+ALTER TABLE delivery_option ADD CONSTRAINT delivery_option_constraint UNIQUE (shopping_cart_id);

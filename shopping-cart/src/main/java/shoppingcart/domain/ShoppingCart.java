@@ -11,6 +11,7 @@ public final class ShoppingCart {
     private List<ShoppingCartItem> shoppingCartItems;
     private Address billingAddress;
     private Address shippingAddress;
+    private DeliveryOption deliveryOption;
 
     private ShoppingCart(long id, UUID cartUid, Long customerId, Date creationTime) {
         this.id = id;
@@ -76,22 +77,43 @@ public final class ShoppingCart {
         this.shippingAddress = shippingAddress;
     }
 
+    public DeliveryOption getDeliveryOption() {
+        return deliveryOption;
+    }
+
+    public void setDeliveryOption(DeliveryOption deliveryOption) {
+        this.deliveryOption = deliveryOption;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         ShoppingCart that = (ShoppingCart) o;
-        return Objects.equals(cartUid, that.cartUid) &&
-                Objects.equals(customerId, that.customerId) &&
-                Objects.equals(creationTime, that.creationTime) &&
-                Objects.equals(shoppingCartItems, that.shoppingCartItems) &&
-                Objects.equals(billingAddress, that.billingAddress) &&
-                Objects.equals(shippingAddress, that.shippingAddress);
+
+        if (cartUid != null ? !cartUid.equals(that.cartUid) : that.cartUid != null) return false;
+        if (customerId != null ? !customerId.equals(that.customerId) : that.customerId != null) return false;
+        if (creationTime != null ? !creationTime.equals(that.creationTime) : that.creationTime != null) return false;
+        if (shoppingCartItems != null ? !shoppingCartItems.equals(that.shoppingCartItems) : that.shoppingCartItems != null)
+            return false;
+        if (billingAddress != null ? !billingAddress.equals(that.billingAddress) : that.billingAddress != null)
+            return false;
+        if (shippingAddress != null ? !shippingAddress.equals(that.shippingAddress) : that.shippingAddress != null)
+            return false;
+        return deliveryOption != null ? deliveryOption.equals(that.deliveryOption) : that.deliveryOption == null;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(cartUid, customerId, creationTime, shoppingCartItems, billingAddress, shippingAddress);
+        int result = cartUid != null ? cartUid.hashCode() : 0;
+        result = 31 * result + (customerId != null ? customerId.hashCode() : 0);
+        result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
+        result = 31 * result + (shoppingCartItems != null ? shoppingCartItems.hashCode() : 0);
+        result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
+        result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
+        result = 31 * result + (deliveryOption != null ? deliveryOption.hashCode() : 0);
+        return result;
     }
 
     public static class ShoppingCartBuilder {
