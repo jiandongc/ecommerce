@@ -6,4 +6,4 @@ CREATE TABLE delivery_option
     eta_from_date date,
     eta_to_date date,
     shopping_cart_id integer REFERENCES shopping_cart (id) NOT NULL
-);.
+);

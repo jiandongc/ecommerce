@@ -75,6 +75,11 @@ public class DeliveryOptionData {
             return this;
         }
 
+        public Builder eta(String eta) {
+            this.eta = eta;
+            return this;
+        }
+
         public DeliveryOptionData build(){
             return new DeliveryOptionData(method, charge, minDays, maxDays, eta);
         }

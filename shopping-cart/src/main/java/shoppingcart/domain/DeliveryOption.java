@@ -1,12 +1,13 @@
 package shoppingcart.domain;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeliveryOption {
 
     private Long id;

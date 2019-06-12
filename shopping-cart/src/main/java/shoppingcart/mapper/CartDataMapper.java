@@ -10,11 +10,15 @@ import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class CartDataMapper {
+
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM. dd");
 
     public CartData map(ShoppingCart shoppingCart) {
         final Double subTotal = shoppingCart.getShoppingCartItems().stream().mapToDouble(cartItem -> cartItem.getPrice() * cartItem.getQuantity()).sum();
@@ -46,7 +50,7 @@ public class CartDataMapper {
                 .build();
     }
 
-    private AddressData map(Address address){
+    private AddressData map(Address address) {
         return AddressData.builder()
                 .name(address.getName())
                 .title(address.getTitle())
@@ -60,12 +64,30 @@ public class CartDataMapper {
                 .build();
     }
 
-    private DeliveryOptionData map(DeliveryOption deliveryOption){
+    private DeliveryOptionData map(DeliveryOption deliveryOption) {
+        final String etaFromDate = formatDate(deliveryOption.getMinDaysRequired());
+        final String etaToDate = formatDate(deliveryOption.getMaxDaysRequired());
+        String eta;
+
+        if (etaFromDate.equals(etaToDate)) {
+            eta = etaFromDate;
+        } else {
+            eta = String.format("%s - %s", etaFromDate, etaToDate);
+        }
+
         return DeliveryOptionData.builder()
                 .method(deliveryOption.getMethod())
                 .charge(deliveryOption.getCharge())
                 .minDays(deliveryOption.getMinDaysRequired())
                 .maxDays(deliveryOption.getMaxDaysRequired())
+                .eta(eta)
                 .build();
+    }
+
+    private String formatDate(int days) {
+        LocalDate localDate = LocalDate.now().plusDays(days);
+        String dayOfWeek = localDate.getDayOfWeek().name();
+        dayOfWeek = dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1).toLowerCase();
+        return dayOfWeek + ", " + dateTimeFormatter.format(localDate);
     }
 }

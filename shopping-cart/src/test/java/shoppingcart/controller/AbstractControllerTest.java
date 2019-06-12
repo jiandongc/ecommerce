@@ -46,6 +46,7 @@ public abstract class AbstractControllerTest {
     public void reset(){
         jdbcTemplate.update("delete from address");
         jdbcTemplate.update("delete from shopping_cart_item");
+        jdbcTemplate.update("delete from delivery_option");
         jdbcTemplate.update("delete from shopping_cart");
     }
 }

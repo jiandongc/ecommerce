@@ -309,4 +309,48 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(billingUpdatePayloadResponse.getBody().getBilling().getName(), is("Conor"));
         assertThat(billingUpdatePayloadResponse.getBody().getBilling().getPostcode(), is("EF3 8HD"));
     }
+
+    @Test
+    public void shouldAddDeliveryOption(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+        final Long customerId = 12345L;
+        final UUID cartUid = repository.create(customerId);
+
+        // When - add delivery option
+        final String deliveryOption = "{\n" +
+                "\"method\": \"FREE Delivery\",\n" +
+                "\"charge\": \"3.0\",\n" +
+                "\"minDaysRequired\": \"1\",\n" +
+                "\"maxDaysRequired\": \"3\"\n" +
+                "}";
+        final HttpEntity<String> deliveryOptionPayload = new HttpEntity<>(deliveryOption, headers);
+        final ResponseEntity<CartData> cartDataResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/deliveryoption", POST, deliveryOptionPayload, CartData.class);
+
+        // Then
+        assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(cartDataResponseEntity.getBody().getCartUid(), is(cartUid.toString()));
+        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMethod(), is("FREE Delivery"));
+        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getCharge(), is(3D));
+        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMinDays(), is(1));
+        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMaxDays(), is(3));
+
+        // When - update delivery option
+        final String deliveryOptionUpdate = "{\n" +
+                "\"method\": \"Express Delivery\",\n" +
+                "\"charge\": \"5.0\",\n" +
+                "\"minDaysRequired\": \"1\",\n" +
+                "\"maxDaysRequired\": \"2\"\n" +
+                "}";
+        final HttpEntity<String> deliveryOptionUpdatePayload = new HttpEntity<>(deliveryOptionUpdate, headers);
+        final ResponseEntity<CartData> cartDataUpdateResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/deliveryoption", POST, deliveryOptionUpdatePayload, CartData.class);
+
+        // Then
+        assertThat(cartDataUpdateResponseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(cartDataUpdateResponseEntity.getBody().getCartUid(), is(cartUid.toString()));
+        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMethod(), is("Express Delivery"));
+        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getCharge(), is(5D));
+        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMinDays(), is(1));
+        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDays(), is(2));
+    }
 }
