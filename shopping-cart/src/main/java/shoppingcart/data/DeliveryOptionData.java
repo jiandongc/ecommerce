@@ -7,20 +7,20 @@ public class DeliveryOptionData {
 
     private final String method;
     private final Double charge;
-    private final Integer minDays;
-    private final Integer maxDays;
+    private final Integer minDaysRequired;
+    private final Integer maxDaysRequired;
     private final String eta;
 
     @JsonCreator
     public DeliveryOptionData(@JsonProperty("method") String method,
                               @JsonProperty("charge") Double charge,
-                              @JsonProperty("minDays") Integer minDays,
-                              @JsonProperty("maxDays") Integer maxDays,
+                              @JsonProperty("minDaysRequired") Integer minDaysRequired,
+                              @JsonProperty("maxDaysRequired") Integer maxDaysRequired,
                               @JsonProperty("eta") String eta) {
         this.method = method;
         this.charge = charge;
-        this.minDays = minDays;
-        this.maxDays = maxDays;
+        this.minDaysRequired = minDaysRequired;
+        this.maxDaysRequired = maxDaysRequired;
         this.eta = eta;
     }
 
@@ -32,16 +32,16 @@ public class DeliveryOptionData {
         return method;
     }
 
+    public Integer getMinDaysRequired() {
+        return minDaysRequired;
+    }
+
+    public Integer getMaxDaysRequired() {
+        return maxDaysRequired;
+    }
+
     public Double getCharge() {
         return charge;
-    }
-
-    public Integer getMinDays() {
-        return minDays;
-    }
-
-    public Integer getMaxDays() {
-        return maxDays;
     }
 
     public String getEta() {
@@ -51,8 +51,8 @@ public class DeliveryOptionData {
     public static class Builder {
         private String method;
         private Double charge;
-        private Integer minDays;
-        private Integer maxDays;
+        private Integer minDaysRequired;
+        private Integer maxDaysRequired;
         private String eta;
 
         public Builder method(String method) {
@@ -65,13 +65,13 @@ public class DeliveryOptionData {
             return this;
         }
 
-        public Builder minDays(Integer minDays) {
-            this.minDays = minDays;
+        public Builder minDaysRequired(Integer minDaysRequired) {
+            this.minDaysRequired = minDaysRequired;
             return this;
         }
 
-        public Builder maxDays(Integer maxDays) {
-            this.maxDays = maxDays;
+        public Builder maxDaysRequired(Integer maxDaysRequired) {
+            this.maxDaysRequired = maxDaysRequired;
             return this;
         }
 
@@ -81,7 +81,7 @@ public class DeliveryOptionData {
         }
 
         public DeliveryOptionData build(){
-            return new DeliveryOptionData(method, charge, minDays, maxDays, eta);
+            return new DeliveryOptionData(method, charge, minDaysRequired, maxDaysRequired, eta);
         }
 
     }

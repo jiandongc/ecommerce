@@ -93,6 +93,18 @@ cart.factory('shoppingCartFactory', function($http, environment){
       }); 
   };
 
+  var addDeliveryOption = function(cartUid, deliveryOption) {
+      return $http.post(environment.shoppingCartUrl + '/carts/' + cartUid + '/deliveryoption', deliveryOption).then(function(response){
+        return response.data;
+      }); 
+  };
+
+  var getDeliveryOption = function(cartUid) {
+      return $http.get(environment.shoppingCartUrl + '/carts/' + cartUid + '/deliveryoption').then(function(response){
+        return response.data;
+      }); 
+  };
+
   return {
     updateCustomerId: updateCustomerId,
     addItemToShoppingCart: addItemToShoppingCart,
@@ -102,7 +114,9 @@ cart.factory('shoppingCartFactory', function($http, environment){
     getShoppingCartByCustomerId: getShoppingCartByCustomerId,
     deleteItemFromShoppingCart: deleteItemFromShoppingCart,
     updateShoppingCartItem: updateShoppingCartItem,
-    addAddress: addAddress
+    addAddress: addAddress,
+    addDeliveryOption: addDeliveryOption,
+    getDeliveryOption: getDeliveryOption
   }
 });
 

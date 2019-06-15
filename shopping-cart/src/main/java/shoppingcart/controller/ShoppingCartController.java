@@ -6,12 +6,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shoppingcart.data.CartData;
+import shoppingcart.data.DeliveryOptionData;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.CartDataMapper;
 import shoppingcart.service.ShoppingCartService;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,8 +38,8 @@ public class ShoppingCartController {
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(method = POST, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> createShoppingCart(@RequestBody(required = false) Long customerId){
-        if(customerId != null){
+    public ResponseEntity<String> createShoppingCart(@RequestBody(required = false) Long customerId) {
+        if (customerId != null) {
             return new ResponseEntity<>(shoppingCartService.createShoppingCartForUser(customerId).toString(), CREATED);
         } else {
             return new ResponseEntity<>(shoppingCartService.createShoppingCartForGuest().toString(), CREATED);
@@ -45,7 +48,7 @@ public class ShoppingCartController {
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}", method = GET)
-    public ResponseEntity<CartData> getShoppingCartByUid(@PathVariable UUID cartUid){
+    public ResponseEntity<CartData> getShoppingCartByUid(@PathVariable UUID cartUid) {
         final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
         return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));
@@ -53,7 +56,7 @@ public class ShoppingCartController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(method = GET)
-    public ResponseEntity<CartData> getShoppingCartByCustomerId(@RequestParam(value = "customerId") Long customerId){
+    public ResponseEntity<CartData> getShoppingCartByCustomerId(@RequestParam(value = "customerId") Long customerId) {
         final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByCustomerId(customerId);
         return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));
@@ -70,7 +73,7 @@ public class ShoppingCartController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "{cartUid}/addresses", method = POST)
-    public ResponseEntity<CartData> addAddress(@PathVariable UUID cartUid, @RequestBody Address address){
+    public ResponseEntity<CartData> addAddress(@PathVariable UUID cartUid, @RequestBody Address address) {
         shoppingCartService.addAddress(cartUid, address);
         final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
         return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
@@ -79,10 +82,30 @@ public class ShoppingCartController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "{cartUid}/deliveryoption", method = POST)
-    public ResponseEntity<CartData> addDeliveryOption(@PathVariable UUID cartUid, @RequestBody DeliveryOption deliveryOption){
+    public ResponseEntity<CartData> addDeliveryOption(@PathVariable UUID cartUid, @RequestBody DeliveryOption deliveryOption) {
         shoppingCartService.addDeliveryOption(cartUid, deliveryOption);
         final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
         return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "{cartUid}/deliveryoption", method = GET)
+    public List<DeliveryOptionData> getDeliveryOptions(@PathVariable UUID cartUid) {
+        Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByUid(cartUid);
+        Double total = shoppingCart.map(cart -> cartDataMapper.map(cart).getSubTotal()).orElse(0D);
+        if (total < 40D) {
+            return Arrays.asList(
+                    cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3D).minDaysRequired(3).maxDaysRequired(5).build()),
+                    cartDataMapper.map(DeliveryOption.builder().method("Tracked Express Delivery").charge(5D).minDaysRequired(1).maxDaysRequired(1).build()),
+                    cartDataMapper.map(DeliveryOption.builder().method("FREE Delivery").charge(0D).minDaysRequired(5).maxDaysRequired(7).build())
+            );
+        } else {
+            return Arrays.asList(
+                    cartDataMapper.map(DeliveryOption.builder().method("FREE Delivery").charge(0D).minDaysRequired(3).maxDaysRequired(5).build()),
+                    cartDataMapper.map(DeliveryOption.builder().method("Tracked Express Delivery").charge(3D).minDaysRequired(1).maxDaysRequired(1).build())
+            );
+        }
+    }
+
 }

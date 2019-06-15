@@ -64,7 +64,7 @@ public class CartDataMapper {
                 .build();
     }
 
-    private DeliveryOptionData map(DeliveryOption deliveryOption) {
+    public DeliveryOptionData map(DeliveryOption deliveryOption) {
         final String etaFromDate = formatDate(deliveryOption.getMinDaysRequired());
         final String etaToDate = formatDate(deliveryOption.getMaxDaysRequired());
         String eta;
@@ -78,8 +78,8 @@ public class CartDataMapper {
         return DeliveryOptionData.builder()
                 .method(deliveryOption.getMethod())
                 .charge(deliveryOption.getCharge())
-                .minDays(deliveryOption.getMinDaysRequired())
-                .maxDays(deliveryOption.getMaxDaysRequired())
+                .minDaysRequired(deliveryOption.getMinDaysRequired())
+                .maxDaysRequired(deliveryOption.getMaxDaysRequired())
                 .eta(eta)
                 .build();
     }

@@ -27,12 +27,15 @@
                                     </div>
                                     <div class="m-l-20">
                                         <div class="eta">{{deliveryOption.eta}}</div>
-                                        <div class="desc">{{deliveryOption.desc}}</div>
+                                        <div class="desc">
+                                            <span ng-show="deliveryOption.charge > 0">{{deliveryOption.charge | currency:'£'}} - </span>
+                                            {{deliveryOption.method}}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xs-12 col-sm-4" ng-show="selected===$index">
-                                    <button class="btn btn-block btn-style-primary" ng-click="saveAddress(address)">
-                                        <span ng-show=""><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                                    <button class="btn btn-block btn-style-primary" ng-click="saveDeliveryOption(deliveryOption)">
+                                        <span ng-show="saveDeliveryOptionLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
                                         Continue
                                     </button>
                                 </div>

@@ -332,8 +332,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataResponseEntity.getBody().getCartUid(), is(cartUid.toString()));
         assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMethod(), is("FREE Delivery"));
         assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getCharge(), is(3D));
-        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMinDays(), is(1));
-        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMaxDays(), is(3));
+        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMinDaysRequired(), is(1));
+        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(3));
 
         // When - update delivery option
         final String deliveryOptionUpdate = "{\n" +
@@ -350,7 +350,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataUpdateResponseEntity.getBody().getCartUid(), is(cartUid.toString()));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMethod(), is("Express Delivery"));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getCharge(), is(5D));
-        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMinDays(), is(1));
-        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDays(), is(2));
+        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMinDaysRequired(), is(1));
+        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(2));
     }
 }

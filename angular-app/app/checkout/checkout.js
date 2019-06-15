@@ -47,41 +47,30 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $
 	}
 });
 
-checkout.controller('deliveryCtrl', function($scope, $location) {
+checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory) {
 
 	$scope.template.header = 'checkout-header.html';
 	$scope.template.footer = 'default-footer.html';
+	$scope.saveDeliveryOptionLoading = false;
 
-	$scope.deliverOptions = [
-		{
-			id : 1,
-			desc : "Standard Delivery",
-			eta : "Thursday, Mar. 28 - Friday, Mar. 29",
-			cost : 2.75,
-			primary : true
-		}, {
-			id : 2,
-			desc : "Tracked Express Delivery",
-			eta : "Saturday, Mar. 30 - Monday, April 1",
-			cost : 6.95,
-			primary : false
-		}, {
-			id : 3,
-			desc : "FREE Delivery",
-			eta : "Friday, Mar. 29",
-			cost : 10.95,
-			primary : false
-		}
-	];
+    shoppingCartFactory.getDeliveryOption($localstorage.get('cart_uid')).then(function(response){
+        $scope.deliverOptions = response;
+    });
+
+	$scope.saveDeliveryOption = function(deliverOption){
+		$scope.saveDeliveryOptionLoading = true;
+		var cartUid = $localstorage.get('cart_uid');
+		shoppingCartFactory.addDeliveryOption(cartUid, deliverOption).then(function(response){
+            $rootScope.$broadcast('updateCartSummary', false);
+            $scope.saveDeliveryOptionLoading = false;
+            $location.path("/billing");
+        });
+	};	
 
     $scope.select=function(index, deliverOption){
 		$scope.selected=index;
 		$scope.deliverOption=deliverOption;
 	};
-
-	$scope.continue = function(){
-		$location.path("/billing");
-	}
 });
 
 checkout.controller('billingCtrl', function($scope, $location) {
