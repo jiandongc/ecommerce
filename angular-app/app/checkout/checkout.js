@@ -1,5 +1,14 @@
 var checkout = angular.module('checkout',[]);
 
+checkout.component('summary', {
+  templateUrl: 'checkout/summary.html',
+  controller: function($scope, $localstorage, shoppingCartFactory){
+  	shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response){
+  		$scope.shoppingCartData = response;
+  	});
+  }
+});
+
 checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
 
 	$scope.template.header = 'checkout-header.html';
