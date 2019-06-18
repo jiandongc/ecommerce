@@ -1,51 +1,53 @@
-<div class="container-fluid checkout">
-   <div class="row">
-      <div class="col-sm-12 hidden-xs">
-         <ul class="breadcrumb checkout-breadcrumb">
-            <li>Shipping</li>
-            <li>Delivery</li>
-            <li class="active">Billing</li>
-            <li>Payment</li>
-            <li>Confirm</li>
-         </ul>
-      </div>
-   </div>
-   <div class = "row">
-      <div class = "col-md-8">
-         <div class="header border-bottom p-b-05">Billing Address</div>
-         <div class ="row p-t-05">
-            <div class="col-sm-8 checkbox">
-               <label><input type="checkbox" value="" ng-checked="sameAsShipping" ng-click="check()">Same as Shipping Address</label>
+<div class="container checkout">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-xs-4">
+                    <p class="prgress-label" style="text-align: left;">Shipping</p>
+                </div>
+                <div class="col-xs-4">
+                    <p class="prgress-label" style="text-align: center;">Payment</p>
+                </div>
+                <div class="col-xs-4">
+                    <p class="prgress-label" style="text-align: right;">Review Order</p>
+                </div>
+                <div class="col-xs-12">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width: 75%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+                <div class="col-xs-12 address">
+                    <div class="header p-b-05">Billing Address</div>
+                    <div ng-repeat="address in addresses | orderBy :'defaultAddress' : true">
+                        <div class="solid-border p-15">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-8">
+                                    <div class="pull-left" style="top: 35%; position: absolute;">
+                                        <input type="radio" ng-checked="selected===$index" ng-click="select($index, address)">
+                                    </div>
+                                    <div class="m-l-20">
+                                        <div class="name">{{address.title}} {{address.name}}</div>
+                                        <div>{{address.addressLine1}}</div>
+                                        <div>{{address.addressLine2}}</div>
+                                        <div>{{address.city}}, {{address.postcode}}</div>
+                                        <div>{{address.country}}</div>
+                                        <div>T: {{address.mobile}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-4" ng-show="selected===$index">
+                                    <button class="btn btn-block btn-style-primary" ng-click="saveAddress(address)">
+                                        <span ng-show="saveAddressLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                                        Bill to this address
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-sm-4" ng-show="sameAsShipping">
-               <button class="btn btn-block btn-style" ng-click="continue()">Continue</button>
-            </div>
-         </div>
-         <div ng-class="sameAsShipping ? 'ng-hide' : 'animated fadeIn'">
-            <div ng-repeat="address in addresses">
-               <div class="row p-t-10 p-b-10 border-bottom">
-                  <div class="col-sm-8 address">
-                     <input type="radio" name="address" ng-checked="selected===$index" ng-click="select($index, address)">
-                     <span class="name">{{address.fullname}}</span>
-                     <div class="m-l-12">{{address.address1}}</div>
-                     <div class="m-l-12">{{address.address2}}</div>
-                     <div class="m-l-12">{{address.city}}, {{address.postcode}}</div>
-                     <div class="m-l-12">{{address.country}}</div>
-                  </div>
-                  <div class="col-sm-4" ng-show="selected===$index">
-                     <button class="btn btn-block btn-style" ng-click="continue()">Continue</button>
-                  </div>
-               </div>
-            </div>
-            <div class="row p-t-05 p-b-05">
-               <div class="col-sm-6">
-                  <button class="btn btn-block btn-style" ng-click="">Add a new address</button>
-               </div>
-            </div>
-         </div>
-      </div>
-      <div class="col-md-4">
-         <summary></summary>
-      </div>
-   </div>
+        </div>
+        <div class="col-md-4">
+            <summary></summary>
+        </div>
+    </div>
 </div>
