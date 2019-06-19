@@ -1,1 +1,0 @@
-alter table anon_cart_item add column image_url varchar(255) null;

@@ -1,1 +1,1 @@
-CREATE SCHEMA orders AUTHORIZATION orders;
+CREATE SCHEMA order_owner AUTHORIZATION order_owner;

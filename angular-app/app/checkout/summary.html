@@ -1,6 +1,6 @@
 <div class="order-summary p-10">
     <div class="order-summary-header border-bottom p-b-05">Order Summary</div>
-    <div class="row p-t-05 p-b-05">
+    <div class="row p-t-05 p-b-05" ng-show="shoppingCartData.shipping">
         <div class="col-xs-6">
             <span class="title">Shipping</span>
             <div class="value">{{shoppingCartData.shipping.title}} {{shoppingCartData.shipping.name}}</div>
@@ -11,25 +11,41 @@
             <div class="value">T: {{shoppingCartData.shipping.mobile}}</div>
         </div>
     </div>
-    <div class="row p-t-05">
+    <div class="row p-t-05 p-b-05" ng-show="shoppingCartData.billing">
         <div class="col-xs-6">
-            <span class="title">Subtotal</span>
+            <span class="title">Billing</span>
+            <div class="value">{{shoppingCartData.billing.title}} {{shoppingCartData.billing.name}}</div>
+            <div class="value">{{shoppingCartData.billing.addressLine1}}</div>
+            <div class="value">{{shoppingCartData.billing.addressLine2}}</div>
+            <div class="value">{{shoppingCartData.billing.city}}, {{shoppingCartData.billing.postcode}}</div>
+            <div class="value">{{shoppingCartData.billing.country}}</div>
+            <div class="value">T: {{shoppingCartData.billing.mobile}}</div>
+        </div>
+    </div>
+    <div class="row p-t-05 p-b-05">
+        <div class="col-xs-6">
+            <span class="title">Items</span>
         </div>
         <div class="col-xs-6">
             <span class="value pull-right">{{shoppingCartData.subTotal | currency:"£"}}</span>
         </div>
     </div>
-    <div class="row p-t-05 p-b-05">
+    <div class="row p-t-05 p-b-05" ng-show="shoppingCartData.deliveryOption">
         <div class="col-xs-6">
-            <span class="title">Shipping</span>
+            <span class="title">Postage</span>
         </div>
         <div class="col-xs-6">
-            <span class="value pull-right">{{shoppingCartData.deliveryOption.charge | currency:"£"}}</span>
+            <span class="value pull-right" ng-show="shoppingCartData.deliveryOption.charge > 0">
+                {{shoppingCartData.deliveryOption.charge | currency:"£"}}
+            </span>
+            <span class="value pull-right" ng-show="shoppingCartData.deliveryOption.charge <= 0">
+                Free
+            </span>
         </div>
     </div>
     <div class="row border-top p-t-05">
         <div class="col-xs-6">
-            <span class="title">Total</span>
+            <span class="title">Order Total</span>
             <div class="value">
                 incl. VAT ({{10 | currency:"£"}})
             </div>

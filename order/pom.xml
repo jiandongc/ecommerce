@@ -14,10 +14,11 @@
 
     <properties>
         <postgresql.version>9.1-901.jdbc4</postgresql.version>
+        <lombok.version>1.18.6</lombok.version>
         <dbdeploy.version>3.0M3</dbdeploy.version>
         <db.driver>org.postgresql.Driver</db.driver>
         <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
-        <dbdeploy.user>orders</dbdeploy.user>
+        <dbdeploy.user>order_owner</dbdeploy.user>
         <dbdeploy.password>password</dbdeploy.password>
     </properties>
 
@@ -40,21 +41,15 @@
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.springframework.security.oauth</groupId>
-            <artifactId>spring-security-oauth2</artifactId>
-            <version>2.0.5.RELEASE</version>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
 
         <!-- Test Scope-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.4.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
