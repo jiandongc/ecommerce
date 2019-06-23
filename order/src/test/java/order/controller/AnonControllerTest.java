@@ -7,12 +7,10 @@ import order.domain.AnonCart;
 import order.domain.AnonCartItem;
 import order.repository.AnonCartRepository;
 import order.service.AnonCartService;
-import org.apache.commons.codec.binary.Base64;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -47,15 +45,15 @@ public class AnonControllerTest extends AbstractControllerTest {
         if (headers == null) {
             headers = new HttpHeaders();
             final String auth = "test:password";
-            final byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("US-ASCII")));
+            final byte[] encodedAuth = null;
             final String authHeader = "Basic " + new String(encodedAuth);
             headers.add("Authorization", authHeader);
             headers.setContentType(APPLICATION_JSON);
         }
 
         if (rest == null) {
-            rest = new TestRestTemplate();
-            rest.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+            //rest = new TestRestTemplate();
+            //rest.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
         }
     }
 
