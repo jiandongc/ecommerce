@@ -1,8 +1,6 @@
 package order.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +10,8 @@ import static javax.persistence.FetchType.LAZY;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order_item")
 public class OrderItem {
