@@ -3,7 +3,7 @@ package shoppingcart.mapper;
 import org.springframework.stereotype.Component;
 import shoppingcart.data.AddressData;
 import shoppingcart.data.CartData;
-import shoppingcart.data.CartItemData;
+import shoppingcart.data.ItemData;
 import shoppingcart.data.DeliveryOptionData;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
@@ -23,8 +23,8 @@ public class CartDataMapper {
     public CartData map(ShoppingCart shoppingCart) {
         final Double subTotal = shoppingCart.getShoppingCartItems().stream().mapToDouble(cartItem -> cartItem.getPrice() * cartItem.getQuantity()).sum();
         final int quantity = shoppingCart.getShoppingCartItems().stream().mapToInt(ShoppingCartItem::getQuantity).sum();
-        final List<CartItemData> cartItems = shoppingCart.getShoppingCartItems().stream().map(cartItem ->
-                CartItemData.builder()
+        final List<ItemData> cartItems = shoppingCart.getShoppingCartItems().stream().map(cartItem ->
+                ItemData.builder()
                         .name(cartItem.getName())
                         .price(cartItem.getPrice())
                         .description(cartItem.getDescription())

@@ -82,8 +82,8 @@ public class Order {
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "order")
     private List<OrderStatus> orderStatuses;
 
-    public void addOrderItem(OrderItem orderItem){
-        if(this.orderItems == null){
+    public void addOrderItem(OrderItem orderItem) {
+        if (this.orderItems == null) {
             this.orderItems = new ArrayList<>();
         }
 

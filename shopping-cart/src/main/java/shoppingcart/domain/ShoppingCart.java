@@ -1,8 +1,9 @@
 package shoppingcart.domain;
 
+import java.math.BigDecimal;
 import java.util.*;
 
-public final class ShoppingCart {
+public class ShoppingCart {
 
     private long id;
     private UUID cartUid;
@@ -20,9 +21,10 @@ public final class ShoppingCart {
         this.creationTime = creationTime;
     }
 
-    public ShoppingCart(){}
+    public ShoppingCart() {
+    }
 
-    public static ShoppingCartBuilder builder(){
+    public static ShoppingCartBuilder builder() {
         return new ShoppingCartBuilder();
     }
 
@@ -46,12 +48,12 @@ public final class ShoppingCart {
         this.customerId = customerId;
     }
 
-    public List<ShoppingCartItem> getShoppingCartItems(){
+    public List<ShoppingCartItem> getShoppingCartItems() {
         return shoppingCartItems;
     }
 
-    public void addItem(ShoppingCartItem cartItem){
-        if(shoppingCartItems == null){
+    public void addItem(ShoppingCartItem cartItem) {
+        if (shoppingCartItems == null) {
             shoppingCartItems = new ArrayList<>();
         }
         shoppingCartItems.add(cartItem);
@@ -83,6 +85,33 @@ public final class ShoppingCart {
 
     public void setDeliveryOption(DeliveryOption deliveryOption) {
         this.deliveryOption = deliveryOption;
+    }
+
+    public BigDecimal getItemSubTotal() {
+        double itemSubTotal = this.getShoppingCartItems().stream()
+                .mapToDouble(cartItem -> cartItem.getPrice() * cartItem.getQuantity())
+                .sum();
+        return BigDecimal.valueOf(itemSubTotal);
+    }
+
+    public BigDecimal getItemsVat() {
+        BigDecimal itemSubTotal = getItemSubTotal();
+        BigDecimal itemsBeforeVat = itemSubTotal.divide(new BigDecimal(1.2), 2, BigDecimal.ROUND_HALF_EVEN);
+        return itemSubTotal.subtract(itemsBeforeVat);
+    }
+
+    public BigDecimal getPostage() {
+        if (this.getDeliveryOption() != null && this.getDeliveryOption().getCharge() != null) {
+            return BigDecimal.valueOf(this.getDeliveryOption().getCharge());
+        } else {
+            return BigDecimal.ZERO;
+        }
+    }
+
+    public BigDecimal getPostageVat(){
+        BigDecimal postage = getPostage();
+        BigDecimal postageBeforeVat = postage.divide(new BigDecimal(1.2), 2, BigDecimal.ROUND_HALF_EVEN);
+        return postage.subtract(postageBeforeVat);
     }
 
     @Override
@@ -122,27 +151,27 @@ public final class ShoppingCart {
         private Long customerId;
         private Date creationTime;
 
-        public ShoppingCartBuilder id(long id){
+        public ShoppingCartBuilder id(long id) {
             this.id = id;
             return this;
         }
 
-        public ShoppingCartBuilder cartUid(UUID cartUid){
+        public ShoppingCartBuilder cartUid(UUID cartUid) {
             this.cartUid = cartUid;
             return this;
         }
 
-        public ShoppingCartBuilder customerId(Long customerId){
+        public ShoppingCartBuilder customerId(Long customerId) {
             this.customerId = customerId;
             return this;
         }
 
-        public ShoppingCartBuilder creationTime(Date creationTime){
+        public ShoppingCartBuilder creationTime(Date creationTime) {
             this.creationTime = creationTime;
             return this;
         }
 
-        public ShoppingCart build(){
+        public ShoppingCart build() {
             return new ShoppingCart(id, cartUid, customerId, creationTime);
         }
 
