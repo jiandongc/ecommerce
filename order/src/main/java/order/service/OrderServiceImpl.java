@@ -24,6 +24,7 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDate(LocalDate.now());
         order.setCreationTime(LocalDateTime.now());
         order.getOrderItems().forEach(orderItem -> orderItem.setOrder(order));
+        order.getOrderAddresses().forEach(orderAddress -> orderAddress.setOrder(order));
         Order saved = orderRepository.save(order);
         return saved.getOrderNumber();
     }
@@ -34,6 +35,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = orderRepository.findByOrderNumber(orderNumber);
         if (order != null) {
             Hibernate.initialize(order.getOrderItems());
+            Hibernate.initialize(order.getOrderAddresses());
             Hibernate.initialize(order.getOrderStatuses());
             return Optional.of(order);
         } else {

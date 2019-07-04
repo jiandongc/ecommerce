@@ -1,6 +1,7 @@
 package order.repository;
 
 import order.domain.Order;
+import order.domain.OrderAddress;
 import order.domain.OrderItem;
 import order.domain.OrderStatus;
 import org.junit.Test;
@@ -42,6 +43,7 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
 
         order.addOrderItem(OrderItem.builder().code("code").price(new BigDecimal("1.0")).quantity(2).sku("sku").name("name").subTotal(new BigDecimal("2.0")).build());
         order.addOrderStatus(OrderStatus.builder().status("PAID").creationTime(LocalDateTime.now()).description("description").build());
+        order.addOrderAddress(OrderAddress.builder().addressType("Billing").title("Mr.").name("John").mobile("04838473883").addressLine1("line 1").addressLine2("line 2").addressLine3("line 3").city("Manchester").country("United Kingdom").postcode("M2 1DD").build());
 
         // When
         orderRepository.save(order);
@@ -54,6 +56,11 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
         assertThat(actual.getOrderItems().size(), is(1));
         assertThat(actual.getOrderItems().get(0).getPrice(), is(new BigDecimal("1.0")));
         assertThat(actual.getOrderItems().get(0).getQuantity(), is(2));
+        assertThat(actual.getOrderAddresses().size(), is(1));
+        assertThat(actual.getOrderAddresses().get(0).getAddressType(), is("Billing"));
+        assertThat(actual.getOrderAddresses().get(0).getName(), is("John"));
+        assertThat(actual.getOrderAddresses().get(0).getAddressLine1(), is("line 1"));
+        assertThat(actual.getOrderAddresses().get(0).getPostcode(), is("M2 1DD"));
     }
 
 }

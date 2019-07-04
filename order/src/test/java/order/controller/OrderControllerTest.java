@@ -61,6 +61,32 @@ public class OrderControllerTest extends AbstractControllerTest {
                 "      \"subTotal\": 4.4,\n" +
                 "      \"imageUrl\": \"http://localhost\"\n" +
                 "    }\n" +
+                "  ],\n" +
+                "  \"orderAddresses\": [\n" +
+                "    {\n" +
+                "      \"addressType\": \"Shipping\",\n" +
+                "      \"name\": \"John\",\n" +
+                "      \"title\": \"Mr.\",\n" +
+                "      \"mobile\": \"077777777\",\n" +
+                "      \"addressLine1\": \"line 1\",\n" +
+                "      \"addressLine2\": \"line 2\",\n" +
+                "      \"addressLine3\": \"line 3\",\n" +
+                "      \"city\": \"Manchester\",\n" +
+                "      \"country\": \"United Kingdom\",\n" +
+                "      \"postcode\": \"M2 3DD\"\n" +
+                "    },\n" +
+                "    {\n" +
+                "      \"addressType\": \"Billing\",\n" +
+                "      \"name\": \"John\",\n" +
+                "      \"title\": \"Mr.\",\n" +
+                "      \"mobile\": \"077777777\",\n" +
+                "      \"addressLine1\": \"line 1\",\n" +
+                "      \"addressLine2\": \"line 2\",\n" +
+                "      \"addressLine3\": \"line 3\",\n" +
+                "      \"city\": \"Manchester\",\n" +
+                "      \"country\": \"United Kingdom\",\n" +
+                "      \"postcode\": \"M2 4DD\"\n" +
+                "    }\n" +
                 "  ]\n" +
                 "}";
         final HttpEntity<String> httpEntity = new HttpEntity<String>(payload, headers);
@@ -75,8 +101,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(orderOptional.get().getCustomerId(), is(1L));
         assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
         assertThat(orderOptional.get().getOrderItems().size(), is(2));
-        assertThat(orderOptional.get().getOrderItems().get(0).getSku(), is("sku"));
-        assertThat(orderOptional.get().getOrderItems().get(1).getSku(), is("sku1"));
+        assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
     }
 
 }

@@ -37,6 +37,7 @@ public abstract class AbstractControllerTest {
     @After
     public void reset() {
         jdbcTemplate.update("delete from order_status");
+        jdbcTemplate.update("delete from order_address");
         jdbcTemplate.update("delete from order_item");
         jdbcTemplate.update("delete from orders");
     }

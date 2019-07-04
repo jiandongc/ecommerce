@@ -80,6 +80,9 @@ public class Order {
     private List<OrderItem> orderItems;
 
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "order")
+    private List<OrderAddress> orderAddresses;
+
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "order")
     private List<OrderStatus> orderStatuses;
 
     public void addOrderItem(OrderItem orderItem) {
@@ -89,6 +92,15 @@ public class Order {
 
         this.orderItems.add(orderItem);
         orderItem.setOrder(this);
+    }
+
+    public void addOrderAddress(OrderAddress orderAddress) {
+        if (this.orderAddresses == null) {
+            this.orderAddresses = new ArrayList<>();
+        }
+
+        this.orderAddresses.add(orderAddress);
+        orderAddress.setOrder(this);
     }
 
     public void addOrderStatus(OrderStatus orderStatus) {
