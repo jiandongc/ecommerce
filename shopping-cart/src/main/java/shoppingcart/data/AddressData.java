@@ -11,6 +11,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AddressData {
 
+    private String addressType;
+
     private String name;
 
     private String title;

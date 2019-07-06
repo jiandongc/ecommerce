@@ -5,8 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
-import shoppingcart.data.CartData;
 import shoppingcart.data.OrderData;
+import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.ShoppingCartItem;
@@ -36,7 +36,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
     @Test
     public void shouldGetCartInOrderFormat(){
         // Given
-        final UUID uuid = shoppingCartRepository.create();
+        final UUID uuid = shoppingCartRepository.create(123L);
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()
                 .name("product")
@@ -67,12 +67,37 @@ public class OrderDataControllerTest extends AbstractControllerTest {
                 .build();
         shoppingCartRepository.addDeliveryOption(cart.getId(), deliveryOption);
 
+        final Address address = new Address();
+        address.setAddressType("Shipping");
+        address.setTitle("Mr.");
+        address.setName("John");
+        address.setAddressLine1("10 Kings Road");
+        address.setAddressLine2("South Harrow");
+        address.setCity("London");
+        address.setCountry("United Kingdom");
+        address.setPostcode("SH13TG");
+        address.setMobile("12345678");
+        shoppingCartRepository.addAddress(cart.getId(), address);
+
+        final Address billingAddress = new Address();
+        billingAddress.setAddressType("Billing");
+        billingAddress.setTitle("Mr.");
+        billingAddress.setName("John");
+        billingAddress.setAddressLine1("10 Kings Road");
+        billingAddress.setAddressLine2("South Harrow");
+        billingAddress.setCity("London");
+        billingAddress.setCountry("United Kingdom");
+        billingAddress.setPostcode("SH13TG");
+        billingAddress.setMobile("12345678");
+        shoppingCartRepository.addAddress(cart.getId(), billingAddress);
+
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
         final ResponseEntity<OrderData> response = rest.exchange(BASE_URL + uuid.toString(), GET, payload, OrderData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
+        assertThat(response.getBody().getCustomerId(), is(123L));
         assertThat(response.getBody().getItems(), is(BigDecimal.valueOf(46.25)));
         assertThat(response.getBody().getPostage(), is(BigDecimal.valueOf(0.92)));
         assertThat(response.getBody().getTotalBeforeVat(), is(BigDecimal.valueOf(47.17)));
@@ -84,6 +109,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
         assertThat(response.getBody().getMinDaysRequired(), is(3));
         assertThat(response.getBody().getMaxDaysRequired(), is(5));
         assertThat(response.getBody().getOrderItems().size(), is(2));
+        assertThat(response.getBody().getOrderAddresses().size(), is(2));
     }
 
 }

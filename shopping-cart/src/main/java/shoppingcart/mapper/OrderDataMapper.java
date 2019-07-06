@@ -1,8 +1,10 @@
 package shoppingcart.mapper;
 
 import org.springframework.stereotype.Component;
+import shoppingcart.data.AddressData;
 import shoppingcart.data.ItemData;
 import shoppingcart.data.OrderData;
+import shoppingcart.domain.Address;
 import shoppingcart.domain.ShoppingCart;
 
 import java.math.BigDecimal;
@@ -59,6 +61,29 @@ public class OrderDataMapper {
             orderData.addOrderItem(itemData);
         });
 
+        if (shoppingCart.getShippingAddress() != null) {
+            orderData.addOrderAddresses(map(shoppingCart.getShippingAddress()));
+        }
+
+        if (shoppingCart.getBillingAddress() != null) {
+            orderData.addOrderAddresses(map(shoppingCart.getBillingAddress()));
+        }
+
         return orderData;
+    }
+
+    private AddressData map(Address address) {
+        return AddressData.builder()
+                .addressType(address.getAddressType())
+                .name(address.getName())
+                .title(address.getTitle())
+                .mobile(address.getMobile())
+                .addressLine1(address.getAddressLine1())
+                .addressLine2(address.getAddressLine2())
+                .addressLine3(address.getAddressLine3())
+                .city(address.getCity())
+                .country(address.getCountry())
+                .postcode(address.getPostcode())
+                .build();
     }
 }

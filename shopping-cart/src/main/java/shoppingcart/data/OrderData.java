@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,12 +43,22 @@ public class OrderData {
 
     private List<ItemData> orderItems;
 
+    private List<AddressData> orderAddresses;
+
     public void addOrderItem(ItemData itemData) {
         if (this.orderItems == null) {
             this.orderItems = new ArrayList<>();
         }
 
         this.orderItems.add(itemData);
+    }
+
+    public void addOrderAddresses(AddressData addressData) {
+        if (this.orderAddresses == null) {
+            this.orderAddresses = new ArrayList<>();
+        }
+
+        this.orderAddresses.add(addressData);
     }
 
 }
