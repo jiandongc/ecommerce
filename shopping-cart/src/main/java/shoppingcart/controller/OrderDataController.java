@@ -19,7 +19,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 @RestController
-@RequestMapping("/orders")
+@RequestMapping("/carts/order-data")
 public class OrderDataController {
 
     private final ShoppingCartService shoppingCartService;

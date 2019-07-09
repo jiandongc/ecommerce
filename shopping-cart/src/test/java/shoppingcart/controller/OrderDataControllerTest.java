@@ -24,7 +24,7 @@ import static org.springframework.http.HttpStatus.OK;
 
 public class OrderDataControllerTest extends AbstractControllerTest {
 
-    private static final String BASE_URL = "http://localhost:8084/orders/";
+    private static final String BASE_URL = "http://localhost:8084/carts/order-data/";
     private final TestRestTemplate rest = new TestRestTemplate();
 
     @Autowired
