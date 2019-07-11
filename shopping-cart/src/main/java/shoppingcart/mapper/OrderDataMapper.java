@@ -28,7 +28,7 @@ public class OrderDataMapper {
 
         BigDecimal totalBeforeVat = itemsBeforeVat.add(postageBeforeVat).add(promotionBeforeVat);
         BigDecimal totalVat = itemsVat.add(postageVat).add(promotionVat);
-        BigDecimal orderTotal = itemSubTotal.add(postage).add(promotion);
+        BigDecimal orderTotal = shoppingCart.getOrderTotal();
 
         OrderData orderData = OrderData.builder()
                 .customerId(shoppingCart.getCustomerId())

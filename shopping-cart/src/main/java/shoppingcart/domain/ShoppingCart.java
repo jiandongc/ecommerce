@@ -114,6 +114,12 @@ public class ShoppingCart {
         return postage.subtract(postageBeforeVat);
     }
 
+    public BigDecimal getOrderTotal(){
+        BigDecimal itemSubTotal = getItemSubTotal();
+        BigDecimal postage = getPostage();
+        return itemSubTotal.add(postage);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
