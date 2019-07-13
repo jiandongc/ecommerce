@@ -1,6 +1,8 @@
 package order.controller;
 
 import order.domain.Order;
+import order.domain.OrderAddress;
+import order.domain.OrderItem;
 import order.service.OrderService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +12,12 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.Optional;
 
+import static java.math.BigDecimal.ONE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 public class OrderControllerTest extends AbstractControllerTest {
 
@@ -24,7 +28,7 @@ public class OrderControllerTest extends AbstractControllerTest {
     private OrderService orderService;
 
     @Test
-    public void shouldCreateOrder(){
+    public void shouldCreateOrder() {
         // Given
         final String payload = "{\n" +
                 "  \"customerId\": 1,\n" +
@@ -102,6 +106,52 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
         assertThat(orderOptional.get().getOrderItems().size(), is(2));
         assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
+        assertThat(orderOptional.get().getOrderStatuses().size(), is(1));
+        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("NEW"));
+    }
+
+    @Test
+    public void shouldAddOrderStatus() {
+        // Given
+        Order order = Order.builder().customerId(123L)
+                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumber = orderService.createOrder(order);
+        String payload = "{\n" +
+                "  \"status\": \"PAID\",\n" +
+                "  \"description\": \"paid successfully\"\n" +
+                "}";
+        final HttpEntity<String> httpEntity = new HttpEntity<>(payload, headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/status", POST, httpEntity, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(CREATED));
+        Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
+        assertThat(orderOptional.get().getOrderStatuses().size(), is(2));
+        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("NEW"));
+        assertThat(orderOptional.get().getOrderStatuses().get(1).getStatus(), is("PAID"));
+        assertThat(orderOptional.get().getOrderStatuses().get(1).getDescription(), is("paid successfully"));
+    }
+
+    @Test
+    public void shouldReturn404IfOrderIsNotFound() {
+        // Given
+        String payload = "{\n" +
+                "  \"status\": \"PAID\",\n" +
+                "  \"description\": \"paid successfully\"\n" +
+                "}";
+        final HttpEntity<String> httpEntity = new HttpEntity<>(payload, headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "1234567" + "/status", POST, httpEntity, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(NOT_FOUND));
     }
 
 }

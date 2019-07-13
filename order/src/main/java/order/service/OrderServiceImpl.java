@@ -1,6 +1,7 @@
 package order.service;
 
 import order.domain.Order;
+import order.domain.OrderStatus;
 import order.repository.OrderRepository;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public String createOrder(Order order) {
+        validateOrder(order);
+        order.addOrderStatus(OrderStatus.builder().status("NEW").description("Order created").creationTime(LocalDateTime.now()).build());
         order.setOrderNumber(OrderUtils.generateOrderNumber());
         order.setOrderDate(LocalDate.now());
         order.setCreationTime(LocalDateTime.now());
@@ -32,15 +35,32 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Order> findByOrderNumber(String orderNumber) {
-        Order order = orderRepository.findByOrderNumber(orderNumber);
-        if (order != null) {
+        Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
+
+        orderOptional.ifPresent(order -> {
             Hibernate.initialize(order.getOrderItems());
             Hibernate.initialize(order.getOrderAddresses());
             Hibernate.initialize(order.getOrderStatuses());
-            return Optional.of(order);
-        } else {
-            return Optional.empty();
+        });
+
+        return orderOptional;
+    }
+
+    @Override
+    @Transactional
+    public void addOrderStatus(String orderNumber, OrderStatus orderStatus) {
+        Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
+        orderStatus.setCreationTime(LocalDateTime.now());
+        orderOptional.ifPresent(order -> order.addOrderStatus(orderStatus));
+    }
+
+    private void validateOrder(Order order) {
+        if (order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
+            throw new RuntimeException("OrderItems is empty for customer: " + order.getCustomerId());
         }
 
+        if (order.getOrderAddresses() == null || order.getOrderAddresses().isEmpty()) {
+            throw new RuntimeException("OrderAddress is empty for customer: " + order.getCustomerId());
+        }
     }
 }

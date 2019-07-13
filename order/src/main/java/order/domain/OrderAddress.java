@@ -1,5 +1,6 @@
 package order.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ public class OrderAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @JsonIgnore
     private long id;
 
     @Column(name = "address_type")
@@ -49,6 +51,7 @@ public class OrderAddress {
     @Column(name = "post_code")
     private String postcode;
 
+    @JsonIgnore
     @ToString.Exclude
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_id")

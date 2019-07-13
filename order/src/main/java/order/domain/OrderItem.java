@@ -1,5 +1,6 @@
 package order.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +20,7 @@ public class OrderItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @JsonIgnore
     private long id;
 
     @Column(name = "sku")
@@ -45,6 +47,7 @@ public class OrderItem {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @JsonIgnore
     @ToString.Exclude
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_id")

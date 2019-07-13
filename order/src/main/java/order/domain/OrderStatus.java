@@ -1,8 +1,7 @@
 package order.domain;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -12,6 +11,8 @@ import static javax.persistence.FetchType.LAZY;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order_status")
 public class OrderStatus {
@@ -19,6 +20,7 @@ public class OrderStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @JsonIgnore
     private long id;
 
     @Column(name = "status")
@@ -30,6 +32,7 @@ public class OrderStatus {
     @Column(name = "creation_time")
     private LocalDateTime creationTime;
 
+    @JsonIgnore
     @ToString.Exclude
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "order_id")
