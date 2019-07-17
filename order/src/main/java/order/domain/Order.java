@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +87,28 @@ public class Order {
 
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "order")
     private List<OrderStatus> orderStatuses;
+
+    @Transient
+    private String eta;
+
+    @PostLoad
+    public void onLoad() {
+        final String etaFromDate = formatDate(this.orderDate, this.minDaysRequired);
+        final String etaToDate = formatDate(this.orderDate, this.maxDaysRequired);
+
+        if (etaFromDate.equals(etaToDate)) {
+            this.eta = etaFromDate;
+        } else {
+            this.eta = String.format("%s - %s", etaFromDate, etaToDate);
+        }
+    }
+
+    private String formatDate(LocalDate orderDate, Integer days) {
+        LocalDate localDate = days != null ? orderDate.plusDays(days) : orderDate;
+        String dayOfWeek = localDate.getDayOfWeek().name();
+        dayOfWeek = dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1).toLowerCase();
+        return dayOfWeek + ", " + DateTimeFormatter.ofPattern("MMM. dd").format(localDate);
+    }
 
     public void addOrderItem(OrderItem orderItem) {
         if (this.orderItems == null) {

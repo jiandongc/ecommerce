@@ -16,6 +16,8 @@ import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
@@ -37,5 +39,12 @@ public class OrderController {
         orderService.addOrderStatus(orderNumber, orderStatus);
         Optional<Order> order = orderService.findByOrderNumber(orderNumber);
         return order.map(o -> new ResponseEntity<>(o, CREATED)).orElse(new ResponseEntity<>(NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "{orderNumber}", method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Order> addOrderStatus(@PathVariable String orderNumber) {
+        Optional<Order> order = orderService.findByOrderNumber(orderNumber);
+        return order.map(o -> new ResponseEntity<>(o, OK)).orElse(new ResponseEntity<>(NOT_FOUND));
     }
 }
