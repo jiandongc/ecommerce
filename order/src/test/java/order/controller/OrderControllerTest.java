@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 
 import java.util.Optional;
 
@@ -158,7 +159,7 @@ public class OrderControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldReturnOrderByOrderNumber(){
+    public void shouldReturnOrderByOrderNumber() {
         // Given
         Order order = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
@@ -179,7 +180,7 @@ public class OrderControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldReturn404IfOrderNumberDoesNotExist(){
+    public void shouldReturn404IfOrderNumberDoesNotExist() {
         // Given
         final HttpEntity<?> httpEntity = new HttpEntity<Long>(null, headers);
 
@@ -188,6 +189,35 @@ public class OrderControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(NOT_FOUND));
+    }
+
+    @Test
+    public void shouldReturnOrdersByCustomerId() {
+        // Given
+        Order orderOne = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
+                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        orderOne.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        orderOne.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        orderService.createOrder(orderOne);
+
+        Order orderTwo = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
+                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        orderTwo.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        orderTwo.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        orderService.createOrder(orderTwo);
+
+        final HttpEntity<?> httpEntity = new HttpEntity<Long>(null, headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "?customerId=123", GET, httpEntity, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(OK));
+        assertThat(StringUtils.countOccurrencesOf(response.getBody(), "\"customerId\":123"), is(2));
     }
 
 }

@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -52,6 +53,12 @@ public class OrderServiceImpl implements OrderService {
         Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
         orderStatus.setCreationTime(LocalDateTime.now());
         orderOptional.ifPresent(order -> order.addOrderStatus(orderStatus));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Order> findOrders(Long customerId, String status) {
+        return orderRepository.findByCustomerIdOrderByOrderDateDesc(customerId);
     }
 
     private void validateOrder(Order order) {

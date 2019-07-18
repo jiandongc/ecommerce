@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -61,6 +62,80 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
         assertThat(actual.getOrderAddresses().get(0).getName(), is("John"));
         assertThat(actual.getOrderAddresses().get(0).getAddressLine1(), is("line 1"));
         assertThat(actual.getOrderAddresses().get(0).getPostcode(), is("M2 1DD"));
+    }
+
+    @Test
+    public void shouldFindOrderByCustomerId(){
+        final Order orderOne = Order.builder()
+                .orderNumber("20191230")
+                .customerId(1L)
+                .items(new BigDecimal("20.2"))
+                .postage(new BigDecimal("3.0"))
+                .promotion(new BigDecimal("-2.0"))
+                .totalBeforeVat(new BigDecimal("21.2"))
+                .itemsVat(new BigDecimal("0.3"))
+                .postageVat(new BigDecimal("0.2"))
+                .promotionVat(new BigDecimal("-0.1"))
+                .totalVat(new BigDecimal("0.4"))
+                .orderTotal(new BigDecimal("21.6"))
+                .orderDate(LocalDate.of(2019, 12, 30))
+                .deliveryMethod("Standard Delivery")
+                .minDaysRequired(1)
+                .maxDaysRequired(3)
+                .creationTime(LocalDateTime.now())
+                .build();
+        orderRepository.save(orderOne);
+
+        final Order orderTwo = Order.builder()
+                .orderNumber("20191229")
+                .customerId(1L)
+                .items(new BigDecimal("20.2"))
+                .postage(new BigDecimal("3.0"))
+                .promotion(new BigDecimal("-2.0"))
+                .totalBeforeVat(new BigDecimal("21.2"))
+                .itemsVat(new BigDecimal("0.3"))
+                .postageVat(new BigDecimal("0.2"))
+                .promotionVat(new BigDecimal("-0.1"))
+                .totalVat(new BigDecimal("0.4"))
+                .orderTotal(new BigDecimal("21.6"))
+                .orderDate(LocalDate.of(2019, 12, 29))
+                .deliveryMethod("Standard Delivery")
+                .minDaysRequired(1)
+                .maxDaysRequired(3)
+                .creationTime(LocalDateTime.now())
+                .build();
+        orderRepository.save(orderTwo);
+
+        final Order orderThree = Order.builder()
+                .orderNumber("20191231")
+                .customerId(1L)
+                .items(new BigDecimal("20.2"))
+                .postage(new BigDecimal("3.0"))
+                .promotion(new BigDecimal("-2.0"))
+                .totalBeforeVat(new BigDecimal("21.2"))
+                .itemsVat(new BigDecimal("0.3"))
+                .postageVat(new BigDecimal("0.2"))
+                .promotionVat(new BigDecimal("-0.1"))
+                .totalVat(new BigDecimal("0.4"))
+                .orderTotal(new BigDecimal("21.6"))
+                .orderDate(LocalDate.of(2019, 12, 31))
+                .deliveryMethod("Standard Delivery")
+                .minDaysRequired(1)
+                .maxDaysRequired(3)
+                .creationTime(LocalDateTime.now())
+                .build();
+        orderRepository.save(orderThree);
+
+        // When & Then
+        List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(1L);
+        assertThat(orders.size(), is(3));
+        assertThat(orders.get(0).getOrderNumber(), is("20191231"));
+        assertThat(orders.get(1).getOrderNumber(), is("20191230"));
+        assertThat(orders.get(2).getOrderNumber(), is("20191229"));
+
+        orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(2L);
+        assertThat(orders.size(), is(0));
+
     }
 
 }

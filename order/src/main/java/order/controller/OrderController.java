@@ -7,11 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.CREATED;
@@ -46,5 +44,12 @@ public class OrderController {
     public ResponseEntity<Order> addOrderStatus(@PathVariable String orderNumber) {
         Optional<Order> order = orderService.findByOrderNumber(orderNumber);
         return order.map(o -> new ResponseEntity<>(o, OK)).orElse(new ResponseEntity<>(NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Order> getOrdersForCustomer(@RequestParam(value = "customerId") Long customerId,
+                                            @RequestParam(value = "status", required = false) String status) {
+        return orderService.findOrders(customerId, status);
     }
 }
