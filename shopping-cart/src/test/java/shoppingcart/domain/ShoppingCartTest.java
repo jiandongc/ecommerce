@@ -18,7 +18,7 @@ public class ShoppingCartTest {
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()
                 .name("product")
                 .code("code1")
-                .price(1.6d)
+                .price(BigDecimal.valueOf(1.6))
                 .quantity(3)
                 .sku("109283")
                 .imageUrl("/image.jpeg")
@@ -29,7 +29,7 @@ public class ShoppingCartTest {
         final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
                 .name("product2")
                 .code("code2")
-                .price(11.9d)
+                .price(BigDecimal.valueOf(11.9))
                 .quantity(2)
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
@@ -41,7 +41,7 @@ public class ShoppingCartTest {
         BigDecimal itemSubTotal = shoppingCart.getItemSubTotal();
 
         // Then
-        assertThat(itemSubTotal, is(BigDecimal.valueOf(28.6)));
+        assertThat(itemSubTotal, is(BigDecimal.valueOf(28.6).setScale(2)));
     }
 
     @Test
@@ -55,6 +55,40 @@ public class ShoppingCartTest {
 
         doReturn(BigDecimal.valueOf(62.0)).when(spy).getItemSubTotal();
         assertThat(spy.getItemsVat(), is(BigDecimal.valueOf(10.33)));
+    }
+
+    @Test
+    public void shouldCalculateItemSubTotal(){
+        // Given
+        final ShoppingCart shoppingCart = ShoppingCart.builder().build();
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .code("code1")
+                .price(BigDecimal.valueOf(1.6))
+                .quantity(3)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .description("Size: S")
+                .build();
+        shoppingCart.addItem(cartItem);
+
+        final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
+                .name("product2")
+                .code("code2")
+                .price(BigDecimal.valueOf(11.9))
+                .quantity(2)
+                .sku("219283")
+                .imageUrl("/image2.jpeg")
+                .description("Size: M")
+                .build();
+        shoppingCart.addItem(cartItem2);
+
+        // When
+        BigDecimal itemSubTotal = shoppingCart.getItemSubTotal();
+
+        // Then
+        assertThat(itemSubTotal, is(BigDecimal.valueOf(28.6).setScale(2)));
+
     }
 
 }

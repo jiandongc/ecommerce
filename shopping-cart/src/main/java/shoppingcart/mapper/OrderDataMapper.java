@@ -9,6 +9,9 @@ import shoppingcart.domain.ShoppingCart;
 
 import java.math.BigDecimal;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.math.BigDecimal.ZERO;
+
 @Component
 public class OrderDataMapper {
 
@@ -22,9 +25,9 @@ public class OrderDataMapper {
         BigDecimal postageVat = shoppingCart.getPostageVat();
         BigDecimal postageBeforeVat = postage.subtract(postageVat);
 
-        BigDecimal promotion = BigDecimal.ZERO;
-        BigDecimal promotionVat = BigDecimal.ZERO;
-        BigDecimal promotionBeforeVat = BigDecimal.ZERO;
+        BigDecimal promotion = ZERO.setScale(2, ROUND_HALF_UP);
+        BigDecimal promotionVat = ZERO.setScale(2, ROUND_HALF_UP);
+        BigDecimal promotionBeforeVat = ZERO.setScale(2, ROUND_HALF_UP);
 
         BigDecimal totalBeforeVat = itemsBeforeVat.add(postageBeforeVat).add(promotionBeforeVat);
         BigDecimal totalVat = itemsVat.add(postageVat).add(promotionVat);
@@ -47,7 +50,6 @@ public class OrderDataMapper {
                 .build();
 
         shoppingCart.getShoppingCartItems().forEach(cartItem -> {
-            BigDecimal subTotal = BigDecimal.valueOf(cartItem.getPrice()).multiply(BigDecimal.valueOf(cartItem.getQuantity()));
             ItemData itemData = ItemData.builder()
                     .sku(cartItem.getSku())
                     .code(cartItem.getCode())
@@ -55,7 +57,7 @@ public class OrderDataMapper {
                     .description(cartItem.getDescription())
                     .price(cartItem.getPrice())
                     .quantity(cartItem.getQuantity())
-                    .subTotal(subTotal)
+                    .subTotal(cartItem.getItemTotal())
                     .imageUrl(cartItem.getImageUrl())
                     .build();
             orderData.addOrderItem(itemData);

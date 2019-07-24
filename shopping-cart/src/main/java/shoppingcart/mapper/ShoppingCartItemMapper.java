@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import shoppingcart.domain.ShoppingCartItem;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,7 +19,7 @@ public class ShoppingCartItemMapper implements RowMapper<ShoppingCartItem> {
                 .code(rs.getString("product_code"))
                 .sku(rs.getString("sku"))
                 .name(rs.getString("product_name"))
-                .price(rs.getDouble("unit_price"))
+                .price(rs.getBigDecimal("unit_price").setScale(2, BigDecimal.ROUND_HALF_UP))
                 .quantity(rs.getInt("quantity"))
                 .imageUrl(rs.getString("image_url"))
                 .description(rs.getString("description"))

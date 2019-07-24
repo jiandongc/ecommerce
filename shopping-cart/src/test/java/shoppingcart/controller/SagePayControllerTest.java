@@ -15,6 +15,7 @@ import shoppingcart.domain.ShoppingCartItem;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -46,7 +47,7 @@ public class SagePayControllerTest extends AbstractControllerTest {
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()
                 .name("product")
                 .code("code1")
-                .price(1.3d)
+                .price(BigDecimal.valueOf(1.3))
                 .sku("109283")
                 .imageUrl("/image.jpeg")
                 .description("Size: S")
@@ -56,7 +57,7 @@ public class SagePayControllerTest extends AbstractControllerTest {
         final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
                 .name("product2")
                 .code("code2")
-                .price(7.3d)
+                .price(BigDecimal.valueOf(7.3))
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
                 .description("Size: M")

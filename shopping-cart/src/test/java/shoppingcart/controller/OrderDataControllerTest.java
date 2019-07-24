@@ -41,7 +41,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()
                 .name("product")
                 .code("code1")
-                .price(1.3d)
+                .price(BigDecimal.valueOf(1.3))
                 .sku("109283")
                 .imageUrl("/image.jpeg")
                 .description("Size: S")
@@ -51,7 +51,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
         final ShoppingCartItem cartItem2 = ShoppingCartItem.builder()
                 .name("product2")
                 .code("code2")
-                .price(7.3d)
+                .price(BigDecimal.valueOf(7.3))
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
                 .description("Size: M")
@@ -92,8 +92,9 @@ public class OrderDataControllerTest extends AbstractControllerTest {
         shoppingCartRepository.addAddress(cart.getId(), billingAddress);
 
         // When
-        final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
+        final HttpEntity<Long> payload = new HttpEntity<>(null, headers);
         final ResponseEntity<OrderData> response = rest.exchange(BASE_URL + uuid.toString(), GET, payload, OrderData.class);
+        final ResponseEntity<String> text = rest.exchange(BASE_URL + uuid.toString(), GET, payload, String.class);
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
@@ -104,7 +105,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
         assertThat(response.getBody().getItemsVat(), is(BigDecimal.valueOf(9.25)));
         assertThat(response.getBody().getPostageVat(), is(BigDecimal.valueOf(0.18)));
         assertThat(response.getBody().getTotalVat(), is(BigDecimal.valueOf(9.43)));
-        assertThat(response.getBody().getOrderTotal(), is(BigDecimal.valueOf(56.6)));
+        assertThat(response.getBody().getOrderTotal(), is(BigDecimal.valueOf(56.60).setScale(2)));
         assertThat(response.getBody().getDeliveryMethod(), is("Express Delivery"));
         assertThat(response.getBody().getMinDaysRequired(), is(3));
         assertThat(response.getBody().getMaxDaysRequired(), is(5));

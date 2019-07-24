@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -15,7 +16,7 @@ public final class CartData {
 
     private Integer quantity;
 
-    private Double subTotal;
+    private BigDecimal subTotal;
 
     private String cartUid;
 

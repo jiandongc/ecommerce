@@ -13,6 +13,7 @@ import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.CartDataMapper;
 import shoppingcart.service.ShoppingCartService;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -93,8 +94,8 @@ public class ShoppingCartController {
     @RequestMapping(value = "{cartUid}/deliveryoption", method = GET)
     public List<DeliveryOptionData> getDeliveryOptions(@PathVariable UUID cartUid) {
         Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByUid(cartUid);
-        Double total = shoppingCart.map(cart -> cartDataMapper.map(cart).getSubTotal()).orElse(0D);
-        if (total < 40D) {
+        BigDecimal itemSubTotal = shoppingCart.map(ShoppingCart::getItemSubTotal).orElse(BigDecimal.ZERO);
+        if (itemSubTotal.compareTo(BigDecimal.valueOf(40L)) < 0) {
             return Arrays.asList(
                     cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3D).minDaysRequired(3).maxDaysRequired(5).build()),
                     cartDataMapper.map(DeliveryOption.builder().method("Tracked Express Delivery").charge(5D).minDaysRequired(1).maxDaysRequired(1).build()),

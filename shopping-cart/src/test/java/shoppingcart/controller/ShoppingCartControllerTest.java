@@ -9,6 +9,7 @@ import shoppingcart.data.CartData;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.repository.ShoppingCartRepository;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -99,7 +100,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(OK));
         assertThat(response.getBody().getQuantity(), is(3));
-        assertThat(response.getBody().getSubTotal(), is(21d));
+        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(21).setScale(2)));
         assertThat(response.getBody().getCartItems().size(), is(2));
         assertThat(response.getBody().getCartItems().get(0).getSku(), is("123456"));
         assertThat(response.getBody().getCartItems().get(0).getDescription(), is("Size: S"));
@@ -153,7 +154,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(OK));
         assertThat(response.getBody().getQuantity(), is(3));
-        assertThat(response.getBody().getSubTotal(), is(21d));
+        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(21).setScale(2)));
         assertThat(response.getBody().getCartItems().size(), is(2));
         assertThat(response.getBody().getCartItems().get(0).getSku(), is("123456"));
         assertThat(response.getBody().getCartItems().get(0).getDescription(), is("Size: S"));

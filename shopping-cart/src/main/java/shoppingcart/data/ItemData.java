@@ -17,7 +17,7 @@ public final class ItemData {
 
     private String name;
 
-    private Double price;
+    private BigDecimal price;
 
     private Integer quantity;
 

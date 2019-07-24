@@ -1,5 +1,6 @@
 package shoppingcart.domain;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class ShoppingCartItem {
@@ -9,7 +10,7 @@ public class ShoppingCartItem {
     private String code;
     private String sku;
     private String name;
-    private Double price;
+    private BigDecimal price;
     private int quantity;
     private String imageUrl;
     private String description;
@@ -17,16 +18,16 @@ public class ShoppingCartItem {
     private Date lastUpdateTime;
 
     private ShoppingCartItem(long id,
-                            long cartId,
-                            String code,
-                            String sku,
-                            String name,
-                            Double price,
-                            int quantity,
-                            String imageUrl,
-                            String description,
-                            Date creationTime,
-                            Date lastUpdateTime) {
+                             long cartId,
+                             String code,
+                             String sku,
+                             String name,
+                             BigDecimal price,
+                             int quantity,
+                             String imageUrl,
+                             String description,
+                             Date creationTime,
+                             Date lastUpdateTime) {
         this.id = id;
         this.cartId = cartId;
         this.code = code;
@@ -40,9 +41,10 @@ public class ShoppingCartItem {
         this.lastUpdateTime = lastUpdateTime;
     }
 
-    public ShoppingCartItem(){}
+    public ShoppingCartItem() {
+    }
 
-    public static ShoppingCartItemBuilder builder(){
+    public static ShoppingCartItemBuilder builder() {
         return new ShoppingCartItemBuilder();
     }
 
@@ -54,7 +56,7 @@ public class ShoppingCartItem {
         return cartId;
     }
 
-    public String getCode(){
+    public String getCode() {
         return code;
     }
 
@@ -66,7 +68,7 @@ public class ShoppingCartItem {
         return name;
     }
 
-    public Double getPrice() {
+    public BigDecimal getPrice() {
         return price;
     }
 
@@ -88,6 +90,10 @@ public class ShoppingCartItem {
 
     public Date getLastUpdateTime() {
         return lastUpdateTime;
+    }
+
+    public BigDecimal getItemTotal(){
+        return this.price.multiply(BigDecimal.valueOf(this.quantity));
     }
 
     @Override
@@ -132,69 +138,69 @@ public class ShoppingCartItem {
         private String code;
         private String sku;
         private String name;
-        private Double price;
+        private BigDecimal price;
         private int quantity;
         private String imageUrl;
         private String description;
         private Date creationTime;
         private Date lastUpdateTime;
 
-        public ShoppingCartItemBuilder id(long id){
+        public ShoppingCartItemBuilder id(long id) {
             this.id = id;
             return this;
         }
 
-        public ShoppingCartItemBuilder cartId(long cartId){
+        public ShoppingCartItemBuilder cartId(long cartId) {
             this.cartId = cartId;
             return this;
         }
 
-        public ShoppingCartItemBuilder code(String code){
+        public ShoppingCartItemBuilder code(String code) {
             this.code = code;
             return this;
         }
 
-        public ShoppingCartItemBuilder sku(String sku){
+        public ShoppingCartItemBuilder sku(String sku) {
             this.sku = sku;
             return this;
         }
 
-        public ShoppingCartItemBuilder name(String name){
+        public ShoppingCartItemBuilder name(String name) {
             this.name = name;
             return this;
         }
 
-        public ShoppingCartItemBuilder price(Double price){
+        public ShoppingCartItemBuilder price(BigDecimal price) {
             this.price = price;
             return this;
         }
 
-        public ShoppingCartItemBuilder quantity(int quantity){
+        public ShoppingCartItemBuilder quantity(int quantity) {
             this.quantity = quantity;
             return this;
         }
 
-        public ShoppingCartItemBuilder imageUrl(String imageUrl){
+        public ShoppingCartItemBuilder imageUrl(String imageUrl) {
             this.imageUrl = imageUrl;
             return this;
         }
 
-        public ShoppingCartItemBuilder description(String description){
+        public ShoppingCartItemBuilder description(String description) {
             this.description = description;
             return this;
         }
 
-        public ShoppingCartItemBuilder creationTime(Date creationTime){
+        public ShoppingCartItemBuilder creationTime(Date creationTime) {
             this.creationTime = creationTime;
             return this;
         }
 
-        public ShoppingCartItemBuilder lastUpdateTime(Date lastUpdateTime){
+        public ShoppingCartItemBuilder lastUpdateTime(Date lastUpdateTime) {
             this.lastUpdateTime = lastUpdateTime;
             return this;
         }
 
-        public ShoppingCartItem build(){
+        public ShoppingCartItem build() {
             return new ShoppingCartItem(id, cartId, code, sku, name, price, quantity, imageUrl, description, creationTime, lastUpdateTime);
         }
 

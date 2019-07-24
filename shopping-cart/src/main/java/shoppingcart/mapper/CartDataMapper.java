@@ -21,7 +21,6 @@ public class CartDataMapper {
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM. dd");
 
     public CartData map(ShoppingCart shoppingCart) {
-        final Double subTotal = shoppingCart.getShoppingCartItems().stream().mapToDouble(cartItem -> cartItem.getPrice() * cartItem.getQuantity()).sum();
         final int quantity = shoppingCart.getShoppingCartItems().stream().mapToInt(ShoppingCartItem::getQuantity).sum();
         final List<ItemData> cartItems = shoppingCart.getShoppingCartItems().stream().map(cartItem ->
                 ItemData.builder()
@@ -42,7 +41,7 @@ public class CartDataMapper {
                 .cartUid(shoppingCart.getCartUid().toString())
                 .customerId(shoppingCart.getCustomerId())
                 .quantity(quantity)
-                .subTotal(subTotal)
+                .subTotal(shoppingCart.getItemSubTotal())
                 .cartItems(cartItems)
                 .shipping(shipping)
                 .billing(billing)

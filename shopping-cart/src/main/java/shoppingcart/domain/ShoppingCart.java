@@ -3,6 +3,9 @@ package shoppingcart.domain;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.math.BigDecimal.ZERO;
+
 public class ShoppingCart {
 
     private long id;
@@ -88,29 +91,28 @@ public class ShoppingCart {
     }
 
     public BigDecimal getItemSubTotal() {
-        double itemSubTotal = this.getShoppingCartItems().stream()
-                .mapToDouble(cartItem -> cartItem.getPrice() * cartItem.getQuantity())
-                .sum();
-        return BigDecimal.valueOf(itemSubTotal);
+        return this.getShoppingCartItems().stream()
+                .map(ShoppingCartItem::getItemTotal)
+                .reduce(ZERO.setScale(2, ROUND_HALF_UP), BigDecimal::add);
     }
 
     public BigDecimal getItemsVat() {
         BigDecimal itemSubTotal = getItemSubTotal();
-        BigDecimal itemsBeforeVat = itemSubTotal.divide(new BigDecimal(1.2), 2, BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal itemsBeforeVat = itemSubTotal.divide(new BigDecimal(1.2), 2, ROUND_HALF_UP);
         return itemSubTotal.subtract(itemsBeforeVat);
     }
 
     public BigDecimal getPostage() {
         if (this.getDeliveryOption() != null && this.getDeliveryOption().getCharge() != null) {
-            return BigDecimal.valueOf(this.getDeliveryOption().getCharge());
+            return BigDecimal.valueOf(this.getDeliveryOption().getCharge()).setScale(2, ROUND_HALF_UP);
         } else {
-            return BigDecimal.ZERO;
+            return ZERO.setScale(2, ROUND_HALF_UP);
         }
     }
 
     public BigDecimal getPostageVat(){
         BigDecimal postage = getPostage();
-        BigDecimal postageBeforeVat = postage.divide(new BigDecimal(1.2), 2, BigDecimal.ROUND_HALF_EVEN);
+        BigDecimal postageBeforeVat = postage.divide(new BigDecimal(1.2), 2, ROUND_HALF_UP);
         return postage.subtract(postageBeforeVat);
     }
 
