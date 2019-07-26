@@ -239,6 +239,9 @@ customer.config(
         templateUrl: 'customer/register.html',
         controller: 'registerCtrl'
     }).when('/account/:id', {
+        templateUrl: 'customer/account.html',
+        controller: 'accountCtrl'
+    }).when('/account/:id/profile', {
         templateUrl: 'customer/profile.html',
         controller: 'accountCtrl'
     }).when('/account/:id/edit', {

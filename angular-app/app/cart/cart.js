@@ -105,6 +105,24 @@ cart.factory('shoppingCartFactory', function($http, environment){
       }); 
   };
 
+  var getSageMerchantKey = function() {
+      return $http.get(environment.shoppingCartUrl + '/carts/sage').then(function(response){
+        return response.data;
+      }); 
+  };
+
+  var submitTrnsactionToSage = function(cartUid, card){
+      return $http.post(environment.shoppingCartUrl + '/carts/sage/transactions/' + cartUid, card).then(function(response){
+        return response.data;
+      }); 
+  };
+
+  var getOrderData = function(cartUid){
+      return $http.get(environment.shoppingCartUrl + '/carts/order-data/' + cartUid).then(function(response){
+        return response.data;
+      }); 
+  };
+
   return {
     updateCustomerId: updateCustomerId,
     addItemToShoppingCart: addItemToShoppingCart,
@@ -116,7 +134,10 @@ cart.factory('shoppingCartFactory', function($http, environment){
     updateShoppingCartItem: updateShoppingCartItem,
     addAddress: addAddress,
     addDeliveryOption: addDeliveryOption,
-    getDeliveryOption: getDeliveryOption
+    getDeliveryOption: getDeliveryOption,
+    getSageMerchantKey: getSageMerchantKey,
+    submitTrnsactionToSage: submitTrnsactionToSage,
+    getOrderData: getOrderData
   }
 });
 

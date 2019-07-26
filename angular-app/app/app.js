@@ -8,7 +8,8 @@ var app = angular.module('store', [
 	'cart',
 	'checkout',
 	'auth',
-	'config'
+	'config',
+	'order'
 ]);
 
 app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, authService) {

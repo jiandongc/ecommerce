@@ -291,10 +291,6 @@ html, body {
 	color: #45555f;
 }
 
-.account .row {
-	padding-bottom: 3%;
-}
-
 .account .title {
 	font-size: 1.3em;
 	font-weight: bold;
@@ -308,7 +304,7 @@ html, body {
     font-weight: 600;
 }
 
-.address .border {
+.account .border {
   border: 1px solid #C0C0C0;
   border-radius: 4px;
 }
@@ -554,6 +550,10 @@ ul.scrollable-menu .btn-remove {
   font-weight: bold;
 }
 
+.checkout .order-confirmation {
+
+}
+
 .checkout .deliveryOption .desc {
   font-weight: 400;
   color: #888;
@@ -688,6 +688,13 @@ ul.scrollable-menu .btn-remove {
 .fs-11 {font-size: 1.1em}
 .fs-12 {font-size: 1.2em}
 .fs-13 {font-size: 1.3em}
+.fs-14 {font-size: 1.4em}
+.fs-15 {font-size: 1.5em}
+.fs-16 {font-size: 1.6em}
+.fs-17 {font-size: 1.7em}
+.fs-18 {font-size: 1.8em}
+.fs-19 {font-size: 1.9em}
+.fs-20 {font-size: 2.0em}
 
 .fw-bold {font-weight: bold}
 .fw-light {font-weight: 200}
@@ -707,6 +714,12 @@ ul.scrollable-menu .btn-remove {
 .required-field::after {
     content: "*";
     color: red;
+}
+
+.underline {
+    border-bottom: 2px solid #E8E8E8;
+    width: 100%;
+    display: block;
 }
 
 /* animation */

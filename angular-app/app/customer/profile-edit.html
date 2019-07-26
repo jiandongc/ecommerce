@@ -1,9 +1,8 @@
 <div class="container account">
 	<div class="row">
-		<ul class="nav nav-pills top-nav">
-			<li role="presentation" class="active"><a href="#!/account/{{customerId}}">Profile</a></li>
-			<li role="presentation"><a href="#!/account/{{customerId}}/orders">My Orders</a></li>
-			<li role="presentation"><a href="#!/account/{{customerId}}/address-book">Address Book</a></li>
+		<ul class="breadcrumb fs-09" style="background: #fff;">
+  			<li><a href="#!/account/{{customer.id}}"><span style="color: #45555f;">Your Account</span></a></li>
+  			<li><span style="color: #c45500;">Your Profile</span></li>
 		</ul>
 	</div>
 	<div class = "row">
@@ -79,7 +78,7 @@
 					</tr>
 					<tr>
 						<td colspan="2">
-							<a href="#!/account/{{customer.id}}" class="btn btn-primary">Cancel</a>			
+							<a href="#!/account/{{customer.id}}/profile" class="btn btn-primary">Cancel</a>			
 							<a href="" class="btn btn-primary" ng-click="updateProfile()">Save Changes</a>
 						</td>
 					</tr>
