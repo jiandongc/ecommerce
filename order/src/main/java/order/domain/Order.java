@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
@@ -135,5 +136,14 @@ public class Order {
 
         this.orderStatuses.add(orderStatus);
         orderStatus.setOrder(this);
+    }
+
+    @JsonIgnore
+    public String getCurrentStatus() {
+        if (this.orderStatuses == null) {
+            return "";
+        }
+
+        return this.orderStatuses.stream().max(Comparator.comparing(OrderStatus::getCreationTime)).map(OrderStatus::getStatus).orElse("");
     }
 }

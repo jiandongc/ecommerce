@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -23,7 +24,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public String createOrder(Order order) {
         validateOrder(order);
-        order.addOrderStatus(OrderStatus.builder().status("NEW").description("Order created").creationTime(LocalDateTime.now()).build());
+        order.addOrderStatus(OrderStatus.builder().status("Placed").description("Order created").creationTime(LocalDateTime.now()).build());
         order.setOrderNumber(OrderUtils.generateOrderNumber());
         order.setOrderDate(LocalDate.now());
         order.setCreationTime(LocalDateTime.now());
@@ -58,7 +59,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public List<Order> findOrders(Long customerId, String status) {
-        return orderRepository.findByCustomerIdOrderByOrderDateDesc(customerId);
+        final List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(customerId);
+        if("open".equalsIgnoreCase(status)){
+            return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("placed|processing|shipped")).collect(Collectors.toList());
+        } else if("completed".equalsIgnoreCase(status)){
+            return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("delivered|returned|cancelled|failed")).collect(Collectors.toList());
+        }
+
+        return orders;
     }
 
     private void validateOrder(Order order) {
