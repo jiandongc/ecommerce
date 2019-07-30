@@ -8,7 +8,7 @@
 	<div class="row address">
 		<div class = "col-xs-12 col-md-4 m-b-15" style="height:250px;">
 			<a href="#!/account/{{customerId}}/add-address">
-				<div class="p-15 dashed-border" style="height: 100%; width: 100%;">
+				<div class="p-15 a-dashed-box" style="height: 100%; width: 100%;">
 					<div class="add-new">
 						<div class="icon m-b-05"><span class="glyphicon glyphicon-plus fa-2x"></span></div>
 						<div class="text fs-13">Add Address</div>
@@ -17,7 +17,7 @@
 			</a>
 		</div>
 		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: true}" style="height:250px;">
-			<div class="p-15 border" style="height: 100%; width: 100%">
+			<div class="p-15 a-box" style="height: 100%; width: 100%">
 				<div class="name">{{address.title}} {{address.name}}</div>
 				<div>{{address.addressLine1}}</div>
 				<div>{{address.addressLine2}}</div>
@@ -32,7 +32,7 @@
 		</div>
 
 		<div class = "col-xs-12 col-md-4 m-b-15" ng-repeat="address in addresses | filter: {defaultAddress: false} | orderBy: '-id'" style="height:250px;">
-			<div class="p-15 border" style="height: 100%; width: 100%">
+			<div class="p-15 a-box" style="height: 100%; width: 100%">
 				<div class="name">{{address.title}} {{address.name}}</div>
 				<div>{{address.addressLine1}}</div>
 				<div>{{address.addressLine2}}</div>

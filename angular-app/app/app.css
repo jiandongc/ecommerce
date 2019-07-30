@@ -304,12 +304,32 @@ html, body {
     font-weight: 600;
 }
 
-.account .border {
+.a-box {
+  display: block;
   border: 1px solid #C0C0C0;
   border-radius: 4px;
 }
 
-.dashed-border {
+.a-box-group>.a-box {
+    margin-top: -1px;
+    border-radius: 0;
+}
+
+.a-box-group>.a-box:first-child {
+    border-radius: 4px 4px 0 0;
+    margin-top: 0;
+}
+
+.a-box-group>.a-box:last-child {
+    border-radius: 0 0 4px 4px;
+}
+
+.a-color-offset-background {
+    background-color: #f6f6f6!important;
+}
+
+.a-dashed-box {
+  display: block;
   border: 1px dashed #C0C0C0;
   border-radius: 4px;
 }
@@ -683,6 +703,7 @@ ul.scrollable-menu .btn-remove {
 .m-b-30 { margin-bottom: 3.0em; }
 
 .fs-08 {font-size: 0.8em}
+.fs-085 {font-size: 0.85em}
 .fs-09 {font-size: 0.9em}
 .fs-10 {font-size: 1.0em}
 .fs-11 {font-size: 1.1em}
@@ -698,6 +719,14 @@ ul.scrollable-menu .btn-remove {
 
 .fw-bold {font-weight: bold}
 .fw-light {font-weight: 200}
+
+.color-tenne {
+  color: #c45500;
+}
+
+.color-san-juan {
+  color: #45555f;
+}
 
 .clearLeft {
   clear: left;

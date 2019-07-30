@@ -49,6 +49,21 @@ customer.controller('accountCtrl', function($scope, $routeParams, customerFactor
     });
 });
 
+customer.controller('orderCtrl', function($scope, $routeParams, orderFactory, customerFactory){
+    $scope.status = $routeParams.status;
+    if($scope.status !== 'open'){
+        $scope.status = 'completed'
+    }
+
+    customerFactory.getCustomerById($routeParams.id).then(function(response){
+        $scope.customer = response;
+    });
+
+    orderFactory.getOrderByCustomerId($routeParams.id, $scope.status).then(function(response){
+        $scope.orders = response;
+    });
+});
+
 customer.controller('profileEditCtrl', function($scope, $routeParams, $location, $localstorage, customerFactory){
     customerFactory.getCustomerById($routeParams.id).then(function(response){
         $scope.customer = response;
@@ -259,9 +274,9 @@ customer.config(
     }).when('/account/:id/address/:addressId/edit', {
         templateUrl: 'customer/edit-address.html',
         controller: 'editAddressCtrl'
-    }).when('/account/:id/orders', {
+    }).when('/account/:id/orders/:status', {
         templateUrl: 'customer/orders.html',
-        controller: 'accountCtrl'
+        controller: 'orderCtrl'
     });
 });
 
