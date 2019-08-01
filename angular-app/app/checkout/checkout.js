@@ -165,7 +165,7 @@ checkout.controller('paymentCtrl', function($scope, $location, $localstorage, sh
     };
 
     var markOrderAsPaid = function(){
-        var orderStatus = {status : 'PAID',description: 'PAID'};
+        var orderStatus = {status : 'Processing',description: 'Order paid'};
     	   return orderFactory.addOrderStatus($scope.orderNumber, orderStatus).then(function(order){
     		    return order;
     	   }, function(error){
@@ -229,9 +229,6 @@ checkout.controller('orderConfirmationCtrl', function($scope, $location, $locals
     orderFactory.getOrderByNumber($routeParams.orderNumber).then(function(response){
         $scope.order = response;
     });
-    
-    console.log($scope.order);
-
 });
 
 checkout.config(

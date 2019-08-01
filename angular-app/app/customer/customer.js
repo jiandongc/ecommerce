@@ -57,10 +57,19 @@ customer.controller('orderCtrl', function($scope, $routeParams, orderFactory, cu
 
     customerFactory.getCustomerById($routeParams.id).then(function(response){
         $scope.customer = response;
+        orderFactory.getOrderByCustomerId($routeParams.id, $scope.status).then(function(response){
+            $scope.orders = response;
+        });
     });
+});
 
-    orderFactory.getOrderByCustomerId($routeParams.id, $scope.status).then(function(response){
-        $scope.orders = response;
+customer.controller('orderDetailsCtrl', function($scope, $routeParams, orderFactory, customerFactory){
+    customerFactory.getCustomerById($routeParams.id).then(function(response){
+        $scope.customer = response;
+        orderFactory.getOrderByNumber($routeParams.orderNumber).then(function(response){
+            $scope.order = response;
+            console.log($scope.order);
+        });
     });
 });
 
@@ -274,9 +283,12 @@ customer.config(
     }).when('/account/:id/address/:addressId/edit', {
         templateUrl: 'customer/edit-address.html',
         controller: 'editAddressCtrl'
-    }).when('/account/:id/orders/:status', {
+    }).when('/account/:id/orders', {
         templateUrl: 'customer/orders.html',
         controller: 'orderCtrl'
+    }).when('/account/:id/orders/:orderNumber', {
+        templateUrl: 'customer/order-details.html',
+        controller: 'orderDetailsCtrl'
     });
 });
 

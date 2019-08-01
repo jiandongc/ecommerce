@@ -41,7 +41,7 @@ public class OrderController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "{orderNumber}", method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Order> addOrderStatus(@PathVariable String orderNumber) {
+    public ResponseEntity<Order> getOrderByOrderNumber(@PathVariable String orderNumber) {
         Optional<Order> order = orderService.findByOrderNumber(orderNumber);
         return order.map(o -> new ResponseEntity<>(o, OK)).orElse(new ResponseEntity<>(NOT_FOUND));
     }
