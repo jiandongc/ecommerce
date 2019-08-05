@@ -24,7 +24,6 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Value("${security.secret.expirationtime}")
     private String expirationTime;
 
-
     private final UserDetailsService userDetailsService;
 
     @Autowired
@@ -35,8 +34,8 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .anyRequest().authenticated()
-                .and()
+                .antMatchers("/guesttoken").permitAll()
+                .anyRequest().authenticated().and()
                 .addFilter(this.jwtAuthenticationFilter())
                 .sessionManagement()
                 .sessionCreationPolicy(STATELESS);
