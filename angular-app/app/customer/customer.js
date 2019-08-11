@@ -3,8 +3,10 @@ var customer = angular.module('customer', ['ngRoute','ngResource']);
 customer.controller('loginCtrl', function($scope, authService, $rootScope) {
 
     $rootScope.loginError = false;
+    $rootScope.logining = false;
 
     $scope.login = function(credentials){
+        $rootScope.logining = true;
         authService.authenticateUser(credentials);
     };
 });

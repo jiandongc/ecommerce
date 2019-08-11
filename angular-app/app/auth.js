@@ -48,11 +48,13 @@ auth.factory('authService', function($localstorage, $location, $rootScope, $q, a
 
     var redirectToAccountPage = function(customer){
         $rootScope.loginError = false;
+        $rootScope.logining = false;
         $location.path("/account/" + customer.id);
     };
 
     var loginFailed = function(error){
         $rootScope.loginError = true;
+        $rootScope.logining = false;
         $rootScope.$broadcast('reset');
     };
 

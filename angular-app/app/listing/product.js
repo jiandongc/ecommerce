@@ -1,9 +1,11 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
 productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout, shoppingCartFactory, $localstorage, $rootScope) {
-
+  $scope.addingItem = false;
+  $scope.loading = true;
 	$http.get(environment.productUrl + '/products/' + $routeParams.code).then(function(response){
 		$scope.product = response.data;
+    $scope.loading = false;
 
     $http.get(environment.productUrl + '/products/color/' + $routeParams.code).then(function(response){
       $scope.colorVariant = response.data;
@@ -66,12 +68,14 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
 
   $scope.addItemToCart = function(product){
       var imageUrl = product.images.Main[0];
+      $scope.addingItem = true;
       if(!$localstorage.containsKey("cart_uid")){
           if($localstorage.containsKey("customer_id")){
               shoppingCartFactory.createShoppingCartForCustomer($localstorage.get("customer_id")).then(function(cartUid){
                   shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data){
                       $localstorage.set('cart_uid', cartUid);
                       $rootScope.$broadcast('updateCartSummary', true);
+                      $scope.addingItem = false;
                   });
               }); 
           } else {
@@ -79,6 +83,7 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
                   shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data){
                       $localstorage.set('cart_uid', cartUid);
                       $rootScope.$broadcast('updateCartSummary', true);
+                      $scope.addingItem = false;
                   });
               }); 
           }
@@ -86,6 +91,7 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
           var cartUid = $localstorage.get('cart_uid', undefined);
           shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data){
               $rootScope.$broadcast('updateCartSummary', true);
+              $scope.addingItem = false;
           });  
       }
 

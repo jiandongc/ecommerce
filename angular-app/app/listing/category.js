@@ -1,6 +1,7 @@
 var category = angular.module('category', ['ngRoute', 'checklist-model']);
 
 category.controller('categoryCtrl', function($scope, $routeParams, categoryService) {
+  $scope.loading = true;
   $scope.processing = {};
   $scope.selectedBrands = {};
   $scope.filters = {};
@@ -15,6 +16,7 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
     $scope.productTotal = category.productTotal;
     $scope.parentcategories = category.parents;
     $scope.subcategories = category.children;
+    $scope.loading = false;
   });
 
   $scope.findProducts = function(categoryCode, filters, sort) {
