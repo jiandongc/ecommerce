@@ -56,15 +56,8 @@ auth.factory('authService', function($localstorage, $location, $rootScope, $q, a
         $rootScope.$broadcast('reset');
     };
 
-    var assignGuestToken = function(){
-        if(!$localstorage.containsKey('access_token')) {
-            $localstorage.set('access_token', "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6MTg1MTI0ODI4MX0.UseykStWF5Qk6a_S65tLgSTDb2BAY1fDz0bEGeUr_EafioOE-I1cpGBwxt-gwLUYlYfo_bNr0PBuAIRVdHtYoQ");
-        }
-    }
-
 	return {
-        authenticateUser : authenticateUser,
-        assignGuestToken : assignGuestToken
+        authenticateUser : authenticateUser
     };
 });
 
@@ -82,7 +75,14 @@ auth.factory('authFactory', function($http, environment){
         });
     };
 
+    var downloadGuestToken = function(){
+      return $http.get(environment.authServerUrl + '/guesttoken').then(function(response){
+          return response;
+      });
+    };
+
     return {
-        validateUser: validateUser
-    }
+        validateUser: validateUser,
+        downloadGuestToken: downloadGuestToken
+    };
 });

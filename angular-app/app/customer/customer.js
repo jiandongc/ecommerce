@@ -2,7 +2,6 @@ var customer = angular.module('customer', ['ngRoute','ngResource']);
 
 customer.controller('loginCtrl', function($scope, authService, $rootScope) {
 
-    authService.assignGuestToken();
     $rootScope.loginError = false;
 
     $scope.login = function(credentials){
@@ -12,7 +11,6 @@ customer.controller('loginCtrl', function($scope, authService, $rootScope) {
 
 customer.controller('registerCtrl', function($scope, authService, customerFactory) {
 
-    authService.assignGuestToken();
     $scope.error = false;
     $scope.errorMsg = "";
 
@@ -68,7 +66,6 @@ customer.controller('orderDetailsCtrl', function($scope, $routeParams, orderFact
         $scope.customer = response;
         orderFactory.getOrderByNumber($routeParams.orderNumber).then(function(response){
             $scope.order = response;
-            console.log($scope.order);
         });
     });
 });

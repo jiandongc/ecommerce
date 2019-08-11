@@ -1,11 +1,9 @@
 var cart = angular.module('cart',[]);
 
-cart.controller('cartCtrl', function($scope, $rootScope, authService, shoppingCartFactory, $localstorage, $timeout, $location) {
+cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $localstorage, $timeout, $location) {
 
   $scope.template.header = 'cart-header.html';
   $scope.template.footer = 'default-footer.html';
-
-  authService.assignGuestToken();
 
   $scope.updateItem = function(cartItem){
     if(cartItem.quantity == undefined){
@@ -70,7 +68,7 @@ cart.factory('shoppingCartFactory', function($http, environment){
   }
 
   var getShoppingCartByCustomerId = function(customerId){
-      return $http.get(environment.shoppingCartUrl + '/carts/?customerId=' + customerId).then(function(response){
+      return $http.get(environment.shoppingCartUrl + '/carts?customerId=' + customerId).then(function(response){
           return response.data;
       });
   }

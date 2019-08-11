@@ -1,9 +1,7 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
-productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout, authService, shoppingCartFactory, $localstorage, $rootScope) {
+productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout, shoppingCartFactory, $localstorage, $rootScope) {
 
-  authService.assignGuestToken();
-  
 	$http.get(environment.productUrl + '/products/' + $routeParams.code).then(function(response){
 		$scope.product = response.data;
 

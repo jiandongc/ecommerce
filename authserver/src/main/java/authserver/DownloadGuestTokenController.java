@@ -32,12 +32,12 @@ public class DownloadGuestTokenController {
         final JwtBuilder jwtBuilder = Jwts.builder()
                 .setSubject("guest_user")
                 .signWith(HS512, secret.getBytes())
-                .claim("roles", Arrays.asList("GUEST"))
+                .claim("roles", Arrays.asList("guest"))
                 .setExpiration(new Date(currentTimeMillis() + parseLong(expirationTime)));
         responseHeaders.set("Authentication", jwtBuilder.compact());
 
         return ResponseEntity.ok()
                 .headers(responseHeaders)
-                .body("guest token");
+                .body("");
     }
 }

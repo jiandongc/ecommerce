@@ -6,9 +6,8 @@ home.service('productService', function($http, environment){
    };
 });
 
-home.controller('homeCtrl', function($scope, $http, environment, productService, authService) {
+home.controller('homeCtrl', function($scope, $http, environment, productService) {
   $scope.processing = {};
-  authService.assignGuestToken();
 
 	$http.get(environment.productUrl + '/products/?cc=msg').then(function(response) {
 		$scope.c1 = response.data;

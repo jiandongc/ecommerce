@@ -1,6 +1,6 @@
 var category = angular.module('category', ['ngRoute', 'checklist-model']);
 
-category.controller('categoryCtrl', function($scope, $routeParams, categoryService, authService) {
+category.controller('categoryCtrl', function($scope, $routeParams, categoryService) {
   $scope.processing = {};
   $scope.selectedBrands = {};
   $scope.filters = {};
@@ -8,8 +8,6 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
   $scope.reverse = true;
   $scope.sort = {display: "Our favourites", code: undefined};
 
-  authService.assignGuestToken();
-  
   categoryService.findCategory($routeParams.code).then(function(response){
     var category = response.data;
     $scope.code = category.code;

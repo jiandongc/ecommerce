@@ -12,28 +12,34 @@ var app = angular.module('store', [
 	'order'
 ]);
 
-app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, authService) {
+app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, authFactory) {
 
     $scope.template = {header: "default-header.html", footer: "default-footer.html"};
 
-	$scope.$watch(function() { return $localstorage.get('current_user', undefined);}, function(newValue, oldValue) {
+	$scope.$watch(function() { return $localstorage.get('current_user');}, function(newValue, oldValue) {
 		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
 			$scope.currentUser = newValue;
 		}
 	})
 
-	$scope.$watch(function() { return $localstorage.get('customer_id', undefined);}, function(newValue, oldValue) {
+	$scope.$watch(function() { return $localstorage.get('customer_id');}, function(newValue, oldValue) {
 		if (typeof $scope.customerId === "undefined" || newValue !== oldValue) {
 			$scope.customerId = newValue;
 		}
 	})
 
-	$scope.$watch(function() { return $localstorage.get('cart_uid', undefined);}, function(newValue, oldValue) {
+	$scope.$watch(function() { return $localstorage.get('cart_uid');}, function(newValue, oldValue) {
 		if (typeof $scope.cartUid === "undefined" || newValue !== oldValue) {
-			$scope.cartUid = $localstorage.get('cart_uid', undefined);
-			if(typeof $localstorage.get('cart_uid', undefined) !== "undefined") {
+			$scope.cartUid = newValue;
+			if($localstorage.get('cart_uid') !== false) {
 				$rootScope.$broadcast('updateCartSummary', false);
 			}
+		}
+	})
+
+	$scope.$watch(function() { return $localstorage.get('access_token');}, function(newValue, oldValue) {
+		if ($localstorage.get('access_token') === false) {
+			$rootScope.$broadcast('downloadGuestToken');
 		}
 	})
 
@@ -63,8 +69,13 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		$scope.totalQuantity = null;
 		$scope.totalPrice = null;
 		$scope.cartItems = null;
-		authService.assignGuestToken();	
 	})
+
+ 	$scope.$on('downloadGuestToken', function(event, args) {
+   		authFactory.downloadGuestToken().then(function(response){
+   			$localstorage.set('access_token', response.headers("Authentication"));
+   		});
+ 	});
 
 	$scope.$on('$routeChangeStart', function($event, next, current) { 
    		$scope.template.header = 'default-header.html';
@@ -118,13 +129,13 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q){
 
     service.request = function(config) {
     	if($localstorage.containsKey('access_token')) {
-    		config.headers.Authentication = $localstorage.get('access_token');	
+    		config.headers.Authentication = $localstorage.get('access_token');
     	}
     	return config;
     };
 
     service.responseError = function(response) {
-        if (response.status === 401) {
+        if (response.status === 400 || response.status === 401 || response.status === 403) {
         	$location.path("/login");
         }
         return $q.reject(response);

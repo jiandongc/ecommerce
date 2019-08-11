@@ -1,5 +1,5 @@
 <div class="container cart">
-     <div class="row">
+     <div class="row" ng-show="cartUid">
           <div class = "col-xs-12 m-b-20">
                <div class="pull-right">
                     <div class="title m-b-05">
@@ -54,60 +54,8 @@
                     </div>
                </div>
           </div>
-     </div>
-     <div class="row">
-          <div class="col-md-6">
-               <div class="panel panel-default">
-                    <div class="panel-heading" style="color:#45555f; font-weight: bold;">派递方式</div>
-                    <div class="panel-body">
-                         <div class = "btn-group full-length">
-                              <button class="btn btn-default full-length dropdown-toggle" data-toggle="dropdown">
-                                   选择我的派递方式 <span class="caret"></span>
-                              </button>
-                              <ul class="dropdown-menu">
-                                   <li><a href="#">Free Delivery</a></li>
-                                   <li><a href="#">Next Day Delivery - £3</a></li>
-                                   <li><a href="#">Weekend Delivery - £5</a></li>
-                              </ul>
-                         </div>
-                         <div class='pull-right margin-top info'><a href="#">派递方式详细?</a></div>
-                    </div>
-               </div>
-          </div>
-          <div class="col-md-6">
-               <div class="panel panel-default">
-                    <div class="panel-heading" style="color:#45555f; font-weight: bold;">折价券</div>
-                    <div class="panel-body">
-                         <div class = "btn-group full-length">
-                              <button class="btn btn-default full-length dropdown-toggle" data-toggle="dropdown">
-                                   选择我的折价券 <span class="caret"></span>
-                              </button>
-                              <ul class="dropdown-menu">
-                                   <li><a href="#">Buy one get one free</a></li>
-                                   <li><a href="#">Save £5 if you spend more than £40</a></li>
-                                   <li><a href="#">Buy over £50, free shipping</a></li>
-                              </ul>
-                         </div>
-                         <div class='pull-right margin-top info'><a href="#">怎样获得更多折价券?</a></div>
-                    </div>
-               </div>
-          </div>
-     </div>
-     <div class="row">
-          <div class="col-md-6">
-               <img class="pay" ng-src="/images/paypal.jpg" title="Paypal支付">
-               <img class="pay" ng-src="/images/alipay.png" title="支付宝支付">
-               <img class="pay" ng-src="/images/cash.png" title="到货现金支付">
-          </div>
-          <div class="col-md-6">
-               <div class="panel panel-default">
-                    <div class="panel-heading" style="color:#45555f; font-weight: bold;">
-                         <div class="text-right">待付(含运费): £100</div>
-                    </div>
-               </div>
-          </div>
-     </div>     
-     <div class="row">
+     </div>   
+     <div class="row m-b-10" ng-show="cartUid">
           <div class="title col-md-2">
                <button type="button" class="btn btn-checkout">Continue shopping</button>
           </div>
@@ -116,4 +64,11 @@
                <button type="button" class="btn btn-checkout" ng-click="checkout()">Proceed to Checkout</button>
           </div>
      </div>
+
+     <div class="row m-b-10" ng-show="!cartUid">
+          <div class="col-xs-12 fs-09 color-san-juan">
+               You have no items in your shopping cart.
+          </div>
+     </div>
+
 </div>
