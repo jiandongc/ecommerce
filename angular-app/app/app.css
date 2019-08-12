@@ -264,7 +264,7 @@ html, body {
 
 /* login page */
 .login {
-	color: #45555f;
+	color: #111;
 }
 
 .login .width-60 {
@@ -277,12 +277,6 @@ html, body {
 
 .login h3 {
 	padding-bottom: 2%;
-}
-
-.login button {
-	font-weight: bold;	
-	background-color: #455560;		
-	color: #E8E8E8;
 }
 
 /* account page */
@@ -383,13 +377,9 @@ html, body {
   color: #111;
 }
 
-.btn-style-secondary,
-.btn-style-secondary:focus {
-  background-color: #e7e9ec;
-  border-color: #ADB1B8 #A2A6AC #8D9096;
-  color: #111;
+.btn-style-primary:hover {
+  background-color: #eeb72b;
 }
-
 
 @media (max-width: 768px){
   .btn-style-primary {
@@ -397,8 +387,11 @@ html, body {
   }
 }
 
-.btn-style-primary:hover {
-  color: #BB5B19;
+.btn-style-secondary,
+.btn-style-secondary:focus {
+  background-color: #e7e9ec;
+  border-color: #ADB1B8 #A2A6AC #8D9096;
+  color: #111;
 }
 
 .form-address {
@@ -495,12 +488,6 @@ ul.scrollable-menu .btn-remove {
 
 .cart .margin-top{
     margin-top: 3%; 
-}
-
-.btn-checkout {
-    background-color: #f0c14b;
-    border-color: #a88734 #9c7e31 #846a29;
-    color: #111;
 }
 
 .cart .full-length {

@@ -5,7 +5,7 @@
                     <div class="title m-b-05">
                          Bag {{totalQuantity}} itme(s): <span style="color: #B12704">{{itemsSubTotal | currency:'£'}}</span>
                     </div>
-                    <button type="button" class="btn btn-md btn-checkout pull-right" ng-click="checkout()">Proceed to Checkout</button>
+                    <button type="button" class="btn btn-md btn-style-primary pull-right" ng-click="checkout()">Proceed to Checkout</button>
                </div>
           </div>
           <div ng-repeat="cartItem in cartItems">
@@ -55,13 +55,13 @@
                </div>
           </div>
      </div>   
-     <div class="row m-b-10" ng-show="cartUid">
+     <div class="row m-b-15" ng-show="cartUid">
           <div class="title col-md-2">
-               <button type="button" class="btn btn-checkout">Continue shopping</button>
+               <button type="button" class="btn btn-block btn-style-primary">Continue shopping</button>
           </div>
           <div class="title col-md-8"></div>
           <div class="title col-md-2">
-               <button type="button" class="btn btn-checkout" ng-click="checkout()">Proceed to Checkout</button>
+               <button type="button" class="btn btn-block btn-style-primary" ng-click="checkout()">Proceed to Checkout</button>
           </div>
      </div>
 
