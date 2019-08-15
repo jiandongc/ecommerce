@@ -7,11 +7,7 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
 		$scope.product = response.data;
     $scope.loading = false;
 
-    $http.get(environment.productUrl + '/products/color/' + $routeParams.code).then(function(response){
-      $scope.colorVariant = response.data;
-    });
-    
-    $http.get(environment.productUrl + '/categories/' + response.categoryCode).then(function(response){
+    $http.get(environment.productUrl + '/categories/' + response.data.categoryCode).then(function(response){
       $scope.parentcategories = response.data.parents;
     });
 
@@ -30,6 +26,10 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
       $scope.selected[attribute] = '';
     }
 	});
+
+  $http.get(environment.productUrl + '/products/color/' + $routeParams.code).then(function(response){
+    $scope.colorVariant = response.data;
+  });
 
   $scope.select=function(attribute, value){
     $scope.selected[attribute] = value;

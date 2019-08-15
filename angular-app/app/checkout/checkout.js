@@ -9,6 +9,12 @@ checkout.component('summary', {
   }
 });
 
+checkout.component('progressbar', {
+  templateUrl: 'checkout/checkout-progress.html',
+  controller: function(){},
+  bindings: {value: '@'}
+});
+
 checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
 
 	$scope.template.header = 'checkout-header.html';
@@ -21,7 +27,7 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $
         $scope.addresses = response;
 		$scope.selected = 0;
         angular.forEach($scope.addresses, function(address, index){
-      		if(address.defaultAddress){   		
+      		if(address.defaultAddress){
 				$scope.address = address;
       		}
     	});

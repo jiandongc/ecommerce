@@ -2,20 +2,7 @@
     <div class="row">
         <div class="col-md-8">
             <div class="row">
-                <div class="col-xs-4">
-                    <p class="prgress-label" style="text-align: left;">Shipping</p>
-                </div>
-                <div class="col-xs-4">
-                    <p class="prgress-label" style="text-align: center;">Payment</p>
-                </div>
-                <div class="col-xs-4">
-                    <p class="prgress-label" style="text-align: right;">Review Order</p>
-                </div>
-                <div class="col-xs-12">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" style="width: 75%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                    </div>
-                </div>
+                <progressbar value="75%"></progressbar>
                 <div class="col-xs-12 address">
                     <div class="header p-b-05">Billing Address</div>
                     <div ng-repeat="address in addresses | orderBy :'defaultAddress' : true">
