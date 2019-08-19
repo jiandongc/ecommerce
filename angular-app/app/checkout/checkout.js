@@ -62,6 +62,11 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $
 	}
 });
 
+checkout.controller('addAddressCtrl', function($scope) {
+    $scope.template.header = 'checkout-header.html';
+    $scope.template.footer = 'default-footer.html';
+});
+
 checkout.controller('billingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
 
 	$scope.template.header = 'checkout-header.html';
@@ -254,5 +259,8 @@ checkout.config(
         controller: 'paymentCtrl'})
     .when('/order-confirmation/:orderNumber', {
       templateUrl: 'checkout/order-confirmation.html',
-        controller: 'orderConfirmationCtrl'});
+        controller: 'orderConfirmationCtrl'})
+    .when('/checkout/add-address', {
+      templateUrl: 'checkout/add-address.html',
+        controller: 'addAddressCtrl'});
 });

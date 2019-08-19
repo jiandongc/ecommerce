@@ -1,5 +1,35 @@
 var customer = angular.module('customer', ['ngRoute','ngResource']);
 
+customer.component('address', {
+  templateUrl: 'component/new-address-form.html',
+  controller: function($scope, $localstorage, $location, $window, customerFactory){
+    $scope.saving = false;
+
+    customerFactory.getCustomerById($localstorage.get('customer_id')).then(function(response){
+        $scope.address.title = response.title;
+        $scope.address.name = response.name;
+        $scope.address.mobile = response.mobile;
+        $scope.address.defaultAddress = true;
+        $scope.address.country = 'United Kingdom';
+        $scope.customer = response;
+    });
+
+    $scope.addAddress = function(address){
+        $scope.saving = true;
+        customerFactory.addAddress($localstorage.get('customer_id'), address).then(function(data){
+            $scope.error = false;
+            $scope.saving = false;
+            $window.history.back();
+        }, function(error){
+            $scope.error = true;
+            $scope.saving = false;
+            $scope.errorMsg = error;
+        })
+    };
+  },
+  bindings: {cancelurl: '@'}
+});
+
 customer.controller('loginCtrl', function($scope, authService, $rootScope) {
 
     $rootScope.loginError = false;
@@ -139,25 +169,8 @@ customer.controller('editAddressCtrl', function($scope, $routeParams, $location,
     }
 });
 
-customer.controller('addAddressCtrl', function($scope, $routeParams, $location, customerFactory){
-    customerFactory.getCustomerById($routeParams.id).then(function(response){
-        $scope.address.title = response.title;
-        $scope.address.name = response.name;
-        $scope.address.mobile = response.mobile;
-        $scope.address.defaultAddress = true;
-        $scope.address.country = 'United Kingdom';
-        $scope.customer = response;
-    });
-
-    $scope.addAddress = function(address){
-        customerFactory.addAddress($scope.customer.id, address).then(function(data){
-            $scope.error = false;
-            $location.path("/account/" + $scope.customer.id + "/address-book");
-        }, function(error){
-            $scope.error = true;
-            $scope.errorMsg = error;
-        })
-    }
+customer.controller('addAddressCtrl', function($scope, $localstorage){
+    $scope.customerId=$localstorage.get('customer_id');
 });
 
 customer.factory('customerFactory', function($http, environment){
