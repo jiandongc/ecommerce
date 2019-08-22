@@ -20,10 +20,9 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $
 	$scope.template.header = 'checkout-header.html';
 	$scope.template.footer = 'default-footer.html';
 	$scope.saveAddressLoading = false;
+  $scope.customerId = $localstorage.get("customer_id");
 
-	var customerId = $localstorage.get("customer_id");
-
-	customerFactory.getAddressesById(customerId).then(function(response){
+	customerFactory.getAddressesById($localstorage.get("customer_id")).then(function(response){
         $scope.addresses = response;
 		$scope.selected = 0;
         angular.forEach($scope.addresses, function(address, index){
@@ -63,6 +62,11 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $
 });
 
 checkout.controller('addAddressCtrl', function($scope) {
+    $scope.template.header = 'checkout-header.html';
+    $scope.template.footer = 'default-footer.html';
+});
+
+checkout.controller('editAddressCtrl', function($scope) {
     $scope.template.header = 'checkout-header.html';
     $scope.template.footer = 'default-footer.html';
 });
@@ -260,7 +264,10 @@ checkout.config(
     .when('/order-confirmation/:orderNumber', {
       templateUrl: 'checkout/order-confirmation.html',
         controller: 'orderConfirmationCtrl'})
-    .when('/checkout/add-address', {
-      templateUrl: 'checkout/add-address.html',
-        controller: 'addAddressCtrl'});
+    .when('/checkout/shipping/address/add', {
+      templateUrl: 'checkout/add-shipping-address.html',
+        controller: 'addAddressCtrl'})
+    .when('/checkout/shipping/:id/address/:addressId/edit', {
+      templateUrl: 'checkout/edit-shipping-address.html',
+        controller: 'editAddressCtrl'});
 });

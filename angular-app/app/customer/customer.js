@@ -30,6 +30,31 @@ customer.component('address', {
   bindings: {cancelurl: '@'}
 });
 
+customer.component('editaddress', {
+  templateUrl: 'component/edit-address-form.html',
+  controller: function($scope, $routeParams, $localstorage, $window, customerFactory){
+    $scope.saving = false;
+
+    customerFactory.getAddressById($routeParams.id, $routeParams.addressId).then(function(response){
+        $scope.address = response;
+    });
+
+    $scope.updateAddress = function(address){
+        $scope.saving = true;
+        customerFactory.updateAddress($localstorage.get('customer_id'), address).then(function(data){
+            $scope.error = false;
+            $scope.saving = false;
+            $window.history.back();
+        }, function(error){
+            $scope.error = true;
+            $scope.saving = false;
+            $scope.errorMsg = error;
+        })
+    }
+  },
+  bindings: {cancelurl: '@'}
+});
+
 customer.controller('loginCtrl', function($scope, authService, $rootScope) {
 
     $rootScope.loginError = false;
@@ -152,21 +177,8 @@ customer.controller('addressBookCtrl', function($scope, $routeParams, $route, cu
     }
 });
 
-customer.controller('editAddressCtrl', function($scope, $routeParams, $location, customerFactory){
-    customerFactory.getAddressById($routeParams.id, $routeParams.addressId).then(function(response){
-        $scope.customer = {id : $routeParams.id};
-        $scope.address = response;
-    });
-
-    $scope.updateAddress = function(address){
-        customerFactory.updateAddress($scope.customer.id, address).then(function(data){
-            $scope.error = false;
-            $location.path("/account/" + $scope.customer.id + "/address-book");
-        }, function(error){
-            $scope.error = true;
-            $scope.errorMsg = error;
-        })
-    }
+customer.controller('editAddressCtrl', function($scope, $localstorage){
+    $scope.customerId=$localstorage.get('customer_id');
 });
 
 customer.controller('addAddressCtrl', function($scope, $localstorage){
