@@ -47,7 +47,7 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(data){
 			$scope.cartUid = data.cartUid;
 			$scope.totalQuantity = (data.quantity != 0 ? data.quantity : null);
-			$scope.itemsSubTotal = (data.subTotal != 0 ? data.subTotal : null);
+			$scope.itemsTotal = (data.itemsTotal != 0 ? data.itemsTotal : null);
 			$scope.cartItems = data.cartItems;
 			if(showDropDown === true){
 				var dropdown = $('ul.nav li.dropdown').find('.dropdown-menu');
@@ -58,7 +58,7 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		}, function(error){
 			$scope.cartUid = null;
 			$scope.totalQuantity = null;
-			$scope.totalPrice = null;
+			$scope.itemsTotal = null;
 			$scope.cartItems = null;
 		});
 	})
@@ -67,7 +67,7 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		$localstorage.clear();
 		$scope.cartUid = null;
 		$scope.totalQuantity = null;
-		$scope.totalPrice = null;
+		$scope.itemsTotal = null;
 		$scope.cartItems = null;
 	})
 

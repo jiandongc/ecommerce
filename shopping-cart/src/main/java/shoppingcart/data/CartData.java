@@ -16,7 +16,15 @@ public final class CartData {
 
     private Integer quantity;
 
-    private BigDecimal subTotal;
+    private BigDecimal itemsTotal;
+
+    private BigDecimal postage;
+
+    private BigDecimal promotion;
+
+    private BigDecimal vat;
+
+    private BigDecimal orderTotal;
 
     private String cartUid;
 

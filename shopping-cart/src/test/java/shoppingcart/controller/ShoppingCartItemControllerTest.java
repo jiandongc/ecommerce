@@ -55,7 +55,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
         assertThat(response.getBody().getQuantity(), is(1));
-        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(10.99).setScale(2, ROUND_HALF_UP)));
+        assertThat(response.getBody().getOrderTotal(), is(BigDecimal.valueOf(10.99).setScale(2, ROUND_HALF_UP)));
         assertThat(response.getBody().getCartItems().size(), is(1));
         assertThat(response.getBody().getCartItems().get(0).getSku(), is("123456"));
         assertThat(response.getBody().getCartItems().get(0).getName(), is("kid's cloth"));
@@ -107,7 +107,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
         assertThat(response.getBody().getQuantity(), is(4));
-        assertThat(response.getBody().getSubTotal(), is(BigDecimal.valueOf(43.96)));
+        assertThat(response.getBody().getOrderTotal(), is(BigDecimal.valueOf(43.96)));
         assertThat(response.getBody().getCartItems().size(), is(1));
         final ShoppingCart cart = cartRepository.findByUUID(cartUid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final List<ShoppingCartItem> cartItems = itemRepository.findByCartId(cart.getId());
@@ -137,7 +137,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         final ResponseEntity<CartData> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartData.class);
         assertThat(cartSummaryOne.getStatusCode(), is(CREATED));
         assertThat(cartSummaryOne.getBody().getQuantity(), is(1));
-        assertThat(cartSummaryOne.getBody().getSubTotal(), is(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)));
+        assertThat(cartSummaryOne.getBody().getOrderTotal(), is(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)));
         assertThat(cartSummaryOne.getBody().getCartItems().size(), is(1));
 
         final String itemTwo = "{\n" +
@@ -151,7 +151,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         final ResponseEntity<CartData> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemTwoPayload, CartData.class);
         assertThat(cartSummaryTwo.getStatusCode(), is(CREATED));
         assertThat(cartSummaryTwo.getBody().getQuantity(), is(2));
-        assertThat(cartSummaryTwo.getBody().getSubTotal(), is(BigDecimal.valueOf(11).setScale(2, ROUND_HALF_UP)));
+        assertThat(cartSummaryTwo.getBody().getOrderTotal(), is(BigDecimal.valueOf(11).setScale(2, ROUND_HALF_UP)));
         assertThat(cartSummaryTwo.getBody().getCartItems().size(), is(2));
     }
 
@@ -185,13 +185,13 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         final ResponseEntity<CartData> cartSummaryOne = rest.exchange(BASE_URL + cartUid.toString() + "/items/123456", DELETE, httpEntity, CartData.class);
         assertThat(cartSummaryOne.getStatusCode(), is(OK));
         assertThat(cartSummaryOne.getBody().getQuantity(), is(1));
-        assertThat(cartSummaryOne.getBody().getSubTotal(), is(BigDecimal.valueOf(10).setScale(2, ROUND_HALF_UP)));
+        assertThat(cartSummaryOne.getBody().getOrderTotal(), is(BigDecimal.valueOf(10).setScale(2, ROUND_HALF_UP)));
         assertThat(cartSummaryOne.getBody().getCartItems().size(), is(1));
 
         final ResponseEntity<CartData> cartSummaryTwo = rest.exchange(BASE_URL + cartUid.toString() + "/items/654321", DELETE, httpEntity, CartData.class);
         assertThat(cartSummaryTwo.getStatusCode(), is(OK));
         assertThat(cartSummaryTwo.getBody().getQuantity(), is(0));
-        assertThat(cartSummaryTwo.getBody().getSubTotal(), is(BigDecimal.valueOf(0).setScale(2, ROUND_HALF_UP)));
+        assertThat(cartSummaryTwo.getBody().getOrderTotal(), is(BigDecimal.valueOf(0).setScale(2, ROUND_HALF_UP)));
         assertThat(cartSummaryTwo.getBody().getCartItems().size(), is(0));
     }
 

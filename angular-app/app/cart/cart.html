@@ -3,7 +3,7 @@
           <div class = "col-xs-12 m-b-20">
                <div class="pull-right">
                     <div class="title m-b-05">
-                         Bag {{totalQuantity}} itme(s): <span style="color: #B12704">{{itemsSubTotal | currency:'£'}}</span>
+                         Bag {{totalQuantity}} itme(s): <span style="color: #B12704">{{itemsTotal | currency:'£'}}</span>
                     </div>
                     <button type="button" class="btn btn-md btn-style-primary pull-right" ng-click="checkout()">Proceed to Checkout</button>
                </div>
@@ -42,7 +42,7 @@
                               </div>
                               <div class="row m-b-05">
                                    <div class="col-xs-12">
-                                        <span class="fw-light">Sub-total:&nbsp&nbsp</span>{{cartItem.price * cartItem.quantity | currency:'£'}}
+                                        <span class="fw-light">Sub-total:&nbsp&nbsp</span>{{cartItem.subTotal | currency:'£'}}
                                    </div>
                               </div>
                               <div class="row">

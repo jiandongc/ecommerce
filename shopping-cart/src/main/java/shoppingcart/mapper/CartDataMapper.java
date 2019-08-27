@@ -15,6 +15,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
+import static java.math.BigDecimal.ZERO;
+
 @Component
 public class CartDataMapper {
 
@@ -29,6 +32,7 @@ public class CartDataMapper {
                         .description(cartItem.getDescription())
                         .quantity(cartItem.getQuantity())
                         .sku(cartItem.getSku())
+                        .subTotal(cartItem.getItemTotal())
                         .thumbnail(cartItem.getImageUrl())
                         .code(cartItem.getCode())
                         .build()
@@ -41,7 +45,11 @@ public class CartDataMapper {
                 .cartUid(shoppingCart.getCartUid().toString())
                 .customerId(shoppingCart.getCustomerId())
                 .quantity(quantity)
-                .subTotal(shoppingCart.getItemSubTotal())
+                .itemsTotal(shoppingCart.getItemSubTotal())
+                .postage(shoppingCart.getPostage())
+                .promotion(ZERO.setScale(2, ROUND_HALF_UP))
+                .vat(shoppingCart.getItemsVat().add(shoppingCart.getPostageVat()))
+                .orderTotal(shoppingCart.getOrderTotal())
                 .cartItems(cartItems)
                 .shipping(shipping)
                 .billing(billing)
