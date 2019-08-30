@@ -5,8 +5,8 @@
                 <progressbar value="25%"></progressbar>
                 <div class="col-xs-12 address">
                     <div class="header p-b-05">Shipping Address</div>
-                    <div ng-repeat="address in addresses | orderBy :'defaultAddress' : true">
-                        <div class="solid-border p-15">
+                    <div class="a-box-group">
+                        <div class="a-box p-15" ng-repeat="address in addresses | orderBy :'defaultAddress' : true">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-8">
                                     <div class="pull-left" style="top: 35%; position: absolute;">
@@ -41,68 +41,6 @@
         </div>
         <div class="col-md-4">
             <summary></summary>
-        </div>
-    </div>
-
-    <div class="modal fade" id="addressform" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                    <h4 class="modal-title">Update your delivery address</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="fullname">Full Name</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="fullname" class="form-control" ng-model="address.fullname" placeholder="Full Name" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="address1">Address 1</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="address1" class="form-control" ng-model="address.address1" placeholder="Address 1" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="address1">Address 2</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="address2" class="form-control" ng-model="address.address2" placeholder="Address 2" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="city">City</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="city" class="form-control" ng-model="address.city" placeholder="City" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="postcode">Postcode</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="postcode" class="form-control" ng-model="address.postcode" placeholder="Postcode" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="country">Country</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="country" class="form-control" ng-model="address.country" placeholder="Country" />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label" for="telephone">Telephone</label>
-                            <div class="col-sm-10">
-                                <input type="text" id="telephone" class="form-control" ng-model="address.phone" placeholder="Telephone" />
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Save</button>
-                </div>
-            </div>
         </div>
     </div>
 </div>

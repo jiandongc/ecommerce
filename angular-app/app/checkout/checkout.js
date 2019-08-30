@@ -72,7 +72,6 @@ checkout.controller('editAddressCtrl', function($scope) {
 });
 
 checkout.controller('billingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
-
 	$scope.template.header = 'checkout-header.html';
 	$scope.template.footer = 'default-footer.html';
 	$scope.saveAddressLoading = false;
@@ -120,7 +119,6 @@ checkout.controller('billingCtrl', function($scope, $location, $localstorage, $r
 });
 
 checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory) {
-
 	$scope.template.header = 'checkout-header.html';
 	$scope.template.footer = 'default-footer.html';
 	$scope.saveDeliveryOptionLoading = false;
@@ -146,7 +144,8 @@ checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $
 });
 
 checkout.controller('paymentCtrl', function($scope, $location, $localstorage, shoppingCartFactory, orderFactory) {
-
+  $scope.template.header = 'checkout-header.html';
+  $scope.template.footer = 'default-footer.html';
 	$scope.loading = false;
 
 	shoppingCartFactory.getSageMerchantKey().then(function(response){
@@ -269,5 +268,11 @@ checkout.config(
         controller: 'addAddressCtrl'})
     .when('/checkout/shipping/:id/address/:addressId/edit', {
       templateUrl: 'checkout/edit-shipping-address.html',
+        controller: 'editAddressCtrl'})
+    .when('/checkout/billing/address/add', {
+      templateUrl: 'checkout/add-billing-address.html',
+        controller: 'addAddressCtrl'})
+    .when('/checkout/billing/:id/address/:addressId/edit', {
+      templateUrl: 'checkout/edit-billing-address.html',
         controller: 'editAddressCtrl'});
 });

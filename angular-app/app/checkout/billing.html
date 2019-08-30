@@ -5,8 +5,8 @@
                 <progressbar value="75%"></progressbar>
                 <div class="col-xs-12 address">
                     <div class="header p-b-05">Billing Address</div>
-                    <div ng-repeat="address in addresses | orderBy :'defaultAddress' : true">
-                        <div class="solid-border p-15">
+                    <div class="a-box-group">
+                        <div class="a-box p-15" ng-repeat="address in addresses | orderBy :'defaultAddress' : true">
                             <div class="row">
                                 <div class="col-xs-12 col-sm-8">
                                     <div class="pull-left" style="top: 35%; position: absolute;">
@@ -26,8 +26,14 @@
                                         <span ng-show="saveAddressLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
                                         Bill to this address
                                     </button>
+                                    <a class="btn btn-block btn-style-secondary" href="#!/checkout/billing/{{customerId}}/address/{{address.id}}/edit">Edit address</a>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row p-t-05 p-b-05">
+                        <div class="col-sm-6">
+                            <a class="btn btn-block btn-style-primary" href="#!/checkout/billing/address/add">Add a new address</a>
                         </div>
                     </div>
                 </div>
