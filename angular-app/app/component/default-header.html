@@ -25,20 +25,23 @@
 				<li class="dropdown">
 					<a href="#!/cart" class="dropdown-toggle">
 						<span class="glyphicon glyphicon-shopping-cart"></span>
-						<span ng-show="cartUid && totalQuantity"> 
+						<span class="mobile" ng-show="cartUid && totalQuantity"> 
+							<span class="badge">{{totalQuantity}}</span>
+						</span>
+						<span class="desktop" ng-show="cartUid && totalQuantity"> 
 							{{totalQuantity}} items {{itemsTotal | currency:'£'}} <span class="caret"></span>
 						</span>
 					</a>
-					<ul class="dropdown-menu scrollable-menu">
+					<ul class="desktop dropdown-menu scrollable-menu">
 						<div ng-repeat="cartItem in cartItems | orderBy:'productId'">
 							<li>
 								<div class="row">
-									<div class="col-md-4">
+									<div class="col-sm-4">
 										<a href="#!/products/{{cartItem.code}}">
 											<img class="img-responsive p-l-05" ng-src="{{cartItem.thumbnail}}">
 										</a>
 									</div>
-									<div class = "col-md-7">
+									<div class = "col-sm-8">
 										<a href="#!/products/{{cartItem.code}}">
 											<div class="productName">{{cartItem.name}}</div>
 										</a>
@@ -46,16 +49,11 @@
 										<div class="productPrice">{{cartItem.price | currency:'£'}}</div>
 										<div class="productQty">Qty {{cartItem.quantity}}</div>
 									</div>
-									<div class = "col-md-1">
-										<a href ng-click="removeItem(cartItem)">
-											<span class="glyphicon glyphicon-remove pull-right btn-remove"></span>
-										</a>
-									</div>
 								</div>
 							</li>
 							<li class='divider'></li>
 						</div>										
-						<li><a href='#!/cart' class='btn btn-view'>View Basket</a></li>
+						<li><a href='#!/cart' class='btn btn-style-primary'>View Shopping Cart</a></li>
 					</ul>
 				</li>
 				<li ng-show="currentUser"><a href ng-click="logout()"><span class="glyphicon glyphicon-log-out"></span></a></li>

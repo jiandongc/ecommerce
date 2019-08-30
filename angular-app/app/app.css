@@ -372,13 +372,13 @@ html, body {
 
 .btn-style-primary,
 .btn-style-primary:focus {
-  background-color: #f0c14b;
-  border-color: #a88734 #9c7e31 #846a29;
-  color: #111;
+  background-color: #f0c14b !important;
+  border-color: #a88734 #9c7e31 #846a29 !important;
+  color: #111 !important;
 }
 
 .btn-style-primary:hover {
-  background-color: #eeb72b;
+  background-color: #eeb72b !important;
 }
 
 @media (max-width: 768px){
@@ -389,9 +389,9 @@ html, body {
 
 .btn-style-secondary,
 .btn-style-secondary:focus {
-  background-color: #e7e9ec;
-  border-color: #ADB1B8 #A2A6AC #8D9096;
-  color: #111;
+  background-color: #e7e9ec !important;
+  border-color: #ADB1B8 #A2A6AC #8D9096 !important;
+  color: #111 !important;
 }
 
 .form-address {
@@ -446,17 +446,6 @@ ul.scrollable-menu .productQty{
   margin-top: 2.5%;
   color: #324902;
   font-size: 0.8em;
-} 
-
-ul.scrollable-menu .btn-view {
-	background-color: #536F19;
-	color: #E8E8E8;
-  font-weight: bold;
-}
-
-ul.scrollable-menu .btn-remove {
-	margin-right: 15%;
-	color: #99AA77;
 }
 
 /* cart page */
@@ -742,6 +731,28 @@ ul.scrollable-menu .btn-remove {
 .glyphicon.spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
+}
+
+@media only screen and (max-width: 768px) {
+  .mobile {
+    visibility: visible;
+  }
+
+  .desktop {
+    visibility: hidden;
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .mobile {
+    visibility: hidden;
+    display: none;
+  }
+
+  .desktop {
+    visibility: visible;
+  }
 }
 
 @keyframes spin {
