@@ -422,32 +422,6 @@ ul.scrollable-menu img {
 	border-color: #F2F2F2;
 }
 
-ul.scrollable-menu .productName{
-  font-weight: bold;
-  color: #1D2807;
-  font-size: 0.8em;
-  text-transform: uppercase;
-}
-
-ul.scrollable-menu .productDescription{
-  margin-top: 2.5%;
-  color: #1D2807;
-  font-size: 0.8em;
-}
-
-ul.scrollable-menu .productPrice{
-  margin-top: 2.5%;
-	font-weight: bold;
-  color: #324902;
-  font-size: 0.8em;
-}
-
-ul.scrollable-menu .productQty{
-  margin-top: 2.5%;
-  color: #324902;
-  font-size: 0.8em;
-}
-
 /* cart page */
 .cart {
     padding-top: 16px;
