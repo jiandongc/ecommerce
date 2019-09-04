@@ -1,9 +1,9 @@
 <div id="error" ng-show="error" class="alert alert-danger width-60">{{errorMsg}}</div>
 <form name="addressForm" role="form" ng-submit="addressForm.$valid && addAddress(address)">
     <table class="table">
-        <tr>
+        <tr ng-show="!{{$ctrl.guest}}">
             <td width="40%">
-                <div class="p-t-05 p-b-05">Set as default address:</div>
+                <div class="p-t-05 p-b-05">Set as default address</div>
             </td>
             <td>
                 <div class="form-check p-t-05 p-b-05">
@@ -13,7 +13,7 @@
         </tr>
         <tr>
             <td width="40%">
-                <div class="p-t-05 required-field">Title </div>
+                <div class="p-t-05 required-field">Title&nbsp;</div>
             </td>
             <td>
                 <select class="form-control" id="title" name="title" ng-model="address.title">
@@ -29,7 +29,7 @@
         </tr>
         <tr>
             <td width="40%">
-                <div class="p-t-05 required-field">Full Name </div>
+                <div class="p-t-05 required-field">Full Name&nbsp;</div>
             </td>
             <td>
                 <div ng-class="{'has-error': addressForm.name.$invalid && addressForm.name.$touched}">
@@ -42,7 +42,7 @@
         </tr>
         <tr>
             <td width="40%">
-                <div class="p-t-05 required-field">House Number/Name </div>
+                <div class="p-t-05 required-field">House Number/Name&nbsp;</div>
             </td>
             <td>
                 <div ng-class="{'has-error': addressForm.addressLine1.$invalid && addressForm.addressLine1.$touched}">
@@ -63,7 +63,7 @@
         </tr>
         <tr>
             <td width="40%">
-                <div class="p-t-05 required-field">Town/City </div>
+                <div class="p-t-05 required-field">Town/City&nbsp;</div>
             </td>
             <td>
                 <div ng-class="{'has-error': addressForm.city.$invalid && addressForm.city.$touched}">
@@ -76,7 +76,7 @@
         </tr>
         <tr>
             <td width="40%">
-                <div class="p-t-05 required-field">Post Code </div>
+                <div class="p-t-05 required-field">Post Code&nbsp;</div>
             </td>
             <td>
                 <div ng-class="{'has-error': addressForm.postcode.$invalid && addressForm.postcode.$touched}">
@@ -89,7 +89,7 @@
         </tr>
         <tr>
             <td width="40%">
-                <div class="p-t-05 required-field">Country </div>
+                <div class="p-t-05 required-field">Country&nbsp;</div>
             </td>
             <td>
                 <input type="text" class="form-control" id="country" name="country" readonly ng-model="address.country">
@@ -97,7 +97,7 @@
         </tr>
         <tr>
             <td width="40%">
-                <div class="p-t-05 required-field">Mobile </div>
+                <div class="p-t-05 required-field">Mobile&nbsp;</div>
             </td>
             <td>
                 <div ng-class="{'has-error': addressForm.mobile.$invalid && addressForm.mobile.$touched}">

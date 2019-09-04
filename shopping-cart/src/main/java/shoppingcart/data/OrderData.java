@@ -17,6 +17,8 @@ public class OrderData {
 
     private Long customerId;
 
+    private String email;
+
     private BigDecimal items;
 
     private BigDecimal postage;

@@ -26,7 +26,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     private static final String SELECT_BY_UUID_SQL = "SELECT * FROM shopping_cart WHERE cart_uid = ?";
     private static final String SELECT_BY_CUSTOMER_ID_SQL = "SELECT * FROM shopping_cart WHERE customer_id = ?";
     private static final String UPDATE_CUSTOMER_ID = "UPDATE shopping_cart SET customer_id = ? WHERE cart_uid = ?";
-    private static final String DELETE_BY_UUID_SQL = "DELETE FROM shopping_cart where cart_uid = ?";
+    private static final String UPDATE_EMAIL = "UPDATE shopping_cart SET email = ? WHERE cart_uid = ?";
     private static final String INSERT_ADDRESS_SQL = "INSERT INTO address " +
             "(address_type, title, name, mobile, address_line_1, address_line_2, address_line_3, city, country, post_code, shopping_cart_id) " +
             "VALUES (:address_type, :title, :name, :mobile, :address_line_1, :address_line_2, :address_line_3, :city, :country, :post_code, :shopping_cart_id) " +
@@ -40,7 +40,9 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
             "ON CONFLICT ON CONSTRAINT delivery_option_constraint " +
             "DO UPDATE SET method=EXCLUDED.method, charge=EXCLUDED.charge, min_days_required=EXCLUDED.min_days_required, max_days_required=EXCLUDED.max_days_required, last_update_time=now()";
     private static final String SELECT_DELIVERY_OPTION_SQL = "SELECT * FROM delivery_option WHERE shopping_cart_id=?";
-
+    private static final String DELETE_SHOPPING_CART_BY_ID_SQL = "DELETE FROM shopping_cart where id = ?";
+    private static final String DELETE_ADDRESS_BY_SESSION_ID_SQL = "DELETE FROM address where shopping_cart_id = ?";
+    private static final String DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL = "DELETE FROM delivery_option where shopping_cart_id = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -91,8 +93,15 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     }
 
     @Override
-    public int delete(UUID cartUid) {
-        return jdbcTemplate.update(DELETE_BY_UUID_SQL, cartUid);
+    public int updateEmail(UUID cartUid, String email) {
+        return jdbcTemplate.update(UPDATE_EMAIL, email, cartUid);
+    }
+
+    @Override
+    public int delete(long cartId) {
+        jdbcTemplate.update(DELETE_ADDRESS_BY_SESSION_ID_SQL, cartId);
+        jdbcTemplate.update(DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL, cartId);
+        return jdbcTemplate.update(DELETE_SHOPPING_CART_BY_ID_SQL, cartId);
     }
 
     @Override

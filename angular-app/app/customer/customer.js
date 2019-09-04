@@ -2,32 +2,75 @@ var customer = angular.module('customer', ['ngRoute','ngResource']);
 
 customer.component('address', {
   templateUrl: 'component/new-address-form.html',
-  controller: function($scope, $localstorage, $location, $window, customerFactory){
+  controller: function($scope, $rootScope, $localstorage, $location, $window, customerFactory, shoppingCartFactory){
     $scope.saving = false;
+    $scope.address = {};
 
-    customerFactory.getCustomerById($localstorage.get('customer_id')).then(function(response){
-        $scope.address.title = response.title;
-        $scope.address.name = response.name;
-        $scope.address.mobile = response.mobile;
+    if($localstorage.get('customer_id')){
+        customerFactory.getCustomerById($localstorage.get('customer_id')).then(function(response){
+            $scope.address.title = response.title;
+            $scope.address.name = response.name;
+            $scope.address.mobile = response.mobile;
+            $scope.address.defaultAddress = true;
+            $scope.address.country = 'United Kingdom';
+            $scope.customer = response;
+        });
+    } else {
         $scope.address.defaultAddress = true;
         $scope.address.country = 'United Kingdom';
-        $scope.customer = response;
-    });
+    }
 
     $scope.addAddress = function(address){
         $scope.saving = true;
-        customerFactory.addAddress($localstorage.get('customer_id'), address).then(function(data){
-            $scope.error = false;
-            $scope.saving = false;
-            $window.history.back();
-        }, function(error){
-            $scope.error = true;
-            $scope.saving = false;
-            $scope.errorMsg = error;
-        })
+        if($localstorage.get('customer_id')){
+            customerFactory.addAddress($localstorage.get('customer_id'), address).then(function(data){
+                $scope.error = false;
+                $scope.saving = false;
+                $window.history.back();
+            }, function(error){
+                $scope.error = true;
+                $scope.saving = false;
+                $scope.errorMsg = error;
+            })
+        } else {
+            var shippingAddressData = {
+                addressType: 'Shipping',
+                name: address.name, 
+                title: address.title,
+                mobile: address.mobile,
+                addressLine1: address.addressLine1,
+                addressLine2: address.addressLine2,
+                addressLine3: address.addressLine3,
+                city: address.city,
+                country: address.country,
+                postcode: address.postcode
+            };
+
+            var billingAddressData = {
+                addressType: 'Billing',
+                name: address.name, 
+                title: address.title,
+                mobile: address.mobile,
+                addressLine1: address.addressLine1,
+                addressLine2: address.addressLine2,
+                addressLine3: address.addressLine3,
+                city: address.city,
+                country: address.country,
+                postcode: address.postcode
+            };
+
+            shoppingCartFactory.addAddress($localstorage.get('cart_uid'), shippingAddressData).then(function(response){
+                $rootScope.$broadcast('updateCartSummary', false);
+                shoppingCartFactory.addAddress($localstorage.get('cart_uid'), billingAddressData).then(function(response){
+                    $rootScope.$broadcast('updateCartSummary', false);
+                    $scope.saving = false;
+                    $location.path("/checkout/guest/delivery");
+                });
+            });
+        }
     };
   },
-  bindings: {cancelurl: '@'}
+  bindings: {cancelurl: '@', guest: '@'}
 });
 
 customer.component('editaddress', {
@@ -55,15 +98,27 @@ customer.component('editaddress', {
   bindings: {cancelurl: '@'}
 });
 
-customer.controller('loginCtrl', function($scope, authService, $rootScope) {
+customer.controller('loginCtrl', function($scope, authService, $rootScope, $localstorage, $location, shoppingCartFactory) {
 
     $rootScope.loginError = false;
     $rootScope.logining = false;
+    $scope.guestLoading = false;
 
     $scope.login = function(credentials){
         $rootScope.logining = true;
         authService.authenticateUser(credentials);
     };
+
+    $scope.guestContinue = function(guest){
+        $rootScope.guestLoading = true;
+        shoppingCartFactory.updateEmail($localstorage.get('cart_uid'), guest.email).then(function(data){
+            $scope.guestLoading = false;
+            $location.path("/checkout/guest/address");
+        }, function(error){
+            $scope.guestLoading = false;
+        });
+        
+    }
 });
 
 customer.controller('registerCtrl', function($scope, authService, customerFactory) {

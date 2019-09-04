@@ -16,6 +16,7 @@ public class ShoppingCartMapper implements RowMapper<ShoppingCart>{
         return ShoppingCart.builder()
                 .id(rs.getLong("id"))
                 .cartUid(UUID.fromString(rs.getString("cart_uid")))
+                .email(rs.getString("email"))
                 .customerId(rs.getObject("customer_id") != null ? rs.getLong("customer_id") : null)
                 .creationTime(rs.getDate("creation_time"))
                 .build();

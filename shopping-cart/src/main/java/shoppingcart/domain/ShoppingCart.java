@@ -11,16 +11,18 @@ public class ShoppingCart {
     private long id;
     private UUID cartUid;
     private Long customerId;
+    private String email;
     private Date creationTime;
     private List<ShoppingCartItem> shoppingCartItems;
     private Address billingAddress;
     private Address shippingAddress;
     private DeliveryOption deliveryOption;
 
-    private ShoppingCart(long id, UUID cartUid, Long customerId, Date creationTime) {
+    private ShoppingCart(long id, UUID cartUid, Long customerId, String email, Date creationTime) {
         this.id = id;
         this.cartUid = cartUid;
         this.customerId = customerId;
+        this.email = email;
         this.creationTime = creationTime;
     }
 
@@ -41,6 +43,10 @@ public class ShoppingCart {
 
     public Long getCustomerId() {
         return customerId;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public Date getCreationTime() {
@@ -130,6 +136,7 @@ public class ShoppingCart {
         ShoppingCart that = (ShoppingCart) o;
 
         if (cartUid != null ? !cartUid.equals(that.cartUid) : that.cartUid != null) return false;
+        if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (customerId != null ? !customerId.equals(that.customerId) : that.customerId != null) return false;
         if (creationTime != null ? !creationTime.equals(that.creationTime) : that.creationTime != null) return false;
         if (shoppingCartItems != null ? !shoppingCartItems.equals(that.shoppingCartItems) : that.shoppingCartItems != null)
@@ -145,6 +152,7 @@ public class ShoppingCart {
     public int hashCode() {
         int result = cartUid != null ? cartUid.hashCode() : 0;
         result = 31 * result + (customerId != null ? customerId.hashCode() : 0);
+        result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
         result = 31 * result + (shoppingCartItems != null ? shoppingCartItems.hashCode() : 0);
         result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
@@ -157,6 +165,7 @@ public class ShoppingCart {
         private long id;
         private UUID cartUid;
         private Long customerId;
+        private String email;
         private Date creationTime;
 
         public ShoppingCartBuilder id(long id) {
@@ -174,13 +183,18 @@ public class ShoppingCart {
             return this;
         }
 
+        public ShoppingCartBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+
         public ShoppingCartBuilder creationTime(Date creationTime) {
             this.creationTime = creationTime;
             return this;
         }
 
         public ShoppingCart build() {
-            return new ShoppingCart(id, cartUid, customerId, creationTime);
+            return new ShoppingCart(id, cartUid, customerId, email, creationTime);
         }
 
     }

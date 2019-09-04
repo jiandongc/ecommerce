@@ -738,3 +738,23 @@ ul.scrollable-menu img {
     from { -webkit-transform: rotate(0deg); }
     to { -webkit-transform: rotate(360deg); }
 }
+
+@media (min-width: 1009px) and (orientation: landscape)
+.background {
+    background-image: url(https://ichef.bbci.co.uk/images/ic/1280xn/p04qth2y.jpg) !important;
+}
+
+@media (min-width: 800px) and (orientation: landscape), (min-width: 37.5em) and (orientation: portrait)
+.background {
+    background-image: url(https://ichef.bbci.co.uk/images/ic/1152xn/p04qth2y.jpg) !important;
+}
+
+@media (min-width: 37.5em) and (orientation: landscape)
+.background {
+    background-image: url(https://ichef.bbci.co.uk/images/ic/800xn/p04qth2y.jpg) !important;
+}
+
+.background {
+    background-image: url("/images/106948.jpg") !important;
+    padding-bottom: 150px;
+}

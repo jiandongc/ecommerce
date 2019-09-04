@@ -72,7 +72,16 @@ public class ShoppingCartController {
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @RequestMapping(value = "{cartUid}/email", method = PUT)
+    public ResponseEntity<CartData> updateCartEmail(@PathVariable UUID cartUid, @RequestBody String email) {
+        shoppingCartService.updateEmail(cartUid, email);
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
+        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+                .orElse(new ResponseEntity<>(NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}/addresses", method = POST)
     public ResponseEntity<CartData> addAddress(@PathVariable UUID cartUid, @RequestBody Address address) {
         shoppingCartService.addAddress(cartUid, address);
@@ -81,7 +90,7 @@ public class ShoppingCartController {
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}/deliveryoption", method = POST)
     public ResponseEntity<CartData> addDeliveryOption(@PathVariable UUID cartUid, @RequestBody DeliveryOption deliveryOption) {
         shoppingCartService.addDeliveryOption(cartUid, deliveryOption);
@@ -90,7 +99,7 @@ public class ShoppingCartController {
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}/deliveryoption", method = GET)
     public List<DeliveryOptionData> getDeliveryOptions(@PathVariable UUID cartUid) {
         Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByUid(cartUid);

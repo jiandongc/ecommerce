@@ -71,6 +71,11 @@ checkout.controller('editAddressCtrl', function($scope) {
     $scope.template.footer = 'default-footer.html';
 });
 
+checkout.controller('guestAddressCtrl', function($scope) {
+    $scope.template.header = 'checkout-header.html';
+    $scope.template.footer = 'default-footer.html';
+});
+
 checkout.controller('billingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
 	$scope.template.header = 'checkout-header.html';
 	$scope.template.footer = 'default-footer.html';
@@ -123,21 +128,25 @@ checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $
 	$scope.template.footer = 'default-footer.html';
 	$scope.saveDeliveryOptionLoading = false;
 
-    shoppingCartFactory.getDeliveryOption($localstorage.get('cart_uid')).then(function(response){
-        $scope.deliverOptions = response;
-    });
+  shoppingCartFactory.getDeliveryOption($localstorage.get('cart_uid')).then(function(response){
+    $scope.deliverOptions = response;
+  });
 
 	$scope.saveDeliveryOption = function(deliverOption){
 		$scope.saveDeliveryOptionLoading = true;
 		var cartUid = $localstorage.get('cart_uid');
 		shoppingCartFactory.addDeliveryOption(cartUid, deliverOption).then(function(response){
-            $rootScope.$broadcast('updateCartSummary', false);
-            $scope.saveDeliveryOptionLoading = false;
-            $location.path("/billing");
-        });
+      $rootScope.$broadcast('updateCartSummary', false);
+      $scope.saveDeliveryOptionLoading = false;
+      if($localstorage.get('customer_id')){
+        $location.path("/billing");
+      } else {
+        $location.path("/payment");
+      }
+    });
 	};	
 
-    $scope.select=function(index, deliverOption){
+  $scope.select=function(index, deliverOption){
 		$scope.selected=index;
 		$scope.deliverOption=deliverOption;
 	};
@@ -238,7 +247,11 @@ checkout.controller('orderConfirmationCtrl', function($scope, $location, $locals
     $scope.template.header = 'cart-header.html';
     $scope.template.footer = 'default-footer.html';
 
-    $scope.user = $localstorage.get('current_user');
+    if($localstorage.get('current_user')){
+      $scope.user = $localstorage.get('current_user');
+    } else {
+      $scope.user = 'Guest'
+    }
 
     orderFactory.getOrderByNumber($routeParams.orderNumber).then(function(response){
         $scope.order = response;
@@ -274,5 +287,11 @@ checkout.config(
         controller: 'addAddressCtrl'})
     .when('/checkout/billing/:id/address/:addressId/edit', {
       templateUrl: 'checkout/edit-billing-address.html',
-        controller: 'editAddressCtrl'});
+        controller: 'editAddressCtrl'})
+    .when('/checkout/guest/address', {
+      templateUrl: 'checkout/add-guest-address.html',
+        controller: 'guestAddressCtrl'})
+    .when('/checkout/guest/delivery', {
+      templateUrl: 'checkout/delivery.html',
+        controller: 'deliveryCtrl'});
 });

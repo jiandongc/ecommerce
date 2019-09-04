@@ -354,4 +354,21 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMinDaysRequired(), is(1));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(2));
     }
+
+    @Test
+    public void shouldUpdateCartEmail(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+        final UUID cartUid = repository.create();
+        assertThat(repository.findByUUID(cartUid).isPresent(), is(true));
+
+        // When
+        final HttpEntity<String> payload = new HttpEntity<>("tom@gmail.com", headers);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + cartUid.toString() + "/email", HttpMethod.PUT, payload, CartData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getEmail(), is("tom@gmail.com"));
+        assertThat(repository.findByUUID(cartUid).get().getEmail(), is("tom@gmail.com"));
+    }
 }

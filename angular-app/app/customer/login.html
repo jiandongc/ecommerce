@@ -1,3 +1,4 @@
+<div class="background">
 <div class="container">
 	<div class = "row login">
 		<div class="col-md-6">
@@ -49,5 +50,23 @@
 					<a href="#!/register"><u>Register now</u></a>
 				</div>
 			</form>
+			<form ng-show="cartUid && !customerId" name="guestForm" ng-submit="guestForm.$valid && guestContinue(guest)">
+			  	<div class="form-group" ng-class="{'has-error': guestForm.guestEmail.$invalid && (guestForm.guestEmail.$touched || guestForm.$submitted) }">
+			    	<label for="guestEmail">Email</label>
+			    	<input type="email" id="guestEmail" name="guestEmail" class="form-control width-60" ng-model="guest.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+			    	<div id="guestEmailMsg" ng-show="guestForm.guestEmail.$touched || guestForm.$submitted">
+						<p ng-show="guestForm.guestEmail.$error.required" class="help-block">
+							Email is missing. Please check and try again.
+						</p>
+						<p ng-show="guestForm.guestEmail.$error.pattern" class="help-block">
+							Sorry, that email doesn’t look right. Please check it’s a proper email.
+						</p>
+					</div>
+			  	</div>
+				<button id="guestBtn" type="submit" class="btn btn-block width-60 btn-style-primary">
+					<span ng-show="guestLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>&nbsp;Continue as guest
+				</button>
+			</form>
 		</div> 
+</div>
 </div>

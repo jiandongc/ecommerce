@@ -90,10 +90,23 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
     public void shouldDeleteShoppingCartByUUID(){
         // Given
         final UUID uuid = shoppingCartRepository.create(1234L);
+        final Long cartId = shoppingCartRepository.findByUUID(uuid).get().getId();
+        shoppingCartRepository.addDeliveryOption(cartId, DeliveryOption.builder().build());
+        final Address address = new Address();
+        address.setAddressType("Shipping");
+        address.setTitle("Mr.");
+        address.setName("John");
+        address.setAddressLine1("10 Kings Road");
+        address.setAddressLine2("South Harrow");
+        address.setCity("London");
+        address.setCountry("United Kingdom");
+        address.setPostcode("SH13TG");
+        address.setMobile("12345678");
+        shoppingCartRepository.addAddress(cartId, address);
         assertThat(shoppingCartRepository.findByUUID(uuid).isPresent(), is(true));
 
         // When
-        shoppingCartRepository.delete(uuid);
+        shoppingCartRepository.delete(cartId);
 
         // Then
         assertThat(shoppingCartRepository.findByUUID(uuid).isPresent(), is(false));

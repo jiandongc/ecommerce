@@ -35,6 +35,7 @@ public class OrderDataMapper {
 
         OrderData orderData = OrderData.builder()
                 .customerId(shoppingCart.getCustomerId())
+                .email(shoppingCart.getEmail())
                 .items(itemsBeforeVat)
                 .postage(postageBeforeVat)
                 .promotion(promotionBeforeVat)

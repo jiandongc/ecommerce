@@ -30,6 +30,8 @@ public final class CartData {
 
     private Long customerId;
 
+    private String email;
+
     private List<ItemData> cartItems;
 
     private AddressData shipping;

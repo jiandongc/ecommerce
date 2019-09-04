@@ -18,6 +18,7 @@ import static java.math.BigDecimal.ONE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.CREATED;
@@ -37,6 +38,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         // Given
         final String payload = "{\n" +
                 "  \"customerId\": 1,\n" +
+                "  \"email\": \"abc@db.com\",\n" +
                 "  \"items\": 20.2,\n" +
                 "  \"postage\": 3,\n" +
                 "  \"promotion\": -2,\n" +
@@ -98,7 +100,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 "    }\n" +
                 "  ]\n" +
                 "}";
-        final HttpEntity<String> httpEntity = new HttpEntity<String>(payload, headers);
+        final HttpEntity<String> httpEntity = new HttpEntity<>(payload, headers);
 
         // When
         ResponseEntity<String> response = rest.exchange(BASE_URL, POST, httpEntity, String.class);
@@ -108,8 +110,86 @@ public class OrderControllerTest extends AbstractControllerTest {
         Optional<Order> orderOptional = orderService.findByOrderNumber(response.getBody());
         assertThat(orderOptional.isPresent(), is(true));
         assertThat(orderOptional.get().getCustomerId(), is(1L));
+        assertThat(orderOptional.get().getEmail(), is("abc@db.com"));
         assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
         assertThat(orderOptional.get().getOrderItems().size(), is(2));
+        assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
+        assertThat(orderOptional.get().getOrderStatuses().size(), is(1));
+        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("Placed"));
+        assertThat(orderOptional.get().getCurrentStatus(), is("Placed"));
+    }
+
+    @Test
+    public void shouldCreateGuestOrder() {
+        // Given
+        final String payload = "{  \n" +
+                "   \"customerId\":null,\n" +
+                "   \"email\":\"abc@gmail.com\",\n" +
+                "   \"items\":3.33,\n" +
+                "   \"postage\":2.5,\n" +
+                "   \"promotion\":0,\n" +
+                "   \"totalBeforeVat\":5.83,\n" +
+                "   \"itemsVat\":0.67,\n" +
+                "   \"postageVat\":0.5,\n" +
+                "   \"promotionVat\":0,\n" +
+                "   \"totalVat\":1.17,\n" +
+                "   \"orderTotal\":7,\n" +
+                "   \"deliveryMethod\":\"Standard Delivery\",\n" +
+                "   \"minDaysRequired\":3,\n" +
+                "   \"maxDaysRequired\":5,\n" +
+                "   \"orderItems\":[  \n" +
+                "      {  \n" +
+                "         \"sku\":\"sku00013\",\n" +
+                "         \"name\":\"Personalised Angel Wings Sleepsuit - Pink\",\n" +
+                "         \"price\":4,\n" +
+                "         \"quantity\":1,\n" +
+                "         \"thumbnail\":null,\n" +
+                "         \"description\":\"\",\n" +
+                "         \"code\":\"mzg0001695\",\n" +
+                "         \"imageUrl\":\"/images/ps0013.jpg\",\n" +
+                "         \"subTotal\":4\n" +
+                "      }\n" +
+                "   ],\n" +
+                "   \"orderAddresses\":[  \n" +
+                "      {  \n" +
+                "         \"addressType\":\"Shipping\",\n" +
+                "         \"name\":\"Jiandong Chen\",\n" +
+                "         \"title\":\"Mr\",\n" +
+                "         \"mobile\":\"07745324432\",\n" +
+                "         \"addressLine1\":\"5 NEW FARM AVENUE\",\n" +
+                "         \"addressLine2\":null,\n" +
+                "         \"addressLine3\":null,\n" +
+                "         \"city\":\"BROMLEY\",\n" +
+                "         \"country\":\"United Kingdom\",\n" +
+                "         \"postcode\":\"BR20TX\"\n" +
+                "      },\n" +
+                "      {  \n" +
+                "         \"addressType\":\"Billing\",\n" +
+                "         \"name\":\"Jiandong Chen\",\n" +
+                "         \"title\":\"Mr\",\n" +
+                "         \"mobile\":\"07745324432\",\n" +
+                "         \"addressLine1\":\"5 NEW FARM AVENUE\",\n" +
+                "         \"addressLine2\":null,\n" +
+                "         \"addressLine3\":null,\n" +
+                "         \"city\":\"BROMLEY\",\n" +
+                "         \"country\":\"United Kingdom\",\n" +
+                "         \"postcode\":\"BR20TX\"\n" +
+                "      }\n" +
+                "   ]\n" +
+                "}";
+        final HttpEntity<String> httpEntity = new HttpEntity<>(payload, headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL, POST, httpEntity, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(CREATED));
+        Optional<Order> orderOptional = orderService.findByOrderNumber(response.getBody());
+        assertThat(orderOptional.isPresent(), is(true));
+        assertThat(orderOptional.get().getCustomerId(), is(nullValue()));
+        assertThat(orderOptional.get().getEmail(), is("abc@gmail.com"));
+        assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
+        assertThat(orderOptional.get().getOrderItems().size(), is(1));
         assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
         assertThat(orderOptional.get().getOrderStatuses().size(), is(1));
         assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("Placed"));

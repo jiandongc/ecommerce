@@ -36,7 +36,10 @@ public class Order {
     private String orderNumber;
 
     @Column(name = "customer_id")
-    private long customerId;
+    private Long customerId;
+
+    @Column(name = "email")
+    private String email;
 
     @Column(name = "items")
     private BigDecimal items;

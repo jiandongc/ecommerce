@@ -71,9 +71,15 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
+    public void updateEmail(UUID cartUid, String email) {
+        cartRepository.updateEmail(cartUid, email);
+    }
+
+    @Override
+    @Transactional
     public void deleteShoppingCart(ShoppingCart shoppingCart){
         cartItemRepository.deleteByCartId(shoppingCart.getId());
-        cartRepository.delete(shoppingCart.getCartUid());
+        cartRepository.delete(shoppingCart.getId());
     }
 
     @Override

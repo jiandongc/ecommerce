@@ -114,7 +114,7 @@ public class ShoppingCartServiceImplTest {
 
         // Then
         verify(cartItemRepository, times(1)).deleteByCartId(123L);
-        verify(cartRepository, times(1)).delete(cartUid);
+        verify(cartRepository, times(1)).delete(123L);
     }
 
     @Test

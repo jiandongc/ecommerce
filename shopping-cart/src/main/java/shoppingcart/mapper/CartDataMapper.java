@@ -44,6 +44,7 @@ public class CartDataMapper {
         return CartData.builder()
                 .cartUid(shoppingCart.getCartUid().toString())
                 .customerId(shoppingCart.getCustomerId())
+                .email(shoppingCart.getEmail())
                 .quantity(quantity)
                 .itemsTotal(shoppingCart.getItemSubTotal())
                 .postage(shoppingCart.getPostage())
