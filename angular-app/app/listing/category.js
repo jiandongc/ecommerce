@@ -89,6 +89,25 @@ category.service('categoryService', function($http, environment){
   }
 });
 
+category.factory('categoryFactory', function($http, environment){
+  var getCategoryData = function(categoryCode){
+    return $http.get(environment.productUrl + '/categories/' + categoryCode).then(function(response){
+      return response.data;
+    });
+  }
+
+  var getSubCategories = function(categoryCode, level){
+    return $http.get(environment.productUrl + '/categories/' + categoryCode + "?level=" + level).then(function(response){
+      return response.data;
+    });
+  }
+
+  return {
+    getCategoryData: getCategoryData,
+    getSubCategories: getSubCategories
+  }
+});
+
 category.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.

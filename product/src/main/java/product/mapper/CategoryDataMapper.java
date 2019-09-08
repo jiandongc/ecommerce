@@ -45,4 +45,11 @@ public class CategoryDataMapper {
                 .build();
 
     }
+
+    public CategoryData getValue(Category category){
+        return CategoryData.builder()
+                .code(category.getCode())
+                .name(category.getName())
+                .build();
+    }
 }

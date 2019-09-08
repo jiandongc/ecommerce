@@ -2,11 +2,10 @@ package product.service;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.mockito.Mockito;
 import product.domain.Category;
+import product.mapper.CategoryDataMapper;
 import product.repository.CategoryRepository;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,8 +19,10 @@ import static org.mockito.Mockito.when;
  */
 public class CategoryServiceImplTest {
 
+    private ProductService productService = mock(ProductService.class);
     private CategoryRepository categoryRepository = mock(CategoryRepository.class);
-    private CategoryService categoryService = new CategoryServiceImpl(categoryRepository);
+    private CategoryDataMapper categoryDataMapper = mock(CategoryDataMapper.class);
+    private CategoryService categoryService = new CategoryServiceImpl(productService, categoryRepository, categoryDataMapper);
 
     @Test
     public void shouldFindParentCategoriesByCode(){

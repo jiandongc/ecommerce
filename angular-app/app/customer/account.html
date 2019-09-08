@@ -1,7 +1,7 @@
 <div class="container account">
     <div class="row">
         <div class="col-xs-12 fs-18 m-b-05">Your Account</div>
-        <div class="col-xs-12 col-md-6 col-lg-4 m-b-05" style="height:120px;">
+        <div class="col-xs-12 col-md-6 col-lg-4 m-b-15" style="height:120px;">
             <a ng-href="#!/account/{{customer.id}}/profile">
                 <div class="p-15 a-box" style="height: 100%; width: 100%">
                     <div class="row">
@@ -16,7 +16,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-xs-12 col-md-6 col-lg-4 m-b-05" style="height:120px;">
+        <div class="col-xs-12 col-md-6 col-lg-4 m-b-15" style="height:120px;">
             <a ng-href="#!/account/{{customer.id}}/orders?status=all">
                 <div class="p-15 a-box" style="height: 100%; width: 100%">
                     <div class="row">
@@ -31,7 +31,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-xs-12 col-md-6 col-lg-4 m-b-05" style="height:120px;">
+        <div class="col-xs-12 col-md-6 col-lg-4 m-b-15" style="height:120px;">
             <a ng-href="#!/account/{{customer.id}}/address-book">
                 <div class="p-15 a-box" style="height: 100%; width: 100%">
                     <div class="row">
@@ -41,6 +41,21 @@
                         <div class="col-xs-9">
                             <div class="fs-11 color-san-juan">Your Addresses</div>
                             <div class="fs-10 fw-light color-san-juan">Edit addresses and delivery preferences</div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-xs-12 col-md-6 col-lg-4 m-b-15" style="height:120px;">
+            <a href ng-click="logout()">
+                <div class="p-15 a-box" style="height: 100%; width: 100%">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <img src="/images/logout.png" style="width: 70px; height: 70px;">
+                        </div>
+                        <div class="col-xs-9">
+                            <div class="fs-11 color-san-juan">Sign Out</div>
+                            <div class="fs-10 fw-light color-san-juan">Thank you and see you next time</div>
                         </div>
                     </div>
                 </div>

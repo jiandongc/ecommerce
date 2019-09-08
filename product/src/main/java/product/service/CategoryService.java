@@ -1,5 +1,6 @@
 package product.service;
 
+import product.data.CategoryData;
 import product.domain.Category;
 
 import java.util.List;
@@ -12,7 +13,11 @@ public interface CategoryService {
 
     Optional<Category> findByCode(String code);
 
-    List<Category> findSubCategories(String parentCode);
+    List<Category> findSubCategories(String code);
+
+    Optional<CategoryData> findSubCategories(String code, int level);
 
     List<Category> findParentCategories(String code);
+
+    Optional<CategoryData> getCategoryData(String code);
 }

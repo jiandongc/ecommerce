@@ -12,7 +12,7 @@ var app = angular.module('store', [
 	'order'
 ]);
 
-app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, authFactory) {
+app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, categoryFactory, authFactory) {
 
     $scope.template = {header: "default-header.html", footer: "default-footer.html"};
 
@@ -82,16 +82,15 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		$scope.template.footer = 'default-footer.html';
  	});
 
-	$scope.logout = function() {
-		$rootScope.$broadcast('reset');
-		$location.path("#");
-	}
-
 	$scope.removeItem = function(cartItem){
 		shoppingCartFactory.deleteItemFromShoppingCart($scope.cartUid, cartItem.sku).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);
 		});
 	}
+
+	categoryFactory.getSubCategories("msg", 2).then(function(response){
+		$scope.categoryOne = response;
+	});
 });
 
 app.factory('$localstorage', ['$window', function($window) {

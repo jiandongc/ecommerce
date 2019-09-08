@@ -153,10 +153,15 @@ customer.controller('registerCtrl', function($scope, authService, customerFactor
     };
 });
 
-customer.controller('accountCtrl', function($scope, $routeParams, customerFactory){
+customer.controller('accountCtrl', function($scope, $routeParams, $rootScope, $location, customerFactory){
     customerFactory.getCustomerById($routeParams.id).then(function(response){
         $scope.customer = response;
     });
+
+    $scope.logout = function() {
+        $rootScope.$broadcast('reset');
+        $location.path("#");
+    }
 });
 
 customer.controller('orderCtrl', function($scope, $routeParams, orderFactory, customerFactory){

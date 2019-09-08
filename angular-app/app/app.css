@@ -394,6 +394,14 @@ html, body {
   color: #111 !important;
 }
 
+a.link-primary {
+  color: #e47911;
+}
+
+a.link-primary:hover {
+  color: #f0c14b;
+}
+
 .form-address {
   color: #324902;
 }
@@ -678,6 +686,10 @@ ul.scrollable-menu img {
   color: #45555f;
 }
 
+.color-cream-can {
+  color: #e47911;
+}
+
 .clearLeft {
   clear: left;
 }
@@ -705,28 +717,6 @@ ul.scrollable-menu img {
 .glyphicon.spinning {
     animation: spin 1s infinite linear;
     -webkit-animation: spin2 1s infinite linear;
-}
-
-@media only screen and (max-width: 768px) {
-  .mobile {
-    visibility: visible;
-  }
-
-  .desktop {
-    visibility: hidden;
-    display: none;
-  }
-}
-
-@media only screen and (min-width: 768px) {
-  .mobile {
-    visibility: hidden;
-    display: none;
-  }
-
-  .desktop {
-    visibility: visible;
-  }
 }
 
 @keyframes spin {

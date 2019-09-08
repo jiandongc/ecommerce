@@ -1,18 +1,15 @@
 package product.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import product.data.CategoryData;
-import product.domain.Category;
-import product.domain.Product;
-import product.mapper.CategoryDataMapper;
 import product.service.CategoryService;
-import product.service.ProductService;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 /**
  * Created by jiandong on 13/11/16.
@@ -22,30 +19,22 @@ import java.util.Optional;
 @RequestMapping("/categories")
 public class CategoryController {
 
-    private final ProductService productService;
     private final CategoryService categoryService;
-    private final CategoryDataMapper categoryDataMapper;
 
     @Autowired
-    public CategoryController(ProductService productService,
-                              CategoryService categoryService,
-                              CategoryDataMapper categoryDataMapper){
-        this.productService = productService;
+    public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
-        this.categoryDataMapper = categoryDataMapper;
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
-    @RequestMapping(value = "/{code}", method= RequestMethod.GET)
-    public CategoryData findCategoryByCode(@PathVariable String code) {
-        final Optional<Category> category = categoryService.findByCode(code);
-        if(category.isPresent()){
-            final List<Product> products = productService.findByCategoryCode(code);
-            final Map<Category, Integer> subCategories = productService.findProductTotalInSubCategories(code);
-            final List<Category> parentCategories = categoryService.findParentCategories(code);
-            return categoryDataMapper.getValue(category.get(), parentCategories, subCategories, products);
+    @RequestMapping(value = "/{code}", method = RequestMethod.GET)
+    public ResponseEntity findCategoryByCode(@PathVariable String code, @RequestParam(value = "level", required = false) Integer level) {
+        if (level == null) {
+            Optional<CategoryData> categoryData = categoryService.getCategoryData(code);
+            return categoryData.map(data -> new ResponseEntity<>(data, HttpStatus.OK)).orElse(new ResponseEntity<>(NOT_FOUND));
         } else {
-            return null;
+            Optional<CategoryData> categoryData = categoryService.findSubCategories(code, level);
+            return categoryData.map(data -> new ResponseEntity<>(data, HttpStatus.OK)).orElse(new ResponseEntity<>(NOT_FOUND));
         }
     }
 }
