@@ -3,6 +3,7 @@ delete from product.product_attribute_value;
 delete from product.attribute_value;
 delete from product.category_filter_attribute;
 delete from product.attribute;
+delete from product.price;
 delete from product.sku;
 delete from product.product_image;
 delete from product.image_type;

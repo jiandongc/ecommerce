@@ -2,7 +2,6 @@ package product.service;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import product.data.Facet;
 import product.data.FacetValue;
 import product.data.ProductSearchData;
@@ -237,13 +236,13 @@ public class ProductSearchServiceImplTest {
         // Given
         final Category category = mock(Category.class);
         final Product p1 = mock(Product.class);
-        when(p1.getMinPrice()).thenReturn(ONE);
+        when(p1.getCurrentPrice()).thenReturn(ONE);
         when(p1.getName()).thenReturn("p1");
         final Product p2 = mock(Product.class);
-        when(p2.getMinPrice()).thenReturn(TEN);
+        when(p2.getCurrentPrice()).thenReturn(TEN);
         when(p2.getName()).thenReturn("p2");
         final Product p3 = mock(Product.class);
-        when(p3.getMinPrice()).thenReturn(new BigDecimal(20));
+        when(p3.getCurrentPrice()).thenReturn(new BigDecimal(20));
         when(p3.getName()).thenReturn("p3");
 
         // When & Then

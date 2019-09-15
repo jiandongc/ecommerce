@@ -5,29 +5,56 @@ import product.data.ProductData;
 import product.domain.Image;
 import product.domain.Product;
 
-import java.util.Comparator;
+import java.util.*;
 
 
 @Component
 public class ProductDataMapper {
 
     public ProductData getValue(Product product) {
-        final ProductData.ProductDataBuilder builder = ProductData.builder()
-                .code(product.getCode())
-                .name(product.getName())
-                .description(product.getDescription())
-                .categoryCode(product.getCategoryCode())
-                .price(product.getMinPrice());
+        Map<String, Set<String>> attributes = new HashMap<>();
+        List<Map<String, String>> variants = new ArrayList<>();
+        Map<String, List<String>> images = new HashMap<>();
 
         product.getSkus().forEach(sku -> {
-            builder.addVariant(sku.getAsMap());
-            sku.getAttributes().forEach(attribute -> builder.addAttribute(attribute.getKeyName(), attribute.getValue()));
+            variants.add(sku.getAsMap());
+            sku.getAttributes().forEach(attribute -> {
+                if (attributes.containsKey(attribute.getKeyName())) {
+                    attributes.get(attribute.getKeyName()).add(attribute.getValue());
+                } else {
+                    final Set<String> values = new LinkedHashSet<>();
+                    values.add(attribute.getValue());
+                    attributes.put(attribute.getKeyName(), values);
+                }
+            });
         });
 
         product.getImages().stream()
                 .sorted(Comparator.comparing(Image::getOrdering))
-                .forEach(image -> builder.addImage(image.getImageTypeValue(), image.getUrl()));
+                .forEach(image -> {
+                    if (images.containsKey(image.getImageTypeValue())) {
+                        images.get(image.getImageTypeValue()).add(image.getUrl());
+                    } else {
+                        final List<String> values = new ArrayList<>();
+                        values.add(image.getUrl());
+                        images.put(image.getImageTypeValue(), values);
+                    }
+                });
 
-        return builder.build();
+
+        return ProductData.builder()
+                .code(product.getCode())
+                .name(product.getName())
+                .description(product.getDescription())
+                .categoryCode(product.getCategoryCode())
+                .price(product.getCurrentPrice())
+                .originalPrice(product.getOriginalPrice())
+                .discountRate(product.getDiscountRate())
+                .isOnSale(product.isOnSale())
+                .attributes(product.getSkus().isEmpty() ? null : attributes)
+                .variants(product.getSkus().isEmpty() ? null : variants)
+                .images(product.getImages().isEmpty() ? null : images)
+                .build();
+
     }
 }

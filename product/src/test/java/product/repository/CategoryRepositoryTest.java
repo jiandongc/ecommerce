@@ -65,7 +65,14 @@ public class CategoryRepositoryTest extends AbstractRepositoryTest {
         category.setCode("FD");
         category.setFilterKeys(Arrays.asList(color, brand));
 
-        assertThat(actualCategory, is(category));
+        assertThat(actualCategory.getName(), is("food"));
+        assertThat(actualCategory.getDescription(), is("delicious"));
+        assertThat(actualCategory.getImageUrl(), is("img/0001.jpg"));
+        assertThat(actualCategory.getCode(), is("FD"));
+        assertThat(actualCategory.isHidden(), is(false));
+        assertThat(actualCategory.getFilterKeys().size(), is(2));
+        assertThat(actualCategory.getFilterKeys().get(0).getName(), is("color"));
+        assertThat(actualCategory.getFilterKeys().get(1).getName(), is("brand"));
     }
 
     @Test
@@ -108,7 +115,9 @@ public class CategoryRepositoryTest extends AbstractRepositoryTest {
         subCategory3.setFilterKeys(new ArrayList<>());
 
         assertThat(subCategories.size(), is(3));
-        assertThat(subCategories, hasItems(subCategory1, subCategory2, subCategory3));
+        assertThat(subCategories.get(0).getName(), is("crackers"));
+        assertThat(subCategories.get(1).getName(), is("cake"));
+        assertThat(subCategories.get(2).getName(), is("chocolate"));
     }
 
 }

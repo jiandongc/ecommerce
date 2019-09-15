@@ -1,7 +1,5 @@
 package product.controller;
 
-import static java.math.BigDecimal.ONE;
-import static java.math.BigDecimal.TEN;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -22,6 +20,8 @@ import product.data.ProductSearchData;
 import product.data.ProductSimpleData;
 import product.domain.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.HashSet;
 
 public class ProductControllerTest extends AbstractControllerTest {
@@ -84,13 +84,13 @@ public class ProductControllerTest extends AbstractControllerTest {
 		image2.setOrdering(2);
 
 		sku = new Sku();
-		sku.setPrice(TEN);
+		sku.addPrice(Price.builder().price(BigDecimal.TEN).startDate(LocalDate.now()).build());
 		sku.setStockQuantity(100);
 		sku.setSku("FD10039403_X");
 		sku.addAttribute(attribute);
 
 		sku2 = new Sku();
-		sku2.setPrice(ONE);
+		sku2.addPrice(Price.builder().price(BigDecimal.ONE).startDate(LocalDate.now()).build());
 		sku2.setStockQuantity(70);
 		sku2.setSku("FD10039403_Y");
 		sku2.addAttribute(attribute);

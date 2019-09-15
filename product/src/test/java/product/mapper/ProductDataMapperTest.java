@@ -4,10 +4,10 @@ import org.junit.Test;
 import product.data.ProductData;
 import product.domain.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.*;
 
-import static java.math.BigDecimal.ONE;
-import static java.math.BigDecimal.TEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -58,7 +58,7 @@ public class ProductDataMapperTest {
         size.setName("Size");
 
         final Sku sku1 = new Sku();
-        sku1.setPrice(TEN);
+        sku1.addPrice(Price.builder().price(BigDecimal.TEN).startDate(LocalDate.now()).build());
         sku1.setStockQuantity(100);
         sku1.setSku("FD10039403_X");
         final Attribute attribute1 = new Attribute();
@@ -72,7 +72,7 @@ public class ProductDataMapperTest {
         product.addSku(sku1);
 
         final Sku sku2 = new Sku();
-        sku2.setPrice(ONE);
+        sku2.addPrice(Price.builder().price(BigDecimal.valueOf(1.5)).startDate(LocalDate.now()).build());
         sku2.setStockQuantity(99);
         sku2.setSku("FD10039403_Y");
         final Attribute attribute3 = new Attribute();
@@ -102,7 +102,7 @@ public class ProductDataMapperTest {
         final Map<String, String> variantTwo = new HashMap<>();
         variantTwo.put("sku", "FD10039403_Y");
         variantTwo.put("qty", "99");
-        variantTwo.put("price", "1");
+        variantTwo.put("price", "1.5");
         variantTwo.put("Color", "Blue");
         variantTwo.put("Size", "XXL");
         variantTwo.put("description", "Color: Blue, Size: XXL");
@@ -110,7 +110,7 @@ public class ProductDataMapperTest {
         final Map<String, List<String>> images = new HashMap<>();
         images.put("main", Arrays.asList("url one", "url two"));
         images.put("thumbnail", Arrays.asList("url three"));
-        final ProductData expected = new ProductData("code", "name", "description", "FH", ONE, attributes, variants, images);
+        final ProductData expected = new ProductData("code", "name", "description", "FH", BigDecimal.valueOf(1.5), BigDecimal.valueOf(1.5), null, false, attributes, variants, images);
         assertThat(actual, is(expected));
     }
 

@@ -71,9 +71,9 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 
         switch (sort){
             case PRICE_DESC :
-                return products.stream().sorted(comparing(Product::getMinPrice).reversed()).collect(toList());
+                return products.stream().sorted(comparing(Product::getCurrentPrice).reversed()).collect(toList());
             case PRICE_ASC :
-                return products.stream().sorted(comparing(Product::getMinPrice)).collect(toList());
+                return products.stream().sorted(comparing(Product::getCurrentPrice)).collect(toList());
             default: return products;
         }
     }

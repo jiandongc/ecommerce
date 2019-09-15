@@ -1,17 +1,18 @@
 package product.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 import java.math.BigDecimal;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.Test;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.annotation.Rollback;
 import product.domain.*;
 
 public class ProductRepositoryTest extends AbstractRepositoryTest {
@@ -35,9 +36,11 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 	private static final String product_insert_sql
 			= "insert into product(category_id, description, name) values (?, ?, ?)";
 	private static final String sku_insert_sql
-			= "insert into sku(product_id, sku, stock_quantity, price) values (?, ?, ?, ?)";
+			= "insert into sku(product_id, sku, stock_quantity) values (?, ?, ?)";
 	private static final String sku_attribute_value_insert_sql
 			= "insert into sku_attribute_value (sku_id, attribute_value_id) values (?, ?)";
+	private static final String sku_price_insert_sql
+			= "insert into price(sku_id, price, start_date, end_date, discount_rate) values (?, ?, ?, ?, ?)";
 	private static final String product_attribute_value_insert_sql
 			= "insert into product_attribute_value(product_id, attribute_value_id) values (?, ?)";
 	private static final String product_group_insert_sql
@@ -61,8 +64,10 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		jdbcTemplate.update(image_insert_sql, productId, imageTypeId, "img/0001.jpg", 1);
 		jdbcTemplate.update(image_insert_sql, productId, imageTypeId, "img/0003.jpg", 3);
 		jdbcTemplate.update(image_insert_sql, productId, imageTypeId, "img/0002.jpg", 2);
-		jdbcTemplate.update(sku_insert_sql, productId, "FD10039403_X", 100, 10);
+		jdbcTemplate.update(sku_insert_sql, productId, "FD10039403_X", 100);
 		final Long skuId = jdbcTemplate.queryForObject("select id from sku where sku = 'FD10039403_X'", Long.class);
+		jdbcTemplate.update(sku_price_insert_sql, skuId, 10, Date.valueOf("2019-11-01"), null, null);
+		jdbcTemplate.update(sku_price_insert_sql, skuId, 9, Date.valueOf("2019-11-01"), Date.valueOf("2019-12-01"), "10%");
 		final Long colorAttributeValueId = jdbcTemplate.queryForObject("select av.id " +
 				"from attribute_value av join attribute a on a.id = av.attribute_id " +
 				"where a.name = 'color'", Long.class);
@@ -99,9 +104,17 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		assertThat(actualProduct.getImages().get(2).getOrdering(), is(3));
 		assertThat(actualProduct.getImages().get(2).getImageType().getType(), is("thumbnail"));
 
-		assertThat(actualProduct.getSkus().get(0).getPrice(), is(BigDecimal.TEN));
 		assertThat(actualProduct.getSkus().get(0).getStockQuantity(), is(100));
 		assertThat(actualProduct.getSkus().get(0).getSku(), is("FD10039403_X"));
+		assertThat(actualProduct.getSkus().get(0).getPrices().size(), is(2));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(0).getPrice(), is(BigDecimal.valueOf(10)));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(0).getStartDate(), is(LocalDate.of(2019, 11, 1)));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(0).getEndDate(), is(nullValue()));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(0).getDiscountRate(), is(nullValue()));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(1).getPrice(), is(BigDecimal.valueOf(9)));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(1).getStartDate(), is(LocalDate.of(2019, 11, 1)));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(1).getEndDate(), is(LocalDate.of(2019, 12, 1)));
+		assertThat(actualProduct.getSkus().get(0).getPrices().get(1).getDiscountRate(), is("10%"));
 		assertThat(actualProduct.getSkus().get(0).getAttributes().get(0).getKeyName(), is("color"));
 		assertThat(actualProduct.getSkus().get(0).getAttributes().get(0).getValue(), is("red"));
 		assertThat(actualProduct.getSkus().get(0).getAttributes().get(1).getKeyName(), is("brand"));
