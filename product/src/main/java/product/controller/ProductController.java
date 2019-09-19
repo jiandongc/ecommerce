@@ -65,7 +65,7 @@ public class ProductController {
 	@RequestMapping(method=RequestMethod.GET)
 	public List<ProductSimpleData> findProducts(@RequestParam(value = "cc") String categoryCode) {
 		return productService.findByCategoryCode(categoryCode).stream()
-				.map(simpleProductMapper::getValueWithMainImage).collect(Collectors.toList());
+				.map(simpleProductMapper::map).collect(Collectors.toList());
 	}
 
 	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
@@ -80,7 +80,7 @@ public class ProductController {
 	@RequestMapping(value = "/color/{code}", method=RequestMethod.GET)
 	public ResponseEntity findColorVariant(@PathVariable String code){
 		final List<ProductSimpleData> products = productService.findColorVariant(code).stream()
-				.map(simpleProductMapper::getValueWithColorImage).collect(Collectors.toList());
+				.map(simpleProductMapper::map).collect(Collectors.toList());
 
 		if(!products.isEmpty()){
 			return new ResponseEntity<>(products, HttpStatus.OK);

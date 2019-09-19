@@ -91,14 +91,12 @@ public class Product {
         attributes.add(attribute);
     }
 
-    public String getMainImageUrl() {
-        final Optional<Image> mainImage = images.stream().filter(image -> "Main".equalsIgnoreCase(image.getImageTypeValue())).findFirst();
-        return mainImage.map(Image::getUrl).orElse(null);
-    }
-
-    public String getColorImageUrl() {
-        final Optional<Image> mainImage = images.stream().filter(image -> "Color".equalsIgnoreCase(image.getImageTypeValue())).findFirst();
-        return mainImage.map(Image::getUrl).orElse(null);
+    public String getFirstImageUrl() {
+        if(images != null && !images.isEmpty()){
+            return images.get(0).getUrl();
+        } else {
+            return null;
+        }
     }
 
     public BigDecimal getCurrentPrice() {

@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 
-import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
 @Data
@@ -20,10 +19,6 @@ public class Image {
     @Column(name = "id")
     private long id;
 
-    @ManyToOne(fetch = EAGER)
-    @JoinColumn(name = "image_type_id")
-    private ImageType imageType;
-
     @Column(name = "url")
     private String url;
 
@@ -35,8 +30,4 @@ public class Image {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
-    public String getImageTypeValue(){
-        return imageType.getType();
-    }
 }

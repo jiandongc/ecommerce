@@ -7,11 +7,11 @@ import product.domain.Product;
 @Component
 public class ProductSimpleDataMapper {
 
-    public ProductSimpleData getValueWithMainImage(Product product) {
+    public ProductSimpleData map(Product product) {
         return ProductSimpleData.builder()
                 .code(product.getCode())
                 .name(product.getName())
-                .imageUrl(product.getMainImageUrl())
+                .imageUrl(product.getFirstImageUrl())
                 .price(product.getCurrentPrice())
                 .originalPrice(product.getOriginalPrice())
                 .discountRate(product.getDiscountRate())
@@ -19,15 +19,4 @@ public class ProductSimpleDataMapper {
                 .build();
     }
 
-    public ProductSimpleData getValueWithColorImage(Product product) {
-        return ProductSimpleData.builder()
-                .code(product.getCode())
-                .name(product.getName())
-                .imageUrl(product.getColorImageUrl())
-                .price(product.getCurrentPrice())
-                .originalPrice(product.getOriginalPrice())
-                .discountRate(product.getDiscountRate())
-                .isOnSale(product.isOnSale())
-                .build();
-    }
 }

@@ -19,7 +19,7 @@ public class ProductSimpleDataMapperTest {
     private ProductSimpleDataMapper mapper = new ProductSimpleDataMapper();
 
     @Test
-    public void shouldMapProductToProductSimpleDataWithMainImage() {
+    public void shouldMapProductToProductSimpleData() {
         // Given
         final Product product = new Product();
         product.setName("Chester");
@@ -27,19 +27,15 @@ public class ProductSimpleDataMapperTest {
         product.setCode("CH");
 
         final Image imageOne = new Image();
-        final ImageType imageTypeOne = new ImageType();
-        imageTypeOne.setType("main");
+        imageOne.setOrdering(1);
         imageOne.setUrl("url one");
-        imageOne.setImageType(imageTypeOne);
 
         final Image imageTwo = new Image();
-        final ImageType imageTypeTwo = new ImageType();
-        imageTypeTwo.setType("thumbnail");
+        imageTwo.setOrdering(2);
         imageTwo.setUrl("url two");
-        imageTwo.setImageType(imageTypeTwo);
 
-        product.addImage(imageTwo);
         product.addImage(imageOne);
+        product.addImage(imageTwo);
 
         final Sku sku1 = new Sku();
         sku1.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1)).build());
@@ -54,7 +50,7 @@ public class ProductSimpleDataMapperTest {
         product.addSku(sku2);
 
         // When
-        final ProductSimpleData actual = mapper.getValueWithMainImage(product);
+        final ProductSimpleData actual = mapper.map(product);
 
         // Then
         final ProductSimpleData expected = ProductSimpleData.builder()
@@ -70,68 +66,12 @@ public class ProductSimpleDataMapperTest {
     }
 
     @Test
-    public void shouldMapProductToProductSimpleDataWithColorImage() {
-        // Given
-        final Product product = new Product();
-        product.setName("Chester");
-        product.setDescription("delicious");
-        product.setCode("CH");
-
-        final Image imageOne = new Image();
-        final ImageType imageTypeOne = new ImageType();
-        imageTypeOne.setType("main");
-        imageOne.setUrl("url one");
-        imageOne.setImageType(imageTypeOne);
-
-        final Image imageTwo = new Image();
-        final ImageType imageTypeTwo = new ImageType();
-        imageTypeTwo.setType("color");
-        imageTwo.setUrl("url two");
-        imageTwo.setImageType(imageTypeTwo);
-
-        product.addImage(imageTwo);
-        product.addImage(imageOne);
-
-        final Sku sku1 = new Sku();
-        sku1.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1)).build());
-        sku1.addPrice(Price.builder().startDate(LocalDate.now()).endDate(LocalDate.now().plusDays(1)).discountRate("10%").price(BigDecimal.valueOf(0.9)).build());
-        sku1.setStockQuantity(100);
-        sku1.setSku("FD10039403_X");
-        product.addSku(sku1);
-
-        final Sku sku2 = new Sku();
-        sku2.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1)).build());
-        sku2.addPrice(Price.builder().startDate(LocalDate.now()).endDate(LocalDate.now().plusDays(1)).discountRate("20%").price(BigDecimal.valueOf(0.8)).build());
-        sku2.setStockQuantity(99);
-        sku2.setSku("FD10039403_Y");
-        product.addSku(sku2);
-
-        // When
-        final ProductSimpleData actual = mapper.getValueWithColorImage(product);
-
-        // Then
-        final ProductSimpleData expected = ProductSimpleData.builder()
-                .name("Chester")
-                .code("CH")
-                .imageUrl("url two")
-                .originalPrice(BigDecimal.valueOf(1))
-                .price(BigDecimal.valueOf(0.8))
-                .discountRate("20%")
-                .isOnSale(true)
-                .build();
-        assertThat(actual, is(expected));
-    }
-
-    @Test
     public void shouldMapProductWithTwoSkuOfWhichOnlyOneIsOnSaleButExpired(){
         // Given
         final Product product = new Product();
 
         final Image imageOne = new Image();
-        final ImageType imageTypeOne = new ImageType();
-        imageTypeOne.setType("main");
         imageOne.setUrl("url one");
-        imageOne.setImageType(imageTypeOne);
         product.addImage(imageOne);
 
         final Sku sku1 = new Sku();
@@ -148,7 +88,7 @@ public class ProductSimpleDataMapperTest {
         product.addSku(sku2);
 
         // When
-        final ProductSimpleData actual = mapper.getValueWithMainImage(product);
+        final ProductSimpleData actual = mapper.map(product);
 
         // Then
         assertThat(actual.getPrice(), is(BigDecimal.valueOf(1)));

@@ -37,9 +37,6 @@ public abstract class AbstractControllerTest {
     protected BrandRepository brandRepository;
 
     @Autowired
-    protected ImageTypeRepository imageTypeRepository;
-
-    @Autowired
     protected KeyRepository keyRepository;
 
     @Autowired
@@ -76,7 +73,6 @@ public abstract class AbstractControllerTest {
         jdbcTemplate.update("delete from price");
         jdbcTemplate.update("delete from sku");
         jdbcTemplate.update("delete from product_image");
-        jdbcTemplate.update("delete from image_type");
         jdbcTemplate.update("delete from product_group");
         jdbcTemplate.update("delete from product");
         jdbcTemplate.update("delete from brand");

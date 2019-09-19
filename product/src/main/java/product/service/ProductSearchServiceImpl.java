@@ -40,7 +40,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
 
         final ProductSearchData.ProductSearchDataBuilder productSearchDataBuilder = ProductSearchData.builder();
         for(Product product : sortedProducts){
-            productSearchDataBuilder.addProduct(productMapper.getValueWithMainImage(product));
+            productSearchDataBuilder.addProduct(productMapper.map(product));
         }
 
         // build facets

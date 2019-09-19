@@ -34,32 +34,6 @@ public class ProductData {
 
     private List<Map<String, String>> variants;
 
-    private Map<String, List<String>> images;
-
-    public void addAttribute(String key, String value) {
-        if (attributes.containsKey(key)) {
-            attributes.get(key).add(value);
-        } else {
-            final Set<String> values = new LinkedHashSet<>();
-            values.add(value);
-            attributes.put(key, values);
-        }
-
-    }
-
-    public void addVariant(Map<String, String> variant) {
-        variants.add(variant);
-    }
-
-    public void addImage(String key, String value) {
-        if (images.containsKey(key)) {
-            images.get(key).add(value);
-        } else {
-            final List<String> values = new ArrayList<>();
-            values.add(value);
-            images.put(key, values);
-        }
-    }
-
+    private List<String> images;
 
 }

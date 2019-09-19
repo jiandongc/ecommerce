@@ -2,7 +2,6 @@ package product.mapper;
 
 import org.springframework.stereotype.Component;
 import product.data.ProductData;
-import product.domain.Image;
 import product.domain.Product;
 
 import java.util.*;
@@ -14,7 +13,7 @@ public class ProductDataMapper {
     public ProductData getValue(Product product) {
         Map<String, Set<String>> attributes = new HashMap<>();
         List<Map<String, String>> variants = new ArrayList<>();
-        Map<String, List<String>> images = new HashMap<>();
+        List<String> images = new ArrayList<>();
 
         product.getSkus().forEach(sku -> {
             variants.add(sku.getAsMap());
@@ -29,18 +28,7 @@ public class ProductDataMapper {
             });
         });
 
-        product.getImages().stream()
-                .sorted(Comparator.comparing(Image::getOrdering))
-                .forEach(image -> {
-                    if (images.containsKey(image.getImageTypeValue())) {
-                        images.get(image.getImageTypeValue()).add(image.getUrl());
-                    } else {
-                        final List<String> values = new ArrayList<>();
-                        values.add(image.getUrl());
-                        images.put(image.getImageTypeValue(), values);
-                    }
-                });
-
+        product.getImages().forEach(image -> images.add(image.getUrl()));
 
         return ProductData.builder()
                 .code(product.getCode())

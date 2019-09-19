@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.junit.Test;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.annotation.Rollback;
 import product.domain.*;
 
 public class ProductRepositoryTest extends AbstractRepositoryTest {
@@ -29,10 +28,8 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 			= "insert into attribute(name) values (?)";
 	private static final String attribute_value_insert_sql
 			= "insert into attribute_value(attribute_id, attribute_value) values(?, ?)";
-	private static final String image_type_insert_sql
-			= "insert into image_type(type) values (?)";
 	private static final String image_insert_sql
-			= "insert into product_image(product_id, image_type_id, url, ordering) values (?, ?, ?, ?)";
+			= "insert into product_image(product_id, url, ordering) values (?, ?, ?)";
 	private static final String product_insert_sql
 			= "insert into product(category_id, description, name) values (?, ?, ?)";
 	private static final String sku_insert_sql
@@ -56,14 +53,12 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		jdbcTemplate.update(attribute_insert_sql, "brand");
 		final Long brandAttributeId = jdbcTemplate.queryForObject("select id from attribute where name = 'brand'", Long.class);
 		jdbcTemplate.update(attribute_value_insert_sql,brandAttributeId, "nike");
-		jdbcTemplate.update(image_type_insert_sql, "thumbnail");
 		final Long categoryId = jdbcTemplate.queryForObject("select id from category where name = 'food'", Long.class);
 		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester");
 		final Long productId = jdbcTemplate.queryForObject("select id from product where name = 'chester'", Long.class);
-		final Long imageTypeId = jdbcTemplate.queryForObject("select id from image_type where type = 'thumbnail'", Long.class);
-		jdbcTemplate.update(image_insert_sql, productId, imageTypeId, "img/0001.jpg", 1);
-		jdbcTemplate.update(image_insert_sql, productId, imageTypeId, "img/0003.jpg", 3);
-		jdbcTemplate.update(image_insert_sql, productId, imageTypeId, "img/0002.jpg", 2);
+		jdbcTemplate.update(image_insert_sql, productId, "img/0001.jpg", 1);
+		jdbcTemplate.update(image_insert_sql, productId, "img/0003.jpg", 3);
+		jdbcTemplate.update(image_insert_sql, productId, "img/0002.jpg", 2);
 		jdbcTemplate.update(sku_insert_sql, productId, "FD10039403_X", 100);
 		final Long skuId = jdbcTemplate.queryForObject("select id from sku where sku = 'FD10039403_X'", Long.class);
 		jdbcTemplate.update(sku_price_insert_sql, skuId, 10, Date.valueOf("2019-11-01"), null, null);
@@ -96,13 +91,10 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 
 		assertThat(actualProduct.getImages().get(0).getUrl(), is("img/0001.jpg"));
 		assertThat(actualProduct.getImages().get(0).getOrdering(), is(1));
-		assertThat(actualProduct.getImages().get(0).getImageType().getType(), is("thumbnail"));
 		assertThat(actualProduct.getImages().get(1).getUrl(), is("img/0002.jpg"));
 		assertThat(actualProduct.getImages().get(1).getOrdering(), is(2));
-		assertThat(actualProduct.getImages().get(1).getImageType().getType(), is("thumbnail"));
 		assertThat(actualProduct.getImages().get(2).getUrl(), is("img/0003.jpg"));
 		assertThat(actualProduct.getImages().get(2).getOrdering(), is(3));
-		assertThat(actualProduct.getImages().get(2).getImageType().getType(), is("thumbnail"));
 
 		assertThat(actualProduct.getSkus().get(0).getStockQuantity(), is(100));
 		assertThat(actualProduct.getSkus().get(0).getSku(), is("FD10039403_X"));
