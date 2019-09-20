@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.math.BigDecimal.TEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 
@@ -49,7 +50,7 @@ public class ProductDataMapperTest {
         size.setName("Size");
 
         final Sku sku1 = new Sku();
-        sku1.addPrice(Price.builder().price(BigDecimal.TEN).startDate(LocalDate.now()).build());
+        sku1.addPrice(Price.builder().price(TEN).startDate(LocalDate.now()).build());
         sku1.setStockQuantity(100);
         sku1.setSku("FD10039403_X");
         final Attribute attribute1 = new Attribute();
@@ -81,23 +82,29 @@ public class ProductDataMapperTest {
 
         // Then
         final Map<String, Set<String>> attributes = new LinkedHashMap<>();
-        attributes.put("Color", new LinkedHashSet<>(Arrays.asList("Red", "Blue")));
         attributes.put("Size", new LinkedHashSet<>(Arrays.asList("XL", "XXL")));
-        final Map<String, String> variantOne = new HashMap<>();
+        attributes.put("Color", new LinkedHashSet<>(Arrays.asList("Red", "Blue")));
+        final Map<String, Object> variantOne = new HashMap<>();
         variantOne.put("sku", "FD10039403_X");
-        variantOne.put("qty", "100");
-        variantOne.put("price", "10");
+        variantOne.put("qty", 100);
+        variantOne.put("price", TEN);
+        variantOne.put("originalPrice", TEN);
+        variantOne.put("discountRate", null);
+        variantOne.put("isOnSale", false);
         variantOne.put("Color", "Red");
         variantOne.put("Size", "XL");
         variantOne.put("description", "Color: Red, Size: XL");
-        final Map<String, String> variantTwo = new HashMap<>();
+        final Map<String, Object> variantTwo = new HashMap<>();
         variantTwo.put("sku", "FD10039403_Y");
-        variantTwo.put("qty", "99");
-        variantTwo.put("price", "1.5");
+        variantTwo.put("qty", 99);
+        variantTwo.put("price", BigDecimal.valueOf(1.5));
+        variantTwo.put("originalPrice", BigDecimal.valueOf(1.5));
+        variantTwo.put("discountRate", null);
+        variantTwo.put("isOnSale", false);
         variantTwo.put("Color", "Blue");
         variantTwo.put("Size", "XXL");
         variantTwo.put("description", "Color: Blue, Size: XXL");
-        final List<Map<String, String>> variants = Arrays.asList(variantOne, variantTwo);
+        final List<Map<String, Object>> variants = Arrays.asList(variantOne, variantTwo);
         final List<String> images = Arrays.asList("url one", "url two", "url three");
         final ProductData expected = new ProductData("code", "name", "description", "FH", BigDecimal.valueOf(1.5), BigDecimal.valueOf(1.5), null, false, attributes, variants, images);
         assertThat(actual, is(expected));

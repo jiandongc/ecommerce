@@ -32,7 +32,7 @@ public class ProductData {
 
     private Map<String, Set<String>> attributes;
 
-    private List<Map<String, String>> variants;
+    private List<Map<String, Object>> variants;
 
     private List<String> images;
 

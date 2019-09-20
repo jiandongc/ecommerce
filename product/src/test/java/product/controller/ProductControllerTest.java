@@ -1,8 +1,10 @@
 package product.controller;
 
+import static java.math.BigDecimal.TEN;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.startsWith;
 import static org.springframework.http.HttpMethod.GET;
 
@@ -71,7 +73,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		image2.setOrdering(2);
 
 		sku = new Sku();
-		sku.addPrice(Price.builder().price(BigDecimal.TEN).startDate(LocalDate.now()).build());
+		sku.addPrice(Price.builder().price(TEN).startDate(LocalDate.now()).build());
 		sku.setStockQuantity(100);
 		sku.setSku("FD10039403_X");
 		sku.addAttribute(attribute);
@@ -109,10 +111,13 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getImages().get(1), is("img/0003.jpg"));
 		assertThat(response.getBody().getImages().get(2), is("img/0004.jpg"));
 		assertThat(response.getBody().getAttributes().get("Color"), is(new HashSet<>(asList("Red"))));
-		assertThat(response.getBody().getVariants().get(0).get("price"), is("10"));
+		assertThat(response.getBody().getVariants().get(0).get("price"), is(10));
+		assertThat(response.getBody().getVariants().get(0).get("originalPrice"), is(10));
+		assertThat(response.getBody().getVariants().get(0).get("isOnSale"), is(false));
+		assertThat(response.getBody().getVariants().get(0).get("discountRate"), is(nullValue()));
 		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_X"));
 		assertThat(response.getBody().getVariants().get(0).get("Color"), is("Red"));
-		assertThat(response.getBody().getVariants().get(0).get("qty"), is("100"));
+		assertThat(response.getBody().getVariants().get(0).get("qty"), is(100));
 		assertThat(response.getBody().getVariants().get(0).get("description"), is("Color: Red"));
 	}
 

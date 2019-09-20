@@ -100,11 +100,14 @@ public class Sku {
         attributes.add(attribute);
     }
 
-    public Map<String, String> getAsMap() {
-        final Map<String, String> values = new HashMap<>();
+    public Map<String, Object> getAsMap() {
+        final Map<String, Object> values = new HashMap<>();
         values.put("sku", sku);
-        values.put("qty", stockQuantity.toString());
-        values.put("price", this.getCurrentPrice() != null ? this.getCurrentPrice().toString() : null);
+        values.put("qty", stockQuantity);
+        values.put("price", this.getCurrentPrice());
+        values.put("originalPrice", this.getOriginalPrice());
+        values.put("discountRate", this.getDiscountRate());
+        values.put("isOnSale", this.isOnSale());
         attributes.forEach(attribute -> values.put(attribute.getKeyName(), attribute.getValue()));
         values.put("description", attributes.stream()
                 .map(attribute -> attribute.getKeyName() + ": " + attribute.getValue())

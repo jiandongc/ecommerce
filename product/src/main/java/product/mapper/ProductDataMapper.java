@@ -12,7 +12,7 @@ public class ProductDataMapper {
 
     public ProductData getValue(Product product) {
         Map<String, Set<String>> attributes = new HashMap<>();
-        List<Map<String, String>> variants = new ArrayList<>();
+        List<Map<String, Object>> variants = new ArrayList<>();
         List<String> images = new ArrayList<>();
 
         product.getSkus().forEach(sku -> {
