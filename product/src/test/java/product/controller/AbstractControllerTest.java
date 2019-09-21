@@ -65,7 +65,7 @@ public abstract class AbstractControllerTest {
 
     @After
     public void cleanUp(){
-        jdbcTemplate.update("delete from sku_attribute_value");
+        jdbcTemplate.update("delete from sku_attribute");
         jdbcTemplate.update("delete from product_attribute_value");
         jdbcTemplate.update("delete from attribute_value");
         jdbcTemplate.update("delete from category_filter_attribute");

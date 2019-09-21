@@ -76,13 +76,13 @@ public class ProductControllerTest extends AbstractControllerTest {
 		sku.addPrice(Price.builder().price(TEN).startDate(LocalDate.now()).build());
 		sku.setStockQuantity(100);
 		sku.setSku("FD10039403_X");
-		sku.addAttribute(attribute);
+		sku.addAttribute(SkuAttribute.builder().key("Color").value("Red").build());
 
 		sku2 = new Sku();
 		sku2.addPrice(Price.builder().price(BigDecimal.ONE).startDate(LocalDate.now()).build());
 		sku2.setStockQuantity(70);
 		sku2.setSku("FD10039403_Y");
-		sku2.addAttribute(attribute);
+		sku2.addAttribute(SkuAttribute.builder().key("Color").value("Red").build());
 	}
 	
 	@Test

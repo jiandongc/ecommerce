@@ -18,12 +18,12 @@ public class ProductDataMapper {
         product.getSkus().forEach(sku -> {
             variants.add(sku.getAsMap());
             sku.getAttributes().forEach(attribute -> {
-                if (attributes.containsKey(attribute.getKeyName())) {
-                    attributes.get(attribute.getKeyName()).add(attribute.getValue());
+                if (attributes.containsKey(attribute.getKey())) {
+                    attributes.get(attribute.getKey()).add(attribute.getValue());
                 } else {
                     final Set<String> values = new LinkedHashSet<>();
                     values.add(attribute.getValue());
-                    attributes.put(attribute.getKeyName(), values);
+                    attributes.put(attribute.getKey(), values);
                 }
             });
         });

@@ -1,0 +1,1 @@
+DROP TABLE sku_attribute_value CASCADE;

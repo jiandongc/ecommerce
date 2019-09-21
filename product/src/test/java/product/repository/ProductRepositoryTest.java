@@ -34,8 +34,8 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 			= "insert into product(category_id, description, name) values (?, ?, ?)";
 	private static final String sku_insert_sql
 			= "insert into sku(product_id, sku, stock_quantity) values (?, ?, ?)";
-	private static final String sku_attribute_value_insert_sql
-			= "insert into sku_attribute_value (sku_id, attribute_value_id) values (?, ?)";
+	private static final String sku_attribute_insert_sql
+			= "insert into sku_attribute (sku_id, key, value) values (?, ?, ?)";
 	private static final String sku_price_insert_sql
 			= "insert into price(sku_id, price, start_date, end_date, discount_rate) values (?, ?, ?, ?, ?)";
 	private static final String product_attribute_value_insert_sql
@@ -69,8 +69,8 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		final Long brandAttributeValueId = jdbcTemplate.queryForObject("select av.id " +
 				"from attribute_value av join attribute a on a.id = av.attribute_id " +
 				"where a.name = 'brand'", Long.class);
-		jdbcTemplate.update(sku_attribute_value_insert_sql, skuId, colorAttributeValueId);
-		jdbcTemplate.update(sku_attribute_value_insert_sql, skuId, brandAttributeValueId);
+		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "color", "red");
+		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "brand", "nike");
 		jdbcTemplate.update(product_attribute_value_insert_sql, productId, colorAttributeValueId);
 		jdbcTemplate.update(product_attribute_value_insert_sql, productId, brandAttributeValueId);
 
@@ -107,9 +107,9 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		assertThat(actualProduct.getSkus().get(0).getPrices().get(1).getStartDate(), is(LocalDate.of(2019, 11, 1)));
 		assertThat(actualProduct.getSkus().get(0).getPrices().get(1).getEndDate(), is(LocalDate.of(2019, 12, 1)));
 		assertThat(actualProduct.getSkus().get(0).getPrices().get(1).getDiscountRate(), is("10%"));
-		assertThat(actualProduct.getSkus().get(0).getAttributes().get(0).getKeyName(), is("color"));
+		assertThat(actualProduct.getSkus().get(0).getAttributes().get(0).getKey(), is("color"));
 		assertThat(actualProduct.getSkus().get(0).getAttributes().get(0).getValue(), is("red"));
-		assertThat(actualProduct.getSkus().get(0).getAttributes().get(1).getKeyName(), is("brand"));
+		assertThat(actualProduct.getSkus().get(0).getAttributes().get(1).getKey(), is("brand"));
 		assertThat(actualProduct.getSkus().get(0).getAttributes().get(1).getValue(), is("nike"));
 
 		assertThat(actualProduct.getAttributes().get(0).getKeyName(), is("color"));

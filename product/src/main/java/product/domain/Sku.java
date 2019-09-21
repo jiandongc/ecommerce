@@ -33,9 +33,8 @@ public class Sku {
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "sku")
     private List<Price> prices;
 
-    @ManyToMany(fetch = LAZY)
-    @JoinTable(name = "sku_attribute_value", joinColumns = {@JoinColumn(name = "sku_id")}, inverseJoinColumns = {@JoinColumn(name = "attribute_value_id")})
-    private List<Attribute> attributes = new ArrayList<Attribute>();
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "sku")
+    private List<SkuAttribute> attributes;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
@@ -96,8 +95,13 @@ public class Sku {
         price.setSku(this);
     }
 
-    public void addAttribute(Attribute attribute) {
-        attributes.add(attribute);
+    public void addAttribute(SkuAttribute skuAttribute) {
+        if (attributes == null) {
+            attributes = new ArrayList<>();
+        }
+
+        attributes.add(skuAttribute);
+        skuAttribute.setSku(this);
     }
 
     public Map<String, Object> getAsMap() {
@@ -108,9 +112,9 @@ public class Sku {
         values.put("originalPrice", this.getOriginalPrice());
         values.put("discountRate", this.getDiscountRate());
         values.put("isOnSale", this.isOnSale());
-        attributes.forEach(attribute -> values.put(attribute.getKeyName(), attribute.getValue()));
+        attributes.forEach(attribute -> values.put(attribute.getKey(), attribute.getValue()));
         values.put("description", attributes.stream()
-                .map(attribute -> attribute.getKeyName() + ": " + attribute.getValue())
+                .map(attribute -> attribute.getKey() + ": " + attribute.getValue())
                 .collect(Collectors.joining(", "))
         );
         return values;

@@ -44,37 +44,20 @@ public class ProductDataMapperTest {
         imageThree.setOrdering(3);
         product.addImage(imageThree);
 
-        final Key color = new Key();
-        color.setName("Color");
-        final Key size = new Key();
-        size.setName("Size");
-
         final Sku sku1 = new Sku();
         sku1.addPrice(Price.builder().price(TEN).startDate(LocalDate.now()).build());
         sku1.setStockQuantity(100);
         sku1.setSku("FD10039403_X");
-        final Attribute attribute1 = new Attribute();
-        attribute1.setKey(color);
-        attribute1.setValue("Red");
-        sku1.addAttribute(attribute1);
-        final Attribute attribute2 = new Attribute();
-        attribute2.setKey(size);
-        attribute2.setValue("XL");
-        sku1.addAttribute(attribute2);
+        sku1.addAttribute(SkuAttribute.builder().key("Color").value("Red").build());
+        sku1.addAttribute(SkuAttribute.builder().key("Size").value("XL").build());
         product.addSku(sku1);
 
         final Sku sku2 = new Sku();
         sku2.addPrice(Price.builder().price(BigDecimal.valueOf(1.5)).startDate(LocalDate.now()).build());
         sku2.setStockQuantity(99);
         sku2.setSku("FD10039403_Y");
-        final Attribute attribute3 = new Attribute();
-        attribute3.setKey(color);
-        attribute3.setValue("Blue");
-        sku2.addAttribute(attribute3);
-        final Attribute attribute4 = new Attribute();
-        attribute4.setKey(size);
-        attribute4.setValue("XXL");
-        sku2.addAttribute(attribute4);
+        sku2.addAttribute(SkuAttribute.builder().key("Color").value("Blue").build());
+        sku2.addAttribute(SkuAttribute.builder().key("Size").value("XXL").build());
         product.addSku(sku2);
 
         // When
