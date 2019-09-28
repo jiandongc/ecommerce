@@ -22,12 +22,14 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 	@Autowired
 	private ProductRepository productRepository;
 
+	private static final String brand_insert_sql
+			= "insert into brand(name, code) values (?, ?)";
 	private static final String category_insert_sql
 			= "insert into category(name, description, image_url, hidden, parent_id, category_code) values (?, ?, ?, ?, ?, ?)";
 	private static final String image_insert_sql
 			= "insert into product_image(product_id, url, ordering) values (?, ?, ?)";
 	private static final String product_insert_sql
-			= "insert into product(category_id, description, name) values (?, ?, ?)";
+			= "insert into product(category_id, description, name, brand_id) values (?, ?, ?, ?)";
 	private static final String sku_insert_sql
 			= "insert into sku(product_id, sku, stock_quantity) values (?, ?, ?)";
 	private static final String sku_attribute_insert_sql
@@ -42,9 +44,11 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 	@Test
 	public void shouldSaveAndFindItByProductCode(){
 		// Given
+		jdbcTemplate.update(brand_insert_sql, "shanghaojia", "shj");
+		final Long brandId = jdbcTemplate.queryForObject("select id from brand where code = 'shj'", Long.class);
 		jdbcTemplate.update(category_insert_sql, "food", "delicious", "img/0001.jpg", false, null, "FD");
 		final Long categoryId = jdbcTemplate.queryForObject("select id from category where name = 'food'", Long.class);
-		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester");
+		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester", brandId);
 		final Long productId = jdbcTemplate.queryForObject("select id from product where name = 'chester'", Long.class);
 		jdbcTemplate.update(image_insert_sql, productId, "img/0001.jpg", 1);
 		jdbcTemplate.update(image_insert_sql, productId, "img/0003.jpg", 3);
@@ -66,6 +70,9 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		assertThat(actualProduct.getCode(), is(productCode));
 		assertThat(actualProduct.getName(), is("chester"));
 		assertThat(actualProduct.getDescription(), is("delicious"));
+
+		assertThat(actualProduct.getBrand().getName(), is("shanghaojia"));
+		assertThat(actualProduct.getBrand().getCode(), is("shj"));
 
 		assertThat(actualProduct.getCategory().getCode(), is("FD"));
 		assertThat(actualProduct.getCategory().getName(), is("food"));
@@ -107,9 +114,9 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		// Given
 		jdbcTemplate.update(category_insert_sql, "food", "delicious", "img/0001.jpg", false, null, "FD");
 		final Long categoryId = jdbcTemplate.queryForObject("select id from category where name = 'food'", Long.class);
-		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester");
-		jdbcTemplate.update(product_insert_sql,categoryId, "yummy", "coke");
-		jdbcTemplate.update(product_insert_sql,categoryId, "fat", "cake");
+		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester", null);
+		jdbcTemplate.update(product_insert_sql,categoryId, "yummy", "coke", null);
+		jdbcTemplate.update(product_insert_sql,categoryId, "fat", "cake", null);
 
 		// When
 		final List<Product> products = productRepository.findByCategoryCode("FD");
@@ -127,15 +134,15 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		jdbcTemplate.update(category_insert_sql, "food", "delicious", "img/0001.jpg", false, null, "FD");
 		final Long categoryId = jdbcTemplate.queryForObject("select id from category where name = 'food'", Long.class);
 
-		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester");
+		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester", null);
 		final Long productOneId = jdbcTemplate.queryForObject("select id from product where name = 'chester'", Long.class);
 		jdbcTemplate.update(product_group_insert_sql, 1, "Color", productOneId);
 
-		jdbcTemplate.update(product_insert_sql,categoryId, "yummy", "coke");
+		jdbcTemplate.update(product_insert_sql,categoryId, "yummy", "coke", null);
 		final Long productTwoId = jdbcTemplate.queryForObject("select id from product where name = 'coke'", Long.class);
 		jdbcTemplate.update(product_group_insert_sql, 1, "Color", productTwoId);
 
-		jdbcTemplate.update(product_insert_sql,categoryId, "fat", "cake");
+		jdbcTemplate.update(product_insert_sql,categoryId, "fat", "cake", null);
 		final Long productThreeId = jdbcTemplate.queryForObject("select id from product where name = 'cake'", Long.class);
 		jdbcTemplate.update(product_group_insert_sql, 1, "Color", productThreeId);
 

@@ -36,4 +36,6 @@ public class ProductData {
 
     private List<String> images;
 
+    private Map<String, String> brand;
+
 }

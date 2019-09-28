@@ -11,10 +11,8 @@ import java.util.*;
 public class ProductDataMapper {
 
     public ProductData getValue(Product product) {
-        Map<String, Set<String>> attributes = new HashMap<>();
-        List<Map<String, Object>> variants = new ArrayList<>();
-        List<String> images = new ArrayList<>();
-
+        final Map<String, Set<String>> attributes = new HashMap<>();
+        final List<Map<String, Object>> variants = new ArrayList<>();
         product.getSkus().forEach(sku -> {
             variants.add(sku.getAsMap());
             sku.getAttributes().forEach(attribute -> {
@@ -28,6 +26,7 @@ public class ProductDataMapper {
             });
         });
 
+        final List<String> images = new ArrayList<>();
         product.getImages().forEach(image -> images.add(image.getUrl()));
 
         return ProductData.builder()
@@ -42,6 +41,7 @@ public class ProductDataMapper {
                 .attributes(product.getSkus().isEmpty() ? null : attributes)
                 .variants(product.getSkus().isEmpty() ? null : variants)
                 .images(product.getImages().isEmpty() ? null : images)
+                .brand(product.getBrand() != null ? product.getBrand().getAsMap() : null)
                 .build();
 
     }

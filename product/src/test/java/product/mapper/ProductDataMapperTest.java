@@ -26,6 +26,7 @@ public class ProductDataMapperTest {
         product.setCode("code");
         product.setName("name");
         product.setDescription("description");
+        product.setBrand(Brand.builder().name("nike").code("abc").build());
 
         final Category category = new Category();
         category.setCode("FH");
@@ -89,7 +90,10 @@ public class ProductDataMapperTest {
         variantTwo.put("description", "Color: Blue, Size: XXL");
         final List<Map<String, Object>> variants = Arrays.asList(variantOne, variantTwo);
         final List<String> images = Arrays.asList("url one", "url two", "url three");
-        final ProductData expected = new ProductData("code", "name", "description", "FH", BigDecimal.valueOf(1.5), BigDecimal.valueOf(1.5), null, false, attributes, variants, images);
+        final Map<String, String> brand = new HashMap<>();
+        brand.put("name", "nike");
+        brand.put("code", "abc");
+        final ProductData expected = new ProductData("code", "name", "description", "FH", BigDecimal.valueOf(1.5), BigDecimal.valueOf(1.5), null, false, attributes, variants, images, brand);
         assertThat(actual, is(expected));
     }
 

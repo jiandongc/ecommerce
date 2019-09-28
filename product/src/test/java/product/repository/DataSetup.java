@@ -18,6 +18,9 @@ public class DataSetup extends AbstractRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private BrandRepository brandRepository;
+
     @Test
     @Rollback(false)
     public void initialise() {
@@ -93,7 +96,12 @@ public class DataSetup extends AbstractRepositoryTest {
         Category msxdm = Category.builder().name("膨化 薯片 虾条 点心面 米果").code("msxdm").parent(xps).build();
         categoryRepository.save(msxdm);
 
-        addProduct(msxdm,
+        Brand haitai = Brand.builder().name("HAITAI海太").code("haitai").build();
+        brandRepository.save(haitai);
+
+        addProduct(
+                msxdm,
+                haitai,
                 "1017004481",
                 Arrays.asList("1017004481", "1017004481-1"),
                 "韩国HAITAI海太 蜂蜜黄油薯片 60g",
@@ -102,7 +110,12 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99))
         );
 
-        addProduct(msxdm,
+        Brand aiyomi = Brand.builder().name("小梅的零食").code("aiyomi").build();
+        brandRepository.save(aiyomi);
+
+        addProduct(
+                msxdm,
+                aiyomi,
                 "1017016711",
                 Arrays.asList("1017016711"),
                 "哎哟咪 小梅的零食 山药薄片 酱香牛排味 90g",
@@ -111,7 +124,12 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(2.59))
         );
 
-        addProduct(msxdm,
+        Brand calbee = Brand.builder().name("卡乐B").code("calbee").build();
+        brandRepository.save(calbee);
+
+        addProduct(
+                msxdm,
+                calbee,
                 "3017008651",
                 Arrays.asList("3017008651"),
                 "【日本直邮】卡乐B薯条三兄弟 北海道最具人气伴手礼 10包入",
@@ -120,7 +138,9 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(16))
         );
 
-        addProduct(msxdm,
+        addProduct(
+                msxdm,
+                null,
                 "1017000211",
                 Arrays.asList("1017000211"),
                 "台湾维力 张君雅小妹妹 点心面 日式串烧烧烤味 80g 新老包装随发",
@@ -129,7 +149,12 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(1.39))
         );
 
-        addProduct(msxdm,
+        Brand lays = Brand.builder().name("Lay's乐事").code("lay-s").build();
+        brandRepository.save(lays);
+
+        addProduct(
+                msxdm,
+                lays,
                 "1017003871",
                 Arrays.asList("1017003871"),
                 "百事LAY'S乐事 薯片 翡翠黄瓜味 桶装 104g",
@@ -161,9 +186,11 @@ public class DataSetup extends AbstractRepositoryTest {
         categoryRepository.save(ggg);
     }
 
-    private void addProduct(Category category, String code, List<String> skus, String name, Integer stockQuantity, List<String> imageUrls, List<BigDecimal> prices) {
+    private void addProduct(Category category, Brand brand, String code, List<String> skus, String name,
+                            Integer stockQuantity, List<String> imageUrls, List<BigDecimal> prices) {
         Product product = Product.builder()
                 .category(category)
+                .brand(brand)
                 .code(code)
                 .name(name)
                 .build();

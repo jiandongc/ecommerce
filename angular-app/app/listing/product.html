@@ -19,7 +19,7 @@
 			</div>	
 		</div>
 		<div class = "col-xs-12 col-md-6">
-			<div class="fs-10 text-underline m-b-05"><a href="#/" class="color-emperor">HAITAI海太</a></div>
+			<div ng-show="product.brand" class="fs-10 text-underline m-b-05"><a href="#/" class="color-emperor">{{product.brand.name}}</a></div>
 			<div class="fs-13 fw-bold m-b-05">{{product.name}}</div>
 			<div class="m-b-05">
 				<span class="fs-20 fw-bold" ng-class="{'color-valencia': onSale}">{{price | currency:"£"}}</span>

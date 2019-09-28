@@ -1,0 +1,1 @@
+ALTER TABLE brand ADD COLUMN code varchar(50) unique;

@@ -1,10 +1,18 @@
 package product.domain;
 
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-/**
- * Created by jiandong on 13/11/16.
- */
+import javax.persistence.*;
+import java.util.HashMap;
+import java.util.Map;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "brand")
 public class Brand {
@@ -13,38 +21,17 @@ public class Brand {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
+
     @Column(name = "name")
     private String name;
 
-    public long getId() {
-        return id;
-    }
+    @Column(name = "code")
+    private String code;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Brand brand = (Brand) o;
-
-        return !(name != null ? !name.equals(brand.name) : brand.name != null);
-
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+    public Map<String, String> getAsMap() {
+        final Map<String, String> values = new HashMap<>();
+        values.put("name", this.name);
+        values.put("code", this.code);
+        return values;
     }
 }

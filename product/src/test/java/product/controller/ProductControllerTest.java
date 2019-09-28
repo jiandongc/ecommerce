@@ -32,6 +32,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private final TestRestTemplate rest = new TestRestTemplate();
 
 	private Category category;
+	private Brand brand;
 	private Image image;
 	private Image image1;
 	private Image image2;
@@ -48,6 +49,9 @@ public class ProductControllerTest extends AbstractControllerTest {
 		category.setCode("FD");
 		category.addCategoryAttribute(CategoryAttribute.builder().key("Color").ordering(0).build());
 		categoryRepository.save(category);
+
+		brand = Brand.builder().code("shj").name("ShangHaoJia").build();
+		brandRepository.save(brand);
 
 		image = new Image();
 		image.setUrl("img/0002.jpg");
@@ -81,6 +85,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
+		productOne.setBrand(brand);
 		productOne.addImage(image);
 		productOne.addImage(image1);
 		productOne.addImage(image2);
@@ -108,6 +113,8 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getVariants().get(0).get("Color"), is("Red"));
 		assertThat(response.getBody().getVariants().get(0).get("qty"), is(100));
 		assertThat(response.getBody().getVariants().get(0).get("description"), is("Color: Red"));
+		assertThat(response.getBody().getBrand().get("name"), is("ShangHaoJia"));
+		assertThat(response.getBody().getBrand().get("code"), is("shj"));
 	}
 
 	@Test
