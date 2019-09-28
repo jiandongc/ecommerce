@@ -7,8 +7,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.FetchType.LAZY;
 
@@ -44,13 +46,20 @@ public class Category {
 	@JoinColumn(name = "parent_id")
 	private Category parent;
 
-	@ManyToMany(fetch = LAZY)
-	@JoinTable(name = "category_filter_attribute", joinColumns = {@JoinColumn(name = "category_id")}, inverseJoinColumns = {@JoinColumn(name = "attribute_id")})
-	@OrderColumn(name = "ordering")
-	private List<Key> filterKeys;
+	@OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "category")
+	@OrderBy(value = "ordering")
+	private List<CategoryAttribute> categoryAttributes;
 
 	public boolean isTopCategory(){
 		return parent == null;
+	}
+
+	public void addCategoryAttribute(CategoryAttribute categoryAttribute) {
+		if (categoryAttributes == null) {
+			categoryAttributes = new ArrayList<>();
+		}
+		categoryAttributes.add(categoryAttribute);
+		categoryAttribute.setCategory(this);
 	}
 
 }

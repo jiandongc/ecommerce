@@ -37,12 +37,6 @@ public abstract class AbstractControllerTest {
     protected BrandRepository brandRepository;
 
     @Autowired
-    protected KeyRepository keyRepository;
-
-    @Autowired
-    protected AttributeRepository attributeRepository;
-
-    @Autowired
     protected ProductGroupRepository productGroupRepository;
 
     protected HttpHeaders headers = null;
@@ -65,17 +59,15 @@ public abstract class AbstractControllerTest {
 
     @After
     public void cleanUp(){
-        jdbcTemplate.update("delete from sku_attribute");
-        jdbcTemplate.update("delete from product_attribute_value");
-        jdbcTemplate.update("delete from attribute_value");
-        jdbcTemplate.update("delete from category_filter_attribute");
-        jdbcTemplate.update("delete from attribute");
         jdbcTemplate.update("delete from price");
+        jdbcTemplate.update("delete from sku_attribute");
         jdbcTemplate.update("delete from sku");
         jdbcTemplate.update("delete from product_image");
         jdbcTemplate.update("delete from product_group");
+        jdbcTemplate.update("delete from product_attribute");
         jdbcTemplate.update("delete from product");
         jdbcTemplate.update("delete from brand");
+        jdbcTemplate.update("delete from category_attribute");
         jdbcTemplate.update("delete from category");
     }
 

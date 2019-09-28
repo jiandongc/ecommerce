@@ -35,29 +35,18 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private Image image;
 	private Image image1;
 	private Image image2;
-	private Key key;
 	private Sku sku;
 	private Sku sku2;
-	private Attribute attribute;
 
 	@Before
 	public void setUp(){
-		key = new Key();
-		key.setName("Color");
-		keyRepository.save(key);
-
-		attribute = new Attribute();
-		attribute.setKey(key);
-		attribute.setValue("Red");
-		attributeRepository.save(attribute);
-
 		category = new Category();
 		category.setHidden(false);
 		category.setName("food");
 		category.setDescription("delicious");
 		category.setImageUrl("img/0001.jpg");
 		category.setCode("FD");
-		category.setFilterKeys(asList(key));
+		category.addCategoryAttribute(CategoryAttribute.builder().key("Color").ordering(0).build());
 		categoryRepository.save(category);
 
 		image = new Image();
@@ -215,7 +204,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
-		productOne.addAttribute(attribute);
+		productOne.addAttribute(ProductAttribute.builder().key("Color").value("Red").build());
 		productRepository.save(productOne);
 
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);

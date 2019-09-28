@@ -24,10 +24,6 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 
 	private static final String category_insert_sql
 			= "insert into category(name, description, image_url, hidden, parent_id, category_code) values (?, ?, ?, ?, ?, ?)";
-	private static final String attribute_insert_sql
-			= "insert into attribute(name) values (?)";
-	private static final String attribute_value_insert_sql
-			= "insert into attribute_value(attribute_id, attribute_value) values(?, ?)";
 	private static final String image_insert_sql
 			= "insert into product_image(product_id, url, ordering) values (?, ?, ?)";
 	private static final String product_insert_sql
@@ -38,8 +34,8 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 			= "insert into sku_attribute (sku_id, key, value) values (?, ?, ?)";
 	private static final String sku_price_insert_sql
 			= "insert into price(sku_id, price, start_date, end_date, discount_rate) values (?, ?, ?, ?, ?)";
-	private static final String product_attribute_value_insert_sql
-			= "insert into product_attribute_value(product_id, attribute_value_id) values (?, ?)";
+	private static final String product_attribute_insert_sql
+			= "insert into product_attribute(product_id, key, value) values (?, ?, ?)";
 	private static final String product_group_insert_sql
 			= "insert into product.product_group(product_group, type, product_id) values (?, ?, ?)";
 
@@ -47,12 +43,6 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 	public void shouldSaveAndFindItByProductCode(){
 		// Given
 		jdbcTemplate.update(category_insert_sql, "food", "delicious", "img/0001.jpg", false, null, "FD");
-		jdbcTemplate.update(attribute_insert_sql, "color");
-		final Long colorAttributeId = jdbcTemplate.queryForObject("select id from attribute where name = 'color'", Long.class);
-		jdbcTemplate.update(attribute_value_insert_sql,colorAttributeId, "red");
-		jdbcTemplate.update(attribute_insert_sql, "brand");
-		final Long brandAttributeId = jdbcTemplate.queryForObject("select id from attribute where name = 'brand'", Long.class);
-		jdbcTemplate.update(attribute_value_insert_sql,brandAttributeId, "nike");
 		final Long categoryId = jdbcTemplate.queryForObject("select id from category where name = 'food'", Long.class);
 		jdbcTemplate.update(product_insert_sql,categoryId, "delicious", "chester");
 		final Long productId = jdbcTemplate.queryForObject("select id from product where name = 'chester'", Long.class);
@@ -63,16 +53,10 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		final Long skuId = jdbcTemplate.queryForObject("select id from sku where sku = 'FD10039403_X'", Long.class);
 		jdbcTemplate.update(sku_price_insert_sql, skuId, 10, Date.valueOf("2019-11-01"), null, null);
 		jdbcTemplate.update(sku_price_insert_sql, skuId, 9, Date.valueOf("2019-11-01"), Date.valueOf("2019-12-01"), "10%");
-		final Long colorAttributeValueId = jdbcTemplate.queryForObject("select av.id " +
-				"from attribute_value av join attribute a on a.id = av.attribute_id " +
-				"where a.name = 'color'", Long.class);
-		final Long brandAttributeValueId = jdbcTemplate.queryForObject("select av.id " +
-				"from attribute_value av join attribute a on a.id = av.attribute_id " +
-				"where a.name = 'brand'", Long.class);
 		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "color", "red");
 		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "brand", "nike");
-		jdbcTemplate.update(product_attribute_value_insert_sql, productId, colorAttributeValueId);
-		jdbcTemplate.update(product_attribute_value_insert_sql, productId, brandAttributeValueId);
+		jdbcTemplate.update(product_attribute_insert_sql, productId, "color", "red");
+		jdbcTemplate.update(product_attribute_insert_sql, productId, "brand", "nike");
 
 		// When
 		final String productCode = jdbcTemplate.queryForObject("select product_code from product where name = 'chester'", String.class);
@@ -112,9 +96,9 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		assertThat(actualProduct.getSkus().get(0).getAttributes().get(1).getKey(), is("brand"));
 		assertThat(actualProduct.getSkus().get(0).getAttributes().get(1).getValue(), is("nike"));
 
-		assertThat(actualProduct.getAttributes().get(0).getKeyName(), is("color"));
+		assertThat(actualProduct.getAttributes().get(0).getKey(), is("color"));
 		assertThat(actualProduct.getAttributes().get(0).getValue(), is("red"));
-		assertThat(actualProduct.getAttributes().get(1).getKeyName(), is("brand"));
+		assertThat(actualProduct.getAttributes().get(1).getKey(), is("brand"));
 		assertThat(actualProduct.getAttributes().get(1).getValue(), is("nike"));
 	}
 

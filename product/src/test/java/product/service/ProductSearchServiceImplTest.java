@@ -6,16 +6,12 @@ import product.data.Facet;
 import product.data.FacetValue;
 import product.data.ProductSearchData;
 import product.data.ProductSimpleData;
-import product.domain.Attribute;
-import product.domain.Category;
-import product.domain.Key;
-import product.domain.Product;
+import product.domain.*;
 import product.mapper.FilterMapMapper;
 import product.mapper.ProductSimpleDataMapper;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.math.BigDecimal.ONE;
@@ -42,61 +38,45 @@ public class ProductSearchServiceImplTest {
     @Test
     public void shouldFilterProductBasedOnJsonFilterString(){
         // Given
-        final Key color = new Key();
-        color.setName("color");
-        final Key brand = new Key();
-        brand.setName("brand");
-        final Attribute nike = new Attribute();
-        nike.setKey(brand);
-        nike.setValue("nike");
-        final Attribute adidas = new Attribute();
-        adidas.setKey(brand);
-        adidas.setValue("adidas");
-        final Attribute puma = new Attribute();
-        puma.setKey(brand);
-        puma.setValue("puma");
-        final Attribute blue = new Attribute();
-        blue.setKey(color);
-        blue.setValue("blue");
-        final Attribute red = new Attribute();
-        red.setKey(color);
-        red.setValue("red");
-        final Attribute yellow = new Attribute();
-        yellow.setKey(color);
-        yellow.setValue("yellow");
-
         final Product redNike = new Product();
         redNike.setName("redNike");
-        redNike.setAttributes(asList(red, nike));
+        redNike.addAttribute(ProductAttribute.builder().key("color").value("red").build());
+        redNike.addAttribute(ProductAttribute.builder().key("brand").value("nike").build());
         this.setOtherProductProperties(redNike);
 
         final Product redAdidas = new Product();
         redAdidas.setName("redAdidas");
-        redAdidas.setAttributes(asList(red, adidas));
+        redAdidas.addAttribute(ProductAttribute.builder().key("color").value("red").build());
+        redAdidas.addAttribute(ProductAttribute.builder().key("brand").value("adidas").build());
         this.setOtherProductProperties(redAdidas);
 
         final Product blueNike = new Product();
         blueNike.setName("blueNike");
-        blueNike.setAttributes(asList(blue, nike));
+        blueNike.addAttribute(ProductAttribute.builder().key("color").value("blue").build());
+        blueNike.addAttribute(ProductAttribute.builder().key("brand").value("nike").build());
         this.setOtherProductProperties(blueNike);
 
         final Product blueAdidas = new Product();
         blueAdidas.setName("blueAdidas");
-        blueAdidas.setAttributes(asList(blue, adidas));
+        blueAdidas.addAttribute(ProductAttribute.builder().key("color").value("blue").build());
+        blueAdidas.addAttribute(ProductAttribute.builder().key("brand").value("adidas").build());
         this.setOtherProductProperties(blueAdidas);
 
         final Product yellowAdidas = new Product();
         yellowAdidas.setName("yellowAdidas");
-        yellowAdidas.setAttributes(asList(yellow, adidas));
+        yellowAdidas.addAttribute(ProductAttribute.builder().key("color").value("yellow").build());
+        yellowAdidas.addAttribute(ProductAttribute.builder().key("brand").value("adidas").build());
         this.setOtherProductProperties(yellowAdidas);
 
         final Product redPuma = new Product();
         redPuma.setName("redPuma");
-        redPuma.setAttributes(asList(red, puma));
+        redPuma.addAttribute(ProductAttribute.builder().key("color").value("red").build());
+        redPuma.addAttribute(ProductAttribute.builder().key("brand").value("puma").build());
         this.setOtherProductProperties(redPuma);
 
         final Category category = new Category();
-        category.setFilterKeys(Arrays.asList(color, brand));
+        category.addCategoryAttribute(CategoryAttribute.builder().key("color").ordering(0).build());
+        category.addCategoryAttribute(CategoryAttribute.builder().key("brand").ordering(1).build());
 
         // When
         String json = "{\n" +

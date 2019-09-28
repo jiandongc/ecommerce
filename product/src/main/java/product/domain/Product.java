@@ -58,13 +58,8 @@ public class Product {
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
     private List<Sku> skus;
 
-    @ManyToMany(fetch = LAZY)
-    @JoinTable(name = "product_attribute_value", joinColumns = {@JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "attribute_value_id")})
-    private List<Attribute> attributes;
-
-    public void setAttributes(List<Attribute> attributes) {
-        this.attributes = attributes;
-    }
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
+    private List<ProductAttribute> attributes;
 
     public void addImage(Image image) {
         if (images == null) {
@@ -84,11 +79,12 @@ public class Product {
         sku.setProduct(this);
     }
 
-    public void addAttribute(Attribute attribute) {
+    public void addAttribute(ProductAttribute attribute) {
         if (attributes == null) {
             attributes = new ArrayList<>();
         }
         attributes.add(attribute);
+        attribute.setProduct(this);
     }
 
     public String getFirstImageUrl() {

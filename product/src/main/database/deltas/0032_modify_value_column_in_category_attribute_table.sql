@@ -1,0 +1,1 @@
+ALTER TABLE category_attribute ALTER COLUMN value DROP NOT NULL;

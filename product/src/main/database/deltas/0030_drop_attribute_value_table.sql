@@ -1,0 +1,1 @@
+DROP TABLE attribute_value CASCADE;

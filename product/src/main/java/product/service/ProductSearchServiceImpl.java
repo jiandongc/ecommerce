@@ -5,10 +5,7 @@ import org.springframework.stereotype.Service;
 import product.data.Facet;
 import product.data.FacetValue;
 import product.data.ProductSearchData;
-import product.domain.Attribute;
-import product.domain.Category;
-import product.domain.Key;
-import product.domain.Product;
+import product.domain.*;
 import product.mapper.FilterMapMapper;
 import product.mapper.ProductSimpleDataMapper;
 
@@ -39,57 +36,58 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         final List<Product> sortedProducts = this.sort(products, sort);
 
         final ProductSearchData.ProductSearchDataBuilder productSearchDataBuilder = ProductSearchData.builder();
-        for(Product product : sortedProducts){
+        for (Product product : sortedProducts) {
             productSearchDataBuilder.addProduct(productMapper.map(product));
         }
 
         // build facets
-        for(Key key : category.getFilterKeys()){
-            final Facet facet = this.buildFacet(key, allProducts, filterMap);
+        for (CategoryAttribute categoryAttribute : category.getCategoryAttributes()) {
+            final Facet facet = this.buildFacet(categoryAttribute, allProducts, filterMap);
             productSearchDataBuilder.addFacet(facet);
         }
 
         return productSearchDataBuilder.build();
     }
 
-    private List<Product> filter(List<Product> allProducts, Map<String, List<String>> filterMap){
+    private List<Product> filter(List<Product> allProducts, Map<String, List<String>> filterMap) {
         return allProducts.stream().filter(product -> {
             for (Object o : filterMap.entrySet()) {
                 final Map.Entry pair = (Map.Entry) o;
                 final String fieldName = (String) pair.getKey();
                 final List fieldValues = (List) pair.getValue();
                 boolean noneMatch = product.getAttributes().stream().noneMatch(attribute ->
-                        attribute.getKeyName().equalsIgnoreCase(fieldName) && fieldValues.contains(attribute.getValue().toLowerCase()));
+                        attribute.getKey().equalsIgnoreCase(fieldName) && fieldValues.contains(attribute.getValue().toLowerCase()));
                 if (noneMatch) return false;
             }
             return true;
         }).collect(toList());
     }
 
-    private List<Product> sort(List<Product> products, String sort){
-        if(sort == null) return products;
+    private List<Product> sort(List<Product> products, String sort) {
+        if (sort == null) return products;
 
-        switch (sort){
-            case PRICE_DESC :
+        switch (sort) {
+            case PRICE_DESC:
                 return products.stream().sorted(comparing(Product::getCurrentPrice).reversed()).collect(toList());
-            case PRICE_ASC :
+            case PRICE_ASC:
                 return products.stream().sorted(comparing(Product::getCurrentPrice)).collect(toList());
-            default: return products;
+            default:
+                return products;
         }
     }
 
-    private Facet buildFacet(Key key, List<Product> allProducts, Map<String, List<String>> filterMap) {
+    private Facet buildFacet(CategoryAttribute categoryAttribute, List<Product> allProducts, Map<String, List<String>> filterMap) {
         final Facet.FacetBuilder facetBuilder = Facet.builder();
-        facetBuilder.name(key.getName().toLowerCase());
-        facetBuilder.hasSelectedValue(filterMap.containsKey(key.getName().toLowerCase()));
+        facetBuilder.name(categoryAttribute.getKey().toLowerCase());
+        facetBuilder.hasSelectedValue(filterMap.containsKey(categoryAttribute.getKey().toLowerCase()));
 
-        final Map<String, List<String>> facetFilterMap = this.facetFilterMap(key, filterMap);
+        final Map<String, List<String>> facetFilterMap = this.facetFilterMap(categoryAttribute, filterMap);
         final List<Product> products = this.filter(allProducts, facetFilterMap);
 
         final Map<String, Integer> facetValueMap = new HashMap<>();
         for (Product product : products) {
-            for (Attribute attribute : product.getAttributes()) {
-                if (attribute.getKey().equals(key)) {
+            for (ProductAttribute attribute : product.getAttributes()) {
+                if (attribute.getKey().equals(categoryAttribute.getKey())) {
                     final String value = attribute.getValue().toLowerCase();
                     if (!facetValueMap.containsKey(value)) {
                         facetValueMap.put(value, 1);
@@ -106,7 +104,7 @@ public class ProductSearchServiceImpl implements ProductSearchService {
             final FacetValue facetValue = FacetValue.builder()
                     .name(name)
                     .count(count)
-                    .isSelected(filterMap.containsKey(key.getName().toLowerCase()) && filterMap.get(key.getName().toLowerCase()).contains(name))
+                    .isSelected(filterMap.containsKey(categoryAttribute.getKey().toLowerCase()) && filterMap.get(categoryAttribute.getKey().toLowerCase()).contains(name))
                     .build();
             facetBuilder.addFacetValue(facetValue);
         });
@@ -114,21 +112,18 @@ public class ProductSearchServiceImpl implements ProductSearchService {
         return facetBuilder.build();
     }
 
-    private Map<String, List<String>> facetFilterMap(Key key, Map<String, List<String>> filterMap){
+    private Map<String, List<String>> facetFilterMap(CategoryAttribute categoryAttribute, Map<String, List<String>> filterMap) {
         final Map<String, List<String>> facetFilterMap = new HashMap<>();
-        for(Object o: filterMap.entrySet()) {
+        for (Object o : filterMap.entrySet()) {
             final Map.Entry pair = (Map.Entry) o;
             final String fieldName = (String) pair.getKey();
             final List fieldValues = (List) pair.getValue();
-            if(!fieldName.equalsIgnoreCase(key.getName())){
+            if (!fieldName.equalsIgnoreCase(categoryAttribute.getKey())) {
                 facetFilterMap.put(fieldName, fieldValues);
             }
         }
         return facetFilterMap;
     }
-
-
-
 
 
 }
