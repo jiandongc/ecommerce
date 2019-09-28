@@ -50,7 +50,7 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 			$scope.itemsTotal = (data.itemsTotal != 0 ? data.itemsTotal : null);
 			$scope.cartItems = data.cartItems;
 			if(showDropDown === true){
-				var dropdown = $('ul.nav li.dropdown').find('.dropdown-menu');
+				var dropdown = $('ul.menu li.dropdown').find('.dropdown-menu');
 				dropdown.stop(true, true).fadeIn(1000, "swing", function(){
 					dropdown.stop(true, true).delay(5000).fadeOut(3800);
 				});
@@ -74,6 +74,7 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
  	$scope.$on('downloadGuestToken', function(event, args) {
    		authFactory.downloadGuestToken().then(function(response){
    			$localstorage.set('access_token', response.headers("Authentication"));
+   			$rootScope.$broadcast('initialiseData');
    		});
  	});
 
@@ -82,15 +83,24 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		$scope.template.footer = 'default-footer.html';
  	});
 
+	$scope.$on('initialiseData', function(event, args) { 
+		categoryFactory.getSubCategories("ls", 2).then(function(response){
+			$scope.categoryOne = response;
+		});
+
+		categoryFactory.getSubCategories("yl", 2).then(function(response){
+			$scope.categoryTwo = response;
+		});
+ 	});
+
 	$scope.removeItem = function(cartItem){
 		shoppingCartFactory.deleteItemFromShoppingCart($scope.cartUid, cartItem.sku).then(function(response){
 			$rootScope.$broadcast('updateCartSummary', false);
 		});
 	}
 
-	categoryFactory.getSubCategories("msg", 2).then(function(response){
-		$scope.categoryOne = response;
-	});
+	$rootScope.$broadcast('initialiseData');
+
 });
 
 app.factory('$localstorage', ['$window', function($window) {

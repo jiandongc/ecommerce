@@ -9,7 +9,7 @@
         <div class="hidden-xs pull-left">
             <ul class="nav navbar-nav navbar-left">
                 <li class="dropdown">
-                    <a href="#!/category/msg" class="dropdown-toggle fs-09">Clothing</a>
+                    <a href="#!/category/ls" class="dropdown-toggle fs-09">零食</a>
                     <ul class="dropdown-menu" style="width: 800px;">
                         <li>
                             <div class="row p-10">
@@ -25,63 +25,28 @@
                         </li>
                     </ul>
                 </li>
-
-
                 <li class="dropdown">
-                    <a href="#!/category/msg" class="dropdown-toggle fs-09">美食館</a>
+                    <a href="#!/category/yl" class="dropdown-toggle fs-09">饮料</a>
                     <ul class="dropdown-menu" style="width: 800px;">
                         <li>
                             <div class="row p-10">
-                                <div class="col-xs-4 m-b-10 box">
-                                    <div class="fw-bold fs-09 m-b-05 color-cream-can">饮料 乳品 冲调 茶类</div>
-                                    <div class="fw-light fs-08 m-b-05">饮料 酸梅汤 汽水 果汁</div>
-                                    <div class="fw-light fs-08 m-b-05">豆奶 乳制品 奶茶 椰奶</div>
-                                    <div class="fw-light fs-08 m-b-05">冲饮 麦片 芝麻糊 柚子蜜</div>
-                                    <div class="fw-light fs-08 m-b-05">茶叶 茶包 咖啡</div>
-                                </div>
-                                <div class="col-xs-4 m-b-10 box">
-                                    <div class="fw-bold fs-09 m-b-05 color-cream-can">饼干 糕点 甜品</div>
-                                    <div class="fw-light fs-08 m-b-05">饼干 脆棒 烤馍片 酥饼</div>
-                                    <div class="fw-light fs-08 m-b-05">凤梨酥 麻薯 沙琪玛</div>
-                                    <div class="fw-light fs-08 m-b-05">蛋糕 面包 派 铜锣烧</div>
-                                </div>
-                                <div class="col-xs-4 m-b-10 box">
-                                    <div class="fw-bold fs-09 m-b-05 color-cream-can">月饼 粽子 青团</div>
-                                    <div class="fw-light fs-08 m-b-05">月饼限时特价</div>
-                                    <div class="fw-light fs-08 m-b-05">粽子</div>
-                                    <div class="fw-light fs-08 m-b-05">冲饮 麦片 芝麻糊 柚子蜜</div>
-                                    <div class="fw-light fs-08 m-b-05">青团</div>
-                                </div>
-                                <div class="col-xs-4 m-b-10 box">
-                                    <div class="fw-bold fs-09 m-b-05 color-cream-can">休闲 膨化 薯片</div>
-                                    <div class="fw-light fs-08 m-b-05">膨化 薯片 虾条 点心面 米果</div>
-                                    <div class="fw-light fs-08 m-b-05">威化 蛋卷 麻花 锅巴</div>
-                                    <div class="fw-light fs-08 m-b-05">肉类 海味 坚果 蜜饯</div>
-                                    <div class="fw-light fs-08 m-b-05">肉类 肉肠 肉干 卤味</div>
-                                    <div class="fw-light fs-08 m-b-05">海味小食 鱼肠 海苔</div>
-                                    <div class="fw-light fs-08 m-b-05">坚果 花生 瓜子 炒货</div>
-                                    <div class="fw-light fs-08 m-b-05">蔬果干 蜜饯 豆制品 素肉</div>
-                                </div>
-                                <div class="col-xs-4 m-b-10 box">
-                                    <div class="fw-bold fs-09 m-b-05 color-cream-can">糖果 果冻 巧克力</div>
-                                    <div class="fw-light fs-08 m-b-05">硬糖 软糖 味觉糖 巧克力</div>
-                                    <div class="fw-light fs-08 m-b-05">果冻 果冻爽 龟苓膏</div>
-                                </div>
-                                <div class="col-xs-4 m-b-10 box">
-                                    <div class="fw-bold fs-09 m-b-05 color-cream-can">生鲜</div>
-                                    <div class="fw-light fs-08 m-b-05">蔬果 生鲜</div>
+                                <div ng-repeat="children in categoryTwo.children" class="col-xs-4 m-b-10 box">
+                                    <div class="fw-bold fs-09 m-b-05">
+                                        <a href="#!/category/{{children.code}}" class="link-primary">{{children.name}}</a>
+                                    </div>
+                                    <div ng-repeat="grandChildren in children.children" class="fs-08 m-b-05">
+                                        <a href="#!/category/{{grandChildren.code}}">{{grandChildren.name}}</a>
+                                    </div>
                                 </div>
                             </div>
                         </li>
                     </ul>
                 </li>
-                <li class="dropdown fs-09"><a href="#!/category/mzg">美妝館</a></li>
-                <li class="dropdown fs-09"><a href="#!/home">特賣場</a></li>
             </ul>
         </div>
 
         <div class="navbar-header p-r-05 pull-right">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav menu">
                 <li ng-show="currentUser" class="pull-left">
                     <a href="#!/account/{{customerId}}"><span class="glyphicon glyphicon-user color-cream-can"></span></a>
                 </li>

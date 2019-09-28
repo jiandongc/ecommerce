@@ -1,5 +1,6 @@
 package shoppingcart.controller;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,6 +18,7 @@ import java.util.UUID;
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/carts")
 public class ShoppingCartItemController {
@@ -40,6 +42,7 @@ public class ShoppingCartItemController {
             final Optional<ShoppingCart> cartOptional = cartService.getShoppingCartByUid(cartUid);
             return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), CREATED)).orElse(new ResponseEntity<>(NOT_FOUND));
         } catch (Exception exception) {
+            log.error("Error creating shopping car item {}", exception);
             return new ResponseEntity<>(NOT_FOUND);
         }
     }
@@ -52,6 +55,7 @@ public class ShoppingCartItemController {
             final Optional<ShoppingCart> cartOptional = cartService.getShoppingCartByUid(cartUid);
             return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK)).orElse(new ResponseEntity<>(NOT_FOUND));
         } catch (Exception exception) {
+            log.error("Error deleting shopping car item {}", exception);
             return new ResponseEntity<>(NOT_FOUND);
         }
     }
@@ -64,6 +68,7 @@ public class ShoppingCartItemController {
             final Optional<ShoppingCart> cartOptional = cartService.getShoppingCartByUid(cartUid);
             return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK)).orElse(new ResponseEntity<>(NOT_FOUND));
         } catch (Exception exception) {
+            log.error("Error updating shopping car item {}", exception);
             return new ResponseEntity<>(NOT_FOUND);
         }
     }

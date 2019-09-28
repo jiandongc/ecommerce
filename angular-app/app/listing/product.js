@@ -2,6 +2,7 @@ var productDetail = angular.module('productDetail', ['ngRoute']);
 
 productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout, shoppingCartFactory, $localstorage, $rootScope) {
   $scope.addingItem = false;
+  $scope.selectOptionAlert = false;
   $scope.loading = true;
 	$http.get(environment.productUrl + '/products/' + $routeParams.code).then(function(response){
 		$scope.product = response.data;
@@ -12,13 +13,19 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
     });
 
     $scope.price = response.data.price;
+    $scope.originalPrice = response.data.originalPrice;
+    $scope.onSale = response.data.onSale;
+    $scope.discountRate = response.data.discountRate;
+    
     if($scope.product.variants.length == 1){
       var variant = $scope.product.variants[0];
       $scope.sku = variant.sku;
       $scope.description = variant.description;
-      if(variant.qty <= 10){
-        $scope.lowqty = variant.qty;
-      }
+      $scope.qty = variant.qty;
+    } else {
+      $scope.sku = undefined;
+      $scope.description = undefined;
+      $scope.qty = undefined;
     }
 
     $scope.selected = {};
@@ -37,18 +44,22 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
 
     if(variant){
       $scope.price = variant.price;
+      $scope.originalPrice = variant.originalPrice;
+      $scope.onSale = variant.isOnSale;
+      $scope.discountRate = variant.discountRate;
       $scope.sku = variant.sku;
       $scope.description = variant.description;
+      $scope.qty = variant.qty;
+      $scope.selectOptionAlert = false;
     } else {
       $scope.price = $scope.product.price;
+      $scope.originalPrice = $scope.product.originalPrice;
+      $scope.onSale = $scope.product.onSale;
+      $scope.discountRate = $scope.product.discountRate;
       $scope.sku = undefined;
       $scope.description = undefined;
-    }
-
-    if(variant && variant.qty <= 10){
-      $scope.lowqty = variant.qty;
-    } else {
-      $scope.lowqty = undefined;  
+      $scope.qty = undefined;
+      $scope.selectOptionAlert = true;
     }
   };
 
@@ -67,7 +78,13 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
   };
 
   $scope.addItemToCart = function(product){
-      var imageUrl = product.images.Main[0];
+
+      if(typeof $scope.sku === "undefined" || typeof $scope.price === "undefined"){
+        $scope.selectOptionAlert = true;
+        return;
+      }
+
+      var imageUrl = product.images[0];
       $scope.addingItem = true;
       if(!$localstorage.containsKey("cart_uid")){
           if($localstorage.containsKey("customer_id")){
