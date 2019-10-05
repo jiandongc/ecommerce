@@ -38,6 +38,8 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 			= "insert into price(sku_id, price, start_date, end_date, discount_rate) values (?, ?, ?, ?, ?)";
 	private static final String product_attribute_insert_sql
 			= "insert into product_attribute(product_id, key, value) values (?, ?, ?)";
+	private static final String product_tag_insert_sql
+			= "insert into product_tag(product_id, code, tag, color_hex, start_date, end_date) values (?, ?, ?, ?, ?, ?)";
 	private static final String product_group_insert_sql
 			= "insert into product.product_group(product_group, type, product_id) values (?, ?, ?)";
 
@@ -61,6 +63,8 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "brand", "nike");
 		jdbcTemplate.update(product_attribute_insert_sql, productId, "color", "red");
 		jdbcTemplate.update(product_attribute_insert_sql, productId, "brand", "nike");
+		jdbcTemplate.update(product_tag_insert_sql, productId, "new", "new", "#F0C14B", Date.valueOf("2019-11-01"), Date.valueOf("2019-12-01"));
+		jdbcTemplate.update(product_tag_insert_sql, productId, "sale", "sale", null, Date.valueOf("2020-11-01"), Date.valueOf("2020-12-01"));
 
 		// When
 		final String productCode = jdbcTemplate.queryForObject("select product_code from product where name = 'chester'", String.class);
@@ -107,6 +111,18 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		assertThat(actualProduct.getAttributes().get(0).getValue(), is("red"));
 		assertThat(actualProduct.getAttributes().get(1).getKey(), is("brand"));
 		assertThat(actualProduct.getAttributes().get(1).getValue(), is("nike"));
+
+		assertThat(actualProduct.getTags().get(0).getCode(), is("new"));
+		assertThat(actualProduct.getTags().get(0).getTag(), is("new"));
+		assertThat(actualProduct.getTags().get(0).getColorHex(), is("#F0C14B"));
+		assertThat(actualProduct.getTags().get(0).getStartDate(), is(LocalDate.of(2019, 11, 1)));
+		assertThat(actualProduct.getTags().get(0).getEndDate(), is(LocalDate.of(2019, 12, 1)));
+
+		assertThat(actualProduct.getTags().get(1).getCode(), is("sale"));
+		assertThat(actualProduct.getTags().get(1).getTag(), is("sale"));
+		assertThat(actualProduct.getTags().get(1).getColorHex(), is(nullValue()));
+		assertThat(actualProduct.getTags().get(1).getStartDate(), is(LocalDate.of(2020, 11, 1)));
+		assertThat(actualProduct.getTags().get(1).getEndDate(), is(LocalDate.of(2020, 12, 1)));
 	}
 
 	@Test

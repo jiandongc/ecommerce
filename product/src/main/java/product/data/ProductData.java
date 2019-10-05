@@ -38,4 +38,6 @@ public class ProductData {
 
     private Map<String, String> brand;
 
+    private List<Map<String, String>> tags;
+
 }

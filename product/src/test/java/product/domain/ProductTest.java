@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import static java.time.LocalDate.now;
 import static org.hamcrest.CoreMatchers.is;
@@ -113,6 +114,24 @@ public class ProductTest {
         assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(1)));
         assertThat(product.getDiscountRate(), is(nullValue()));
         assertThat(product.isOnSale(), is(false));
+    }
+
+    @Test
+    public void shouldGetValidDisplayTags(){
+        // Given
+        final Product product = new Product();
+        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).build());
+        product.addTag(ProductTag.builder().tag("popular").code("popular").startDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("future").code("future").startDate(LocalDate.now().plusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("past").code("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
+
+        // When
+        List<ProductTag> validTags = product.getValidTags();
+
+        // Then
+        assertThat(validTags.size(), is(2));
+        assertThat(validTags.get(0).getTag(), is("sale"));
+        assertThat(validTags.get(1).getTag(), is("popular"));
     }
 
 }

@@ -8,10 +8,12 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -61,6 +63,9 @@ public class Product {
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
     private List<ProductAttribute> attributes;
 
+    @OneToMany(fetch = EAGER, cascade = ALL, mappedBy = "product")
+    private List<ProductTag> tags;
+
     public void addImage(Image image) {
         if (images == null) {
             images = new ArrayList<>();
@@ -87,8 +92,16 @@ public class Product {
         attribute.setProduct(this);
     }
 
+    public void addTag(ProductTag tag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        tags.add(tag);
+        tag.setProduct(this);
+    }
+
     public String getFirstImageUrl() {
-        if(images != null && !images.isEmpty()){
+        if (images != null && !images.isEmpty()) {
             return images.get(0).getUrl();
         } else {
             return null;
@@ -96,7 +109,7 @@ public class Product {
     }
 
     public BigDecimal getCurrentPrice() {
-        if(skus == null){
+        if (skus == null) {
             return null;
         }
 
@@ -105,7 +118,7 @@ public class Product {
     }
 
     public BigDecimal getOriginalPrice() {
-        if(skus == null){
+        if (skus == null) {
             return null;
         }
 
@@ -113,8 +126,8 @@ public class Product {
         return skuOptional.map(Sku::getOriginalPrice).orElse(null);
     }
 
-    public String getDiscountRate(){
-        if(skus == null){
+    public String getDiscountRate() {
+        if (skus == null) {
             return null;
         }
 
@@ -122,13 +135,24 @@ public class Product {
         return skuOptional.map(Sku::getDiscountRate).orElse(null);
     }
 
-    public boolean isOnSale(){
-        if(skus == null){
+    public boolean isOnSale() {
+        if (skus == null) {
             return false;
         }
 
         final Optional<Sku> skuOptional = skus.stream().filter(sku -> sku.getCurrentPrice() != null).min(Comparator.comparing(Sku::getCurrentPrice));
         return skuOptional.map(Sku::isOnSale).orElse(false);
+    }
+
+    public List<ProductTag> getValidTags() {
+        if (tags == null){
+            return null;
+        }
+
+        final LocalDate today = LocalDate.now();
+        return tags.stream().filter(tag ->  (tag.getStartDate() != null && !today.isBefore(tag.getStartDate()))
+                && (tag.getEndDate() == null || !today.isAfter(tag.getEndDate())))
+                .collect(Collectors.toList());
     }
 
     public String getCategoryCode() {

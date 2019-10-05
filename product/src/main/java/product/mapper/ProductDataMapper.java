@@ -3,6 +3,7 @@ package product.mapper;
 import org.springframework.stereotype.Component;
 import product.data.ProductData;
 import product.domain.Product;
+import product.domain.ProductTag;
 
 import java.util.*;
 
@@ -26,6 +27,12 @@ public class ProductDataMapper {
             });
         });
 
+        final List<Map<String, String>> tags = new ArrayList<>();
+        final List<ProductTag> validTags = product.getValidTags();
+        if(validTags != null && !validTags.isEmpty()){
+            validTags.forEach(validTag -> tags.add(validTag.getAsMap()));
+        }
+
         final List<String> images = new ArrayList<>();
         product.getImages().forEach(image -> images.add(image.getUrl()));
 
@@ -38,10 +45,11 @@ public class ProductDataMapper {
                 .originalPrice(product.getOriginalPrice())
                 .discountRate(product.getDiscountRate())
                 .isOnSale(product.isOnSale())
-                .attributes(product.getSkus().isEmpty() ? null : attributes)
-                .variants(product.getSkus().isEmpty() ? null : variants)
-                .images(product.getImages().isEmpty() ? null : images)
+                .attributes(attributes.isEmpty() ? null : attributes)
+                .variants(variants.isEmpty() ? null : variants)
                 .brand(product.getBrand() != null ? product.getBrand().getAsMap() : null)
+                .tags(tags.isEmpty() ? null: tags)
+                .images(images.isEmpty() ? null : images)
                 .build();
 
     }
