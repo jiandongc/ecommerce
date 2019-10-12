@@ -12,6 +12,9 @@ import product.domain.Category;
 import product.domain.Product;
 import product.repository.ProductRepository;
 
+import static product.service.ProductPredicate.brandFilter;
+import static product.service.ProductPredicate.tagsFilter;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -43,7 +46,7 @@ public class ProductServiceImpl implements ProductService {
     public Map<Category, Integer> findProductTotalInSubCategories(String categoryCode) {
         final List<Category> subCategories = this.categoryService.findSubCategories(categoryCode);
         final Map<Category, Integer> categories = new LinkedHashMap<>();
-        for(Category category : subCategories){
+        for (Category category : subCategories) {
             final List<Product> products = this.findByCategoryCode(category.getCode());
             categories.put(category, products.size());
         }
@@ -60,12 +63,41 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     public List<Product> findColorVariant(String code) {
         final Optional<Product> product = this.findByCode(code);
-        if(product.isPresent()){
+        if (product.isPresent()) {
             final List<Integer> ids = productRepository.findColorVariantIds(product.get().getId());
             return ids.stream().map(id -> productRepository.findOne(Long.valueOf(id))).collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
 
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findProducts(String categoryCode, List<String> tags, String brand, String sort) {
+        List<Product> products;
+        if (categoryCode == null) {
+            products = productRepository.findAll();
+        } else {
+            products = productRepository.findByCategoryCode(categoryCode);
+        }
+
+        if (tags != null) {
+            products = products.stream().filter(tagsFilter(tags)).collect(Collectors.toList());
+        }
+
+        if (brand != null) {
+            products = products.stream().filter(brandFilter(brand)).collect(Collectors.toList());
+        }
+
+        if (sort != null && sort.equalsIgnoreCase("price.asc")) {
+            products = products.stream().sorted(ProductPredicate.priceAscComparator()).collect(Collectors.toList());
+        }
+
+        if (sort != null && sort.equalsIgnoreCase("price.desc")) {
+            products = products.stream().sorted(ProductPredicate.priceDescComparator()).collect(Collectors.toList());
+        }
+
+        return products;
     }
 }

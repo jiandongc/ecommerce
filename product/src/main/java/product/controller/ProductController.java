@@ -63,9 +63,14 @@ public class ProductController {
 
 	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
 	@RequestMapping(method=RequestMethod.GET)
-	public List<ProductSimpleData> findProducts(@RequestParam(value = "cc") String categoryCode) {
-		return productService.findByCategoryCode(categoryCode).stream()
-				.map(simpleProductMapper::map).collect(Collectors.toList());
+	public List<ProductSimpleData> findProducts(@RequestParam(value = "cc", required = false) String categoryCode,
+												@RequestParam(value = "tg", required = false) List<String> tags,
+												@RequestParam(value = "br", required = false) String brand,
+												@RequestParam(value = "sort", required = false) String sort) {
+
+		return productService.findProducts(categoryCode, tags, brand, sort)
+				.stream().map(simpleProductMapper::map)
+				.collect(Collectors.toList());
 	}
 
 	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")

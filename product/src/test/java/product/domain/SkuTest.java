@@ -26,8 +26,8 @@ public class SkuTest {
         sku.addPrice(priceTwo);
 
         // When && Then
-        assertThat(sku.getOriginalPrice(), is(BigDecimal.ONE));
-        assertThat(sku.getCurrentPrice(), is(BigDecimal.ONE));
+        assertThat(sku.getOriginalPrice(), is(BigDecimal.ONE.setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertThat(sku.getCurrentPrice(), is(BigDecimal.ONE.setScale(2, BigDecimal.ROUND_HALF_UP)));
     }
 
     @Test
@@ -55,8 +55,8 @@ public class SkuTest {
         sku.addPrice(priceThree);
 
         // When && Then
-        assertThat(sku.getCurrentSalePrice(), is(BigDecimal.TEN));
-        assertThat(sku.getCurrentPrice(), is(BigDecimal.TEN));
+        assertThat(sku.getCurrentSalePrice(), is(BigDecimal.TEN.setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertThat(sku.getCurrentPrice(), is(BigDecimal.TEN.setScale(2, BigDecimal.ROUND_HALF_UP)));
     }
 
 }

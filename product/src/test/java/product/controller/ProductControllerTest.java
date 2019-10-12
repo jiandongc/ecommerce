@@ -1,6 +1,6 @@
 package product.controller;
 
-import static java.math.BigDecimal.TEN;
+import static java.math.BigDecimal.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -32,6 +32,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private final TestRestTemplate rest = new TestRestTemplate();
 
 	private Category category;
+	private Category anotherCatetory;
 	private Brand brand;
 	private Image image;
 	private Image image1;
@@ -49,6 +50,14 @@ public class ProductControllerTest extends AbstractControllerTest {
 		category.setCode("FD");
 		category.addCategoryAttribute(CategoryAttribute.builder().key("Color").ordering(0).build());
 		categoryRepository.save(category);
+
+		anotherCatetory = new Category();
+		anotherCatetory.setHidden(false);
+		anotherCatetory.setName("cloth");
+		anotherCatetory.setDescription("beautiful");
+		anotherCatetory.setImageUrl("img/0001.jpg");
+		anotherCatetory.setCode("CL");
+		categoryRepository.save(anotherCatetory);
 
 		brand = Brand.builder().code("shj").name("ShangHaoJia").build();
 		brandRepository.save(brand);
@@ -100,13 +109,13 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getName(), is("Chester"));
 		assertThat(response.getBody().getDescription(), is("Chester description"));
 		assertThat(response.getBody().getCategoryCode(), is("FD"));
-		assertThat(response.getBody().getPrice().toPlainString(), is("10"));
+		assertThat(response.getBody().getPrice().toPlainString(), is("10.00"));
 		assertThat(response.getBody().getImages().get(0), is("img/0002.jpg"));
 		assertThat(response.getBody().getImages().get(1), is("img/0003.jpg"));
 		assertThat(response.getBody().getImages().get(2), is("img/0004.jpg"));
 		assertThat(response.getBody().getAttributes().get("Color"), is(new HashSet<>(asList("Red"))));
-		assertThat(response.getBody().getVariants().get(0).get("price"), is(10));
-		assertThat(response.getBody().getVariants().get(0).get("originalPrice"), is(10));
+		assertThat(response.getBody().getVariants().get(0).get("price"), is(10.0d));
+		assertThat(response.getBody().getVariants().get(0).get("originalPrice"), is(10.0d));
 		assertThat(response.getBody().getVariants().get(0).get("isOnSale"), is(false));
 		assertThat(response.getBody().getVariants().get(0).get("discountRate"), is(nullValue()));
 		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_X"));
@@ -139,19 +148,187 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setName("Shoes");
 		productTwo.setDescription("Shoes description");
 		productTwo.setCategory(category);
+		productTwo.addSku(sku2);
 		productRepository.save(productTwo);
+
+		final Product productThree = new Product();
+		productThree.setName("Cloth");
+		productThree.setDescription("Cloth description");
+		productThree.setCategory(anotherCatetory);
+		productRepository.save(productThree);
 
 		// When & Then
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
-		final ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?cc=FD", GET, httpEntity, ProductSimpleData[].class);
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?cc=FD", GET, httpEntity, ProductSimpleData[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
 		assertThat(response.getBody()[0].getName(), is("Chester"));
 		assertThat(response.getBody()[0].getCode(), startsWith("FD"));
 		assertThat(response.getBody()[0].getImageUrl(), startsWith("img/0002.jpg"));
-		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10"));
+		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10.00"));
 		assertThat(response.getBody()[1].getName(), is("Shoes"));
 		assertThat(response.getBody()[1].getCode(), startsWith("FD"));
+	}
+
+	@Test
+	public void shouldFindProductsByBrand(){
+		// Given
+		Brand nike = Brand.builder().code("nike").name("Nike").build();
+		brandRepository.save(nike);
+		Brand adidas = Brand.builder().code("adidas").name("Adidas").build();
+		brandRepository.save(adidas);
+
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.setBrand(nike);
+		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Shoes");
+		productTwo.setDescription("Shoes description");
+		productTwo.setCategory(category);
+		productTwo.setBrand(nike);
+		productRepository.save(productTwo);
+
+		final Product productThree = new Product();
+		productThree.setName("Cloth");
+		productThree.setDescription("Cloth description");
+		productThree.setCategory(category);
+		productThree.setBrand(adidas);
+		productRepository.save(productThree);
+
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?br=nike", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(2));
+
+		response = rest.exchange(BASE_URL + "?br=adidas", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+
+		response = rest.exchange(BASE_URL + "?br=puma", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(0));
+	}
+
+	@Test
+	public void shouldFindProductByTag(){
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.addTag(ProductTag.builder().code("sale").tag("SALE").startDate(LocalDate.now()).build());
+		productOne.addTag(ProductTag.builder().code("popular").tag("POPULAR").startDate(LocalDate.now()).build());
+		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Shoes");
+		productTwo.setDescription("Shoes description");
+		productTwo.setCategory(category);
+		productTwo.addTag(ProductTag.builder().code("sale").tag("SALE").startDate(LocalDate.now()).build());
+		productRepository.save(productTwo);
+
+		final Product productThree = new Product();
+		productThree.setName("Cloth");
+		productThree.setDescription("Cloth description");
+		productThree.setCategory(category);
+		productThree.addTag(ProductTag.builder().code("season").tag("SEASON").startDate(LocalDate.now()).build());
+		productRepository.save(productThree);
+
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?tg=sale", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(2));
+
+		response = rest.exchange(BASE_URL + "?tg=popular", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+		assertThat(response.getBody()[0].getName(), is("Chester"));
+
+		response = rest.exchange(BASE_URL + "?tg=season", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+		assertThat(response.getBody()[0].getName(), is("Cloth"));
+
+		response = rest.exchange(BASE_URL + "?tg=sale&tg=season", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(3));
+
+		response = rest.exchange(BASE_URL + "?tg=new", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(0));
+	}
+
+	@Test
+	public void shouldOrderProductByPrice(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.addImage(image);
+		productOne.addSku(sku);
+		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Shoes");
+		productTwo.setDescription("Shoes description");
+		productTwo.setCategory(category);
+		productTwo.addSku(sku2);
+		productRepository.save(productTwo);
+
+		// When & Then
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?sort=price.asc", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(2));
+		assertThat(response.getBody()[0].getPrice().toPlainString(), is("1.00"));
+		assertThat(response.getBody()[1].getPrice().toPlainString(), is("10.00"));
+
+		response = rest.exchange(BASE_URL + "?sort=price.desc", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(2));
+		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10.00"));
+		assertThat(response.getBody()[1].getPrice().toPlainString(), is("1.00"));
+	}
+	
+	@Test
+	public void shouldFindProductsByMultipleAttributes(){
+		// Given
+		Brand nike = Brand.builder().code("nike").name("Nike").build();
+		brandRepository.save(nike);
+
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.addTag(ProductTag.builder().code("sale").tag("SALE").startDate(LocalDate.now()).build());
+		productOne.addTag(ProductTag.builder().code("popular").tag("POPULAR").startDate(LocalDate.now()).build());
+		productOne.addSku(sku);
+		productOne.setBrand(nike);
+
+		productRepository.save(productOne);
+
+		// When & Then
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?cc=FD&tg=sale&tg=popular&br=nike&sort=price.asc", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+
+		response = rest.exchange(BASE_URL + "?cc=FD&tg=sale&br=nike&sort=price.asc", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+
+		response = rest.exchange(BASE_URL + "?cc=FD&tg=popular&br=nike&sort=price.asc", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+
+		response = rest.exchange(BASE_URL + "?cc=FD&tg=abc&br=nike&sort=price.asc", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(0));
 	}
 
 	@Test
@@ -278,4 +455,5 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Book"));
 		assertThat(response.getBody().getProducts().get(1).getName(), is("Chester"));
 	}
+
 }

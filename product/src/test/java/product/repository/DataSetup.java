@@ -107,7 +107,9 @@ public class DataSetup extends AbstractRepositoryTest {
                 "韩国HAITAI海太 蜂蜜黄油薯片 60g",
                 100,
                 Arrays.asList("/images/1017004481.webp", "/images/1017004481-1.webp", "/images/1017004481-2.webp", "/images/1017004481-3.webp"),
-                Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99))
+                Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
+                Arrays.asList(ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build())
         );
 
         Brand aiyomi = Brand.builder().name("小梅的零食").code("aiyomi").build();
@@ -121,7 +123,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 "哎哟咪 小梅的零食 山药薄片 酱香牛排味 90g",
                 1,
                 Arrays.asList("/images/1017016711.webp"),
-                Arrays.asList(BigDecimal.valueOf(2.59))
+                Arrays.asList(BigDecimal.valueOf(2.59)),
+                Arrays.asList(ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build())
         );
 
         Brand calbee = Brand.builder().name("卡乐B").code("calbee").build();
@@ -135,7 +138,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 "【日本直邮】卡乐B薯条三兄弟 北海道最具人气伴手礼 10包入",
                 100,
                 Arrays.asList("/images/3017008651.webp"),
-                Arrays.asList(BigDecimal.valueOf(16))
+                Arrays.asList(BigDecimal.valueOf(16)),
+                Arrays.asList(ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build())
         );
 
         addProduct(
@@ -146,7 +150,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 "台湾维力 张君雅小妹妹 点心面 日式串烧烧烤味 80g 新老包装随发",
                 1,
                 Arrays.asList("/images/1017000211.webp"),
-                Arrays.asList(BigDecimal.valueOf(1.39))
+                Arrays.asList(BigDecimal.valueOf(1.39)),
+                null
         );
 
         Brand lays = Brand.builder().name("Lay's乐事").code("lay-s").build();
@@ -160,7 +165,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 "百事LAY'S乐事 薯片 翡翠黄瓜味 桶装 104g",
                 100,
                 Arrays.asList("/images/1017003871.webp"),
-                Arrays.asList(BigDecimal.valueOf(3.29))
+                Arrays.asList(BigDecimal.valueOf(3.29)),
+                null
         );
 
 
@@ -187,7 +193,8 @@ public class DataSetup extends AbstractRepositoryTest {
     }
 
     private void addProduct(Category category, Brand brand, String code, List<String> skus, String name,
-                            Integer stockQuantity, List<String> imageUrls, List<BigDecimal> prices) {
+                            Integer stockQuantity, List<String> imageUrls, List<BigDecimal> prices,
+                            List<ProductTag> productTags) {
         Product product = Product.builder()
                 .category(category)
                 .brand(brand)
@@ -207,6 +214,11 @@ public class DataSetup extends AbstractRepositoryTest {
         for (int i = 0; i < imageUrls.size(); i++) {
             product.addImage(Image.builder().url(imageUrls.get(i)).ordering(i).build());
         }
+
+        if (productTags != null) {
+            productTags.forEach(product::addTag);
+        }
+
         productRepository.save(product);
 
 

@@ -55,7 +55,7 @@ public class Sku {
         final Optional<Price> priceOptional = prices.stream()
                 .filter(price -> price.getStartDate() != null && !today.isBefore(price.getStartDate()) && price.getEndDate() == null)
                 .findFirst();
-        return priceOptional.map(Price::getPrice).orElse(null);
+        return priceOptional.map(price -> price.getPrice().setScale(2, BigDecimal.ROUND_HALF_UP)).orElse(null);
     }
 
     public BigDecimal getCurrentSalePrice() {
@@ -67,7 +67,7 @@ public class Sku {
         final Optional<Price> priceOptional = prices.stream()
                 .filter(price -> price.getStartDate() != null && price.getEndDate() != null && !today.isBefore(price.getStartDate()) && !today.isAfter(price.getEndDate()))
                 .findFirst();
-        return priceOptional.map(Price::getPrice).orElse(null);
+        return priceOptional.map(price -> price.getPrice().setScale(2, BigDecimal.ROUND_HALF_UP)).orElse(null);
     }
 
     public String getDiscountRate() {

@@ -159,4 +159,23 @@ public class Product {
         return category.getCode();
     }
 
+    public boolean hasTag(List<String> tags) {
+
+        List<ProductTag> validTags = this.getValidTags();
+
+        if(validTags == null){
+            return false;
+        }
+
+        for (int i = 0; i < validTags.size(); i++) {
+            for (String tag: tags) {
+                if (tag.equalsIgnoreCase(validTags.get(i).getCode())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
 }

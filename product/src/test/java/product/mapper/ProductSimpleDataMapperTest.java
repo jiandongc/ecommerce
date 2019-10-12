@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.*;
@@ -42,13 +43,13 @@ public class ProductSimpleDataMapperTest {
         product.addImage(imageTwo);
 
         final Sku sku1 = new Sku();
-        sku1.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1)).build());
+        sku1.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)).build());
         sku1.setStockQuantity(100);
         sku1.setSku("FD10039403_X");
         product.addSku(sku1);
 
         final Sku sku2 = new Sku();
-        sku2.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(0.9)).build());
+        sku2.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(0.9).setScale(2, ROUND_HALF_UP)).build());
         sku2.setStockQuantity(99);
         sku2.setSku("FD10039403_Y");
         product.addSku(sku2);
@@ -70,8 +71,8 @@ public class ProductSimpleDataMapperTest {
                 .name("Chester")
                 .code("CH")
                 .imageUrl("url one")
-                .price(BigDecimal.valueOf(0.9))
-                .originalPrice(BigDecimal.valueOf(0.9))
+                .price(BigDecimal.valueOf(0.9).setScale(2, ROUND_HALF_UP))
+                .originalPrice(BigDecimal.valueOf(0.9).setScale(2, ROUND_HALF_UP))
                 .discountRate(null)
                 .isOnSale(false)
                 .tags(tags)
@@ -89,14 +90,14 @@ public class ProductSimpleDataMapperTest {
         product.addImage(imageOne);
 
         final Sku sku1 = new Sku();
-        sku1.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1)).build());
+        sku1.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)).build());
         sku1.setStockQuantity(100);
         sku1.setSku("FD10039403_X");
         product.addSku(sku1);
 
         final Sku sku2 = new Sku();
-        sku2.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1)).build());
-        sku2.addPrice(Price.builder().startDate(LocalDate.now().minusDays(10)).endDate(LocalDate.now().minusDays(9)).discountRate("20%").price(BigDecimal.valueOf(0.8)).build());
+        sku2.addPrice(Price.builder().startDate(LocalDate.now()).price(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)).build());
+        sku2.addPrice(Price.builder().startDate(LocalDate.now().minusDays(10)).endDate(LocalDate.now().minusDays(9)).discountRate("20%").price(BigDecimal.valueOf(0.8).setScale(2, ROUND_HALF_UP)).build());
         sku2.setStockQuantity(99);
         sku2.setSku("FD10039403_Y");
         product.addSku(sku2);
@@ -105,8 +106,8 @@ public class ProductSimpleDataMapperTest {
         final ProductSimpleData actual = mapper.map(product);
 
         // Then
-        assertThat(actual.getPrice(), is(BigDecimal.valueOf(1)));
-        assertThat(actual.getOriginalPrice(), is(BigDecimal.valueOf(1)));
+        assertThat(actual.getPrice(), is(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)));
+        assertThat(actual.getOriginalPrice(), is(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)));
         assertThat(actual.getDiscountRate(), is(nullValue()));
         assertThat(actual.isOnSale(), is(false));
     }

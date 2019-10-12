@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.time.LocalDate.now;
@@ -25,8 +26,8 @@ public class ProductTest {
         product.addSku(sku);
 
         // When & Then
-        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(9)));
-        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10)));
+        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(9).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_HALF_UP)));
         assertThat(product.getDiscountRate(), is("10%"));
         assertThat(product.isOnSale(), is(true));
 
@@ -37,8 +38,8 @@ public class ProductTest {
         product.addSku(anotherSku);
 
         // When & Then
-        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(8)));
-        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10)));
+        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(8).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_HALF_UP)));
         assertThat(product.getDiscountRate(), is("20%"));
         assertThat(product.isOnSale(), is(true));
     }
@@ -53,8 +54,8 @@ public class ProductTest {
         product.addSku(sku);
 
         // When & Then
-        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(10)));
-        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10)));
+        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_HALF_UP)));
         assertThat(product.getDiscountRate(), is(nullValue()));
         assertThat(product.isOnSale(), is(false));
 
@@ -64,8 +65,8 @@ public class ProductTest {
         product.addSku(anotherSku);
 
         // When & Then
-        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(10)));
-        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10)));
+        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_HALF_UP)));
         assertThat(product.getDiscountRate(), is(nullValue()));
         assertThat(product.isOnSale(), is(false));
     }
@@ -85,8 +86,8 @@ public class ProductTest {
         product.addSku(sku2);
 
         // When & Then
-        Assert.assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(0.8)));
-        Assert.assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(1)));
+        Assert.assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(0.8).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        Assert.assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(1).setScale(2, BigDecimal.ROUND_HALF_UP)));
         Assert.assertThat(product.getDiscountRate(), is("20%"));
         Assert.assertThat(product.isOnSale(), is(true));
     }
@@ -110,8 +111,8 @@ public class ProductTest {
         product.addSku(sku2);
 
         // When & Then
-        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(1)));
-        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(1)));
+        assertThat(product.getCurrentPrice(), is(BigDecimal.valueOf(1).setScale(2, BigDecimal.ROUND_HALF_UP)));
+        assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(1).setScale(2, BigDecimal.ROUND_HALF_UP)));
         assertThat(product.getDiscountRate(), is(nullValue()));
         assertThat(product.isOnSale(), is(false));
     }
@@ -132,6 +133,47 @@ public class ProductTest {
         assertThat(validTags.size(), is(2));
         assertThat(validTags.get(0).getTag(), is("sale"));
         assertThat(validTags.get(1).getTag(), is("popular"));
+    }
+
+    @Test
+    public void shouldReturnTrueIfProductHasTag(){
+        // Given
+        final Product product = new Product();
+        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).build());
+        product.addTag(ProductTag.builder().tag("popular").code("popular").startDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("future").code("future").startDate(LocalDate.now().plusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("past").code("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
+
+        // Then
+        assertThat(product.hasTag(Arrays.asList("sale")), is(true));
+        assertThat(product.hasTag(Arrays.asList("popular")), is(true));
+        assertThat(product.hasTag(Arrays.asList("SALE")), is(true));
+        assertThat(product.hasTag(Arrays.asList("POPULAR")), is(true));
+        assertThat(product.hasTag(Arrays.asList("sale", "unknown")), is(true));
+        assertThat(product.hasTag(Arrays.asList("popular", "unknown")), is(true));
+        assertThat(product.hasTag(Arrays.asList("SALE", "unknown")), is(true));
+        assertThat(product.hasTag(Arrays.asList("POPULAR", "unknown")), is(true));
+    }
+
+    @Test
+    public void shouldReturnFalseIfProductHasNoTag(){
+        // Given
+        final Product product = new Product();
+        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).build());
+        product.addTag(ProductTag.builder().tag("popular").code("popular").startDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("future").code("future").startDate(LocalDate.now().plusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("past").code("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
+
+        assertThat(product.hasTag(Arrays.asList("future")), is(false));
+        assertThat(product.hasTag(Arrays.asList("past")), is(false));
+        assertThat(product.hasTag(Arrays.asList("FUTURE")), is(false));
+        assertThat(product.hasTag(Arrays.asList("PAST")), is(false));
+        assertThat(product.hasTag(Arrays.asList("future", "unknown")), is(false));
+        assertThat(product.hasTag(Arrays.asList("past", "unknown")), is(false));
+        assertThat(product.hasTag(Arrays.asList("FUTURE", "unknown")), is(false));
+        assertThat(product.hasTag(Arrays.asList("PAST", "unknown")), is(false));
+        assertThat(product.hasTag(Arrays.asList("unknown")), is(false));
+        assertThat(product.hasTag(Arrays.asList("unknown", "unknown1")), is(false));
     }
 
 }

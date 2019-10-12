@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.TEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -76,8 +77,8 @@ public class ProductDataMapperTest {
         final Map<String, Object> variantOne = new HashMap<>();
         variantOne.put("sku", "FD10039403_X");
         variantOne.put("qty", 100);
-        variantOne.put("price", TEN);
-        variantOne.put("originalPrice", TEN);
+        variantOne.put("price", TEN.setScale(2, ROUND_HALF_UP));
+        variantOne.put("originalPrice", TEN.setScale(2, ROUND_HALF_UP));
         variantOne.put("discountRate", null);
         variantOne.put("isOnSale", false);
         variantOne.put("Color", "Red");
@@ -86,8 +87,8 @@ public class ProductDataMapperTest {
         final Map<String, Object> variantTwo = new HashMap<>();
         variantTwo.put("sku", "FD10039403_Y");
         variantTwo.put("qty", 99);
-        variantTwo.put("price", BigDecimal.valueOf(1.5));
-        variantTwo.put("originalPrice", BigDecimal.valueOf(1.5));
+        variantTwo.put("price", BigDecimal.valueOf(1.5).setScale(2, ROUND_HALF_UP));
+        variantTwo.put("originalPrice", BigDecimal.valueOf(1.5).setScale(2, ROUND_HALF_UP));
         variantTwo.put("discountRate", null);
         variantTwo.put("isOnSale", false);
         variantTwo.put("Color", "Blue");
@@ -109,8 +110,20 @@ public class ProductDataMapperTest {
         popularTag.put("tag", "popular");
         popularTag.put("colorHex", "#C1F04B");
         tags.add(popularTag);
-        final ProductData expected = new ProductData("code", "name", "description", "FH", BigDecimal.valueOf(1.5), BigDecimal.valueOf(1.5),
-                null, false, attributes, variants, images, brand, tags);
+        final ProductData expected = new ProductData(
+                "code",
+                "name",
+                "description",
+                "FH",
+                BigDecimal.valueOf(1.5).setScale(2, ROUND_HALF_UP),
+                BigDecimal.valueOf(1.5).setScale(2, ROUND_HALF_UP),
+                null,
+                false,
+                attributes,
+                variants,
+                images,
+                brand,
+                tags);
         assertThat(actual, is(expected));
     }
 
