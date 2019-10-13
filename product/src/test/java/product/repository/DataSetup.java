@@ -108,8 +108,10 @@ public class DataSetup extends AbstractRepositoryTest {
                 100,
                 Arrays.asList("/images/1017004481.webp", "/images/1017004481-1.webp", "/images/1017004481-2.webp", "/images/1017004481-3.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
-                Arrays.asList(ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build())
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                )
         );
 
         Brand aiyomi = Brand.builder().name("小梅的零食").code("aiyomi").build();
@@ -124,7 +126,10 @@ public class DataSetup extends AbstractRepositoryTest {
                 1,
                 Arrays.asList("/images/1017016711.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.59)),
-                Arrays.asList(ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build())
+                Arrays.asList(
+                        ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                )
         );
 
         Brand calbee = Brand.builder().name("卡乐B").code("calbee").build();
@@ -151,7 +156,9 @@ public class DataSetup extends AbstractRepositoryTest {
                 1,
                 Arrays.asList("/images/1017000211.webp"),
                 Arrays.asList(BigDecimal.valueOf(1.39)),
-                null
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                )
         );
 
         Brand lays = Brand.builder().name("Lay's乐事").code("lay-s").build();
@@ -166,7 +173,9 @@ public class DataSetup extends AbstractRepositoryTest {
                 100,
                 Arrays.asList("/images/1017003871.webp"),
                 Arrays.asList(BigDecimal.valueOf(3.29)),
-                null
+                Arrays.asList(
+                        ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build()
+                )
         );
 
 

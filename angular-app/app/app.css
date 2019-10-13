@@ -573,6 +573,14 @@ ul.scrollable-menu img {
   }
 }
 
+a.clickable-label {
+  text-decoration: none;
+}
+
+a.clickable-label:hover {
+  opacity: 0.8;
+}
+
 
 /* utility class */
 .p-t-02 { padding-top: 0.2em; }
