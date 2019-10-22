@@ -2,102 +2,83 @@ package customer.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "customer")
 public class Customer {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id")
-	private long id;
-	@Column(name = "title")
-	private String title;
-	@Column(name = "name")
-	private String name;
-	@Column(name = "email")
-	private String email;
-	@Column(name = "mobile")
-	private String mobile;
-	@JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
-	@Column(name = "password")
-	private String password;
-	@JsonIgnore
-	@OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
-	private List<Address> addresses = new ArrayList<>();
 
-	public long getId() {
-		return id;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	public String getEmail() {
-		return email;
-	}
-	
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private long id;
 
-	public String getPassword() {
-		return password;
-	}
-	
-	public void setPassword(String password) {
-		this.password = password;
-	}
+    @Column(name = "title")
+    private String title;
 
-	public String getTitle() {
-		return title;
-	}
+    @Column(name = "name")
+    private String name;
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    @Column(name = "email")
+    private String email;
 
-	public String getMobile() {
-		return mobile;
-	}
+    @Column(name = "mobile")
+    private String mobile;
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    @JsonProperty(value = "password", access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password")
+    private String password;
 
-	public List<Address> getAddresses() {
-		return addresses;
-	}
+    @JsonIgnore
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
+    private List<Address> addresses;
 
-	public void addAddress(Address address){
-		this.addresses.add(address);
-		address.setCustomer(this);
-	}
+    @JsonIgnore
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
+    private List<Product> products;
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		Customer customer = (Customer) o;
-		return Objects.equals(title, customer.title) &&
-				Objects.equals(name, customer.name) &&
-				Objects.equals(email, customer.email) &&
-				Objects.equals(mobile, customer.mobile) &&
-				Objects.equals(password, customer.password);
-	}
+    public void addAddress(Address address) {
+        if (addresses == null) {
+            addresses = new ArrayList<>();
+        }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(title, name, email, mobile, password);
-	}
+        this.addresses.add(address);
+        address.setCustomer(this);
+    }
+
+    public void addProduct(Product product) {
+        if (products == null) {
+            products = new ArrayList<>();
+        }
+
+        this.products.add(product);
+        product.setCustomer(this);
+    }
+
+    @JsonIgnore
+    public List<Product> getValidProducts() {
+        if (products == null){
+            return null;
+        }
+
+        final LocalDate today = LocalDate.now();
+        return products.stream().filter(product ->  (product.getStartDate() != null && !today.isBefore(product.getStartDate()))
+                && (product.getEndDate() == null || !today.isAfter(product.getEndDate())))
+                .collect(Collectors.toList());
+    }
 }

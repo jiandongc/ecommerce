@@ -2,6 +2,7 @@ package customer.controller;
 
 import customer.repository.AddressRepository;
 import customer.repository.CustomerRepository;
+import customer.service.CustomerService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -24,6 +25,9 @@ public abstract class AbstractControllerTest {
 
     @Autowired
     AddressRepository addressRepository;
+
+    @Autowired
+    CustomerService customerService;
 
     HttpHeaders headers = null;
 

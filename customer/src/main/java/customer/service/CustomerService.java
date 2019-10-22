@@ -2,6 +2,7 @@ package customer.service;
 
 import customer.domain.Address;
 import customer.domain.Customer;
+import customer.domain.Product;
 
 import java.util.List;
 
@@ -15,4 +16,6 @@ public interface CustomerService {
 	Address addAddress(Long customerId, Address address);
 	Address updateAddress(Long customerId, Long addressId, Address address);
 	void removeAddress(Long addressId);
+	Product addProduct(Long customerId, Product product);
+	List<Product> findProductsByCustomerId(Long customerId);
 }

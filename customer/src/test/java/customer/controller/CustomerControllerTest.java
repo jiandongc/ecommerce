@@ -1,10 +1,14 @@
 package customer.controller;
 
+import static customer.domain.Type.FAVOURITE;
+import static customer.domain.Type.NOTIFY_IN_STOCK;
+import static java.time.LocalDate.now;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
 import customer.domain.Address;
+import customer.domain.Product;
 import org.junit.Test;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
@@ -559,5 +563,116 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+	}
+
+	@Test
+	public void shouldAddProduct(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+		String addressJson = "{" +
+				"\"productId\":\"11\"," +
+				"\"type\":\"FAVOURITE\"" +
+				"}";
+		HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products", HttpMethod.POST, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		List<Product> products = customerService.findProductsByCustomerId(savedCustomer.getId());
+		assertThat(products.size(), is(1));
+		assertThat(products.get(0).getProductId(), is(11L));
+		assertThat(products.get(0).getType(), is(FAVOURITE));
+		assertThat(products.get(0).getStartDate(), is(now()));
+	}
+
+	@Test
+	public void shouldAddTheSameProduct(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+		customer.addProduct(Product.builder().productId(11L).type(FAVOURITE).startDate(now().minusDays(10L)).build());
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+		String addressJson = "{" +
+				"\"productId\":\"11\"," +
+				"\"type\":\"FAVOURITE\"" +
+				"}";
+		HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products", HttpMethod.POST, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		List<Product> products = customerService.findProductsByCustomerId(savedCustomer.getId());
+		assertThat(products.size(), is(1));
+		assertThat(products.get(0).getProductId(), is(11L));
+		assertThat(products.get(0).getType(), is(FAVOURITE));
+		assertThat(products.get(0).getStartDate(), is(now()));
+	}
+
+	@Test
+	public void shouldFindProductsByCustomerIdAndType(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+		customer.addProduct(Product.builder().productId(10L).type(FAVOURITE).startDate(now().minusDays(9L)).build());
+		customer.addProduct(Product.builder().productId(11L).type(FAVOURITE).startDate(now().minusDays(10L)).endDate(now()).build());
+		customer.addProduct(Product.builder().productId(12L).type(NOTIFY_IN_STOCK).startDate(now().minusDays(10L)).build());
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When & Then
+		this.setUserToken();
+		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", HttpMethod.GET, httpEntity, Product[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(2));
+		assertThat(response.getBody()[0].getProductId(), is(10L));
+		assertThat(response.getBody()[0].getType(), is(FAVOURITE));
+		assertThat(response.getBody()[1].getProductId(), is(11L));
+		assertThat(response.getBody()[1].getType(), is(FAVOURITE));
+
+		// When & Then
+		response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=notify_in_stock", HttpMethod.GET, httpEntity, Product[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+		assertThat(response.getBody()[0].getProductId(), is(12L));
+		assertThat(response.getBody()[0].getType(), is(NOTIFY_IN_STOCK));
+	}
+
+	@Test
+	public void shouldReturnValidProducts(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+		customer.addProduct(Product.builder().productId(10L).type(FAVOURITE).startDate(now().minusDays(9L)).endDate(now().minusDays(1L)).build());
+		customer.addProduct(Product.builder().productId(11L).type(FAVOURITE).startDate(now().minusDays(10L)).build());
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When & Then
+		this.setUserToken();
+		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", HttpMethod.GET, httpEntity, Product[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+		assertThat(response.getBody()[0].getProductId(), is(11L));
+		assertThat(response.getBody()[0].getType(), is(FAVOURITE));
 	}
 }

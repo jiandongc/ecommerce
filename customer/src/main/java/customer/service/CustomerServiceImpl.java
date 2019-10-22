@@ -1,7 +1,9 @@
 package customer.service;
 
 import customer.domain.Address;
+import customer.domain.Product;
 import customer.repository.AddressRepository;
+import customer.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import customer.domain.Customer;
 import customer.repository.CustomerRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +23,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private AddressRepository addressRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Override
     @Transactional
@@ -118,6 +124,29 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public void removeAddress(Long addressId) {
         addressRepository.delete(addressId);
+    }
+
+    @Override
+    @Transactional
+    public Product addProduct(Long customerId, Product product) {
+        final Customer customer = customerRepository.findOne(customerId);
+        final List<Product> validProducts = customer.getValidProducts();
+
+        Optional<Product> existingProduct = validProducts.stream().filter(p -> p.hasSameProductIdAndType(product)).findFirst();
+        if (existingProduct.isPresent()) {
+            existingProduct.get().setStartDate(LocalDate.now());
+        } else {
+            product.setStartDate(LocalDate.now());
+            customer.addProduct(product);
+        }
+
+        return product;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Product> findProductsByCustomerId(Long customerId) {
+        return productRepository.findByCustomerId(customerId);
     }
 
 }

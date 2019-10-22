@@ -1,6 +1,8 @@
 package customer.controller;
 
 import customer.domain.Address;
+import customer.domain.Product;
+import customer.domain.Type;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ import customer.domain.Customer;
 import customer.service.CustomerService;
 
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequestMapping("/customers")
@@ -99,7 +103,22 @@ public class CustomerController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{id}/products", method = RequestMethod.POST)
+    public Product addProduct(@PathVariable long id, @RequestBody Product product) {
+        return customerService.addProduct(id, product);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{id}/products", method = RequestMethod.GET)
+    public List<Product> getProducts(@PathVariable long id, @RequestParam("type") String type){
+        Customer customer = customerService.findById(id);
+        List<Product> validProducts = customer.getValidProducts();
+        return validProducts.stream()
+                .filter(product -> product.getType().equals(Type.valueOf(type.toUpperCase())))
+                .collect(toList());
     }
 
 }
