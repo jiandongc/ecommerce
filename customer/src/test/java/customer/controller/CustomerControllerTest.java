@@ -578,7 +578,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When
 		this.setUserToken();
 		String addressJson = "{" +
-				"\"productId\":\"11\"," +
+				"\"productCode\":\"11L\"," +
 				"\"type\":\"FAVOURITE\"" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
@@ -588,7 +588,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		List<Product> products = customerService.findProductsByCustomerId(savedCustomer.getId());
 		assertThat(products.size(), is(1));
-		assertThat(products.get(0).getProductId(), is(11L));
+		assertThat(products.get(0).getProductCode(), is("11L"));
 		assertThat(products.get(0).getType(), is(FAVOURITE));
 		assertThat(products.get(0).getStartDate(), is(now()));
 	}
@@ -600,14 +600,14 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		customer.setName("Name");
 		customer.setEmail("Email");
 		customer.setPassword("Password");
-		customer.addProduct(Product.builder().productId(11L).type(FAVOURITE).startDate(now().minusDays(10L)).build());
+		customer.addProduct(Product.builder().productCode("11L").type(FAVOURITE).startDate(now().minusDays(10L)).build());
 
 		Customer savedCustomer = customerRepository.save(customer);
 
 		// When
 		this.setUserToken();
 		String addressJson = "{" +
-				"\"productId\":\"11\"," +
+				"\"productCode\":\"11L\"," +
 				"\"type\":\"FAVOURITE\"" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
@@ -617,7 +617,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		List<Product> products = customerService.findProductsByCustomerId(savedCustomer.getId());
 		assertThat(products.size(), is(1));
-		assertThat(products.get(0).getProductId(), is(11L));
+		assertThat(products.get(0).getProductCode(), is("11L"));
 		assertThat(products.get(0).getType(), is(FAVOURITE));
 		assertThat(products.get(0).getStartDate(), is(now()));
 	}
@@ -629,9 +629,9 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		customer.setName("Name");
 		customer.setEmail("Email");
 		customer.setPassword("Password");
-		customer.addProduct(Product.builder().productId(10L).type(FAVOURITE).startDate(now().minusDays(9L)).build());
-		customer.addProduct(Product.builder().productId(11L).type(FAVOURITE).startDate(now().minusDays(10L)).endDate(now()).build());
-		customer.addProduct(Product.builder().productId(12L).type(NOTIFY_IN_STOCK).startDate(now().minusDays(10L)).build());
+		customer.addProduct(Product.builder().productCode("10L").type(FAVOURITE).startDate(now().minusDays(9L)).build());
+		customer.addProduct(Product.builder().productCode("11L").type(FAVOURITE).startDate(now().minusDays(10L)).endDate(now()).build());
+		customer.addProduct(Product.builder().productCode("12L").type(NOTIFY_IN_STOCK).startDate(now().minusDays(10L)).build());
 
 		Customer savedCustomer = customerRepository.save(customer);
 
@@ -641,16 +641,16 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", HttpMethod.GET, httpEntity, Product[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
-		assertThat(response.getBody()[0].getProductId(), is(10L));
+		assertThat(response.getBody()[0].getProductCode(), is("10L"));
 		assertThat(response.getBody()[0].getType(), is(FAVOURITE));
-		assertThat(response.getBody()[1].getProductId(), is(11L));
+		assertThat(response.getBody()[1].getProductCode(), is("11L"));
 		assertThat(response.getBody()[1].getType(), is(FAVOURITE));
 
 		// When & Then
 		response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=notify_in_stock", HttpMethod.GET, httpEntity, Product[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(1));
-		assertThat(response.getBody()[0].getProductId(), is(12L));
+		assertThat(response.getBody()[0].getProductCode(), is("12L"));
 		assertThat(response.getBody()[0].getType(), is(NOTIFY_IN_STOCK));
 	}
 
@@ -661,8 +661,8 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		customer.setName("Name");
 		customer.setEmail("Email");
 		customer.setPassword("Password");
-		customer.addProduct(Product.builder().productId(10L).type(FAVOURITE).startDate(now().minusDays(9L)).endDate(now().minusDays(1L)).build());
-		customer.addProduct(Product.builder().productId(11L).type(FAVOURITE).startDate(now().minusDays(10L)).build());
+		customer.addProduct(Product.builder().productCode("10L").type(FAVOURITE).startDate(now().minusDays(9L)).endDate(now().minusDays(1L)).build());
+		customer.addProduct(Product.builder().productCode("11L").type(FAVOURITE).startDate(now().minusDays(10L)).build());
 
 		Customer savedCustomer = customerRepository.save(customer);
 
@@ -672,7 +672,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", HttpMethod.GET, httpEntity, Product[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(1));
-		assertThat(response.getBody()[0].getProductId(), is(11L));
+		assertThat(response.getBody()[0].getProductCode(), is("11L"));
 		assertThat(response.getBody()[0].getType(), is(FAVOURITE));
 	}
 }

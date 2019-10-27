@@ -22,8 +22,8 @@ public class Product {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "product_id")
-    private long productId;
+    @Column(name = "product_code")
+    private String productCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type")
@@ -45,7 +45,7 @@ public class Product {
     private Customer customer;
 
     public boolean hasSameProductIdAndType(Product product){
-        return this.productId == product.getProductId()
+        return this.productCode.equals(product.getProductCode())
                 && this.type.equals(product.getType());
     }
 
