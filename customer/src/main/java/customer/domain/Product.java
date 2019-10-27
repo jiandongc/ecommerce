@@ -44,7 +44,7 @@ public class Product {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    public boolean hasSameProductIdAndType(Product product){
+    public boolean hasSameProductCodeAndType(Product product){
         return this.productCode.equals(product.getProductCode())
                 && this.type.equals(product.getType());
     }

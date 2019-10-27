@@ -1,1 +1,1 @@
-ALTER TABLE product ADD COLUMN product_code varchar(50);
+ALTER TABLE product ADD COLUMN product_code varchar(50) NOT NULL;

@@ -132,7 +132,7 @@ public class CustomerServiceImpl implements CustomerService {
         final Customer customer = customerRepository.findOne(customerId);
         final List<Product> validProducts = customer.getValidProducts();
 
-        Optional<Product> existingProduct = validProducts.stream().filter(p -> p.hasSameProductIdAndType(product)).findFirst();
+        Optional<Product> existingProduct = validProducts.stream().filter(p -> p.hasSameProductCodeAndType(product)).findFirst();
         if (existingProduct.isPresent()) {
             existingProduct.get().setStartDate(LocalDate.now());
         } else {
