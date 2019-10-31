@@ -238,11 +238,28 @@ customer.controller('addressBookCtrl', function($scope, $routeParams, $route, cu
 });
 
 customer.controller('editAddressCtrl', function($scope, $localstorage){
-    $scope.customerId=$localstorage.get('customer_id');
+    $scope.customerId = $localstorage.get('customer_id');
 });
 
 customer.controller('addAddressCtrl', function($scope, $localstorage){
-    $scope.customerId=$localstorage.get('customer_id');
+    $scope.customerId = $localstorage.get('customer_id');
+});
+
+customer.controller('favouriteCtrl', function($scope, $localstorage, $q, customerFactory, productFactory){
+    $scope.customerId = $localstorage.get('customer_id');
+    $scope.products = [];
+    customerFactory.getFavouriteItems($localstorage.get('customer_id')).then(function(response){
+        var promises = [];
+        for (i = 0; i < response.length; i = i + 1) {
+            promises.push(productFactory.getProductWithCode(response[i].productCode));
+        }
+
+        $q.all(promises).then(function(response) {
+            for (var i = 0; i < response.length; i++) {
+             $scope.products.push(response[i]);
+            }       
+        })
+    });
 });
 
 customer.factory('customerFactory', function($http, environment){
@@ -305,6 +322,24 @@ customer.factory('customerFactory', function($http, environment){
         });
     };
 
+    var addToFavourite = function(customerId, productCode){
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+        var favouriteProduct = {
+            productCode : productCode,
+            type: 'FAVOURITE'
+        };
+
+        return $http.post(environment.customerUrl + '/customers/' + customerId + '/products/', favouriteProduct, configs).then(function(response){
+            return response.data;
+        });
+    };
+
+    var getFavouriteItems = function(customerId){
+        return $http.get(environment.customerUrl + '/customers/' + customerId + '/products?type=favourite').then(function(response){
+            return response.data;
+        });
+    }
+
     return {
         getCustomerByEmail: getCustomerByEmail,
         getCustomerById: getCustomerById,
@@ -314,7 +349,9 @@ customer.factory('customerFactory', function($http, environment){
         getAddressById: getAddressById,
         addAddress: addAddress,
         updateAddress: updateAddress,
-        removeAddress: removeAddress
+        removeAddress: removeAddress,
+        addToFavourite: addToFavourite,
+        getFavouriteItems: getFavouriteItems
     };
 });
 
@@ -373,6 +410,9 @@ customer.config(
     }).when('/account/:id/orders/:orderNumber', {
         templateUrl: 'customer/order-details.html',
         controller: 'orderDetailsCtrl'
+    }).when('/account/:id/favourites', {
+        templateUrl: 'customer/favourites.html',
+        controller: 'favouriteCtrl'
     });
 });
 

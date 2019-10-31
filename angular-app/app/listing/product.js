@@ -1,21 +1,25 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
-productDetail.controller('productDetailCtrl', function($scope, $http, $routeParams, environment, $timeout, shoppingCartFactory, $localstorage, $rootScope) {
+productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, productFactory, shoppingCartFactory, customerFactory, categoryFactory) {
   $scope.addingItem = false;
   $scope.selectOptionAlert = false;
+  $scope.addingItemToFavourites = false;
+  $scope.addedToFavouriteAlert = false;
   $scope.loading = true;
-	$http.get(environment.productUrl + '/products/' + $routeParams.code).then(function(response){
-		$scope.product = response.data;
+  $scope.customerId = $localstorage.get("customer_id");
+
+	productFactory.getProductWithCode($routeParams.code).then(function(response){
+		$scope.product = response;
     $scope.loading = false;
 
-    $http.get(environment.productUrl + '/categories/' + response.data.categoryCode).then(function(response){
-      $scope.parentcategories = response.data.parents;
+    categoryFactory.getCategoryData(response.categoryCode).then(function(response){
+      $scope.parentcategories = response.parents;
     });
 
-    $scope.price = response.data.price;
-    $scope.originalPrice = response.data.originalPrice;
-    $scope.onSale = response.data.onSale;
-    $scope.discountRate = response.data.discountRate;
+    $scope.price = response.price;
+    $scope.originalPrice = response.originalPrice;
+    $scope.onSale = response.onSale;
+    $scope.discountRate = response.discountRate;
     
     if($scope.product.variants.length == 1){
       var variant = $scope.product.variants[0];
@@ -34,8 +38,8 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
     }
 	});
 
-  $http.get(environment.productUrl + '/products/color/' + $routeParams.code).then(function(response){
-    $scope.colorVariant = response.data;
+  productFactory.getProductWithColorVariants($routeParams.code).then(function(response){
+    $scope.colorVariant = response;
   });
 
   $scope.select=function(attribute, value){
@@ -113,6 +117,48 @@ productDetail.controller('productDetailCtrl', function($scope, $http, $routePara
       }
 
   };
+
+  $scope.addToFavourite = function(product){
+    $scope.addingItemToFavourites = true;
+    customerFactory.addToFavourite($scope.customerId, product.code).then(function(product){
+      $scope.addingItemToFavourites = false;
+      $scope.addedToFavouriteAlert = true;
+    });
+  }
+});
+
+productDetail.factory('productFactory', function($http, environment){
+  var getProductWithCode = function(productCode){
+    return $http.get(environment.productUrl + '/products/' + productCode).then(function(response){
+      return response.data;
+    });
+  }
+
+  var getProductWithColorVariants = function(productCode){
+    return $http.get(environment.productUrl + '/products/color/' + productCode).then(function(response){
+      return response.data;
+      $scope.colorVariant = response.data;
+    });
+  }
+
+  var getProductsWithTag = function(tag){
+    return $http.get(environment.productUrl + '/products?tg=' + tag).then(function(response){
+      return response.data;
+    });
+  }
+
+  var getProductsWithTagInOrder = function(tag, sort){
+    return $http.get(environment.productUrl + '/products?tg=' + tag + '&sort=' + sort).then(function(response){
+      return response.data;
+    });
+  }
+
+  return {
+    getProductWithCode: getProductWithCode,
+    getProductWithColorVariants: getProductWithColorVariants,
+    getProductsWithTag: getProductsWithTag,
+    getProductsWithTagInOrder: getProductsWithTagInOrder
+  }
 });
 
 productDetail.directive('onFinishInitSlider', function ($timeout) {

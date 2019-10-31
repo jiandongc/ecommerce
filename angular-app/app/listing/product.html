@@ -25,7 +25,7 @@
 				<span class="fs-20 fw-bold" ng-class="{'color-valencia': onSale}">{{price | currency:"£"}}</span>
 				<span ng-show="onSale" class="fs-16 m-l-05 text-line-through">{{originalPrice | currency:"£"}}</span>
 			</div>
-			<div class="m-b-10">
+			<div class="m-b-05">
 				<span ng-show="qty >= 0 && qty <= 10" class="fs-09 label label-warning m-r-05">{{qty}} left</span>
 				<span ng-show="qty > 10 || !qty" class="fs-09 label label-success m-r-05">Items in stock</span>
 				<span ng-show="onSale" class="fs-09 label label-danger m-r-05">{{discountRate}} Off</span>
@@ -33,7 +33,7 @@
 			</div>
 			<div class="m-b-05">
 				<a ng-repeat='item in product.tags' class="clickable-label" href="#!/tags/{{item.code}}/{{item.tag}}">
-					<span class="fs-12 label m-r-05" style="background-color: {{item.colorHex}}">{{item.tag}}</span>
+					<span class="fs-09 label m-r-05" style="background-color: {{item.colorHex}}">#{{item.tag}}</span>
 				</a>
 			</div>
 			<div ng-show="colorVariant" class="row color-variant m-b-05">
@@ -59,14 +59,17 @@
 			<div ng-show="selectOptionAlert" class="m-b-05 alert alert-danger">
 				Please choss an option 
 			</div>
+			<div ng-show="addedToFavouriteAlert" class="m-b-05 alert alert-success">
+				Added to <a href="#!/account/{{customerId}}/favourites" class="alert-link">your favourites</a>!
+			</div>
 			<div class="m-b-05">
 				<button ng-show="qty > 0 || !qty" class="btn btn-style-primary" ng-click="addItemToCart(product)">
 					<span ng-show="addingItem"><i class="glyphicon glyphicon-refresh spinning"></i></span>
 					<span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;&nbsp;Add to Bag
 				</button>
-				<button class="btn btn-style-secondary" ng-click="">
-					<span ng-show=""><i class="glyphicon glyphicon-refresh spinning"></i></span>
-					<span class="color-valencia glyphicon glyphicon-heart"></span>&nbsp;&nbsp;Add to Favorites
+				<button class="btn btn-style-secondary" ng-click="addToFavourite(product)">
+					<span ng-show="addingItemToFavourites"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+					<span class="color-valencia glyphicon glyphicon-heart"></span>&nbsp;&nbsp;Add to Favourites
 				</button>
 			</div>
 			<div>
