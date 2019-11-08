@@ -17,7 +17,7 @@
 			</ul>
 		</div>
 	</div>
-	<div class="row product-list">
+	<div ng-show="!loading" class="row product-list">
 		<div class="box" ng-repeat="product in products">
 			<div class = "col-xs-6 col-sm-4 p-b-20">
 				<a href="#!/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
