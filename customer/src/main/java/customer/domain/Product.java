@@ -17,7 +17,6 @@ import static javax.persistence.FetchType.LAZY;
 public class Product {
 
     @Id
-    @JsonIgnore
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;

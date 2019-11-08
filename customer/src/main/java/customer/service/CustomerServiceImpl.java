@@ -2,6 +2,7 @@ package customer.service;
 
 import customer.domain.Address;
 import customer.domain.Product;
+import customer.domain.Type;
 import customer.repository.AddressRepository;
 import customer.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -84,7 +85,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public Address addAddress(Long customerId, Address newAddress) {
         final Customer customer = customerRepository.findOne(customerId);
-        if(newAddress.isDefaultAddress()){
+        if (newAddress.isDefaultAddress()) {
             customer.getAddresses().forEach(address -> address.setDefaultAddress(false));
         }
         customer.addAddress(newAddress);
@@ -147,6 +148,23 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional(readOnly = true)
     public List<Product> findProductsByCustomerId(Long customerId) {
         return productRepository.findByCustomerId(customerId);
+    }
+
+    @Override
+    public void removeProduct(Long customerId, Long productId) {
+        Product product = productRepository.findOne(productId);
+        if (product != null && product.getCustomer().getId() == customerId) {
+            productRepository.delete(productId);
+        }
+    }
+
+    @Override
+    public void removeProductByTypeAndCode(Long customerId, String type, String productCode) {
+        final Type productType = Type.valueOf(type.toUpperCase());
+        final List<Product> products = productRepository.findByCustomerId(customerId);
+        products.stream().filter(product -> product.getType().equals(productType) && product.getProductCode().equals(productCode))
+                .forEach(product -> productRepository.delete(product.getId()));
+
     }
 
 }

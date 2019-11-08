@@ -18,4 +18,6 @@ public interface CustomerService {
 	void removeAddress(Long addressId);
 	Product addProduct(Long customerId, Product product);
 	List<Product> findProductsByCustomerId(Long customerId);
+	void removeProduct(Long customerId, Long productId);
+	void removeProductByTypeAndCode(Long customerId, String type, String productCode);
 }

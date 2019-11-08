@@ -1,12 +1,18 @@
 <div class="container cart">
      <div class="row">
           <ul class="breadcrumb fs-09" style="background: #fff;">
-               <li><a href="#!/account/{{customerId}}"><span style="color: #45555f;">Your Account</span></a></li>
+               <li><a href="#!/account/{{customerId}}"><span class="color-san-juan">Your Account</span></a></li>
                <li><span style="color: #c45500;">Your Favorites</span></li>
           </ul>
      </div>
      <div class="row">
-          <div ng-repeat="product in products">
+          <div ng-show="loading" class="m-b-15 fs-20" style="text-align: center;">
+               <i class="glyphicon glyphicon-refresh spinning"></i>
+          </div>
+          <div class="col-xs-12 m-b-15" ng-if="products.length == 0 && !loading">
+               <span class="fs-09 color-san-juan">We can't find any favourites.</span>
+          </div>
+          <div ng-if="products.length > 0 && !loading" ng-repeat="product in products">
                <div class = "col-xs-12 col-sm-6">
                     <div class="row"> 
                          <div class="col-xs-6">
@@ -30,7 +36,8 @@
                               </div>
                               <div class="row">
                                    <div class="col-xs-12">
-                                        <a href ng-click="removeItem(product)">Remove</a>
+                                        <span ng-show="product.removing"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                                        <a href ng-click="removeFavouriteItem(product, $index)">Remove</a>
                                    </div>
                               </div>
                          </div>

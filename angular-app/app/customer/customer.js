@@ -154,8 +154,10 @@ customer.controller('registerCtrl', function($scope, authService, customerFactor
 });
 
 customer.controller('accountCtrl', function($scope, $routeParams, $rootScope, $location, customerFactory){
+    $scope.loading = true;
     customerFactory.getCustomerById($routeParams.id).then(function(response){
         $scope.customer = response;
+        $scope.loading = false;
     });
 
     $scope.logout = function() {
@@ -245,8 +247,8 @@ customer.controller('addAddressCtrl', function($scope, $localstorage){
     $scope.customerId = $localstorage.get('customer_id');
 });
 
-customer.controller('favouriteCtrl', function($scope, $localstorage, $q, customerFactory, productFactory){
-    $scope.customerId = $localstorage.get('customer_id');
+customer.controller('favouriteCtrl', function($scope, $localstorage, $q, $route, customerFactory, productFactory){
+    $scope.loading = true;
     $scope.products = [];
     customerFactory.getFavouriteItems($localstorage.get('customer_id')).then(function(response){
         var promises = [];
@@ -256,10 +258,29 @@ customer.controller('favouriteCtrl', function($scope, $localstorage, $q, custome
 
         $q.all(promises).then(function(response) {
             for (var i = 0; i < response.length; i++) {
-             $scope.products.push(response[i]);
-            }       
+                var product = {
+                    code: response[i].code,
+                    images: response[i].images,
+                    name: response[i].name,
+                    description: response[i].description,
+                    price: response[i].price,
+                    removing: false
+                };
+
+                $scope.products.push(product);
+            }
+            $scope.loading = false;       
         })
     });
+
+    $scope.removeFavouriteItem = function(product, index){
+        $scope.products[index].removing = true;
+        customerFactory.removeFavouriteItem($localstorage.get('customer_id'), product).then(function(data){
+            $route.reload();
+        }, function(error){
+            $scope.products[index].removing = false;
+        })
+    }
 });
 
 customer.factory('customerFactory', function($http, environment){
@@ -338,7 +359,13 @@ customer.factory('customerFactory', function($http, environment){
         return $http.get(environment.customerUrl + '/customers/' + customerId + '/products?type=favourite').then(function(response){
             return response.data;
         });
-    }
+    };
+
+    var removeFavouriteItem = function(customerId, product){
+        return $http.delete(environment.customerUrl + '/customers/' + customerId + '/products/?type=favourite&code=' + product.code).then(function(response){
+            return response.data;
+        });
+    };
 
     return {
         getCustomerByEmail: getCustomerByEmail,
@@ -351,7 +378,8 @@ customer.factory('customerFactory', function($http, environment){
         updateAddress: updateAddress,
         removeAddress: removeAddress,
         addToFavourite: addToFavourite,
-        getFavouriteItems: getFavouriteItems
+        getFavouriteItems: getFavouriteItems,
+        removeFavouriteItem: removeFavouriteItem
     };
 });
 

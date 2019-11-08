@@ -20,6 +20,7 @@ import customer.service.CustomerService;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/customers")
@@ -33,7 +34,7 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(method = POST)
     public ResponseEntity save(@RequestBody Customer customer) {
         try {
             return new ResponseEntity<>(customerService.save(customer), HttpStatus.OK);
@@ -43,7 +44,7 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = PUT)
     public ResponseEntity update(@RequestBody Customer customer) {
         try {
             final Customer updatedCustomer = customerService.update(customer);
@@ -54,37 +55,37 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(method = GET)
     public Customer findByEmail(@RequestParam("email") String email) {
         return customerService.findByEmail(email);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = GET)
     public Customer findById(@PathVariable long id) {
         return customerService.findById(id);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/addresses", method = GET)
     public List<Address> findAddressesByCustomerId(@PathVariable long id){
         return customerService.findAddressesByCustomerId(id);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses/{addressId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/addresses/{addressId}", method = GET)
     public Address findAddressById(@PathVariable long addressId){
         return customerService.findAddressById(addressId);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/addresses", method = POST)
     public Address addAddress(@PathVariable long id, @RequestBody Address address) {
         return customerService.addAddress(id, address);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses/{addressId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/addresses/{addressId}", method = PUT)
     public ResponseEntity updateAddress(@PathVariable long id, @PathVariable long addressId, @RequestBody Address address){
         try {
             return new ResponseEntity<>(customerService.updateAddress(id, addressId, address), HttpStatus.OK);
@@ -106,19 +107,31 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/products", method = RequestMethod.POST)
-    public Product addProduct(@PathVariable long id, @RequestBody Product product) {
-        return customerService.addProduct(id, product);
+    @RequestMapping(value = "/{customerId}/products", method = POST)
+    public Product addProduct(@PathVariable long customerId, @RequestBody Product product) {
+        return customerService.addProduct(customerId, product);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/products", method = RequestMethod.GET)
-    public List<Product> getProducts(@PathVariable long id, @RequestParam("type") String type){
-        Customer customer = customerService.findById(id);
+    @RequestMapping(value = "/{customerId}/products", method = GET)
+    public List<Product> getProducts(@PathVariable long customerId, @RequestParam("type") String type){
+        Customer customer = customerService.findById(customerId);
         List<Product> validProducts = customer.getValidProducts();
         return validProducts.stream()
                 .filter(product -> product.getType().equals(Type.valueOf(type.toUpperCase())))
                 .collect(toList());
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{customerId}/products/{productId}", method = DELETE)
+    public void removeProduct(@PathVariable long customerId, @PathVariable long productId) {
+        customerService.removeProduct(customerId, productId);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "/{customerId}/products", method = DELETE)
+    public void removeProduct(@PathVariable long customerId, @RequestParam("type") String type, @RequestParam("code") String productCode) {
+        customerService.removeProductByTypeAndCode(customerId, type, productCode);
     }
 
 }

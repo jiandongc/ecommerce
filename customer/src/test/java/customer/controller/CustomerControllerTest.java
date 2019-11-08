@@ -5,7 +5,9 @@ import static customer.domain.Type.NOTIFY_IN_STOCK;
 import static java.time.LocalDate.now;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.http.HttpMethod.*;
 
 import customer.domain.Address;
 import customer.domain.Product;
@@ -36,7 +38,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.POST, payload, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, POST, payload, Customer.class);
 		
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -61,7 +63,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.POST, payload, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, POST, payload, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -89,7 +91,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.PUT, payload, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, PUT, payload, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -132,7 +134,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.PUT, payload, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, PUT, payload, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
@@ -152,7 +154,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.PUT, payload, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, PUT, payload, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -172,7 +174,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				
 		// When
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		final ResponseEntity<Customer> response =  rest.exchange(BASE_URL + "/" + customer.getId(), HttpMethod.GET, httpEntity, Customer.class);
+		final ResponseEntity<Customer> response =  rest.exchange(BASE_URL + "/" + customer.getId(), GET, httpEntity, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -197,7 +199,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// When
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		final ResponseEntity<Customer> response =  rest.exchange(BASE_URL + "/" + customer.getId(), HttpMethod.GET, httpEntity, Customer.class);
+		final ResponseEntity<Customer> response =  rest.exchange(BASE_URL + "/" + customer.getId(), GET, httpEntity, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -217,7 +219,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				
 		// When
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL + "?email=" + customer.getEmail(), HttpMethod.GET, httpEntity, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL + "?email=" + customer.getEmail(), GET, httpEntity, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -242,7 +244,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// When
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL + "?email=" + customer.getEmail(), HttpMethod.GET, httpEntity, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL + "?email=" + customer.getEmail(), GET, httpEntity, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
@@ -262,7 +264,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 		// When
 		final HttpEntity<String> payload = new HttpEntity<String>(customerJson, headers);
-		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, HttpMethod.POST, payload, Customer.class);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL, POST, payload, Customer.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
@@ -303,7 +305,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When
 		this.setUserToken();
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		final ResponseEntity<Address[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", HttpMethod.GET, httpEntity, Address[].class);
+		final ResponseEntity<Address[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", GET, httpEntity, Address[].class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -339,7 +341,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When
 		this.setUserToken();
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		final ResponseEntity<Address> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/" + address.getId(), HttpMethod.GET, httpEntity, Address.class);
+		final ResponseEntity<Address> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/" + address.getId(), GET, httpEntity, Address.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -383,7 +385,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				"\"defaultAddress\":true" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<String>(addressJson, headers);
-		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", HttpMethod.POST, payload, String.class);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", POST, payload, String.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -408,7 +410,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				"\"defaultAddress\":false" +
 				"}";
 		payload = new HttpEntity<String>(addressJson, headers);
-		response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", HttpMethod.POST, payload, String.class);
+		response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses", POST, payload, String.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -467,7 +469,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				"\"defaultAddress\":true" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<String>(addressJson, headers);
-		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/" + addressTwo.getId(), HttpMethod.PUT, payload, String.class);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/" + addressTwo.getId(), PUT, payload, String.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -511,7 +513,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				"\"defaultAddress\":true" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<String>(addressJson, headers);
-		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/123", HttpMethod.PUT, payload, String.class);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/addresses/123", PUT, payload, String.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.CONFLICT));
@@ -540,7 +542,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When
 		this.setUserToken();
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/addresses/" + address.getId(), HttpMethod.DELETE, httpEntity, Object.class);
+		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/addresses/" + address.getId(), DELETE, httpEntity, Object.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -559,7 +561,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When
 		this.setUserToken();
 		final HttpEntity<?> httpEntity = new HttpEntity<Object>(headers);
-		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/addresses/12345", HttpMethod.DELETE, httpEntity, Object.class);
+		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/addresses/12345", DELETE, httpEntity, Object.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
@@ -582,7 +584,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				"\"type\":\"FAVOURITE\"" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
-		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products", HttpMethod.POST, payload, String.class);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products", POST, payload, String.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -611,7 +613,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				"\"type\":\"FAVOURITE\"" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
-		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products", HttpMethod.POST, payload, String.class);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products", POST, payload, String.class);
 
 		// Then
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
@@ -638,16 +640,17 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When & Then
 		this.setUserToken();
 		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", HttpMethod.GET, httpEntity, Product[].class);
+		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", GET, httpEntity, Product[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
+		assertThat(response.getBody()[0].getId(), is(notNullValue()));
 		assertThat(response.getBody()[0].getProductCode(), is("10L"));
 		assertThat(response.getBody()[0].getType(), is(FAVOURITE));
 		assertThat(response.getBody()[1].getProductCode(), is("11L"));
 		assertThat(response.getBody()[1].getType(), is(FAVOURITE));
 
 		// When & Then
-		response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=notify_in_stock", HttpMethod.GET, httpEntity, Product[].class);
+		response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=notify_in_stock", GET, httpEntity, Product[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(1));
 		assertThat(response.getBody()[0].getProductCode(), is("12L"));
@@ -669,10 +672,62 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		// When & Then
 		this.setUserToken();
 		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
-		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", HttpMethod.GET, httpEntity, Product[].class);
+		ResponseEntity<Product[]> response =  rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/products?type=favourite", GET, httpEntity, Product[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(1));
 		assertThat(response.getBody()[0].getProductCode(), is("11L"));
 		assertThat(response.getBody()[0].getType(), is(FAVOURITE));
+	}
+
+	@Test
+	public void shouldRemoveProduct(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+		customer.addProduct(Product.builder().productCode("abc").type(FAVOURITE).startDate(now()).build());
+
+		Customer savedCustomer = customerRepository.save(customer);
+		Product savedProduct = productRepository.findByCustomerId(savedCustomer.getId()).get(0);
+
+
+		// When
+		this.setUserToken();
+
+		final HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/products/" + savedProduct.getId(), DELETE, httpEntity, Object.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(productRepository.findByCustomerId(savedCustomer.getId()).size(), is(0));
+	}
+
+	@Test
+	public void shouldRemoveProductByTypeAndProductCode(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("Email");
+		customer.setPassword("Password");
+		customer.addProduct(Product.builder().productCode("abc").type(FAVOURITE).startDate(now()).build());
+		customer.addProduct(Product.builder().productCode("def").type(FAVOURITE).startDate(now()).build());
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+
+		final HttpEntity<?> httpEntity = new HttpEntity<>(headers);
+		ResponseEntity<Object> response = rest.exchange(BASE_URL + "/" + customer.getId() + "/products?type=favourite&code=abc", DELETE, httpEntity, Object.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		List<Product> savedProducts = productRepository.findByCustomerId(savedCustomer.getId());
+		assertThat(savedProducts.size(), is(1));
+		assertThat(savedProducts.get(0).getProductCode(), is("def"));
+
+		response = rest.exchange(BASE_URL + "/" + customer.getId() + "/products?type=favourite&code=def", DELETE, httpEntity, Object.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		savedProducts = productRepository.findByCustomerId(savedCustomer.getId());
+		assertThat(savedProducts.size(), is(0));
 	}
 }
