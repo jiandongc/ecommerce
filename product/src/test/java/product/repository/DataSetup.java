@@ -8,6 +8,7 @@ import product.domain.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DataSetup extends AbstractRepositoryTest {
@@ -41,14 +42,90 @@ public class DataSetup extends AbstractRepositoryTest {
         Category ysqg = Category.builder().name("饮料 酸梅汤 汽水 果汁").code("ysqg").parent(yrcc).build();
         categoryRepository.save(ysqg);
 
+        Brand vitasoy = Brand.builder().name("VITASOY维他奶").code("vitasoy").build();
+        brandRepository.save(vitasoy);
+
+        addProduct(
+                ysqg,
+                vitasoy,
+                "1110003496",
+                Arrays.asList("1110003496"),
+                "香港VITA维他 柠檬茶 6盒装 1500ml",
+                100,
+                Arrays.asList("/images/1110003496.webp", "/images/1110003496-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(4.09)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                Collections.emptyList()
+        );
+
         Category drny = Category.builder().name("豆奶 乳制品 奶茶 椰奶").code("drny").parent(yrcc).build();
         categoryRepository.save(drny);
+
+        Brand royalboat = Brand.builder().name("泰国ROYAL BOAT").code("royalboat").build();
+        brandRepository.save(royalboat);
+
+        addProduct(
+                drny,
+                royalboat,
+                "1110003493",
+                Arrays.asList("1110003493"),
+                "泰国ROYAL BOAT 南洋泰式奶茶 480ml",
+                100,
+                Arrays.asList("/images/1110003493.webp"),
+                Arrays.asList(BigDecimal.valueOf(1.04)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                Collections.emptyList()
+        );
 
         Category cmzy = Category.builder().name("冲饮 麦片 芝麻糊 柚子蜜").code("cmzy").parent(yrcc).build();
         categoryRepository.save(cmzy);
 
+        Brand nf = Brand.builder().name("南方").code("nf").build();
+        brandRepository.save(nf);
+
+        addProduct(
+                cmzy,
+                nf,
+                "1110003495",
+                Arrays.asList("1110003495"),
+                "南方 黑芝麻糊 无糖 560g",
+                100,
+                Arrays.asList("/images/1110003495.webp"),
+                Arrays.asList(BigDecimal.valueOf(7.79)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                Collections.emptyList()
+        );
+
         Category cck = Category.builder().name("茶叶 茶包 咖啡").code("cck").parent(yrcc).build();
         categoryRepository.save(cck);
+
+        Brand sdb = Brand.builder().name("三顿半").code("sdb").build();
+        brandRepository.save(sdb);
+
+        addProduct(
+                cck,
+                sdb,
+                "1110003494",
+                Arrays.asList("1110003494"),
+                "【全网最低价】三顿半 1-6号超即溶精品咖啡冷萃冷泡拿铁纯黑咖啡 24颗装 72g",
+                2,
+                Arrays.asList("/images/1110003494.webp", "/images/1110003494-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(37.99), BigDecimal.valueOf(34.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                Collections.emptyList()
+        );
     }
 
     private void lsCategory() {
@@ -57,6 +134,7 @@ public class DataSetup extends AbstractRepositoryTest {
         categoryRepository.save(ls);
 
         Category xps = Category.builder().name("休闲 膨化 薯片").code("xps").parent(ls).build();
+        xps.addCategoryAttribute(CategoryAttribute.builder().key("Salty").ordering(0).build());
         categoryRepository.save(xps);
 
         Category bgt = Category.builder().name("饼干 糕点 甜品").code("bgt").parent(ls).build();
@@ -111,7 +189,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(
                         ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
                         ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
-                )
+                ),
+                Arrays.asList(ProductAttribute.builder().key("Salty").value("light").build())
         );
 
         Brand aiyomi = Brand.builder().name("小梅的零食").code("aiyomi").build();
@@ -129,7 +208,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(
                         ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
                         ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
-                )
+                ),
+                Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
         );
 
         Brand calbee = Brand.builder().name("卡乐B").code("calbee").build();
@@ -144,7 +224,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 100,
                 Arrays.asList("/images/3017008651.webp"),
                 Arrays.asList(BigDecimal.valueOf(16)),
-                Arrays.asList(ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build())
+                Arrays.asList(ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()),
+                Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
         );
 
         addProduct(
@@ -158,7 +239,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(1.39)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build()
-                )
+                ),
+                Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
         );
 
         Brand lays = Brand.builder().name("Lay's乐事").code("lay-s").build();
@@ -175,7 +257,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(3.29)),
                 Arrays.asList(
                         ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build()
-                )
+                ),
+                Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
         );
 
 
@@ -203,7 +286,7 @@ public class DataSetup extends AbstractRepositoryTest {
 
     private void addProduct(Category category, Brand brand, String code, List<String> skus, String name,
                             Integer stockQuantity, List<String> imageUrls, List<BigDecimal> prices,
-                            List<ProductTag> productTags) {
+                            List<ProductTag> productTags, List<ProductAttribute> productAttributes) {
         Product product = Product.builder()
                 .category(category)
                 .brand(brand)
@@ -227,6 +310,11 @@ public class DataSetup extends AbstractRepositoryTest {
         if (productTags != null) {
             productTags.forEach(product::addTag);
         }
+
+        if(productAttributes != null){
+            productAttributes.forEach(product::addAttribute);
+        }
+
 
         productRepository.save(product);
 

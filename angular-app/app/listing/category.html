@@ -56,8 +56,8 @@
 		</div>
 	</div>
 	<div class="row product-list">
-		<div class="box" ng-repeat="product in products">
-			<div class = "col-xs-6 col-sm-4 p-b-20">
+		<div class="box-4" ng-repeat="product in products">
+			<div class = "col-xs-6 col-sm-3 p-b-20">
 				<a href="#!/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
 				<div>
 					<span class="fs-16 fw-bold" ng-class="{'color-valencia': product.onSale}">{{product.price | currency:"£"}}</span>

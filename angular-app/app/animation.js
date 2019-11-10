@@ -6,3 +6,8 @@ $(document).on('click', '.filter-header', function(e){
 		$this.find('i').removeClass('glyphicon glyphicon-minus').addClass('glyphicon glyphicon-plus');
 	}
 });
+
+
+$(document).on('click', '.nav-pills a', function (e) {
+	$(this).parent().addClass('active').siblings().removeClass('active');
+});

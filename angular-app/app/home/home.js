@@ -1,27 +1,31 @@
 var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-home.service('productService', function($http, environment){
-   this.getAllProducts = function() {
-     return $http.get(environment.productUrl + '/products');
-   };
+home.controller('homeCtrl', function($scope) {
+
 });
 
-home.controller('homeCtrl', function($scope, $http, environment, productService) {
-  $scope.processing = {};
+home.component('productpanel', {
+  templateUrl: 'component/product-panel.html',
+  controller: function($scope, $element, productFactory){
+    $scope.tag = $element.attr("tag");
 
-	$http.get(environment.productUrl + '/products/?cc=msg').then(function(response) {
-		$scope.c1 = response.data;
-		angular.forEach($scope.c1, function(value,index){
-			value.quantity = 1;
+    productFactory.getProductsWithTag($scope.tag).then(function(response){
+        $scope.products = response;
     });
-	});
 
-  $http.get(environment.productUrl + '/products/?cc=mzg').then(function(response) {
-    $scope.c2 = response.data;
-    angular.forEach($scope.c2, function(value,index){
-      value.quantity = 1;
-    });
-  });
+    $scope.refresh = function(categoryCode){
+      if(categoryCode == undefined){
+          productFactory.getProductsWithTag($scope.tag).then(function(response){
+              $scope.products = response;
+          });
+      } else {
+          productFactory.getProductsWithTagInCategory($scope.tag, categoryCode).then(function(response){
+              $scope.products = response;
+          });
+      }
+    }
+  },
+  bindings: {title: '@', titlecolor: '@'}
 });
 
 home.config(['$routeProvider',

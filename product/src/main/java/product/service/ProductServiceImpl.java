@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
         if (categoryCode == null) {
             products = productRepository.findAll();
         } else {
-            products = productRepository.findByCategoryCode(categoryCode);
+            products = this.findByCategoryCode(categoryCode);
         }
 
         if (tags != null) {

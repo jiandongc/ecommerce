@@ -47,13 +47,20 @@ html, body {
     top: 0.3em;
 }
 
-@media (min-width: 576px) {
-  .box:nth-child(3n+1) {
+@media (min-width: 768px) {
+  .box-3:nth-child(3n+1) {
     clear: left;
   }
 }
-@media (max-width: 575px) {
-  .box:nth-child(2n+1) {
+
+@media (max-width: 767px) {
+  .box-3:nth-child(2n+1) {
+    clear: left;
+  }
+}
+
+@media (min-width: 768px) {
+  .box-4:nth-child(4n+1) {
     clear: left;
   }
 }
@@ -685,6 +692,10 @@ a.clickable-label:hover {
 
 .color-valencia {
   color: #D9534F;
+}
+
+.color-grey {
+  color: #777777; 
 }
 
 .text-line-through {
