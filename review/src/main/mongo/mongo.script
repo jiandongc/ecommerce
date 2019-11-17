@@ -1,0 +1,5 @@
+db.createUser({
+    user: "review_user",
+    pwd: "QW34rt^&",
+    roles: [ { role: "readWrite", db: "review" }]
+})
