@@ -37,13 +37,48 @@
         </div>
     </div>
 
-	<div class="m-t-05 p-05 underline">
+	<div class="p-05 underline">
 	    <span class="glyphicon glyphicon-pencil fw-bold fs-12 color-grey"></span>&nbsp&nbsp
 	    <span class="fw-bold fs-15 color-grey">Questions & Feedback</span>
 	</div>
-	<div class="m-t-05 p-05 clearfix">
+	<div class="p-05 clearfix">
 		<textarea class="form-control" placeholder="We love to hear from you..."></textarea>
 		<button class="btn btn-style-primary m-t-05 pull-right" type="button">&nbsp&nbspPost&nbsp&nbsp</button>
+	</div>
+
+	<div class="p-l-05 p-r-05 underline">
+    	<span class="glyphicon glyphicon-th-list fw-bold fs-12 color-grey"></span>&nbsp&nbsp
+    	<span class="fw-bold fs-15 color-grey">Categories</span>
+	</div>
+	<div class="row p-05">
+		<div class="a-box-group col-xs-12 col-sm-6 m-t-05 box-2">
+			<div class="a-box a-color-offset-background p-05">
+				<a href="#!/category/ls" class="color-grey">零食</a>
+			</div>
+			<div class="a-box p-05">
+				<div class="row">
+					<span ng-repeat="children in categoryOne.children">
+						<div class="col-xs-6 col-sm-4">
+	                		<a href="#!/category/{{children.code}}" class="link-primary">{{children.name}}</a>
+	                	</div>
+	            	</span>
+            	</div>
+			</div>
+		</div>
+		<div class="a-box-group col-xs-12 col-sm-6 m-t-05 box-2">
+			<div class="a-box a-color-offset-background p-05">
+				<a href="#!/category/yl" class="color-grey">饮料</a>
+			</div>
+			<div class="a-box p-05">
+				<div class="row">
+					<span ng-repeat="children in categoryTwo.children">
+						<div class="col-xs-6 col-sm-4">
+	                		<a href="#!/category/{{children.code}}" class="link-primary">{{children.name}}</a>
+	                	</div>
+	            	</span>
+            	</div>
+			</div>
+		</div>
 	</div>
     <productpanel tag="new" title="New In" titlecolor="color-grey"></productpanel>
     <productpanel tag="sale" title="Sale" titlecolor="color-valencia"></productpanel>
