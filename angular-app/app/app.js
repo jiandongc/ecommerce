@@ -10,7 +10,8 @@ var app = angular.module('store', [
 	'auth',
 	'config',
 	'order',
-	'productTag'
+	'productTag',
+	'review'
 ]);
 
 app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, categoryFactory, authFactory) {

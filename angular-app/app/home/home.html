@@ -39,11 +39,18 @@
 
 	<div class="p-05 underline">
 	    <span class="glyphicon glyphicon-pencil fw-bold fs-12 color-grey"></span>&nbsp&nbsp
+	    <a href="#!/feedback">
 	    <span class="fw-bold fs-15 color-grey">Questions & Feedback</span>
+		</a>
 	</div>
 	<div class="p-05 clearfix">
-		<textarea class="form-control" placeholder="We love to hear from you..."></textarea>
-		<button class="btn btn-style-primary m-t-05 pull-right" type="button">&nbsp&nbspPost&nbsp&nbsp</button>
+		<textarea class="form-control" placeholder="We love to hear from you..." ng-model="feedback"></textarea>
+		<button class="btn btn-style-primary m-t-05 pull-right" type="button" ng-click="addFeedback(feedback)">
+			&nbsp&nbspPost&nbsp&nbsp
+		</button>
+		<a href="#!/feedback" class="btn btn-style-secondary m-t-05 m-r-05 pull-right">
+			See all {{feedbackSize}}
+		</a>
 	</div>
 
 	<div class="p-l-05 p-r-05 underline">

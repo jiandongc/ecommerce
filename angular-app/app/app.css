@@ -709,6 +709,10 @@ a.clickable-label:hover {
   color: #777777; 
 }
 
+.color-tiffany-green {
+  color: #0ABAB5; 
+}
+
 .text-line-through {
   text-decoration: line-through;  
 }
@@ -745,6 +749,10 @@ a.clickable-label:hover {
     height: 1px;
     margin: 20px 0;
     background-color: #eee;
+}
+
+.opacity-05 {
+    opacity: 0.5; 
 }
 
 /* animation */

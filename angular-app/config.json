@@ -5,7 +5,8 @@
 			"customerUrl": "http://localhost:8081",
 			"orderUrl": "http://localhost:8082",
 			"shoppingCartUrl": "http://localhost:8084",
-			"productUrl": "http://localhost:8083"
+			"productUrl": "http://localhost:8083",
+			"reviewUrl": "http://localhost:8085"
 		}	
 	},
 	"uat" : {
