@@ -1,0 +1,7 @@
+<textarea class="form-control" placeholder="We love to hear from you..." ng-model="feedback"></textarea>
+<button class="btn btn-style-primary m-t-05 pull-right" type="button" ng-click="addFeedback(feedback)">
+	&nbsp&nbspPost&nbsp&nbsp
+</button>
+<a href="#!/feedback" ng-show="$ctrl.seeallbutton" class="btn btn-style-secondary m-t-05 m-r-05 pull-right">
+	See all {{feedbackSize}}
+</a>

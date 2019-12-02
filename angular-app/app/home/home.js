@@ -1,17 +1,6 @@
 var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-home.controller('homeCtrl', function($scope, $location, reviewFactory) {
-
-  reviewFactory.getFeedback(undefined, undefined, 0, 1).then(function(response){
-    $scope.feedbackSize = '(' + response.size + ')';
-  });
-
-  $scope.addFeedback = function(feedback){
-    reviewFactory.addFeedback(feedback).then(function(response){
-      $location.path("/feedback_received/" + response._id);
-    });
-  }
-
+home.controller('homeCtrl', function() {
 });
 
 home.component('productpanel', {

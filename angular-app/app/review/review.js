@@ -103,7 +103,24 @@ review.factory('reviewFactory', function($http, environment){
 
 });
 
-checkout.config(
+review.component('postfeedback', {
+  templateUrl: 'component/post_feedback.html',
+  controller: function($scope, $location, reviewFactory){
+
+  	reviewFactory.getFeedback(undefined, undefined, 0, 1).then(function(response){
+    	$scope.feedbackSize = '(' + response.size + ')';
+  	});
+
+    $scope.addFeedback = function(feedback){
+    	reviewFactory.addFeedback(feedback).then(function(response){
+      		$location.path("/feedback_received/" + response._id);
+    	});
+  	}	
+  },
+  bindings: {seeallbutton: '<'}
+});
+
+review.config(
   function($routeProvider) {
     $routeProvider
     .when('/feedback_received/:feedbackId', {
