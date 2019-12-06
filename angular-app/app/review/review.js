@@ -13,12 +13,16 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 	$scope.offset = 0;
 	$scope.limit = 10;
 	$scope.sort = {display: "Newest First", code: 'date.desc'};
+	$scope.voting = [];
 	$scope.search;
 
 	reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 		$scope.loading = false;
 		$scope.data = response;
 		$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
+		angular.forEach(response.feedback, function(value, key) {
+			$scope.voting.push(false);
+		});
 	});
 
 	$scope.loadMore = function() {
@@ -27,6 +31,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 		reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 			angular.forEach(response.feedback, function(value, key) {
 				$scope.data.feedback.push(value);
+				$scope.voting.push(false);
 			});
 			$scope.loadingMore = false;
 			$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
@@ -40,11 +45,15 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 		$scope.offset = 0;
 		$scope.limit = 10;
 		$scope.sort = {display: display, code: code};
+		$scope.voting = [];
 
 		reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 			$scope.loading = false;
 			$scope.data = response;
 			$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
+			angular.forEach(response.feedback, function(value, key) {
+				$scope.voting.push(false);
+			});
 		});
 	};
 
@@ -54,11 +63,23 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 		$scope.showLoadMoreButton = false;
 		$scope.offset = 0;
 		$scope.limit = 10;
+		$scope.voting = [];
 
 		reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 			$scope.loading = false;
 			$scope.data = response;
 			$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
+			angular.forEach(response.feedback, function(value, key) {
+				$scope.voting.push(false);
+			});
+		});
+	};
+
+	$scope.voteUp = function(id, index){
+		$scope.voting[index] = true;
+		reviewFactory.voteUp(id).then(function(response){
+			$scope.data.feedback[index] = response;
+			$scope.voting[index] = false;
 		});
 	};
 });
@@ -93,12 +114,19 @@ review.factory('reviewFactory', function($http, environment){
       	return $http.get(environment.reviewUrl + '/reviews?' + params).then(function(response){
         	return response.data;
       	});
+	};
+
+	var voteUp = function(id){
+		return $http.post(environment.reviewUrl + '/reviews/' + id + "/vote").then(function(response){
+        	return response.data;
+      	});
 	}
 
     return {
          addFeedback: addFeedback,
          getFeedbackById: getFeedbackById,
-         getFeedback: getFeedback
+         getFeedback: getFeedback,
+         voteUp: voteUp
     };
 
 });

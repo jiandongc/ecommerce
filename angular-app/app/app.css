@@ -761,6 +761,11 @@ a.clickable-label:hover {
     -webkit-animation: spin2 1s infinite linear;
 }
 
+div > .glyphicon-thumbs-up:hover  {
+    color: #e47911; 
+    cursor: pointer;
+}
+
 @keyframes spin {
     from { transform: scale(1) rotate(0deg); }
     to { transform: scale(1) rotate(360deg); }

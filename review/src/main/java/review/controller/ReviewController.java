@@ -2,6 +2,8 @@ package review.controller;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import review.domain.Answer;
@@ -67,22 +69,28 @@ public class ReviewController {
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public void addAnswer(@PathVariable("id") ObjectId id, @RequestBody Answer answer) {
+    public ResponseEntity addAnswer(@PathVariable("id") ObjectId id, @RequestBody Answer answer) {
         Feedback feedback = feedbackRepository.findBy_id(id);
         if (feedback != null) {
             answer.setCreationDate(LocalDate.now());
             feedback.addAnswer(answer);
-            feedbackRepository.save(feedback);
+            Feedback updated = feedbackRepository.save(feedback);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
-    @RequestMapping(value = "/{id}/vote", method = RequestMethod.PUT)
-    public void addVote(@PathVariable("id") ObjectId id){
+    @RequestMapping(value = "/{id}/vote", method = RequestMethod.POST)
+    public ResponseEntity addVote(@PathVariable("id") ObjectId id){
         Feedback feedback = feedbackRepository.findBy_id(id);
         if (feedback != null) {
             feedback.addVote();
-            feedbackRepository.save(feedback);
+            Feedback updated = feedbackRepository.save(feedback);
+            return new ResponseEntity<>(updated, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 

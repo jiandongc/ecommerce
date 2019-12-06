@@ -62,18 +62,21 @@ public class ReviewControllerTest extends AbstractControllerTest {
         Feedback savedFeedbck = feedbackRepository.save(Feedback.builder().text("love your website").creationDate(LocalDate.now()).build());
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
-        ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id() + "/vote", PUT, httpEntity, String.class);
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id() + "/vote", POST, httpEntity, String.class);
         assertThat(response.getStatusCode(), is(OK));
+        assertThat(response.getBody().contains("\"vote\":1"), is(true));
         Feedback updatedFeedback = feedbackRepository.findBy_id(savedFeedbck.get_id());
         assertThat(updatedFeedback.getVote(), is(1));
 
-        response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id() + "/vote", PUT, httpEntity, String.class);
+        response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id() + "/vote", POST, httpEntity, String.class);
         assertThat(response.getStatusCode(), is(OK));
+        assertThat(response.getBody().contains("\"vote\":2"), is(true));
         updatedFeedback = feedbackRepository.findBy_id(savedFeedbck.get_id());
         assertThat(updatedFeedback.getVote(), is(2));
 
-        response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id() + "/vote", PUT, httpEntity, String.class);
+        response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id() + "/vote", POST, httpEntity, String.class);
         assertThat(response.getStatusCode(), is(OK));
+        assertThat(response.getBody().contains("\"vote\":3"), is(true));
         updatedFeedback = feedbackRepository.findBy_id(savedFeedbck.get_id());
         assertThat(updatedFeedback.getVote(), is(3));
     }

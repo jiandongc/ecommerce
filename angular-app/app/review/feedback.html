@@ -34,8 +34,9 @@
             <span class="color-grey">{{answerItem.text}}</span>
         </div>
         <div class="col-xs-12">
-            <span class="glyphicon glyphicon-thumbs-up color-grey fs-11" style="display: table-cell; vertical-align: middle;"></span>
-            <span class="color-grey" style="display: table-cell; vertical-align: middle; padding-left: 5px">{{item.vote}}</span>
+            <span ng-hide="voting[$index]" class="glyphicon glyphicon-thumbs-up color-grey fs-11" style="display: table-cell; vertical-align: middle; cursor: pointer;" ng-click="voteUp(item._id, $index)"></span>
+            <span ng-show="voting[$index]" class="glyphicon glyphicon-refresh spinning color-grey fs-11" style="display: table-cell; vertical-align: middle;"></span>
+            <span class="color-grey" style="display: table-cell; vertical-align: middle; padding-left: 8px">{{item.vote}}</span>
         </div>
     </div>
     <div ng-show="showLoadMoreButton" class="row m-b-10" style="text-align: center;">
