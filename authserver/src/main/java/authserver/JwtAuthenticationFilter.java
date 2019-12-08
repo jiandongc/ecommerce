@@ -6,7 +6,6 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -16,7 +15,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -27,10 +25,7 @@ import java.util.stream.Collectors;
 
 import static io.jsonwebtoken.SignatureAlgorithm.HS512;
 import static java.lang.Long.parseLong;
-import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
-import static java.util.stream.Collectors.toList;
-import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 

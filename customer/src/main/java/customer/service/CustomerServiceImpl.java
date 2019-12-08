@@ -5,6 +5,7 @@ import customer.domain.Product;
 import customer.domain.Type;
 import customer.repository.AddressRepository;
 import customer.repository.ProductRepository;
+import customer.security.HashService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,12 +29,18 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private ProductRepository productRepository;
 
+    @Autowired
+    private HashService hashService;
+
     @Override
     @Transactional
     public Customer save(Customer customer) {
         if (this.findByEmail(customer.getEmail()) != null) {
             throw new IllegalArgumentException("Email address is already used");
         }
+
+        String rawPassword = customer.getPassword();
+        customer.setPassword(hashService.generateHash(rawPassword));
 
         return customerRepository.save(customer);
     }

@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import customer.domain.Address;
 import customer.repository.AddressRepository;
+import customer.security.HashService;
 import org.junit.Test;
 
 import customer.domain.Customer;
@@ -27,6 +28,9 @@ public class CustomerServiceImplTest {
 
 	@Mock
 	private AddressRepository addressRepository;
+
+	@Mock
+	private HashService hashService;
 
 	@InjectMocks
 	private CustomerServiceImpl customerService;

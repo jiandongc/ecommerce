@@ -3,6 +3,7 @@ package authserver;
 import org.junit.Test;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.ResourceAccessException;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -11,10 +12,13 @@ import static org.springframework.http.HttpMethod.POST;
 
 public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
 
+    private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @Test
-    public void shouldReturnJasonWebTokenIfUserProvideValidUsernameAndPassword(){
+    public void shouldReturnJasonWebTokenIfUserProvideValidUsernameAndPassword() {
         // Given
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '12345')";
+        String hashedPassword = passwordEncoder.encode("12345");
+        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
         jdbcTemplate.execute(sql);
 
         // When
@@ -30,9 +34,10 @@ public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
     }
 
     @Test(expected = ResourceAccessException.class)
-    public void shouldNotReturnJasonWebTokenIfPasswordIsIncorrect(){
+    public void shouldNotReturnJasonWebTokenIfPasswordIsIncorrect() {
         // Given
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '12345')";
+        String hashedPassword = passwordEncoder.encode("12345");
+        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
         jdbcTemplate.execute(sql);
 
         // When
@@ -45,9 +50,10 @@ public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
     }
 
     @Test(expected = ResourceAccessException.class)
-    public void shouldNotReturnJasonWebTokenIfEmailIsIncorrect(){
+    public void shouldNotReturnJasonWebTokenIfEmailIsIncorrect() {
         // Given
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '12345')";
+        String hashedPassword = passwordEncoder.encode("12345");
+        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
         jdbcTemplate.execute(sql);
 
         // When
@@ -60,10 +66,11 @@ public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
     }
 
     @Test(expected = ResourceAccessException.class)
-    public void shouldNotReturnJasonWebTokenIfRequestDoesNotHaveAValidAccessToken(){
+    public void shouldNotReturnJasonWebTokenIfRequestDoesNotHaveAValidAccessToken() {
         // Given
         headers.remove("Authentication");
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '12345')";
+        String hashedPassword = passwordEncoder.encode("12345");
+        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
         jdbcTemplate.execute(sql);
 
         // When

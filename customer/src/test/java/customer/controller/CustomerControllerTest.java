@@ -11,7 +11,9 @@ import static org.springframework.http.HttpMethod.*;
 
 import customer.domain.Address;
 import customer.domain.Product;
+import customer.security.HashService;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 
@@ -23,6 +25,9 @@ public class CustomerControllerTest extends AbstractControllerTest{
 
 	private final String BASE_URL = "http://localhost:8081/customers";
 	private final TestRestTemplate rest = new TestRestTemplate();
+
+	@Autowired
+	private HashService hashService;
 
 	@Test
 	public void shouldSaveCustomer(){
@@ -48,7 +53,8 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getBody().getMobile(), is("07736473343"));
 		assertThat(response.getBody().getPassword(), is(nullValue()));
 
-		assertThat(customerRepository.findByEmail("jiandong.c@gmail.com").getPassword(), is("1234qwer"));
+		String hash = customerRepository.findByEmail("jiandong.c@gmail.com").getPassword();
+		assertThat(hashService.matches("1234qwer", hash), is(true));
 	}
 
 	@Test
