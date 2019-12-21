@@ -52,6 +52,10 @@ public class Customer {
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
     private List<Product> products;
 
+    @JsonIgnore
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
+    private List<Token> tokens;
+
     public void addAddress(Address address) {
         if (addresses == null) {
             addresses = new ArrayList<>();
@@ -69,6 +73,16 @@ public class Customer {
         this.products.add(product);
         product.setCustomer(this);
     }
+
+    public void addToken(Token token) {
+        if (tokens == null) {
+            tokens = new ArrayList<>();
+        }
+
+        this.tokens.add(token);
+        token.setCustomer(this);
+    }
+
 
     @JsonIgnore
     public List<Product> getValidProducts() {

@@ -3,12 +3,14 @@ package customer.service;
 import customer.domain.Address;
 import customer.domain.Customer;
 import customer.domain.Product;
+import customer.domain.Token;
 
 import java.util.List;
 
 public interface CustomerService {
 	Customer save(Customer customer);
 	Customer update(Customer customer);
+	void updatePassword(Token token, String password);
 	Customer findById(Long Id);
 	Customer findByEmail(String email);
 	List<Address> findAddressesByCustomerId(Long customerId);
@@ -20,4 +22,7 @@ public interface CustomerService {
 	List<Product> findProductsByCustomerId(Long customerId);
 	void removeProduct(Long customerId, Long productId);
 	void removeProductByTypeAndCode(Long customerId, String type, String productCode);
+	Token addToken(Long customerId, Token.Type type);
+	List<Token> findTokensByCustomerId(Long customerId);
+	Token findValidToken(String text);
 }

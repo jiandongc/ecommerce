@@ -1,21 +1,21 @@
 package customer.service;
 
-import customer.domain.Address;
-import customer.domain.Product;
-import customer.domain.Type;
+import customer.domain.*;
 import customer.repository.AddressRepository;
 import customer.repository.ProductRepository;
+import customer.repository.TokenRepository;
 import customer.security.HashService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import customer.domain.Customer;
 import customer.repository.CustomerRepository;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -28,6 +28,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @Autowired
     private HashService hashService;
@@ -62,6 +65,17 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         return theCustomer;
+    }
+
+    @Override
+    @Transactional
+    public void updatePassword(Token token, String password) {
+        Token savedToken = tokenRepository.findByText(token.getText());
+        if (savedToken != null) {
+            long customerId = savedToken.getCustomer().getId();
+            final Customer customer = customerRepository.findOne(customerId);
+            customer.setPassword(hashService.generateHash(password));
+        }
     }
 
     @Override
@@ -172,6 +186,37 @@ public class CustomerServiceImpl implements CustomerService {
         products.stream().filter(product -> product.getType().equals(productType) && product.getProductCode().equals(productCode))
                 .forEach(product -> productRepository.delete(product.getId()));
 
+    }
+
+    @Override
+    @Transactional
+    public Token addToken(Long customerId, Token.Type type) {
+        final Customer customer = customerRepository.findOne(customerId);
+        Token token = Token.builder()
+                .type(type)
+                .text(UUID.randomUUID().toString())
+                .startDateTime(LocalDateTime.now())
+                .endDateTime(LocalDateTime.now().plusMinutes(30L))
+                .build();
+        customer.addToken(token);
+        return token;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<Token> findTokensByCustomerId(Long customerId) {
+        return tokenRepository.findByCustomerId(customerId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Token findValidToken(String text) {
+        Token token = tokenRepository.findByText(text);
+        if (token != null && token.isValid()) {
+            return token;
+        }
+
+        return null;
     }
 
 }

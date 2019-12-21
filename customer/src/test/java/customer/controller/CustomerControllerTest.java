@@ -1,16 +1,16 @@
 package customer.controller;
 
+import static customer.domain.Token.Type.EMAIL_RESET;
 import static customer.domain.Type.FAVOURITE;
 import static customer.domain.Type.NOTIFY_IN_STOCK;
 import static java.time.LocalDate.now;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.http.HttpMethod.*;
 
 import customer.domain.Address;
 import customer.domain.Product;
+import customer.domain.Token;
 import customer.security.HashService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,9 @@ import org.springframework.http.*;
 
 import customer.domain.Customer;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class CustomerControllerTest extends AbstractControllerTest{
 
@@ -735,5 +737,196 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		savedProducts = productRepository.findByCustomerId(savedCustomer.getId());
 		assertThat(savedProducts.size(), is(0));
+	}
+
+	@Test
+	public void shouldAddPasswordResetToken(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("John");
+		customer.setEmail("john.smith@gmail.com");
+		customer.setPassword("Password123");
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When
+		this.setGuestToken();
+		String tokenRequest = "{" +
+				"\"email\":\"john.smith@gmail.com\"," +
+				"\"type\":\"EMAIL_RESET\"" +
+				"}";
+		HttpEntity<String> payload = new HttpEntity<>(tokenRequest, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/tokens", POST, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		List<Token> tokens = customerService.findTokensByCustomerId(savedCustomer.getId());
+		assertThat(tokens.size(), is(1));
+		assertThat(tokens.get(0).getType(), is(EMAIL_RESET));
+		assertThat(tokens.get(0).getText(), is(notNullValue()));
+		assertThat(tokens.get(0).getStartDateTime(), is(notNullValue()));
+		assertThat(tokens.get(0).getEndDateTime(), is(notNullValue()));
+	}
+
+	@Test
+	public void shouldNotThrowExceptionIfEmailIsNotFound(){
+		// When
+		this.setGuestToken();
+		String tokenRequest = "{" +
+				"\"email\":\"abc@gmail.com\"," +
+				"\"type\":\"EMAIL_RESET\"" +
+				"}";
+		HttpEntity<String> payload = new HttpEntity<>(tokenRequest, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/tokens", POST, payload, String.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+	}
+
+	@Test
+	public void shouldReturnTokenIfValid(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("John");
+		customer.setEmail("john.smith@gmail.com");
+		customer.setPassword("Password123");
+		String tokenText = UUID.randomUUID().toString();
+		customer.addToken(Token.builder()
+				.startDateTime(LocalDateTime.now().minusMinutes(30))
+				.endDateTime(LocalDateTime.now().plusMinutes(30))
+				.text(tokenText)
+				.type(Token.Type.EMAIL_RESET)
+				.build()
+		);
+
+		customerRepository.save(customer);
+
+		// When & Then
+		this.setGuestToken();
+		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+		ResponseEntity<Token> response =  rest.exchange(BASE_URL + "/tokens/" + tokenText, GET, httpEntity, Token.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getType(), is(EMAIL_RESET));
+		assertThat(response.getBody().getText(), is(tokenText));
+	}
+
+	@Test
+	public void shouldNotReturnTokenIfExpired(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("John");
+		customer.setEmail("john.smith@gmail.com");
+		customer.setPassword("Password123");
+		String tokenText = UUID.randomUUID().toString();
+		customer.addToken(Token.builder()
+				.startDateTime(LocalDateTime.now().minusMinutes(30))
+				.endDateTime(LocalDateTime.now().minusMinutes(10))
+				.text(tokenText)
+				.type(Token.Type.EMAIL_RESET)
+				.build()
+		);
+
+		customerRepository.save(customer);
+
+		// When & Then
+		this.setGuestToken();
+		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+		ResponseEntity<Token> response =  rest.exchange(BASE_URL + "/tokens/" + tokenText, GET, httpEntity, Token.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody(), is(nullValue()));
+	}
+
+	@Test
+	public void shouldNotReturnTokenIfTextIsInvalid(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("John");
+		customer.setEmail("john.smith@gmail.com");
+		customer.setPassword("Password123");
+		String tokenText = UUID.randomUUID().toString();
+		customer.addToken(Token.builder()
+				.startDateTime(LocalDateTime.now().minusMinutes(30))
+				.endDateTime(LocalDateTime.now().plusMinutes(10))
+				.text(tokenText)
+				.type(Token.Type.EMAIL_RESET)
+				.build()
+		);
+
+		customerRepository.save(customer);
+
+		// When & Then
+		this.setGuestToken();
+		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+		ResponseEntity<Token> response =  rest.exchange(BASE_URL + "/tokens/invalid-token-text", GET, httpEntity, Token.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody(), is(nullValue()));
+	}
+
+	@Test
+	public void shouldResetPasswordWithToken(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("John");
+		customer.setEmail("john.smith@gmail.com");
+		customer.setPassword("Password123");
+		String tokenText = UUID.randomUUID().toString();
+		customer.addToken(Token.builder()
+				.startDateTime(LocalDateTime.now().minusMinutes(30))
+				.endDateTime(LocalDateTime.now().plusMinutes(10))
+				.text(tokenText)
+				.type(Token.Type.EMAIL_RESET)
+				.build()
+		);
+
+		customerRepository.save(customer);
+
+		// When
+		this.setGuestToken();
+		String tokenRequest = String.format("{" +
+				"\"token\":\"%s\"," +
+				"\"password\":\"Password321\"" +
+				"}", tokenText);
+		HttpEntity<String> payload = new HttpEntity<>(tokenRequest, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/reset-password", POST, payload, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+
+		// Then
+		Customer updatedCustomer = customerService.findByEmail("john.smith@gmail.com");
+		assertThat(updatedCustomer.getPassword(), is(notNullValue()));
+		assertThat(updatedCustomer.getPassword(), is(not("Password123")));
+	}
+
+	@Test
+	public void shouldNotThrowExceptionIfPasswordRestTokenIsNotFound(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("John");
+		customer.setEmail("john.smith@gmail.com");
+		customer.setPassword("Password123");
+		String tokenText = UUID.randomUUID().toString();
+		customer.addToken(Token.builder()
+				.startDateTime(LocalDateTime.now().minusMinutes(30))
+				.endDateTime(LocalDateTime.now().plusMinutes(10))
+				.text(tokenText)
+				.type(Token.Type.EMAIL_RESET)
+				.build()
+		);
+
+		customerRepository.save(customer);
+
+		// When
+		this.setGuestToken();
+		String tokenRequest = String.format("{" +
+				"\"token\":\"%s\"," +
+				"\"password\":\"Password321\"" +
+				"}", "invalid-token-text");
+		HttpEntity<String> payload = new HttpEntity<>(tokenRequest, headers);
+		ResponseEntity<String> response = rest.exchange(BASE_URL + "/reset-password", POST, payload, String.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+
+		// Then
+		Customer updatedCustomer = customerService.findByEmail("john.smith@gmail.com");
+		assertThat(updatedCustomer.getPassword(), is(notNullValue()));
+		assertThat(updatedCustomer.getPassword(), is("Password123"));
 	}
 }
