@@ -32,9 +32,4 @@ public class PasswordResetData extends MailData {
         return st.render();
     }
 
-    public static void main(String args[]){
-        PasswordResetData passwordResetData = PasswordResetData.builder().name("Jiandong").link("http://google.com").build();
-        System.out.println(passwordResetData.generateText());
-    }
-
 }
