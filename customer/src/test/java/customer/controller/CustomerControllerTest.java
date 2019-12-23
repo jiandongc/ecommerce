@@ -1,6 +1,6 @@
 package customer.controller;
 
-import static customer.domain.Token.Type.EMAIL_RESET;
+import static customer.domain.Token.Type.PASSWORD_RESET;
 import static customer.domain.Type.FAVOURITE;
 import static customer.domain.Type.NOTIFY_IN_STOCK;
 import static java.time.LocalDate.now;
@@ -753,7 +753,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setGuestToken();
 		String tokenRequest = "{" +
 				"\"email\":\"john.smith@gmail.com\"," +
-				"\"type\":\"EMAIL_RESET\"" +
+				"\"type\":\"PASSWORD_RESET\"" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<>(tokenRequest, headers);
 		ResponseEntity<String> response = rest.exchange(BASE_URL + "/tokens", POST, payload, String.class);
@@ -762,7 +762,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		List<Token> tokens = customerService.findTokensByCustomerId(savedCustomer.getId());
 		assertThat(tokens.size(), is(1));
-		assertThat(tokens.get(0).getType(), is(EMAIL_RESET));
+		assertThat(tokens.get(0).getType(), is(PASSWORD_RESET));
 		assertThat(tokens.get(0).getText(), is(notNullValue()));
 		assertThat(tokens.get(0).getStartDateTime(), is(notNullValue()));
 		assertThat(tokens.get(0).getEndDateTime(), is(notNullValue()));
@@ -774,7 +774,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		this.setGuestToken();
 		String tokenRequest = "{" +
 				"\"email\":\"abc@gmail.com\"," +
-				"\"type\":\"EMAIL_RESET\"" +
+				"\"type\":\"PASSWORD_RESET\"" +
 				"}";
 		HttpEntity<String> payload = new HttpEntity<>(tokenRequest, headers);
 		ResponseEntity<String> response = rest.exchange(BASE_URL + "/tokens", POST, payload, String.class);
@@ -795,7 +795,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				.startDateTime(LocalDateTime.now().minusMinutes(30))
 				.endDateTime(LocalDateTime.now().plusMinutes(30))
 				.text(tokenText)
-				.type(Token.Type.EMAIL_RESET)
+				.type(PASSWORD_RESET)
 				.build()
 		);
 
@@ -806,7 +806,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 		final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 		ResponseEntity<Token> response =  rest.exchange(BASE_URL + "/tokens/" + tokenText, GET, httpEntity, Token.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
-		assertThat(response.getBody().getType(), is(EMAIL_RESET));
+		assertThat(response.getBody().getType(), is(PASSWORD_RESET));
 		assertThat(response.getBody().getText(), is(tokenText));
 	}
 
@@ -822,7 +822,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				.startDateTime(LocalDateTime.now().minusMinutes(30))
 				.endDateTime(LocalDateTime.now().minusMinutes(10))
 				.text(tokenText)
-				.type(Token.Type.EMAIL_RESET)
+				.type(PASSWORD_RESET)
 				.build()
 		);
 
@@ -848,7 +848,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				.startDateTime(LocalDateTime.now().minusMinutes(30))
 				.endDateTime(LocalDateTime.now().plusMinutes(10))
 				.text(tokenText)
-				.type(Token.Type.EMAIL_RESET)
+				.type(PASSWORD_RESET)
 				.build()
 		);
 
@@ -874,7 +874,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				.startDateTime(LocalDateTime.now().minusMinutes(30))
 				.endDateTime(LocalDateTime.now().plusMinutes(10))
 				.text(tokenText)
-				.type(Token.Type.EMAIL_RESET)
+				.type(PASSWORD_RESET)
 				.build()
 		);
 
@@ -908,7 +908,7 @@ public class CustomerControllerTest extends AbstractControllerTest{
 				.startDateTime(LocalDateTime.now().minusMinutes(30))
 				.endDateTime(LocalDateTime.now().plusMinutes(10))
 				.text(tokenText)
-				.type(Token.Type.EMAIL_RESET)
+				.type(PASSWORD_RESET)
 				.build()
 		);
 
