@@ -266,10 +266,6 @@ html, body {
 	color: #111;
 }
 
-.login .width-60 {
-	width: 60%;
-}
-
 .login form {
 	padding-bottom: 7%;
 }
@@ -684,6 +680,8 @@ a.clickable-label:hover {
 
 .fw-bold {font-weight: bold}
 .fw-light {font-weight: 200}
+
+.width-60 {width: 60%;}
 
 .color-tenne {
   color: #c45500;

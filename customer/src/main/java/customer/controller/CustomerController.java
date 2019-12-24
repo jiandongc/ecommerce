@@ -3,6 +3,7 @@ package customer.controller;
 import customer.data.PasswordResetRequest;
 import customer.data.TokenRequest;
 import customer.domain.*;
+import customer.service.CustomerEmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,11 +26,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 @RequestMapping("/customers")
 public class CustomerController {
 
-    private CustomerService customerService;
+    private final CustomerService customerService;
+    private final CustomerEmailService customerEmailService;
 
     @Autowired
-    public CustomerController(CustomerService customerService) {
+    public CustomerController(CustomerService customerService, CustomerEmailService customerEmailService) {
         this.customerService = customerService;
+        this.customerEmailService = customerEmailService;
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
@@ -138,7 +141,8 @@ public class CustomerController {
     public void createToken(@RequestBody TokenRequest tokenRequest) {
         Customer customer = customerService.findByEmail(tokenRequest.getEmail());
         if (customer != null) {
-            customerService.addToken(customer.getId(), tokenRequest.getType());
+            Token token = customerService.addToken(customer.getId(), tokenRequest.getType());
+            customerEmailService.sendPasswordResetEmail(customer, token.getText());
         }
     }
 

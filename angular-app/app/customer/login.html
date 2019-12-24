@@ -1,15 +1,15 @@
 <div class="background">
 <div class="container">
 	<div class = "row login">
-		<div class="col-md-6">
+		<div class="col-sm-6 col-md-4">
 			<form name="loginForm" ng-submit="loginForm.$valid && login(credentials)">
 				<h3>Sign-In</h3>
-				<div id="loginError" ng-show="loginError" class="alert alert-danger width-60">
+				<div id="loginError" ng-show="loginError" class="alert alert-danger">
 					Uh on...Incorrect email / password.
 				</div>
 			  	<div class="form-group" ng-class="{'has-error': loginForm.loginEmail.$invalid && (loginForm.loginEmail.$touched || loginForm.$submitted) }">
 			    	<label for="loginEmail">Email</label>
-			    	<input type="email" id="loginEmail" name="loginEmail" class="form-control width-60" ng-model="credentials.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+			    	<input type="email" id="loginEmail" name="loginEmail" class="form-control" ng-model="credentials.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
 			    	<div id="loginEmailMsg" ng-show="loginForm.loginEmail.$touched || loginForm.$submitted">
 						<p ng-show="loginForm.loginEmail.$error.required" class="help-block">
 							Email is missing. Please check and try again.
@@ -21,7 +21,7 @@
 			  	</div>
 			  	<div class="form-group" ng-class="{'has-error': loginForm.loginPassword.$invalid && (loginForm.loginPassword.$touched || loginForm.$submitted) }">
 			    	<label for="loginPassword">Password</label>
-			    	<input type="password" id="loginPassword" name="loginPassword" class="form-control width-60" ng-model="credentials.password" ng-minlength="8" ng-maxlength="50" ng-pattern="/(?=.*\d)(?=.*[a-zA-Z])/" placeholder="Enter Password" required>
+			    	<input type="password" id="loginPassword" name="loginPassword" class="form-control" ng-model="credentials.password" ng-minlength="8" ng-maxlength="50" ng-pattern="/(?=.*\d)(?=.*[a-zA-Z])/" placeholder="Enter Password" required>
 			    	<div id="loginPasswordMsg" ng-show="loginForm.loginPassword.$touched || loginForm.$submitted">
 						<p ng-show="loginForm.loginPassword.$error.required" class="help-block">
 							Password is missing. Please check and try again.
@@ -37,11 +37,11 @@
 						</p>
 					</div>
 			  	</div>
-				<button id="loginBtn" type="submit" class="btn btn-block width-60 btn-style-primary">
+				<button id="loginBtn" type="submit" class="btn btn-block btn-style-primary">
 					<span ng-show="logining"><i class="glyphicon glyphicon-refresh spinning"></i></span>&nbsp;Sign-In
 				</button>
 				<div class="m-t-05">
-					<a><u>Need help signing in?</u></a>
+					<a href="#!/login/forgotten"><u>I've forgotten my password</u></a>
 				</div>
 				<div class="m-t-20">
 					<span class="fs-11 fw-bold">Don't have an account?</span>
@@ -53,7 +53,7 @@
 			<form ng-show="cartUid && !customerId" name="guestForm" ng-submit="guestForm.$valid && guestContinue(guest)">
 			  	<div class="form-group" ng-class="{'has-error': guestForm.guestEmail.$invalid && (guestForm.guestEmail.$touched || guestForm.$submitted) }">
 			    	<label for="guestEmail">Email</label>
-			    	<input type="email" id="guestEmail" name="guestEmail" class="form-control width-60" ng-model="guest.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+			    	<input type="email" id="guestEmail" name="guestEmail" class="form-control" ng-model="guest.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
 			    	<div id="guestEmailMsg" ng-show="guestForm.guestEmail.$touched || guestForm.$submitted">
 						<p ng-show="guestForm.guestEmail.$error.required" class="help-block">
 							Email is missing. Please check and try again.
@@ -63,7 +63,7 @@
 						</p>
 					</div>
 			  	</div>
-				<button id="guestBtn" type="submit" class="btn btn-block width-60 btn-style-primary">
+				<button id="guestBtn" type="submit" class="btn btn-block btn-style-primary">
 					<span ng-show="guestLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>&nbsp;Continue as guest
 				</button>
 			</form>

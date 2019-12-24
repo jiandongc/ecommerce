@@ -18,9 +18,8 @@ password-reset(name, link) ::= <<
         </div>
         <p>Kind regards,<br>Cawaii Customer Service</p>
     </div>
-    <div class="footer" style="padding-top: 30px; background-color: #f6f6f6; text-align: center; color: grey; font-size: 12px; letter-spacing: 0.8px;">
-        @ 2019 CAWAII. INC.<br>
-        ALL RIGHTS RESERVED
+    <div class="footer" style="padding-top: 30px; padding-bottom: 15px; background-color: #f6f6f6; text-align: center; color: grey; font-size: 12px; letter-spacing: 0.8px;">
+        @ 2019 CAWAII. INC.
     </div>
 </div>
 

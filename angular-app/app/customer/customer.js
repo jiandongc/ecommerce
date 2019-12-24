@@ -283,6 +283,17 @@ customer.controller('favouriteCtrl', function($scope, $localstorage, $q, $route,
     }
 });
 
+customer.controller('forgetPasswordCtrl', function($scope, customerFactory, $location){
+    $scope.submitting = false;
+    $scope.submit = function(email){
+        $scope.submitting = true;
+        customerFactory.requestPasswordResetToken(email).then(function(data){
+            $scope.submitting = false;
+            $location.path("/login/forgotten/confirmation");
+        });
+    }
+});
+
 customer.factory('customerFactory', function($http, environment){
 
     var getCustomerByEmail = function(credentials){
@@ -367,6 +378,18 @@ customer.factory('customerFactory', function($http, environment){
         });
     };
 
+    var requestPasswordResetToken = function(email){
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+        var passwordResetRequest = {
+            email : email,
+            type: 'PASSWORD_RESET'
+        };
+
+        return $http.post(environment.customerUrl + '/customers/tokens', passwordResetRequest, configs).then(function(response){
+            return response.data;
+        });
+    }
+
     return {
         getCustomerByEmail: getCustomerByEmail,
         getCustomerById: getCustomerById,
@@ -379,7 +402,8 @@ customer.factory('customerFactory', function($http, environment){
         removeAddress: removeAddress,
         addToFavourite: addToFavourite,
         getFavouriteItems: getFavouriteItems,
-        removeFavouriteItem: removeFavouriteItem
+        removeFavouriteItem: removeFavouriteItem,
+        requestPasswordResetToken: requestPasswordResetToken
     };
 });
 
@@ -408,6 +432,12 @@ customer.config(
     when('/login', {
         templateUrl: 'customer/login.html',
         controller: 'loginCtrl'
+    }).when('/login/forgotten', {
+        templateUrl: 'customer/forgotten-password.html',
+        controller: 'forgetPasswordCtrl'
+    }).when('/login/forgotten/confirmation', {
+        templateUrl: 'customer/forgotten-password-confirmation.html',
+        controller: 'forgetPasswordCtrl'
     }).when('/register', {
         templateUrl: 'customer/register.html',
         controller: 'registerCtrl'
