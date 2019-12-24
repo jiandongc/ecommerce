@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class UrlGenerator {
 
-    @Value("${host.url}")
-    private String hostUrl;
+    @Value("${web.base.url}")
+    private String webBaseUrl;
 
     public String generatePasswordResetUrl(String token){
-        return String.format("%s/customer/password?token=%s", hostUrl, token);
+        return String.format("%s/#!/login/password?token=%s", webBaseUrl, token);
     }
 }

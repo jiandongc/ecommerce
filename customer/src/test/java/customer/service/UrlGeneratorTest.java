@@ -14,13 +14,13 @@ public class UrlGeneratorTest {
 
     @Before
     public void setup(){
-        ReflectionTestUtils.setField(urlGenerator, "hostUrl", "http://localhost:8000");
+        ReflectionTestUtils.setField(urlGenerator, "webBaseUrl", "http://localhost:8000/app");
     }
 
     @Test
     public void shouldGeneratePasswordResetUrl(){
-        String url = urlGenerator.generatePasswordResetUrl("abc-def");
-        assertThat(url, CoreMatchers.is("http://localhost:8000/customer/password?token=abc-def"));
+        String url = urlGenerator.generatePasswordResetUrl("d1320cf9-03d2-4bcc-ac93-71346c0c720d");
+        assertThat(url, CoreMatchers.is("http://localhost:8000/app/#!/login/password?token=d1320cf9-03d2-4bcc-ac93-71346c0c720d"));
     }
 
 }
