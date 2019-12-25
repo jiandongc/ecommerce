@@ -4,6 +4,7 @@ import email.data.MailData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.javamail.JavaMailSender;
 
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import static javax.mail.Message.RecipientType.TO;
@@ -21,6 +22,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendMessage(MailData mailData) {
         try {
             final MimeMessage mimeMessage = emailSender.createMimeMessage();
+            mimeMessage.setFrom(new InternetAddress(mailData.getFrom(), mailData.getFromAlias()));
             mimeMessage.setSubject(mailData.getSubject());
             mimeMessage.setText(mailData.generateText(), "utf-8", "html");
             for(int i = 0; i < mailData.getSendTo().size(); i++){
@@ -28,7 +30,7 @@ public class EmailServiceImpl implements EmailService {
             }
             emailSender.send(mimeMessage);
         } catch (Exception exception) {
-            exception.printStackTrace();
+            log.error("Error sending email {}", exception);
         }
     }
 

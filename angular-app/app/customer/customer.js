@@ -294,6 +294,18 @@ customer.controller('forgetPasswordCtrl', function($scope, customerFactory, $loc
     }
 });
 
+customer.controller('resetPasswordCtrl', function($scope, customerFactory, $routeParams, $location){
+    $scope.validating = true;
+    customerFactory.retrieveToken($routeParams.token).then(function(data){
+        if (data) {
+            $scope.token = data;
+            $scope.validating = false;
+        } else {
+           $location.path("/login/password/token-expired"); 
+        }
+    });
+});
+
 customer.factory('customerFactory', function($http, environment){
 
     var getCustomerByEmail = function(credentials){
@@ -388,7 +400,13 @@ customer.factory('customerFactory', function($http, environment){
         return $http.post(environment.customerUrl + '/customers/tokens', passwordResetRequest, configs).then(function(response){
             return response.data;
         });
-    }
+    };
+
+    var retrieveToken = function(token){
+        return $http.get(environment.customerUrl + '/customers/tokens/' + token).then(function(response){
+            return response.data;
+        });
+    };
 
     return {
         getCustomerByEmail: getCustomerByEmail,
@@ -403,7 +421,8 @@ customer.factory('customerFactory', function($http, environment){
         addToFavourite: addToFavourite,
         getFavouriteItems: getFavouriteItems,
         removeFavouriteItem: removeFavouriteItem,
-        requestPasswordResetToken: requestPasswordResetToken
+        requestPasswordResetToken: requestPasswordResetToken,
+        retrieveToken: retrieveToken
     };
 });
 
@@ -436,8 +455,12 @@ customer.config(
         templateUrl: 'customer/forgotten-password.html',
         controller: 'forgetPasswordCtrl'
     }).when('/login/forgotten/confirmation', {
-        templateUrl: 'customer/forgotten-password-confirmation.html',
-        controller: 'forgetPasswordCtrl'
+        templateUrl: 'customer/forgotten-password-confirmation.html'
+    }).when('/login/password', {
+        templateUrl: 'customer/reset-password.html',
+        controller: 'resetPasswordCtrl'
+    }).when('/login/password/token-expired', {
+        templateUrl: 'customer/link-expired.html'
     }).when('/register', {
         templateUrl: 'customer/register.html',
         controller: 'registerCtrl'
