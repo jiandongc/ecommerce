@@ -298,12 +298,20 @@ customer.controller('resetPasswordCtrl', function($scope, customerFactory, $rout
     $scope.validating = true;
     customerFactory.retrieveToken($routeParams.token).then(function(data){
         if (data) {
-            $scope.token = data;
+            $scope.token = data.text;
             $scope.validating = false;
         } else {
            $location.path("/login/password/token-expired"); 
         }
     });
+
+    $scope.submit = function(password, token){
+        $scope.submitting = true;
+        customerFactory.resetPassword(password, token).then(function(data){
+            $scope.submitting = false;
+            $location.path("/login/password/reset-confirmation");
+        });
+    }
 });
 
 customer.factory('customerFactory', function($http, environment){
@@ -408,6 +416,18 @@ customer.factory('customerFactory', function($http, environment){
         });
     };
 
+    var resetPassword = function(password, token){
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+        var passwordResetRequest = {
+            token : token,
+            password: password
+        };
+
+        return $http.post(environment.customerUrl + '/customers/reset-password', passwordResetRequest, configs).then(function(response){
+            return response.data;
+        });
+    };
+
     return {
         getCustomerByEmail: getCustomerByEmail,
         getCustomerById: getCustomerById,
@@ -422,7 +442,8 @@ customer.factory('customerFactory', function($http, environment){
         getFavouriteItems: getFavouriteItems,
         removeFavouriteItem: removeFavouriteItem,
         requestPasswordResetToken: requestPasswordResetToken,
-        retrieveToken: retrieveToken
+        retrieveToken: retrieveToken,
+        resetPassword: resetPassword
     };
 });
 
@@ -461,6 +482,8 @@ customer.config(
         controller: 'resetPasswordCtrl'
     }).when('/login/password/token-expired', {
         templateUrl: 'customer/link-expired.html'
+    }).when('/login/password/reset-confirmation', {
+        templateUrl: 'customer/reset-password-confirmation.html'
     }).when('/register', {
         templateUrl: 'customer/register.html',
         controller: 'registerCtrl'
