@@ -576,6 +576,32 @@ public class CustomerControllerTest extends AbstractControllerTest{
 	}
 
 	@Test
+	public void shouldUpdateCustomerPassword(){
+		// Given
+		Customer customer = new Customer();
+		customer.setName("Name");
+		customer.setEmail("john.smith@gmail.com");
+		customer.setPassword("Password123");
+
+		Customer savedCustomer = customerRepository.save(customer);
+
+		// When
+		this.setUserToken();
+
+		// When
+		final HttpEntity<String> payload = new HttpEntity<>("Password321", headers);
+		final ResponseEntity<Customer> response = rest.exchange(BASE_URL + "/" + savedCustomer.getId() + "/password", PUT, payload, Customer.class);
+
+		// Then
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+
+		Customer updatedCustomer = customerService.findByEmail("john.smith@gmail.com");
+		assertThat(updatedCustomer.getPassword(), is(notNullValue()));
+		assertThat(updatedCustomer.getPassword(), is(not("Password123")));
+
+	}
+
+	@Test
 	public void shouldAddProduct(){
 		// Given
 		Customer customer = new Customer();

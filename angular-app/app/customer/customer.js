@@ -190,18 +190,22 @@ customer.controller('orderDetailsCtrl', function($scope, $routeParams, orderFact
 });
 
 customer.controller('profileEditCtrl', function($scope, $routeParams, $location, $localstorage, customerFactory){
+    $scope.saving = false;
     customerFactory.getCustomerById($routeParams.id).then(function(response){
         $scope.customer = response;
     });
 
-    $scope.updateProfile = function(){
-        customerFactory.update($scope.customer).then(function(data){
+    $scope.update = function(customer){
+        $scope.saving = true;
+        customerFactory.update(customer).then(function(data){
             $scope.error = false;
+            $scope.saving = false;
             $localstorage.set('current_user', data.name);
             $localstorage.set('customer_id', data.id);
-            $location.path("/account/" + data.id);
+            $location.path("/account/" + data.id + "/profile");
         }, function(error){
             $scope.error = true;
+            $scope.saving = false;
             if(error.status === 409){
                 $scope.errorMsg = "This the email address is already used.";
             } else {
@@ -209,6 +213,39 @@ customer.controller('profileEditCtrl', function($scope, $routeParams, $location,
             }
         });
     };
+
+    $scope.cancel = function(){
+        $location.path("/account/" + $scope.customer.id + "/profile");
+    }
+});
+
+customer.controller('passwordUpdateCtrl', function($scope, $routeParams, $location, $localstorage, customerFactory){
+    $scope.updating = false;
+    customerFactory.getCustomerById($routeParams.id).then(function(response){
+        $scope.customer = response;
+    });
+
+    $scope.update = function(password){
+        $scope.updating = true;
+        customerFactory.updatePassword($scope.customer.id, password).then(function(data){
+            $scope.error = false;
+            $localstorage.set('current_user', data.name);
+            $localstorage.set('customer_id', data.id);
+            $location.path("/account/" + data.id + "/profile");
+        }, function(error){
+            $scope.error = true;
+            $scope.updating = false;
+            if(error.status === 409){
+                $scope.errorMsg = "This the email address is already used.";
+            } else {
+                $scope.errorMsg = "Technical error, please contact site admin: jiandong.c@gmail.com";
+            }
+        });
+    };
+
+    $scope.cancel = function(){
+        $location.path("/account/" + $scope.customer.id + "/profile");
+    }
 });
 
 customer.controller('addressBookCtrl', function($scope, $routeParams, $route, customerFactory){
@@ -428,6 +465,13 @@ customer.factory('customerFactory', function($http, environment){
         });
     };
 
+    var updatePassword = function(customerId, password){
+        var configs = {headers: {'Content-Type' : 'application/json'}};
+        return $http.put(environment.customerUrl + '/customers/' + customerId + '/password', password, configs).then(function(response){
+            return response.data;
+        });
+    };
+
     return {
         getCustomerByEmail: getCustomerByEmail,
         getCustomerById: getCustomerById,
@@ -443,7 +487,8 @@ customer.factory('customerFactory', function($http, environment){
         removeFavouriteItem: removeFavouriteItem,
         requestPasswordResetToken: requestPasswordResetToken,
         retrieveToken: retrieveToken,
-        resetPassword: resetPassword
+        resetPassword: resetPassword,
+        updatePassword: updatePassword
     };
 });
 
@@ -493,12 +538,12 @@ customer.config(
     }).when('/account/:id/profile', {
         templateUrl: 'customer/profile.html',
         controller: 'accountCtrl'
-    }).when('/account/:id/edit', {
+    }).when('/account/:id/profile-edit', {
         templateUrl: 'customer/profile-edit.html',
         controller: 'profileEditCtrl'
-    }).when('/account/:id/change-password', {
-        templateUrl: 'customer/password-change.html',
-        controller: 'accountCtrl'
+    }).when('/account/:id/password-update', {
+        templateUrl: 'customer/password-update.html',
+        controller: 'passwordUpdateCtrl'
     }).when('/account/:id/address-book', {
         templateUrl: 'customer/address-book.html',
         controller: 'addressBookCtrl'

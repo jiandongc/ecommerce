@@ -69,6 +69,14 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
+    public Customer updatePassword(long customerId, String password) {
+        final Customer customer = customerRepository.findOne(customerId);
+        customer.setPassword(hashService.generateHash(password));
+        return customer;
+    }
+
+    @Override
+    @Transactional
     public void updatePassword(Token token, String password) {
         Token savedToken = tokenRepository.findByText(token.getText());
         if (savedToken != null) {

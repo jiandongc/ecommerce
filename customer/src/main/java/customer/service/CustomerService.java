@@ -10,6 +10,7 @@ import java.util.List;
 public interface CustomerService {
 	Customer save(Customer customer);
 	Customer update(Customer customer);
+	Customer updatePassword(long customerId, String password);
 	void updatePassword(Token token, String password);
 	Customer findById(Long Id);
 	Customer findByEmail(String email);

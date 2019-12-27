@@ -8,7 +8,7 @@
 	<div class = "row">
 		<div class = "col-xs-12 col-md-6">
 			<div id="error" ng-show="error" class="alert alert-danger width-60">{{errorMsg}}</div>
-			<form name="userform" novalidate>
+			<form name="userform" ng-submit="userform.$valid && update(customer)">
 				<table class="table">
 					<tr>
 						<td>
@@ -46,7 +46,7 @@
 							<div class="p-t-05 required-field">Email </div>
 						</td>
 						<td>
-							<div ng-class="{'has-error': userform.email.$invalid && (userform.email.$touched || userform.$submitted) }">
+							<div ng-class="{'has-error': userform.email.$invalid && (userform.email.$touched || userform.$submitted)}">
 								<input type="text" id="email" name="email" class="form-control" ng-model="customer.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required>
 								<div id="emailMsg" ng-show="userform.email.$touched || userform.$submitted">
 									<p ng-show="userform.email.$error.required" class="help-block">
@@ -57,7 +57,6 @@
 									</p>
 								</div>
 							</div>
-							
 						</td>
 					</tr>
 					<tr>
@@ -78,11 +77,12 @@
 					</tr>
 					<tr>
 						<td colspan="2">
-							<a href="#!/account/{{customer.id}}/profile" class="btn btn-style-primary">Cancel</a>			
-							<a href="" class="btn btn-style-primary" ng-click="updateProfile()">Save Changes</a>
+							<button id="cancelBtn" type="button" class="btn btn-style-primary" ng-click="cancel()">Cancel</button>
+                            <button id="updateBtn" type="submit" class="btn btn-style-primary">
+                                <span ng-show="saving"><i class="glyphicon glyphicon-refresh spinning"></i>&nbsp;</span>Save changes
+                            </button>
 						</td>
 					</tr>
-
 				</table>
 			</form>
 		</div>

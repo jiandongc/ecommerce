@@ -57,6 +57,13 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "{id}/password", method = PUT)
+    public ResponseEntity updatePassword(@PathVariable long id, @RequestBody String password) {
+        final Customer updatedCustomer = customerService.updatePassword(id, password);
+        return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(method = GET)
     public Customer findByEmail(@RequestParam("email") String email) {
         return customerService.findByEmail(email);
