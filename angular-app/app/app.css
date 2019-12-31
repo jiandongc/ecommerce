@@ -113,11 +113,6 @@ html, body {
   margin-bottom: 1.5%
 }
 
-.product-detail .social-icon {
-  width: 200px;
-  margin-bottom: 2%;
-}
-
 .product-detail .color-variant {
   width: 220px;
   margin-bottom: 2%;
@@ -231,34 +226,6 @@ html, body {
     color: #E9E9E9;
     height: auto;
     width: 100%;
-    padding: 1% 0px 1.3%; 
-}
-
-.footerContent {
-    margin: 0px auto;
-}
-
-.footerColumn {
-    float: left;
-    width: 21%;
-    margin: 0px 2% 0px 2%; 
-}
-
-.footerColumn h3 {
-    font-size: 0.8em;
-    font-family: Helvetica,sans-serif;
-    text-transform: uppercase;
-}
-
-.footerColumn ul{
-	font-size: 0.75em;
-	font-family: Arial, Helvetica;
-	list-style-type: none;
-	padding: 0px;
-}
-
-.footerColumn ul li{
-	padding: 0.4em 0px;
 }
 
 /* login page */
@@ -394,6 +361,14 @@ a.link-primary {
 }
 
 a.link-primary:hover {
+  color: #f0c14b;
+}
+
+a.link-secondary {
+  color: #f2f2f2;
+}
+
+a.link-secondary:hover {
   color: #f0c14b;
 }
 
