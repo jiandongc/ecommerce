@@ -11,9 +11,6 @@ import java.util.Optional;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-/**
- * Created by jiandong on 13/11/16.
- */
 
 @RestController
 @RequestMapping("/categories")

@@ -32,7 +32,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private final TestRestTemplate rest = new TestRestTemplate();
 
 	private Category category;
-	private Category anotherCatetory;
+	private Category anotherCategory;
 	private Brand brand;
 	private Image image;
 	private Image image1;
@@ -51,13 +51,13 @@ public class ProductControllerTest extends AbstractControllerTest {
 		category.addCategoryAttribute(CategoryAttribute.builder().key("Color").ordering(0).build());
 		categoryRepository.save(category);
 
-		anotherCatetory = new Category();
-		anotherCatetory.setHidden(false);
-		anotherCatetory.setName("cloth");
-		anotherCatetory.setDescription("beautiful");
-		anotherCatetory.setImageUrl("img/0001.jpg");
-		anotherCatetory.setCode("CL");
-		categoryRepository.save(anotherCatetory);
+		anotherCategory = new Category();
+		anotherCategory.setHidden(false);
+		anotherCategory.setName("cloth");
+		anotherCategory.setDescription("beautiful");
+		anotherCategory.setImageUrl("img/0001.jpg");
+		anotherCategory.setCode("CL");
+		categoryRepository.save(anotherCategory);
 
 		brand = Brand.builder().code("shj").name("ShangHaoJia").build();
 		brandRepository.save(brand);
@@ -154,7 +154,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		final Product productThree = new Product();
 		productThree.setName("Cloth");
 		productThree.setDescription("Cloth description");
-		productThree.setCategory(anotherCatetory);
+		productThree.setCategory(anotherCategory);
 		productRepository.save(productThree);
 
 		// When & Then

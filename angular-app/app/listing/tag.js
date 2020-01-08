@@ -13,12 +13,12 @@ productTag.controller('tagsCtrl', function($scope, $routeParams, productFactory)
 
 	$scope.sortby = function(display, sortcode){
 		$scope.loading = true;
-    $scope.sort = {display: display, code: sortcode};
-    productFactory.getProductsWithTagInOrder($scope.code, sortcode).then(function(response){
+    	$scope.sort = {display: display, code: sortcode};
+    	productFactory.getProductsWithTagInOrder($scope.code, sortcode).then(function(response){
 			$scope.products = response;
 			$scope.loading = false;
 		});
-  }
+  	}
 
 });
 

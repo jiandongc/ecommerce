@@ -42,7 +42,12 @@ public class DataSetup extends AbstractRepositoryTest {
         Category ysqg = Category.builder().name("饮料 酸梅汤 汽水 果汁").code("ysqg").parent(yrcc).build();
         categoryRepository.save(ysqg);
 
-        Brand vitasoy = Brand.builder().name("VITASOY维他奶").code("vitasoy").build();
+        Brand vitasoy = Brand.builder()
+                .name("VITASOY维他奶")
+                .code("vitasoy")
+                .imageUrl("/images/brand/brand-vitasoy.png")
+                .description("维他奶（英文：Vitasoy）1940年至今，是香港家喻户晓的饮料品牌，该豆奶饮料自1940年开始在香港生产，现时生产厂房遍及中国大陆、香港、澳大利亚和美国。\n" +
+                "维他奶包括果汁、牛奶、茶类饮品，汽水、蒸馏水及豆腐等产品的品牌。").build();
         brandRepository.save(vitasoy);
 
         addProduct(
@@ -243,7 +248,13 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
         );
 
-        Brand lays = Brand.builder().name("Lay's乐事").code("lay-s").build();
+        Brand lays = Brand.builder()
+                .name("Lay's乐事")
+                .code("lay-s")
+                .imageUrl("/images/brand/lays.png")
+                .description("乐事（Lay's，台灣初使用波卡（POCA）品牌、於英国與爱尔兰称为Walkers、埃及称为Chipsy、越南称为Poca、以色列称为Tapuchips、墨西哥称为Sabritas），" +
+                        "是一种马铃薯片系列的商品名，也是一个创立于1938年的马铃薯片的品牌。自1965年起乐事薯片作为百事公司所拥有的菲多利的子品牌销售。其他菲多利旗下的商品包含多力多滋、波乐、奇多等。")
+                .build();
         brandRepository.save(lays);
 
         addProduct(
@@ -257,6 +268,22 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(3.29)),
                 Arrays.asList(
                         ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build()
+                ),
+                Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
+        );
+
+        addProduct(
+                msxdm,
+                lays,
+                "1017003872",
+                Arrays.asList("1017003872"),
+                "Lay's Classic Potato Chips - 15.75oz",
+                100,
+                Arrays.asList("/images/1017003872.webp"),
+                Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
+                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
         );

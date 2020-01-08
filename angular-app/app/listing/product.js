@@ -159,12 +159,27 @@ productDetail.factory('productFactory', function($http, environment){
     });
   }
 
+  var getProductsWithBrand = function(brand){
+    return $http.get(environment.productUrl + '/products?br=' + brand).then(function(response){
+      return response.data;
+    });
+  }
+
+  var getProductsWithBrandInOrder = function(brand, sort){
+    return $http.get(environment.productUrl + '/products?br=' + brand + '&sort=' + sort).then(function(response){
+      return response.data;
+    });
+  }
+
+
   return {
     getProductWithCode: getProductWithCode,
     getProductWithColorVariants: getProductWithColorVariants,
     getProductsWithTag: getProductsWithTag,
     getProductsWithTagInCategory: getProductsWithTagInCategory,
-    getProductsWithTagInOrder: getProductsWithTagInOrder
+    getProductsWithTagInOrder: getProductsWithTagInOrder,
+    getProductsWithBrand: getProductsWithBrand,
+    getProductsWithBrandInOrder: getProductsWithBrandInOrder
   }
 });
 
