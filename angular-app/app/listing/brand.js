@@ -3,6 +3,7 @@ var brand = angular.module('brand', ['ngRoute']);
 brand.controller('brandCtl', function($scope, $routeParams, brandFactory, productFactory) {
 	brandFactory.getBrandWithCode($routeParams.code).then(function(response){
 		$scope.brand = response;
+		$scope.brand.imageUrl = $scope.brand.imageUrl ? $scope.brand.imageUrl : '/images/brand/notfound.png';
 	});
 
 	$scope.loading = true;
