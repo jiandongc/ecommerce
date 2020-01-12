@@ -121,10 +121,10 @@ public class ProductTest {
     public void shouldGetValidDisplayTags(){
         // Given
         final Product product = new Product();
-        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).build());
-        product.addTag(ProductTag.builder().tag("popular").code("popular").startDate(LocalDate.now().minusDays(1)).build());
-        product.addTag(ProductTag.builder().tag("future").code("future").startDate(LocalDate.now().plusDays(1)).build());
-        product.addTag(ProductTag.builder().tag("past").code("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("sale").startDate(LocalDate.now()).build());
+        product.addTag(ProductTag.builder().tag("popular").startDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("future").startDate(LocalDate.now().plusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
 
         // When
         List<ProductTag> validTags = product.getValidTags();
@@ -139,10 +139,10 @@ public class ProductTest {
     public void shouldReturnTrueIfProductHasTag(){
         // Given
         final Product product = new Product();
-        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).build());
-        product.addTag(ProductTag.builder().tag("popular").code("popular").startDate(LocalDate.now().minusDays(1)).build());
-        product.addTag(ProductTag.builder().tag("future").code("future").startDate(LocalDate.now().plusDays(1)).build());
-        product.addTag(ProductTag.builder().tag("past").code("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("sale").startDate(LocalDate.now()).build());
+        product.addTag(ProductTag.builder().tag("popular").startDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("future").startDate(LocalDate.now().plusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
 
         // Then
         assertThat(product.hasTag(Arrays.asList("sale")), is(true));
@@ -159,10 +159,10 @@ public class ProductTest {
     public void shouldReturnFalseIfProductHasNoTag(){
         // Given
         final Product product = new Product();
-        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).build());
-        product.addTag(ProductTag.builder().tag("popular").code("popular").startDate(LocalDate.now().minusDays(1)).build());
-        product.addTag(ProductTag.builder().tag("future").code("future").startDate(LocalDate.now().plusDays(1)).build());
-        product.addTag(ProductTag.builder().tag("past").code("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("sale").startDate(LocalDate.now()).build());
+        product.addTag(ProductTag.builder().tag("popular").startDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("future").startDate(LocalDate.now().plusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
 
         assertThat(product.hasTag(Arrays.asList("future")), is(false));
         assertThat(product.hasTag(Arrays.asList("past")), is(false));

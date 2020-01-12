@@ -60,8 +60,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1110003496.webp", "/images/1110003496-1.webp"),
                 Arrays.asList(BigDecimal.valueOf(4.09)),
                 Arrays.asList(
-                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Collections.emptyList()
         );
@@ -82,8 +82,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1110003493.webp"),
                 Arrays.asList(BigDecimal.valueOf(1.04)),
                 Arrays.asList(
-                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Collections.emptyList()
         );
@@ -104,8 +104,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1110003495.webp"),
                 Arrays.asList(BigDecimal.valueOf(7.79)),
                 Arrays.asList(
-                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Collections.emptyList()
         );
@@ -126,8 +126,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1110003494.webp", "/images/1110003494-1.webp"),
                 Arrays.asList(BigDecimal.valueOf(37.99), BigDecimal.valueOf(34.99)),
                 Arrays.asList(
-                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Collections.emptyList()
         );
@@ -192,8 +192,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1017004481.webp", "/images/1017004481-1.webp", "/images/1017004481-2.webp", "/images/1017004481-3.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
                 Arrays.asList(
-                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("light").build())
         );
@@ -211,8 +211,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1017016711.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.59)),
                 Arrays.asList(
-                        ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                        ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
         );
@@ -229,7 +229,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 100,
                 Arrays.asList("/images/3017008651.webp"),
                 Arrays.asList(BigDecimal.valueOf(16)),
-                Arrays.asList(ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()),
+                Arrays.asList(ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
         );
 
@@ -243,7 +243,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1017000211.webp"),
                 Arrays.asList(BigDecimal.valueOf(1.39)),
                 Arrays.asList(
-                        ProductTag.builder().tag("促销").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
                 ),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
         );
@@ -267,7 +267,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1017003871.webp"),
                 Arrays.asList(BigDecimal.valueOf(3.29)),
                 Arrays.asList(
-                        ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build()
+                        ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build()
                 ),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
         );
@@ -282,8 +282,8 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("/images/1017003872.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
                 Arrays.asList(
-                        ProductTag.builder().tag("学生最爱").code("studentFav").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
-                        ProductTag.builder().tag("新款到货").code("new").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                        ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
         );

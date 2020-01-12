@@ -219,22 +219,22 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
-		productOne.addTag(ProductTag.builder().code("sale").tag("SALE").startDate(LocalDate.now()).build());
-		productOne.addTag(ProductTag.builder().code("popular").tag("POPULAR").startDate(LocalDate.now()).build());
+		productOne.addTag(ProductTag.builder().tag("SALE").startDate(LocalDate.now()).build());
+		productOne.addTag(ProductTag.builder().tag("POPULAR").startDate(LocalDate.now()).build());
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
 		productTwo.setName("Shoes");
 		productTwo.setDescription("Shoes description");
 		productTwo.setCategory(category);
-		productTwo.addTag(ProductTag.builder().code("sale").tag("SALE").startDate(LocalDate.now()).build());
+		productTwo.addTag(ProductTag.builder().tag("SALE").startDate(LocalDate.now()).build());
 		productRepository.save(productTwo);
 
 		final Product productThree = new Product();
 		productThree.setName("Cloth");
 		productThree.setDescription("Cloth description");
 		productThree.setCategory(category);
-		productThree.addTag(ProductTag.builder().code("season").tag("SEASON").startDate(LocalDate.now()).build());
+		productThree.addTag(ProductTag.builder().tag("SEASON").startDate(LocalDate.now()).build());
 		productRepository.save(productThree);
 
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -305,8 +305,8 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
-		productOne.addTag(ProductTag.builder().code("sale").tag("SALE").startDate(LocalDate.now()).build());
-		productOne.addTag(ProductTag.builder().code("popular").tag("POPULAR").startDate(LocalDate.now()).build());
+		productOne.addTag(ProductTag.builder().tag("SALE").startDate(LocalDate.now()).build());
+		productOne.addTag(ProductTag.builder().tag("POPULAR").startDate(LocalDate.now()).build());
 		productOne.addSku(sku);
 		productOne.setBrand(nike);
 

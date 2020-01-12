@@ -169,7 +169,7 @@ public class Product {
 
         for (int i = 0; i < validTags.size(); i++) {
             for (String tag: tags) {
-                if (tag.equalsIgnoreCase(validTags.get(i).getCode())) {
+                if (tag.equalsIgnoreCase(validTags.get(i).getTag())) {
                     return true;
                 }
             }

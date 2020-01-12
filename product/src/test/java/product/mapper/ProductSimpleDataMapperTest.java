@@ -54,7 +54,7 @@ public class ProductSimpleDataMapperTest {
         sku2.setSku("FD10039403_Y");
         product.addSku(sku2);
 
-        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build());
+        product.addTag(ProductTag.builder().tag("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build());
 
         // When
         final ProductSimpleData actual = mapper.map(product);
@@ -62,7 +62,6 @@ public class ProductSimpleDataMapperTest {
         // Then
         final List<Map<String, String>> tags = new ArrayList<>();
         final Map<String, String> saleTag = new HashMap<>();
-        saleTag.put("code", "sale");
         saleTag.put("tag", "sale");
         saleTag.put("colorHex", "#F0C14B");
         tags.add(saleTag);

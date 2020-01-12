@@ -62,10 +62,10 @@ public class ProductDataMapperTest {
         sku2.addAttribute(SkuAttribute.builder().key("Size").value("XXL").build());
         product.addSku(sku2);
 
-        product.addTag(ProductTag.builder().tag("sale").code("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build());
-        product.addTag(ProductTag.builder().tag("popular").code("popular").startDate(LocalDate.now().minusDays(1)).colorHex("#C1F04B").build());
-        product.addTag(ProductTag.builder().tag("future").code("future").startDate(LocalDate.now().plusDays(1)).build());
-        product.addTag(ProductTag.builder().tag("past").code("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("sale").startDate(LocalDate.now()).colorHex("#F0C14B").build());
+        product.addTag(ProductTag.builder().tag("popular").startDate(LocalDate.now().minusDays(1)).colorHex("#C1F04B").build());
+        product.addTag(ProductTag.builder().tag("future").startDate(LocalDate.now().plusDays(1)).build());
+        product.addTag(ProductTag.builder().tag("past").startDate(LocalDate.now().minusDays(5)).endDate(LocalDate.now().minusDays(1)).build());
 
         // When
         final ProductData actual = mapper.getValue(product);
@@ -101,12 +101,10 @@ public class ProductDataMapperTest {
         brand.put("code", "abc");
         final List<Map<String, String>> tags = new ArrayList<>();
         final Map<String, String> saleTag = new HashMap<>();
-        saleTag.put("code", "sale");
         saleTag.put("tag", "sale");
         saleTag.put("colorHex", "#F0C14B");
         tags.add(saleTag);
         final Map<String, String> popularTag = new HashMap<>();
-        popularTag.put("code", "popular");
         popularTag.put("tag", "popular");
         popularTag.put("colorHex", "#C1F04B");
         tags.add(popularTag);

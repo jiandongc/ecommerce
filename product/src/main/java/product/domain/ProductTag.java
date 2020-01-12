@@ -22,9 +22,6 @@ public class ProductTag {
     @Column(name = "id")
     private long id;
 
-    @Column(name = "code")
-    private String code;
-
     @Column(name = "tag")
     private String tag;
 
@@ -45,7 +42,6 @@ public class ProductTag {
 
     public Map<String, String> getAsMap(){
         Map<String, String> map = new HashMap<>();
-        map.put("code", this.code);
         map.put("tag", this.tag);
         map.put("colorHex", this.colorHex);
         return map;
