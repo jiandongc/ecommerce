@@ -32,4 +32,10 @@ public class BrandController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @RequestMapping(method= RequestMethod.GET)
+    public ResponseEntity findAll(){
+        return new ResponseEntity<>(brandService.findAll(), HttpStatus.OK);
+    }
+
 }
