@@ -25,7 +25,17 @@ brand.controller('brandCtl', function($scope, $routeParams, brandFactory, produc
 			$scope.loading = false;
 		});
   	}
+});
 
+brand.controller('brandListCtl', function($scope, brandFactory) {
+	$scope.loading = true;
+	brandFactory.getAllBrands().then(function(response){
+		$scope.brands = response;
+		for (var i in $scope.brands) {
+      		$scope.brands[i].imageUrl = $scope.brands[i].imageUrl ? $scope.brands[i].imageUrl : '/images/brand/notfound.png';
+    	}
+    	$scope.loading = false;
+	});
 });
 
 brand.factory('brandFactory', function($http, environment){
@@ -35,16 +45,26 @@ brand.factory('brandFactory', function($http, environment){
     });
   }
 
+  var getAllBrands = function(){
+    return $http.get(environment.productUrl + '/brands').then(function(response){
+      return response.data;
+    });  	
+  }
+
   return {
-    getBrandWithCode: getBrandWithCode
+    getBrandWithCode: getBrandWithCode,
+    getAllBrands: getAllBrands
   }
 });
 
 brand.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
-      when('/brand/:code', {
+      when('/brands/:code', {
         templateUrl: 'listing/brand.html',
         controller: 'brandCtl'
+      }).when('/brands', {
+        templateUrl: 'listing/brand-list.html',
+        controller: 'brandListCtl'
       });
   }]);

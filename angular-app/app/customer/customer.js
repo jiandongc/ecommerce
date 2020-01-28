@@ -512,7 +512,6 @@ customer.directive('passwordMatch', [function () {
 
 customer.config(
   function($routeProvider) {
-
     $routeProvider.
     when('/login', {
         templateUrl: 'customer/login.html',

@@ -1,6 +1,6 @@
 var productTag = angular.module('productTag', ['ngRoute']);
 
-productTag.controller('tagsCtrl', function($scope, $routeParams, productFactory) {
+productTag.controller('tagCtrl', function($scope, $routeParams, productFactory) {
 	$scope.loading = true;
 	$scope.tag = $routeParams.tag;
 	$scope.sort = {display: "Our favourites", code: undefined};
@@ -37,14 +37,37 @@ productTag.controller('tagsCtrl', function($scope, $routeParams, productFactory)
           	});
       	}
     }
+});
 
+productTag.controller('tagListCtrl', function($scope, tagFactory) {
+	$scope.loading = true;
+	tagFactory.getAllTags().then(function(response){
+		$scope.tags = response;
+		$scope.loading = false;
+	});
+});
+
+productTag.factory('tagFactory', function($http, environment){
+
+  var getAllTags = function(){
+    return $http.get(environment.productUrl + '/tags').then(function(response){
+      return response.data;
+    });  	
+  }
+
+  return {
+    getAllTags: getAllTags
+  }
 });
 
 productTag.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/tags/:tag', {
-        templateUrl: 'listing/tags.html',
-        controller: 'tagsCtrl'
+        templateUrl: 'listing/tag.html',
+        controller: 'tagCtrl'
+      }).when('/tags', {
+        templateUrl: 'listing/tag-list.html',
+        controller: 'tagListCtrl'
       });
   }]);

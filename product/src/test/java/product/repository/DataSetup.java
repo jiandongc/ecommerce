@@ -47,7 +47,9 @@ public class DataSetup extends AbstractRepositoryTest {
                 .code("vitasoy")
                 .imageUrl("/images/brand/brand-vitasoy.png")
                 .description("维他奶（英文：Vitasoy）1940年至今，是香港家喻户晓的饮料品牌，该豆奶饮料自1940年开始在香港生产，现时生产厂房遍及中国大陆、香港、澳大利亚和美国。\n" +
-                "维他奶包括果汁、牛奶、茶类饮品，汽水、蒸馏水及豆腐等产品的品牌。").build();
+                "维他奶包括果汁、牛奶、茶类饮品，汽水、蒸馏水及豆腐等产品的品牌。")
+                .startDate(LocalDate.now())
+                .build();
         brandRepository.save(vitasoy);
 
         addProduct(
@@ -69,7 +71,7 @@ public class DataSetup extends AbstractRepositoryTest {
         Category drny = Category.builder().name("豆奶 乳制品 奶茶 椰奶").code("drny").parent(yrcc).build();
         categoryRepository.save(drny);
 
-        Brand royalboat = Brand.builder().name("泰国ROYAL BOAT").code("royalboat").build();
+        Brand royalboat = Brand.builder().name("泰国ROYAL BOAT").code("royalboat").startDate(LocalDate.now()).build();
         brandRepository.save(royalboat);
 
         addProduct(
@@ -91,7 +93,7 @@ public class DataSetup extends AbstractRepositoryTest {
         Category cmzy = Category.builder().name("冲饮 麦片 芝麻糊 柚子蜜").code("cmzy").parent(yrcc).build();
         categoryRepository.save(cmzy);
 
-        Brand nf = Brand.builder().name("南方").code("nf").build();
+        Brand nf = Brand.builder().name("南方").code("nf").startDate(LocalDate.now()).build();
         brandRepository.save(nf);
 
         addProduct(
@@ -113,7 +115,7 @@ public class DataSetup extends AbstractRepositoryTest {
         Category cck = Category.builder().name("茶叶 茶包 咖啡").code("cck").parent(yrcc).build();
         categoryRepository.save(cck);
 
-        Brand sdb = Brand.builder().name("三顿半").code("sdb").build();
+        Brand sdb = Brand.builder().name("三顿半").code("sdb").startDate(LocalDate.now()).build();
         brandRepository.save(sdb);
 
         addProduct(
@@ -179,7 +181,7 @@ public class DataSetup extends AbstractRepositoryTest {
         Category msxdm = Category.builder().name("膨化 薯片 虾条 点心面 米果").code("msxdm").parent(xps).build();
         categoryRepository.save(msxdm);
 
-        Brand haitai = Brand.builder().name("HAITAI海太").code("haitai").build();
+        Brand haitai = Brand.builder().name("HAITAI海太").code("haitai").startDate(LocalDate.now()).build();
         brandRepository.save(haitai);
 
         addProduct(
@@ -198,7 +200,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("light").build())
         );
 
-        Brand aiyomi = Brand.builder().name("小梅的零食").code("aiyomi").build();
+        Brand aiyomi = Brand.builder().name("小梅的零食").code("aiyomi").startDate(LocalDate.now()).build();
         brandRepository.save(aiyomi);
 
         addProduct(
@@ -217,7 +219,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
         );
 
-        Brand calbee = Brand.builder().name("卡乐B").code("calbee").build();
+        Brand calbee = Brand.builder().name("卡乐B").code("calbee").startDate(LocalDate.now()).build();
         brandRepository.save(calbee);
 
         addProduct(
@@ -254,6 +256,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 .imageUrl("/images/brand/lays.png")
                 .description("乐事（Lay's，台灣初使用波卡（POCA）品牌、於英国與爱尔兰称为Walkers、埃及称为Chipsy、越南称为Poca、以色列称为Tapuchips、墨西哥称为Sabritas），" +
                         "是一种马铃薯片系列的商品名，也是一个创立于1938年的马铃薯片的品牌。自1965年起乐事薯片作为百事公司所拥有的菲多利的子品牌销售。其他菲多利旗下的商品包含多力多滋、波乐、奇多等。")
+                .startDate(LocalDate.now())
                 .build();
         brandRepository.save(lays);
 
