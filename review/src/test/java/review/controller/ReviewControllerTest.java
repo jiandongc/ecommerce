@@ -8,7 +8,7 @@ import org.springframework.util.StringUtils;
 import review.domain.Answer;
 import review.domain.Feedback;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldFindFeedbackById(){
-        Feedback savedFeedbck = feedbackRepository.save(Feedback.builder().text("love your website").creationDate(LocalDate.now()).build());
+        Feedback savedFeedbck = feedbackRepository.save(Feedback.builder().text("love your website").creationTime(LocalDateTime.now()).build());
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         final ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id(), GET, httpEntity, String.class);
         assertThat(response.getStatusCode(), is(OK));
@@ -46,7 +46,7 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldAddAnswerToFeedback(){
-        Feedback savedFeedbck = feedbackRepository.save(Feedback.builder().text("love your website").creationDate(LocalDate.now()).build());
+        Feedback savedFeedbck = feedbackRepository.save(Feedback.builder().text("love your website").creationTime(LocalDateTime.now()).build());
         final String answerJson = "{\"text\": \"thank you\"}";
         final HttpEntity<String> payload = new HttpEntity<String>(answerJson, headers);
         final ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id(), PUT, payload, String.class);
@@ -59,7 +59,7 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldAddVoteToFeedback(){
-        Feedback savedFeedbck = feedbackRepository.save(Feedback.builder().text("love your website").creationDate(LocalDate.now()).build());
+        Feedback savedFeedbck = feedbackRepository.save(Feedback.builder().text("love your website").creationTime(LocalDateTime.now()).build());
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
 
         ResponseEntity<String> response = rest.exchange(BASE_URL + "/" + savedFeedbck.get_id() + "/vote", POST, httpEntity, String.class);
@@ -83,10 +83,10 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldOrderFeedbackByVoteCountInDesc(){
-        feedbackRepository.save(Feedback.builder().text("vote 0").vote(0).creationDate(LocalDate.now()).build());
-        feedbackRepository.save(Feedback.builder().text("vote 3").vote(3).creationDate(LocalDate.now()).build());
-        feedbackRepository.save(Feedback.builder().text("vote 1").vote(1).creationDate(LocalDate.now()).build());
-        feedbackRepository.save(Feedback.builder().text("vote 2").vote(2).creationDate(LocalDate.now()).build());
+        feedbackRepository.save(Feedback.builder().text("vote 0").vote(0).creationTime(LocalDateTime.now()).build());
+        feedbackRepository.save(Feedback.builder().text("vote 3").vote(3).creationTime(LocalDateTime.now()).build());
+        feedbackRepository.save(Feedback.builder().text("vote 1").vote(1).creationTime(LocalDateTime.now()).build());
+        feedbackRepository.save(Feedback.builder().text("vote 2").vote(2).creationTime(LocalDateTime.now()).build());
 
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         final ResponseEntity<String> response = rest.exchange(BASE_URL + "?sort=vote.desc", GET, httpEntity, String.class);
@@ -99,10 +99,10 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldOrderFeedbackByCreationDateInDesc(){
-        feedbackRepository.save(Feedback.builder().text("second earliest").vote(0).creationDate(LocalDate.now().minusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("most recent").vote(0).creationDate(LocalDate.now().plusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("second most recent").vote(0).creationDate(LocalDate.now()).build());
-        feedbackRepository.save(Feedback.builder().text("earliest").vote(0).creationDate(LocalDate.now().minusDays(4L)).build());
+        feedbackRepository.save(Feedback.builder().text("second earliest").vote(0).creationTime(LocalDateTime.now().minusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("most recent").vote(0).creationTime(LocalDateTime.now().plusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("second most recent").vote(0).creationTime(LocalDateTime.now()).build());
+        feedbackRepository.save(Feedback.builder().text("earliest").vote(0).creationTime(LocalDateTime.now().minusDays(4L)).build());
 
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         final ResponseEntity<String> response = rest.exchange(BASE_URL + "?sort=date.desc", GET, httpEntity, String.class);
@@ -115,10 +115,10 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldReturnFeedbackContainsText(){
-        feedbackRepository.save(Feedback.builder().text("blue dog").vote(0).creationDate(LocalDate.now().minusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("red dog").vote(0).creationDate(LocalDate.now().plusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("blue cat").vote(0).creationDate(LocalDate.now()).build());
-        feedbackRepository.save(Feedback.builder().text("red cat").vote(0).creationDate(LocalDate.now().minusDays(4L)).build());
+        feedbackRepository.save(Feedback.builder().text("blue dog").vote(0).creationTime(LocalDateTime.now().minusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("red dog").vote(0).creationTime(LocalDateTime.now().plusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("blue cat").vote(0).creationTime(LocalDateTime.now()).build());
+        feedbackRepository.save(Feedback.builder().text("red cat").vote(0).creationTime(LocalDateTime.now().minusDays(4L)).build());
 
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<String> response = rest.exchange(BASE_URL + "?text=dog", GET, httpEntity, String.class);
@@ -163,18 +163,18 @@ public class ReviewControllerTest extends AbstractControllerTest {
         feedbackRepository.save(
                 Feedback.builder()
                         .vote(0)
-                        .creationDate(LocalDate.now().minusDays(1L))
+                        .creationTime(LocalDateTime.now().minusDays(1L))
                         .answers(Arrays.asList(Answer.builder()
-                                .text("dog").creationDate(LocalDate.now()).build()))
+                                .text("dog").creationTime(LocalDateTime.now()).build()))
                         .build()
         );
 
         feedbackRepository.save(
                 Feedback.builder()
                         .vote(0)
-                        .creationDate(LocalDate.now().minusDays(1L))
+                        .creationTime(LocalDateTime.now().minusDays(1L))
                         .answers(Arrays.asList(Answer.builder()
-                                .text("cat").creationDate(LocalDate.now()).build()))
+                                .text("cat").creationTime(LocalDateTime.now()).build()))
                         .build()
         );
 
@@ -194,10 +194,10 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldReturnPaginatedItem(){
-        feedbackRepository.save(Feedback.builder().text("one").vote(1).creationDate(LocalDate.now().minusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("two").vote(2).creationDate(LocalDate.now().plusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("three").vote(3).creationDate(LocalDate.now()).build());
-        feedbackRepository.save(Feedback.builder().text("four").vote(4).creationDate(LocalDate.now().minusDays(4L)).build());
+        feedbackRepository.save(Feedback.builder().text("one").vote(1).creationTime(LocalDateTime.now().minusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("two").vote(2).creationTime(LocalDateTime.now().plusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("three").vote(3).creationTime(LocalDateTime.now()).build());
+        feedbackRepository.save(Feedback.builder().text("four").vote(4).creationTime(LocalDateTime.now().minusDays(4L)).build());
 
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<String> response = rest.exchange(BASE_URL + "?sort=vote.desc&limit=1&offset=0", GET, httpEntity, String.class);
@@ -271,11 +271,11 @@ public class ReviewControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldReturnPaginatedItemTwo() {
-        feedbackRepository.save(Feedback.builder().text("one").vote(1).creationDate(LocalDate.now().minusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("two").vote(2).creationDate(LocalDate.now().plusDays(1L)).build());
-        feedbackRepository.save(Feedback.builder().text("three").vote(3).creationDate(LocalDate.now()).build());
-        feedbackRepository.save(Feedback.builder().text("four").vote(4).creationDate(LocalDate.now().minusDays(4L)).build());
-        feedbackRepository.save(Feedback.builder().text("five").vote(5).creationDate(LocalDate.now().minusDays(4L)).build());
+        feedbackRepository.save(Feedback.builder().text("one").vote(1).creationTime(LocalDateTime.now().minusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("two").vote(2).creationTime(LocalDateTime.now().plusDays(1L)).build());
+        feedbackRepository.save(Feedback.builder().text("three").vote(3).creationTime(LocalDateTime.now()).build());
+        feedbackRepository.save(Feedback.builder().text("four").vote(4).creationTime(LocalDateTime.now().minusDays(4L)).build());
+        feedbackRepository.save(Feedback.builder().text("five").vote(5).creationTime(LocalDateTime.now().minusDays(4L)).build());
 
         final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
         ResponseEntity<String> response = rest.exchange(BASE_URL + "?sort=vote.desc&limit=2&offset=0", GET, httpEntity, String.class);

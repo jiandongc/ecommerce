@@ -10,7 +10,7 @@ import review.domain.Answer;
 import review.domain.Feedback;
 import review.repository.FeedbackRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -48,7 +48,7 @@ public class ReviewController {
         }
 
         if (sort != null && sort.equalsIgnoreCase("date.desc")) {
-            feedback = feedback.stream().sorted(Comparator.comparing(Feedback::getCreationDate).reversed()).collect(Collectors.toList());
+            feedback = feedback.stream().sorted(Comparator.comparing(Feedback::getCreationTime).reversed()).collect(Collectors.toList());
         }
 
         if (limit != null && offset != null && offset < feedback.size()) {
@@ -72,7 +72,7 @@ public class ReviewController {
     public ResponseEntity addAnswer(@PathVariable("id") ObjectId id, @RequestBody Answer answer) {
         Feedback feedback = feedbackRepository.findBy_id(id);
         if (feedback != null) {
-            answer.setCreationDate(LocalDate.now());
+            answer.setCreationTime(LocalDateTime.now());
             feedback.addAnswer(answer);
             Feedback updated = feedbackRepository.save(feedback);
             return new ResponseEntity<>(updated, HttpStatus.OK);
@@ -97,7 +97,7 @@ public class ReviewController {
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(method = RequestMethod.POST)
     public Feedback createFeedback(@RequestBody Feedback feedback) {
-        feedback.setCreationDate(LocalDate.now());
+        feedback.setCreationTime(LocalDateTime.now());
         feedbackRepository.save(feedback);
         return feedback;
     }

@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +28,7 @@ public class Feedback {
     private int vote;
 
     @JsonSerialize(using = ToStringSerializer.class)
-    private LocalDate creationDate;
+    private LocalDateTime creationTime;
 
     private List<Answer> answers;
 
