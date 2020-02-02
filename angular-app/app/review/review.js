@@ -132,7 +132,7 @@ review.factory('reviewFactory', function($http, environment){
 });
 
 review.component('postfeedback', {
-  templateUrl: 'component/post_feedback.html',
+  templateUrl: 'component/post-feedback.html',
   controller: function($scope, $location, reviewFactory){
 
   	reviewFactory.getFeedback(undefined, undefined, 0, 1).then(function(response){
@@ -140,8 +140,12 @@ review.component('postfeedback', {
   	});
 
     $scope.addFeedback = function(feedback){
+    	if(typeof feedback === "undefined"){
+    		return;
+    	}
+
     	reviewFactory.addFeedback(feedback).then(function(response){
-      		$location.path("/feedback_received/" + response._id);
+      		$location.path("/feedback-received/" + response._id);
     	});
   	}	
   },
@@ -151,8 +155,8 @@ review.component('postfeedback', {
 review.config(
   function($routeProvider) {
     $routeProvider
-    .when('/feedback_received/:feedbackId', {
-    	templateUrl: 'review/feedback_received.html',
+    .when('/feedback-received/:feedbackId', {
+    	templateUrl: 'review/feedback-received.html',
         controller: 'feedbackReceivedCtrl'})
     .when('/feedback', {
     	templateUrl: 'review/feedback.html',

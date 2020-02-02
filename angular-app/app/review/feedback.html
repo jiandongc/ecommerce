@@ -23,7 +23,7 @@
     </div>
     <div ng-hide="loading" class="row p-25" ng-repeat="item in data.feedback">
         <div class="col-xs-12 underline">
-            <span class="color-grey pull-right">{{item.creationDate}}</span>
+            <span class="color-grey pull-right">{{item.creationTime | date:'yyyy-MM-dd @ h:mma'}}</span>
         </div>
         <div class="col-xs-12 p-b-10 p-t-10">
             <span class="color-cream-can fw-bold">Q: </span>
