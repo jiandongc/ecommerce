@@ -29,7 +29,7 @@ public class OrderServiceImplTest {
     public void shouldReturnOrders() {
         // Given
         Order orderOne = new Order();
-        orderOne.addOrderStatus(OrderStatus.builder().status("Placed").build());
+        orderOne.addOrderStatus(OrderStatus.builder().status("Created").build());
         Order orderTwo = new Order();
         orderTwo.addOrderStatus(OrderStatus.builder().status("Processing").build());
         Order orderThree = new Order();
@@ -45,7 +45,7 @@ public class OrderServiceImplTest {
 
         // Then
         assertThat(openOrders.size(), CoreMatchers.is(3));
-        assertThat(openOrders.get(0).getCurrentStatus(), CoreMatchers.is("Placed"));
+        assertThat(openOrders.get(0).getCurrentStatus(), CoreMatchers.is("Created"));
         assertThat(openOrders.get(1).getCurrentStatus(), CoreMatchers.is("Processing"));
         assertThat(openOrders.get(2).getCurrentStatus(), CoreMatchers.is("Shipped"));
 

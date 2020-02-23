@@ -127,6 +127,12 @@ cart.factory('shoppingCartFactory', function($http, environment){
       }); 
   };
 
+  var downloadStripeClientSecret = function(cartUid){
+      return $http.get(environment.shoppingCartUrl + '/carts/stripe/' + cartUid).then(function(response){
+        return response.data;
+      }); 
+  };
+
   return {
     updateCustomerId: updateCustomerId,
     updateEmail: updateEmail,
@@ -142,7 +148,8 @@ cart.factory('shoppingCartFactory', function($http, environment){
     getDeliveryOption: getDeliveryOption,
     getSageMerchantKey: getSageMerchantKey,
     submitTrnsactionToSage: submitTrnsactionToSage,
-    getOrderData: getOrderData
+    getOrderData: getOrderData,
+    downloadStripeClientSecret: downloadStripeClientSecret
   }
 });
 

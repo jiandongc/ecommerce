@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
@@ -139,6 +140,16 @@ public class Order {
 
         this.orderStatuses.add(orderStatus);
         orderStatus.setOrder(this);
+    }
+
+    @JsonIgnore
+    public Optional<OrderAddress> getBillingAddress() {
+        return this.orderAddresses.stream().filter(address -> address.getAddressType().equalsIgnoreCase("Billing")).findFirst();
+    }
+
+    @JsonIgnore
+    public Optional<OrderAddress> getShippingAddress() {
+        return this.orderAddresses.stream().filter(address -> address.getAddressType().equalsIgnoreCase("Shipping")).findFirst();
     }
 
     @JsonIgnore

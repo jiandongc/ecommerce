@@ -26,10 +26,17 @@ order.factory('orderFactory', function($http, environment){
       });
   }
 
+  var downloadStripeClientSecret = function(orderNumber, shoppingCartUid){
+      return $http.get(environment.orderUrl + '/orders/stripe/' + orderNumber + "/" + shoppingCartUid).then(function(response){
+        return response.data;
+      }); 
+  };
+
 	return {
     	createOrder: createOrder,
     	addOrderStatus: addOrderStatus,
     	getOrderByNumber: getOrderByNumber,
-      getOrderByCustomerId: getOrderByCustomerId
+      getOrderByCustomerId: getOrderByCustomerId,
+      downloadStripeClientSecret: downloadStripeClientSecret
   	}
 });

@@ -115,8 +115,8 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(orderOptional.get().getOrderItems().size(), is(2));
         assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
         assertThat(orderOptional.get().getOrderStatuses().size(), is(1));
-        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("Placed"));
-        assertThat(orderOptional.get().getCurrentStatus(), is("Placed"));
+        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("CREATED"));
+        assertThat(orderOptional.get().getCurrentStatus(), is("CREATED"));
     }
 
     @Test
@@ -192,8 +192,8 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(orderOptional.get().getOrderItems().size(), is(1));
         assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
         assertThat(orderOptional.get().getOrderStatuses().size(), is(1));
-        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("Placed"));
-        assertThat(orderOptional.get().getCurrentStatus(), is("Placed"));
+        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("CREATED"));
+        assertThat(orderOptional.get().getCurrentStatus(), is("CREATED"));
     }
 
     @Test
@@ -219,7 +219,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(CREATED));
         Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
         assertThat(orderOptional.get().getOrderStatuses().size(), is(2));
-        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("Placed"));
+        assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("CREATED"));
         assertThat(orderOptional.get().getOrderStatuses().get(1).getStatus(), is("Processing"));
         assertThat(orderOptional.get().getOrderStatuses().get(1).getDescription(), is("paid successfully"));
         assertThat(orderOptional.get().getCurrentStatus(), is("Processing"));

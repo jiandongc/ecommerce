@@ -1,0 +1,43 @@
+<div class="container checkout">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <progressbar value="100%"></progressbar>
+                <div class="col-xs-12 m-b-05">
+                    <div class="header">Payment</div>
+                </div>
+                <div class="col-xs-12 m-b-05">
+                    <img ng-src="/images/visa_logo.jpg" style="width:64px;height:auto;">
+                    <img ng-src="/images/amex_logo.png" style="width:64px;height:auto;" >
+                    <img ng-src="/images/master_logo.png" style="width:64px;height:auto;" >
+                </div>
+                <div class="col-xs-12 m-b-05">
+                    <form id="payment-form" class="payment-form">
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <div id="card-element" class="form-control input-lg">
+                                    <!-- A Stripe Element will be inserted here. -->
+                                </div>
+                            </div>
+
+                            <!-- We'll put the error messages in this element -->
+                            <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-6">
+                                <div id="card-errors" class="color-valencia" role="alert"></div>
+                            </div>
+
+                            <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-6 pull-right">
+                                <button id="submit" class="btn btn-block btn-style-primary" type="submit">
+                                    <i id="btnSpinner" class=""></i>&nbsp;Pay {{orderData.orderTotal | currency:"£"}}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-md-4">
+            <summary></summary>
+        </div>
+    </div>
+</div>
