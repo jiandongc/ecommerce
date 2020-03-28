@@ -3,6 +3,7 @@ package shoppingcart.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shoppingcart.data.CustomerData;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
@@ -49,7 +50,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional(readOnly = true)
     public Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId) {
         final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerId);
-        if(shoppingCarts.size() > 0){
+        if (shoppingCarts.size() > 0) {
             final ShoppingCart shoppingCart = shoppingCarts.get(0);
             shoppingCart.setShoppingCartItems(cartItemRepository.findByCartId(shoppingCart.getId()));
             shoppingCart.setShippingAddress(cartRepository.findAddress(shoppingCart.getId(), "Shipping").orElse(null));
@@ -62,29 +63,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public void updateCustomerId(UUID cartUid, Long customerId) {
-        final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerId);
-        shoppingCarts.stream().filter(cart -> !cart.getCartUid().equals(cartUid))
-                .forEach(this::deleteShoppingCart);
-        cartRepository.updateCustomerId(cartUid, customerId);
+    public void addCustomerInfo(UUID cartUid, CustomerData customerData) {
+        if (customerData.getId() != null) {
+            final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerData.getId());
+            shoppingCarts.stream().filter(cart -> !cart.getCartUid().equals(cartUid))
+                    .forEach(this::deleteShoppingCart);
+            cartRepository.updateCustomerId(cartUid, customerData.getId());
+        }
+        cartRepository.updateEmail(cartUid, customerData.getEmail());
     }
 
     @Override
     @Transactional
-    public void updateEmail(UUID cartUid, String email) {
-        cartRepository.updateEmail(cartUid, email);
-    }
-
-    @Override
-    @Transactional
-    public void deleteShoppingCart(ShoppingCart shoppingCart){
+    public void deleteShoppingCart(ShoppingCart shoppingCart) {
         cartItemRepository.deleteByCartId(shoppingCart.getId());
         cartRepository.delete(shoppingCart.getId());
     }
 
     @Override
     @Transactional
-    public void addAddress(UUID cartUid, Address address){
+    public void addAddress(UUID cartUid, Address address) {
         final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
         cartOptional.ifPresent(cart -> cartRepository.addAddress(cart.getId(), address));
     }

@@ -1,6 +1,5 @@
 package shoppingcart.controller;
 
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -190,7 +189,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void shouldUpdateCustomerUidForTheCartUidAndDeleteOtherCarts(){
+    public void shouldUpdateCustomerInfoForTheCartUidAndDeleteOtherCarts(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
         final Long customerId = 12345L;
@@ -201,39 +200,54 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(repository.findByUUID(cartUidTwo).isPresent(), is(true));
         assertThat(repository.findByUUID(cartUidThree).isPresent(), is(true));
 
+        final String customerData = "{\n" +
+                "\"id\": \"12345\",\n" +
+                "\"email\": \"joe@gmail.com\"\n" +
+                "}";
+
         // When
-        final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
+        final HttpEntity<String> payload = new HttpEntity<>(customerData, headers);
         final ResponseEntity<Void> response = rest.exchange(BASE_URL + cartUidOne.toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(repository.findByUUID(cartUidOne).get().getCustomerId(), is(12345L));
+        assertThat(repository.findByUUID(cartUidOne).get().getEmail(), is("joe@gmail.com"));
         assertThat(repository.findByUUID(cartUidTwo).isPresent(), is(false));
         assertThat(repository.findByUUID(cartUidThree).isPresent(), is(false));
     }
 
     @Test
-    public void shouldRejectUpdateCustomerUidRequestWithGuestToken(){
+    public void shouldUpdateCartEmailOnly(){
         // Given - set guest token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
         final UUID cartUid = repository.create();
+        assertThat(repository.findByUUID(cartUid).isPresent(), is(true));
+        final String customerData = "{\n" +
+                "\"email\": \"tom@gmail.com\"\n" +
+                "}";
 
         // When
-        final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
-        final ResponseEntity<Void> response = rest.exchange(BASE_URL + cartUid.toString(), HttpMethod.PUT, payload, Void.class);
+        final HttpEntity<String> payload = new HttpEntity<>(customerData, headers);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + cartUid.toString(), HttpMethod.PUT, payload, CartData.class);
 
         // Then
-        assertThat(response.getStatusCode(), is(HttpStatus.FORBIDDEN));
-        assertThat(repository.findByUUID(cartUid).get().getCustomerId(), CoreMatchers.nullValue());
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().getEmail(), is("tom@gmail.com"));
+        assertThat(repository.findByUUID(cartUid).get().getEmail(), is("tom@gmail.com"));
     }
+
 
     @Test
     public void shouldReturn403IfCartUidIsNotFoundForUpdateCustomerIdRequest(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
-
+        final String customerData = "{\n" +
+                "\"customerId\": \"12345\",\n" +
+                "\"email\": \"joe@gmail.com\"\n" +
+                "}";
         // When
-        final HttpEntity<Long> payload = new HttpEntity<Long>(12345L, headers);
+        final HttpEntity<String> payload = new HttpEntity<>(customerData, headers);
         final ResponseEntity<Void> response = rest.exchange(BASE_URL + UUID.randomUUID().toString(), HttpMethod.PUT, payload, Void.class);
 
         // Then
@@ -355,20 +369,4 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(2));
     }
 
-    @Test
-    public void shouldUpdateCartEmail(){
-        // Given - set user token
-        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
-        final UUID cartUid = repository.create();
-        assertThat(repository.findByUUID(cartUid).isPresent(), is(true));
-
-        // When
-        final HttpEntity<String> payload = new HttpEntity<>("tom@gmail.com", headers);
-        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + cartUid.toString() + "/email", HttpMethod.PUT, payload, CartData.class);
-
-        // Then
-        assertThat(response.getStatusCode(), is(HttpStatus.OK));
-        assertThat(response.getBody().getEmail(), is("tom@gmail.com"));
-        assertThat(repository.findByUUID(cartUid).get().getEmail(), is("tom@gmail.com"));
-    }
 }

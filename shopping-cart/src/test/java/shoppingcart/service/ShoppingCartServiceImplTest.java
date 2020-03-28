@@ -5,6 +5,7 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import shoppingcart.data.CustomerData;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
@@ -85,7 +86,7 @@ public class ShoppingCartServiceImplTest {
     }
 
     @Test
-    public void shouldUpdateCustomerId(){
+    public void shouldAddCustomerInfo(){
         // Given
         final UUID cartUid = UUID.randomUUID();
         final Long customerId = 123L;
@@ -95,12 +96,13 @@ public class ShoppingCartServiceImplTest {
         when(cartRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(shoppingCartOne, shoppingCartTwo, shoppingCartThree));
 
         // When
-        service.updateCustomerId(cartUid, 123L);
+        service.addCustomerInfo(cartUid, CustomerData.builder().id(123L).email("joe@gmail.com").build());
 
         // Then
         verify(service, times(1)).deleteShoppingCart(shoppingCartOne);
         verify(service, times(1)).deleteShoppingCart(shoppingCartTwo);
         verify(cartRepository, times(1)).updateCustomerId(cartUid,123L);
+        verify(cartRepository, times(1)).updateEmail(cartUid,"joe@gmail.com");
     }
 
     @Test

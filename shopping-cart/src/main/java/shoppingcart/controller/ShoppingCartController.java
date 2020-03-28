@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import shoppingcart.data.CartData;
+import shoppingcart.data.CustomerData;
 import shoppingcart.data.DeliveryOptionData;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
@@ -63,19 +64,10 @@ public class ShoppingCartController {
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "{cartUid}", method = PUT)
-    public ResponseEntity<CartData> updateCartCustomerId(@PathVariable UUID cartUid, @RequestBody Long customerId) {
-        shoppingCartService.updateCustomerId(cartUid, customerId);
-        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
-        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
-                .orElse(new ResponseEntity<>(NOT_FOUND));
-    }
-
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
-    @RequestMapping(value = "{cartUid}/email", method = PUT)
-    public ResponseEntity<CartData> updateCartEmail(@PathVariable UUID cartUid, @RequestBody String email) {
-        shoppingCartService.updateEmail(cartUid, email);
+    @RequestMapping(value = "{cartUid}", method = PUT)
+    public ResponseEntity<CartData> addCustomerInfo(@PathVariable UUID cartUid, @RequestBody CustomerData customerData) {
+        shoppingCartService.addCustomerInfo(cartUid, customerData);
         final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
         return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));
