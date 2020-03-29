@@ -61,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
     public List<Order> findOrders(Long customerId, String status) {
         final List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(customerId);
         if("open".equalsIgnoreCase(status)){
-            return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("created|processing|shipped")).collect(Collectors.toList());
+            return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("created|processing|shipped|payment succeeded")).collect(Collectors.toList());
         } else if("completed".equalsIgnoreCase(status)){
             return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("delivered|returned|cancelled|failed")).collect(Collectors.toList());
         }

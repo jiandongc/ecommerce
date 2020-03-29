@@ -298,7 +298,8 @@ checkout.controller('stripePaymentCtrl', function($scope, $location, $localstora
 
             orderFactory.createOrder($scope.orderData).then(function(orderNumber) {
                 $scope.orderNumber = orderNumber;
-                orderFactory.downloadStripeClientSecret($scope.orderNumber, $localstorage.get('cart_uid')).then(function(response) {
+
+                orderFactory.downloadStripeClientSecret($scope.orderNumber, $localstorage.get('cart_uid'), $localstorage.get('current_user')).then(function(response) {
                     $scope.clientSecret = response;
                     stripe.confirmCardPayment($scope.clientSecret, {
                         payment_method: {

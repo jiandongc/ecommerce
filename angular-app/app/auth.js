@@ -31,7 +31,7 @@ auth.factory('authService', function($localstorage, $location, $rootScope, $q, a
     var syncCustomerAndCart = function(customer) {
         if($localstorage.containsKey('cart_uid')) {
             var cartUid = $localstorage.get('cart_uid');
-            return shoppingCartFactory.updateCustomerId(cartUid, customer.id).then(function(response){
+            return shoppingCartFactory.addCustomerInfo(cartUid, customer).then(function(response){
                 return customer;
             }, function(error){
                 return customer;

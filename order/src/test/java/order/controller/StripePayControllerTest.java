@@ -30,7 +30,6 @@ public class StripePayControllerTest extends AbstractControllerTest {
     @Test
     public void shouldDownloadStripeClientSecret() {
         // Given
-        // Given
         Order order = Order.builder().customerId(123L)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
@@ -38,12 +37,15 @@ public class StripePayControllerTest extends AbstractControllerTest {
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
-        String shoppingCartUid = "123-456";
 
+        String json = "{\n" +
+                "  \"shoppingCartId\": \"123-456\",\n" +
+                "  \"userName\": \"Joe\"\n" +
+                "}";
 
         // When
-        final HttpEntity<String> payload = new HttpEntity<>(headers);
-        final ResponseEntity<String> response = rest.exchange("/orders/stripe/" + orderNumber + "/" + shoppingCartUid, HttpMethod.GET, payload, String.class);
+        final HttpEntity<String> payload = new HttpEntity<>(json, headers);
+        final ResponseEntity<String> response = rest.exchange("/orders/stripe/" + orderNumber, HttpMethod.POST, payload, String.class);
 
         // Then
         assertThat(response.getStatusCode(), CoreMatchers.is(OK));

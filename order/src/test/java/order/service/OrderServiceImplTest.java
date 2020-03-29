@@ -38,16 +38,19 @@ public class OrderServiceImplTest {
         orderFour.addOrderStatus(OrderStatus.builder().status("Delivered").build());
         Order orderFive = new Order();
         orderFive.addOrderStatus(OrderStatus.builder().status("Returned").build());
-        Mockito.when(orderRepository.findByCustomerIdOrderByOrderDateDesc(1L)).thenReturn(Arrays.asList(orderOne, orderTwo, orderThree, orderFour, orderFive));
+        Order orderSix = new Order();
+        orderSix.addOrderStatus(OrderStatus.builder().status("PAYMENT SUCCEEDED").build());
+        Mockito.when(orderRepository.findByCustomerIdOrderByOrderDateDesc(1L)).thenReturn(Arrays.asList(orderOne, orderTwo, orderThree, orderFour, orderFive, orderSix));
 
         // When
         List<Order> openOrders = orderServiceImpl.findOrders(1L, "open");
 
         // Then
-        assertThat(openOrders.size(), CoreMatchers.is(3));
+        assertThat(openOrders.size(), CoreMatchers.is(4));
         assertThat(openOrders.get(0).getCurrentStatus(), CoreMatchers.is("Created"));
         assertThat(openOrders.get(1).getCurrentStatus(), CoreMatchers.is("Processing"));
         assertThat(openOrders.get(2).getCurrentStatus(), CoreMatchers.is("Shipped"));
+        assertThat(openOrders.get(3).getCurrentStatus(), CoreMatchers.is("PAYMENT SUCCEEDED"));
 
         // When
         List<Order> completedOrders = orderServiceImpl.findOrders(1L, "completed");
@@ -61,7 +64,7 @@ public class OrderServiceImplTest {
         List<Order> allOrders = orderServiceImpl.findOrders(1L, null);
 
         // Then
-        assertThat(allOrders.size(), CoreMatchers.is(5));
+        assertThat(allOrders.size(), CoreMatchers.is(6));
     }
 
 }

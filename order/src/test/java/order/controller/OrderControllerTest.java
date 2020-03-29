@@ -294,6 +294,15 @@ public class OrderControllerTest extends AbstractControllerTest {
         orderTwo.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumberTwo = orderService.createOrder(orderTwo);
 
+        Order orderThree = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
+                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        orderThree.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        orderThree.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumberThree = orderService.createOrder(orderThree);
+        orderService.addOrderStatus(orderNumberThree, OrderStatus.builder().status("PAYMENT SUCCEEDED").build());
+
         final HttpEntity<?> httpEntity = new HttpEntity<Long>(null, headers);
 
         // When
@@ -301,18 +310,20 @@ public class OrderControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
-        assertThat(StringUtils.countOccurrencesOf(response.getBody(), "\"customerId\":123"), is(2));
+        assertThat(StringUtils.countOccurrencesOf(response.getBody(), "\"customerId\":123"), is(3));
         assertThat(StringUtils.countOccurrencesOf(response.getBody(), orderNumberOne), is(1));
         assertThat(StringUtils.countOccurrencesOf(response.getBody(), orderNumberTwo), is(1));
+        assertThat(StringUtils.countOccurrencesOf(response.getBody(), orderNumberThree), is(1));
 
         // When
         ResponseEntity<String> responseTwo = rest.exchange(BASE_URL + "?customerId=123&status=open", GET, httpEntity, String.class);
 
         // Then
         assertThat(responseTwo.getStatusCode(), is(OK));
-        assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), "\"customerId\":123"), is(1));
+        assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), "\"customerId\":123"), is(2));
         assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), orderNumberOne), is(0));
         assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), orderNumberTwo), is(1));
+        assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), orderNumberThree), is(1));
 
         // When
         ResponseEntity<String> responseThree = rest.exchange(BASE_URL + "?customerId=123&status=completed", GET, httpEntity, String.class);
@@ -322,6 +333,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), "\"customerId\":123"), is(1));
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberOne), is(1));
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberTwo), is(0));
+        assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberThree), is(0));
     }
 
 }

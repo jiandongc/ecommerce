@@ -28,8 +28,8 @@ cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $l
 });
 
 cart.factory('shoppingCartFactory', function($http, environment){
-  var updateCustomerId = function(cartUid, customerId){
-    return $http.put(environment.shoppingCartUrl + '/carts/' + cartUid, customerId).then(function(response){
+  var addCustomerInfo = function(cartUid, customerData){
+    return $http.put(environment.shoppingCartUrl + '/carts/' + cartUid, customerData).then(function(response){
       return response.data;
     });
   }
@@ -127,14 +127,8 @@ cart.factory('shoppingCartFactory', function($http, environment){
       }); 
   };
 
-  var downloadStripeClientSecret = function(cartUid){
-      return $http.get(environment.shoppingCartUrl + '/carts/stripe/' + cartUid).then(function(response){
-        return response.data;
-      }); 
-  };
-
   return {
-    updateCustomerId: updateCustomerId,
+    addCustomerInfo: addCustomerInfo,
     updateEmail: updateEmail,
     addItemToShoppingCart: addItemToShoppingCart,
     createShoppingCartForCustomer: createShoppingCartForCustomer,
@@ -148,8 +142,7 @@ cart.factory('shoppingCartFactory', function($http, environment){
     getDeliveryOption: getDeliveryOption,
     getSageMerchantKey: getSageMerchantKey,
     submitTrnsactionToSage: submitTrnsactionToSage,
-    getOrderData: getOrderData,
-    downloadStripeClientSecret: downloadStripeClientSecret
+    getOrderData: getOrderData
   }
 });
 
