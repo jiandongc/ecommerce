@@ -28,7 +28,7 @@ public class PasswordResetData extends MailData {
         ST st = group.getInstanceOf("password-reset");
 
         st.add("name", this.name);
-        st.add("link", link);
+        st.add("link", this.link);
         return st.render();
     }
 
