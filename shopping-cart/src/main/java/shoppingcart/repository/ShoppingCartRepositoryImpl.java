@@ -22,7 +22,7 @@ import static java.util.Optional.empty;
 @Repository
 public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
-    private static final String INSERT_SQL = "INSERT INTO shopping_cart (cart_uid, customer_id) VALUES (?, ?)";
+    private static final String INSERT_SQL = "INSERT INTO shopping_cart (cart_uid, customer_id, email) VALUES (?, ?, ?)";
     private static final String SELECT_BY_UUID_SQL = "SELECT * FROM shopping_cart WHERE cart_uid = ?";
     private static final String SELECT_BY_CUSTOMER_ID_SQL = "SELECT * FROM shopping_cart WHERE customer_id = ?";
     private static final String UPDATE_CUSTOMER_ID = "UPDATE shopping_cart SET customer_id = ? WHERE cart_uid = ?";
@@ -62,14 +62,14 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     @Override
     public UUID create() {
         final UUID uuid = UUID.randomUUID();
-        jdbcTemplate.update(INSERT_SQL, uuid, null);
+        jdbcTemplate.update(INSERT_SQL, uuid, null, null);
         return uuid;
     }
 
     @Override
-    public UUID create(long customerId) {
+    public UUID create(long customerId, String email) {
         final UUID uuid = UUID.randomUUID();
-        jdbcTemplate.update(INSERT_SQL, uuid, customerId);
+        jdbcTemplate.update(INSERT_SQL, uuid, customerId, email);
         return uuid;
     }
 

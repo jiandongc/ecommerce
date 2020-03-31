@@ -34,7 +34,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
     @Test
     public void shouldCreateShoppingCartWithCustomerId() throws Exception {
         // Given & When
-        final UUID uuid = shoppingCartRepository.create(1234L);
+        final UUID uuid = shoppingCartRepository.create(1234L, null);
 
         // Then
         final ShoppingCart shoppingCart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
@@ -67,8 +67,8 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
     @Test
     public void shouldReturnShoppingCartByCustomerId(){
         // Given
-        shoppingCartRepository.create(1234L);
-        shoppingCartRepository.create(1234L);
+        shoppingCartRepository.create(1234L, null);
+        shoppingCartRepository.create(1234L, null);
 
         // When
         List<ShoppingCart> shoppingCarts = shoppingCartRepository.findByCustomerId(1234L);
@@ -89,7 +89,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
     @Test
     public void shouldDeleteShoppingCartByUUID(){
         // Given
-        final UUID uuid = shoppingCartRepository.create(1234L);
+        final UUID uuid = shoppingCartRepository.create(1234L, null);
         final Long cartId = shoppingCartRepository.findByUUID(uuid).get().getId();
         shoppingCartRepository.addDeliveryOption(cartId, DeliveryOption.builder().build());
         final Address address = new Address();
@@ -115,7 +115,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
     @Test
     public void shouldAddAddress(){
         // Given
-        final UUID uuid = shoppingCartRepository.create(1234L);
+        final UUID uuid = shoppingCartRepository.create(1234L, null);
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final Address address = new Address();
         address.setAddressType("Shipping");
@@ -157,7 +157,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
     @Test
     public void shouldAddDeliveryOption(){
         // Given
-        final UUID uuid = shoppingCartRepository.create(1234L);
+        final UUID uuid = shoppingCartRepository.create(1234L, null);
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final DeliveryOption deliveryOption = DeliveryOption.builder()
                 .method("FREE Delivery")

@@ -48,10 +48,10 @@ public class ShoppingCartServiceImplTest {
     @Test
     public void shouldCreateShoppingCartForUser(){
         // Given & When
-        service.createShoppingCartForUser(1234L);
+        service.createShoppingCartForUser(CustomerData.builder().id(1234L).email("email").build());
 
         // Then
-        verify(cartRepository, times(1)).create(1234L);
+        verify(cartRepository, times(1)).create(1234L, "email");
     }
 
     @Test

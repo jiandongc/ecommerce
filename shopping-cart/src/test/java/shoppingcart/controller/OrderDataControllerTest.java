@@ -36,7 +36,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
     @Test
     public void shouldGetCartInOrderFormat(){
         // Given
-        final UUID uuid = shoppingCartRepository.create(123L);
+        final UUID uuid = shoppingCartRepository.create(123L, null);
         shoppingCartRepository.updateEmail(uuid, "john@gmail.com");
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()

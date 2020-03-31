@@ -40,9 +40,9 @@ public class ShoppingCartController {
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(method = POST, produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<String> createShoppingCart(@RequestBody(required = false) Long customerId) {
-        if (customerId != null) {
-            return new ResponseEntity<>(shoppingCartService.createShoppingCartForUser(customerId).toString(), CREATED);
+    public ResponseEntity<String> createShoppingCart(@RequestBody(required = false) CustomerData customerData) {
+        if (customerData != null) {
+            return new ResponseEntity<>(shoppingCartService.createShoppingCartForUser(customerData).toString(), CREATED);
         } else {
             return new ResponseEntity<>(shoppingCartService.createShoppingCartForGuest().toString(), CREATED);
         }

@@ -31,8 +31,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public UUID createShoppingCartForUser(long customerId) {
-        return cartRepository.create(customerId);
+    public UUID createShoppingCartForUser(CustomerData customerData) {
+        return cartRepository.create(customerData.getId(), customerData.getEmail());
     }
 
     @Override

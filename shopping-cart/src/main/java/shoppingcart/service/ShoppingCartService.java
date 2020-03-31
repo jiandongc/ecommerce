@@ -11,7 +11,7 @@ import java.util.UUID;
 public interface ShoppingCartService {
 
     UUID createShoppingCartForGuest();
-    UUID createShoppingCartForUser(long customerId);
+    UUID createShoppingCartForUser(CustomerData customerData);
     Optional<ShoppingCart> getShoppingCartByUid(UUID cartUid);
     Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId);
     void addCustomerInfo(UUID cartUid, CustomerData customerData);
