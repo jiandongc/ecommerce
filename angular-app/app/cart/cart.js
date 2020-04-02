@@ -34,12 +34,6 @@ cart.factory('shoppingCartFactory', function($http, environment) {
         });
     }
 
-    var updateEmail = function(cartUid, email) {
-        return $http.put(environment.shoppingCartUrl + '/carts/' + cartUid + "/email", email).then(function(response) {
-            return response.data;
-        });
-    }
-
     var createShoppingCartForCustomer = function(customerData) {
         return $http.post(environment.shoppingCartUrl + '/carts', customerData).then(function(response) {
             return response.data;
@@ -129,7 +123,6 @@ cart.factory('shoppingCartFactory', function($http, environment) {
 
     return {
         addCustomerInfo: addCustomerInfo,
-        updateEmail: updateEmail,
         addItemToShoppingCart: addItemToShoppingCart,
         createShoppingCartForCustomer: createShoppingCartForCustomer,
         createShoppingCartForGuest: createShoppingCartForGuest,

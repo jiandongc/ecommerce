@@ -111,7 +111,7 @@ customer.controller('loginCtrl', function($scope, authService, $rootScope, $loca
 
     $scope.guestContinue = function(guest){
         $rootScope.guestLoading = true;
-        shoppingCartFactory.updateEmail($localstorage.get('cart_uid'), guest.email).then(function(data){
+        shoppingCartFactory.addCustomerInfo($localstorage.get('cart_uid'), guest).then(function(data){
             $scope.guestLoading = false;
             $location.path("/checkout/guest/address");
         }, function(error){
