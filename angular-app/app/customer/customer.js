@@ -161,7 +161,8 @@ customer.controller('accountCtrl', function($scope, $routeParams, $rootScope, $l
     });
 
     $scope.logout = function() {
-        $rootScope.$broadcast('reset');
+        $rootScope.$broadcast('resetUserInfo');
+        $rootScope.$broadcast('resetCartInfo');
         $location.path("#");
     }
 });

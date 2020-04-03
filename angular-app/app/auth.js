@@ -55,7 +55,7 @@ auth.factory('authService', function($localstorage, $location, $rootScope, $q, a
     var loginFailed = function(error){
         $rootScope.loginError = true;
         $rootScope.logining = false;
-        $rootScope.$broadcast('reset');
+        $rootScope.$broadcast('resetUserInfo');
     };
 
 	return {

@@ -23,13 +23,13 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 		if (typeof $scope.currentUser === "undefined" || newValue !== oldValue) {
 			$scope.currentUser = newValue;
 		}
-	})
+	});
 
 	$scope.$watch(function() { return $localstorage.get('customer_id');}, function(newValue, oldValue) {
 		if (typeof $scope.customerId === "undefined" || newValue !== oldValue) {
 			$scope.customerId = newValue;
 		}
-	})
+	});
 
 	$scope.$watch(function() { return $localstorage.get('cart_uid');}, function(newValue, oldValue) {
 		if (typeof $scope.cartUid === "undefined" || newValue !== oldValue) {
@@ -38,13 +38,13 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 				$rootScope.$broadcast('updateCartSummary', false);
 			}
 		}
-	})
+	});
 
 	$scope.$watch(function() { return $localstorage.get('access_token');}, function(newValue, oldValue) {
 		if ($localstorage.get('access_token') === false) {
 			$rootScope.$broadcast('downloadGuestToken');
 		}
-	})
+	});
 
 	$scope.$on('updateCartSummary', function(event, showDropDown) {
 		shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(data){
@@ -64,15 +64,21 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 			$scope.itemsTotal = null;
 			$scope.cartItems = null;
 		});
-	})
+	});
 
-	$scope.$on('reset', function(event, args) {
-		$localstorage.clear();
+	$scope.$on('resetUserInfo', function(event, args) {
+		$localstorage.remove("access_token");
+		$localstorage.remove("current_user");
+		$localstorage.remove("customer_id");
+	});
+
+	$scope.$on('resetCartInfo', function(event, args) {
+		$localstorage.remove("cart_uid");
 		$scope.cartUid = null;
 		$scope.totalQuantity = null;
 		$scope.itemsTotal = null;
 		$scope.cartItems = null;
-	})
+	});	
 
  	$scope.$on('downloadGuestToken', function(event, args) {
    		authFactory.downloadGuestToken().then(function(response){
