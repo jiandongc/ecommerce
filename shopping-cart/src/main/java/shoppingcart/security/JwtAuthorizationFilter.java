@@ -2,6 +2,7 @@ package shoppingcart.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +22,7 @@ import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
+@Slf4j
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private final String secret;
@@ -45,25 +47,22 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     }
 
     private UsernamePasswordAuthenticationToken getAuthentication(String accessToken) {
-        if (accessToken != null) {
+        try {
             // parse the token.
             final Claims claims = Jwts.parser()
                     .setSigningKey(secret.getBytes())
                     .parseClaimsJws(accessToken)
                     .getBody();
 
-            if (claims != null) {
-                List<String> roles = (List<String>) claims.get("roles");
-                roles = roles.stream().map(role -> format("role_%s", role).toUpperCase()).collect(toList());
-                return new UsernamePasswordAuthenticationToken(
-                        claims.getSubject(),
-                        null,
-                        createAuthorityList(roles.toArray(new String[roles.size()])));
-            }
-
+            List<String> roles = (List<String>) claims.get("roles");
+            roles = roles.stream().map(role -> format("role_%s", role).toUpperCase()).collect(toList());
+            return new UsernamePasswordAuthenticationToken(
+                    claims.getSubject(),
+                    null,
+                    createAuthorityList(roles.toArray(new String[roles.size()])));
+        } catch (Exception e) {
+            log.info("Failed to parse JWT token : " + accessToken, e);
             return null;
         }
-
-        return null;
     }
 }

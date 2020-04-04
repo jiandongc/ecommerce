@@ -58,8 +58,8 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "{id}/password", method = PUT)
-    public ResponseEntity updatePassword(@PathVariable long id, @RequestBody String password) {
-        final Customer updatedCustomer = customerService.updatePassword(id, password);
+    public ResponseEntity updatePassword(@PathVariable String id, @RequestBody String password) {
+        final Customer updatedCustomer = customerService.updatePassword(Long.valueOf(id), password);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
@@ -71,33 +71,33 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}", method = GET)
-    public Customer findById(@PathVariable long id) {
-        return customerService.findById(id);
+    public Customer findById(@PathVariable String id) {
+        return customerService.findById(Long.valueOf(id));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}/addresses", method = GET)
-    public List<Address> findAddressesByCustomerId(@PathVariable long id) {
-        return customerService.findAddressesByCustomerId(id);
+    public List<Address> findAddressesByCustomerId(@PathVariable String id) {
+        return customerService.findAddressesByCustomerId(Long.valueOf(id));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}/addresses/{addressId}", method = GET)
-    public Address findAddressById(@PathVariable long addressId) {
-        return customerService.findAddressById(addressId);
+    public Address findAddressById(@PathVariable String addressId) {
+        return customerService.findAddressById(Long.valueOf(addressId));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}/addresses", method = POST)
-    public Address addAddress(@PathVariable long id, @RequestBody Address address) {
-        return customerService.addAddress(id, address);
+    public Address addAddress(@PathVariable String id, @RequestBody Address address) {
+        return customerService.addAddress(Long.valueOf(id), address);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}/addresses/{addressId}", method = PUT)
-    public ResponseEntity updateAddress(@PathVariable long id, @PathVariable long addressId, @RequestBody Address address) {
+    public ResponseEntity updateAddress(@PathVariable String id, @PathVariable String addressId, @RequestBody Address address) {
         try {
-            return new ResponseEntity<>(customerService.updateAddress(id, addressId, address), HttpStatus.OK);
+            return new ResponseEntity<>(customerService.updateAddress(Long.valueOf(id), Long.valueOf(addressId), address), HttpStatus.OK);
         } catch (IllegalArgumentException exe) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
@@ -105,10 +105,10 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{id}/addresses/{addressId}", method = RequestMethod.DELETE)
-    public ResponseEntity removeAddress(@PathVariable long addressId) {
-        final Address address = customerService.findAddressById(addressId);
+    public ResponseEntity removeAddress(@PathVariable String addressId) {
+        final Address address = customerService.findAddressById(Long.valueOf(addressId));
         if (address != null) {
-            customerService.removeAddress(addressId);
+            customerService.removeAddress(Long.valueOf(addressId));
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.notFound().build();
@@ -117,14 +117,14 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{customerId}/products", method = POST)
-    public Product addProduct(@PathVariable long customerId, @RequestBody Product product) {
-        return customerService.addProduct(customerId, product);
+    public Product addProduct(@PathVariable String customerId, @RequestBody Product product) {
+        return customerService.addProduct(Long.valueOf(customerId), product);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{customerId}/products", method = GET)
-    public List<Product> getProducts(@PathVariable long customerId, @RequestParam("type") String type) {
-        Customer customer = customerService.findById(customerId);
+    public List<Product> getProducts(@PathVariable String customerId, @RequestParam("type") String type) {
+        Customer customer = customerService.findById(Long.valueOf(customerId));
         List<Product> validProducts = customer.getValidProducts();
         return validProducts.stream()
                 .filter(product -> product.getType().equals(Type.valueOf(type.toUpperCase())))
@@ -133,14 +133,14 @@ public class CustomerController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{customerId}/products/{productId}", method = DELETE)
-    public void removeProduct(@PathVariable long customerId, @PathVariable long productId) {
-        customerService.removeProduct(customerId, productId);
+    public void removeProduct(@PathVariable String customerId, @PathVariable String productId) {
+        customerService.removeProduct(Long.valueOf(customerId), Long.valueOf(productId));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "/{customerId}/products", method = DELETE)
-    public void removeProduct(@PathVariable long customerId, @RequestParam("type") String type, @RequestParam("code") String productCode) {
-        customerService.removeProductByTypeAndCode(customerId, type, productCode);
+    public void removeProduct(@PathVariable String customerId, @RequestParam("type") String type, @RequestParam("code") String productCode) {
+        customerService.removeProductByTypeAndCode(Long.valueOf(customerId), type, productCode);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")

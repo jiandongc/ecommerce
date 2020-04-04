@@ -94,7 +94,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         final ResponseEntity<String> response = rest.exchange(BASE_URL, POST, payload, String.class);
 
         // Then
-        assertThat(response.getStatusCode(), is(INTERNAL_SERVER_ERROR));
+        assertThat(response.getStatusCode(), is(FORBIDDEN));
     }
 
     @Test

@@ -54,6 +54,10 @@ public abstract class AbstractControllerTest {
         headers.add("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
     }
 
+    public void setExpiredToken(){
+        headers.add("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJqaWFuZG9uZy5jQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjoxMTg2MTAwMTYyfQ.kvIFNgoxYYaMAJv7lK_P4kh47TxAN-oCoFJ47lzlxv7tkjM-CzWLQcFJjHg4wHgazI9MfF9zOmSKAfxh7msPgw");
+    }
+
     @After
     public void cleanup(){
         customerRepository.deleteAll();
