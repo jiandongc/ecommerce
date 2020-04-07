@@ -15,7 +15,7 @@ var app = angular.module('store', [
     'brand'
 ]);
 
-app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, categoryFactory, authFactory) {
+app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, categoryFactory) {
 
     $scope.template = {
         header: "default-header.html",
@@ -46,14 +46,6 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
             if ($localstorage.get('cart_uid') !== false) {
                 $rootScope.$broadcast('updateCartSummary', false);
             }
-        }
-    });
-
-    $scope.$watch(function() {
-        return $localstorage.get('access_token');
-    }, function(newValue, oldValue) {
-        if ($localstorage.get('access_token') === false) {
-            $rootScope.$broadcast('downloadGuestToken');
         }
     });
 
@@ -89,13 +81,6 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
         $scope.totalQuantity = null;
         $scope.itemsTotal = null;
         $scope.cartItems = null;
-    });
-
-    $scope.$on('downloadGuestToken', function(event, args) {
-        authFactory.downloadGuestToken().then(function(response) {
-            $localstorage.set('access_token', response.headers("Authentication"));
-            $rootScope.$broadcast('initialiseData');
-        });
     });
 
     $scope.$on('$routeChangeStart', function($event, next, current) {
@@ -150,20 +135,34 @@ app.factory('$localstorage', ['$window', function($window) {
     }
 }]);
 
-app.factory('accessTokenInterceptor', function($localstorage, $rootScope, $location, $q) {
+app.factory('accessTokenInterceptor', function($localstorage, $location, $q, authFactory, $injector) {
     var service = this;
 
     service.request = function(config) {
+        if (config.url.includes('/guesttoken')) {
+            return config;
+        }
+
         if ($localstorage.containsKey('access_token')) {
             config.headers.Authentication = $localstorage.get('access_token');
-        } 
+        } else {
+            authFactory.downloadGuestToken().then(function(response) {
+                $localstorage.set('access_token', response.headers("Authentication"));
+            });
+        }
+
         return config;
+
     };
 
     service.responseError = function(response) {
         if (response.status === 403) {
-            $rootScope.$broadcast('downloadGuestToken');
-            $location.path("/login");
+            if (response.config.headers.Authentication == undefined) {
+                var $http = $injector.get('$http');
+                return $http(response.config);
+            } else {
+                $location.path("/login");
+            }
         }
         return $q.reject(response);
     };

@@ -1,6 +1,7 @@
 var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-home.controller('homeCtrl', function() {
+home.controller('homeCtrl', function($rootScope) {
+  $rootScope.$broadcast('initialiseData');
 });
 
 home.component('productpanel', {
