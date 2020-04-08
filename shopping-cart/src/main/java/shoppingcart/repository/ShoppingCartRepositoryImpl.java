@@ -23,8 +23,8 @@ import static java.util.Optional.empty;
 public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
     private static final String INSERT_SQL = "INSERT INTO shopping_cart (cart_uid, customer_id, email) VALUES (?, ?, ?)";
-    private static final String SELECT_BY_UUID_SQL = "SELECT * FROM shopping_cart WHERE cart_uid = ?";
-    private static final String SELECT_BY_CUSTOMER_ID_SQL = "SELECT * FROM shopping_cart WHERE customer_id = ?";
+    private static final String SELECT_BY_UUID_SQL = "SELECT * FROM shopping_cart WHERE cart_uid = ? AND active = true";
+    private static final String SELECT_BY_CUSTOMER_ID_SQL = "SELECT * FROM shopping_cart WHERE customer_id = ? AND active = true";
     private static final String UPDATE_CUSTOMER_ID = "UPDATE shopping_cart SET customer_id = ? WHERE cart_uid = ?";
     private static final String UPDATE_EMAIL = "UPDATE shopping_cart SET email = ? WHERE cart_uid = ?";
     private static final String INSERT_ADDRESS_SQL = "INSERT INTO address " +
@@ -43,6 +43,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     private static final String DELETE_SHOPPING_CART_BY_ID_SQL = "DELETE FROM shopping_cart where id = ?";
     private static final String DELETE_ADDRESS_BY_SESSION_ID_SQL = "DELETE FROM address where shopping_cart_id = ?";
     private static final String DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL = "DELETE FROM delivery_option where shopping_cart_id = ?";
+    private static final String DEACTIVATE_SHOPPING_CART = "UPDATE shopping_cart SET active = false WHERE id = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -102,6 +103,11 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
         jdbcTemplate.update(DELETE_ADDRESS_BY_SESSION_ID_SQL, cartId);
         jdbcTemplate.update(DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL, cartId);
         return jdbcTemplate.update(DELETE_SHOPPING_CART_BY_ID_SQL, cartId);
+    }
+
+    @Override
+    public void deactivateShoppingCart(long cartId) {
+        jdbcTemplate.update(DEACTIVATE_SHOPPING_CART, cartId);
     }
 
     @Override

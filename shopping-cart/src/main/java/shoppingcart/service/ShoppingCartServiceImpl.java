@@ -67,7 +67,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (customerData.getId() != null) {
             final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerData.getId());
             shoppingCarts.stream().filter(cart -> !cart.getCartUid().equals(cartUid))
-                    .forEach(this::deleteShoppingCart);
+                    .forEach(this::deactivateShoppingCart);
             cartRepository.updateCustomerId(cartUid, customerData.getId());
         }
         cartRepository.updateEmail(cartUid, customerData.getEmail());
@@ -75,9 +75,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional
-    public void deleteShoppingCart(ShoppingCart shoppingCart) {
-        cartItemRepository.deleteByCartId(shoppingCart.getId());
-        cartRepository.delete(shoppingCart.getId());
+    public void deactivateShoppingCart(ShoppingCart shoppingCart) {
+        cartRepository.deactivateShoppingCart(shoppingCart.getId());
     }
 
     @Override

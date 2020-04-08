@@ -15,7 +15,7 @@ public interface ShoppingCartService {
     Optional<ShoppingCart> getShoppingCartByUid(UUID cartUid);
     Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId);
     void addCustomerInfo(UUID cartUid, CustomerData customerData);
-    void deleteShoppingCart(ShoppingCart shoppingCart);
+    void deactivateShoppingCart(ShoppingCart shoppingCart);
     void addAddress(UUID cartUid, Address address);
     void addDeliveryOption(UUID cartUid, DeliveryOption deliveryOption);
 }

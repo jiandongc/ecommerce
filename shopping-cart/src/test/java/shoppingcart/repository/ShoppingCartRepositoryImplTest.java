@@ -87,6 +87,20 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
     }
 
     @Test
+    public void shouldDeactivateShoppingCart(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create();
+        final long cartId = shoppingCartRepository.findByUUID(uuid).get().getId();
+        assertThat(shoppingCartRepository.findByUUID(uuid).get().isActive(), is(true));
+
+        // When
+        shoppingCartRepository.deactivateShoppingCart(cartId);
+
+        // Then
+        assertThat(shoppingCartRepository.findByUUID(uuid).isPresent(), is(false));
+    }
+
+    @Test
     public void shouldDeleteShoppingCartByUUID(){
         // Given
         final UUID uuid = shoppingCartRepository.create(1234L, null);

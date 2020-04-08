@@ -99,24 +99,23 @@ public class ShoppingCartServiceImplTest {
         service.addCustomerInfo(cartUid, CustomerData.builder().id(123L).email("joe@gmail.com").build());
 
         // Then
-        verify(service, times(1)).deleteShoppingCart(shoppingCartOne);
-        verify(service, times(1)).deleteShoppingCart(shoppingCartTwo);
+        verify(service, times(1)).deactivateShoppingCart(shoppingCartOne);
+        verify(service, times(1)).deactivateShoppingCart(shoppingCartTwo);
         verify(cartRepository, times(1)).updateCustomerId(cartUid,123L);
         verify(cartRepository, times(1)).updateEmail(cartUid,"joe@gmail.com");
     }
 
     @Test
-    public void shouldDeleteShoppingCart(){
+    public void shouldDeactivateShoppingCart(){
         // Given
         final UUID cartUid = UUID.randomUUID();
         final ShoppingCart shoppingCart = ShoppingCart.builder().id(123L).cartUid(cartUid).build();
 
         // When
-        service.deleteShoppingCart(shoppingCart);
+        service.deactivateShoppingCart(shoppingCart);
 
         // Then
-        verify(cartItemRepository, times(1)).deleteByCartId(123L);
-        verify(cartRepository, times(1)).delete(123L);
+        verify(cartRepository, times(1)).deactivateShoppingCart(123L);
     }
 
     @Test

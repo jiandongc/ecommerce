@@ -240,10 +240,22 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(repository.findByUUID(cartUidOne).get().isActive(), is(true));
         assertThat(repository.findByUUID(cartUidOne).get().getCustomerId(), is(12345L));
         assertThat(repository.findByUUID(cartUidOne).get().getEmail(), is("joe@gmail.com"));
         assertThat(repository.findByUUID(cartUidTwo).isPresent(), is(false));
         assertThat(repository.findByUUID(cartUidThree).isPresent(), is(false));
+
+        // When
+        final HttpEntity<Long> emptyPayload = new HttpEntity<Long>(null, headers);
+        final ResponseEntity<CartData> responseOne = rest.exchange(BASE_URL + cartUidOne.toString(), GET, emptyPayload, CartData.class);
+        assertThat(responseOne.getStatusCode(), is(HttpStatus.OK));
+
+        final ResponseEntity<CartData> responseTwo = rest.exchange(BASE_URL + cartUidTwo.toString(), GET, emptyPayload, CartData.class);
+        assertThat(responseTwo.getStatusCode(), is(HttpStatus.NOT_FOUND));
+
+        final ResponseEntity<CartData> responseThree = rest.exchange(BASE_URL + cartUidTwo.toString(), GET, emptyPayload, CartData.class);
+        assertThat(responseThree.getStatusCode(), is(HttpStatus.NOT_FOUND));
     }
 
     @Test

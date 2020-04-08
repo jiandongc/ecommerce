@@ -19,6 +19,7 @@ public class ShoppingCartMapper implements RowMapper<ShoppingCart>{
                 .email(rs.getString("email"))
                 .customerId(rs.getObject("customer_id") != null ? rs.getLong("customer_id") : null)
                 .creationTime(rs.getDate("creation_time"))
+                .active(rs.getBoolean("active"))
                 .build();
     }
 }

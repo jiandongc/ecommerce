@@ -13,17 +13,19 @@ public class ShoppingCart {
     private Long customerId;
     private String email;
     private Date creationTime;
+    private boolean active;
     private List<ShoppingCartItem> shoppingCartItems;
     private Address billingAddress;
     private Address shippingAddress;
     private DeliveryOption deliveryOption;
 
-    private ShoppingCart(long id, UUID cartUid, Long customerId, String email, Date creationTime) {
+    private ShoppingCart(long id, UUID cartUid, Long customerId, String email, Date creationTime, boolean active) {
         this.id = id;
         this.cartUid = cartUid;
         this.customerId = customerId;
         this.email = email;
         this.creationTime = creationTime;
+        this.active = active;
     }
 
     public ShoppingCart() {
@@ -51,6 +53,10 @@ public class ShoppingCart {
 
     public Date getCreationTime() {
         return creationTime;
+    }
+
+    public boolean isActive() {
+        return active;
     }
 
     public void setCustomerId(Long customerId) {
@@ -116,49 +122,16 @@ public class ShoppingCart {
         }
     }
 
-    public BigDecimal getPostageVat(){
+    public BigDecimal getPostageVat() {
         BigDecimal postage = getPostage();
         BigDecimal postageBeforeVat = postage.divide(new BigDecimal(1.2), 2, ROUND_HALF_UP);
         return postage.subtract(postageBeforeVat);
     }
 
-    public BigDecimal getOrderTotal(){
+    public BigDecimal getOrderTotal() {
         BigDecimal itemSubTotal = getItemSubTotal();
         BigDecimal postage = getPostage();
         return itemSubTotal.add(postage);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        ShoppingCart that = (ShoppingCart) o;
-
-        if (cartUid != null ? !cartUid.equals(that.cartUid) : that.cartUid != null) return false;
-        if (email != null ? !email.equals(that.email) : that.email != null) return false;
-        if (customerId != null ? !customerId.equals(that.customerId) : that.customerId != null) return false;
-        if (creationTime != null ? !creationTime.equals(that.creationTime) : that.creationTime != null) return false;
-        if (shoppingCartItems != null ? !shoppingCartItems.equals(that.shoppingCartItems) : that.shoppingCartItems != null)
-            return false;
-        if (billingAddress != null ? !billingAddress.equals(that.billingAddress) : that.billingAddress != null)
-            return false;
-        if (shippingAddress != null ? !shippingAddress.equals(that.shippingAddress) : that.shippingAddress != null)
-            return false;
-        return deliveryOption != null ? deliveryOption.equals(that.deliveryOption) : that.deliveryOption == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = cartUid != null ? cartUid.hashCode() : 0;
-        result = 31 * result + (customerId != null ? customerId.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
-        result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
-        result = 31 * result + (shoppingCartItems != null ? shoppingCartItems.hashCode() : 0);
-        result = 31 * result + (billingAddress != null ? billingAddress.hashCode() : 0);
-        result = 31 * result + (shippingAddress != null ? shippingAddress.hashCode() : 0);
-        result = 31 * result + (deliveryOption != null ? deliveryOption.hashCode() : 0);
-        return result;
     }
 
     public static class ShoppingCartBuilder {
@@ -167,6 +140,7 @@ public class ShoppingCart {
         private Long customerId;
         private String email;
         private Date creationTime;
+        private boolean active;
 
         public ShoppingCartBuilder id(long id) {
             this.id = id;
@@ -193,8 +167,13 @@ public class ShoppingCart {
             return this;
         }
 
+        public ShoppingCartBuilder active(boolean active) {
+            this.active = active;
+            return this;
+        }
+
         public ShoppingCart build() {
-            return new ShoppingCart(id, cartUid, customerId, email, creationTime);
+            return new ShoppingCart(id, cartUid, customerId, email, creationTime, active);
         }
 
     }

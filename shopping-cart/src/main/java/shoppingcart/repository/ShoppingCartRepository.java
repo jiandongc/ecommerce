@@ -16,6 +16,7 @@ public interface ShoppingCartRepository {
     int updateCustomerId(UUID cartUid, Long customerId);
     int updateEmail(UUID cartUid, String email);
     int delete(long cartId);
+    void deactivateShoppingCart(long cartId);
     void addAddress(long cartId, Address address);
     Optional<Address> findAddress(long cartId, String addressType);
     void addDeliveryOption(long cartId, DeliveryOption deliveryOption);
