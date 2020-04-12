@@ -19,8 +19,20 @@ cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $l
     }
 
     $scope.checkout = function() {
-        if (typeof $localstorage.get('cart_uid', undefined) !== "undefined") {
-            $location.path("/shipping");
+        if ($localstorage.containsKey('cart_uid')) {
+            $scope.checking = true;
+            shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response){
+                $scope.shoppingCart = response;
+                if ($scope.shoppingCart.shipping == null) {
+                    $location.path("/checkout/shipping");
+                } else if ($scope.shoppingCart.deliveryOption == null){
+                    $location.path("/checkout/delivery");
+                } else if ($scope.shoppingCart.billing == null){
+                    $location.path("/checkout/billing");
+                }  else {
+                    $location.path("/checkout/payment");
+                }
+            });
         } else {
             $location.path("/login");
         }

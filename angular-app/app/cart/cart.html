@@ -1,74 +1,75 @@
 <div class="container cart">
-     <div class="row" ng-show="cartUid">
-          <div class = "col-xs-12 m-b-20">
-               <div class="pull-right">
-                    <div class="title m-b-05">
-                         Bag {{totalQuantity}} itme(s): <span style="color: #B12704">{{itemsTotal | currency:'£'}}</span>
+    <div class="row" ng-show="cartUid">
+        <div class="col-xs-12 m-b-20">
+            <div class="pull-right">
+                <div class="title m-b-05">
+                    Bag {{totalQuantity}} itme(s): <span style="color: #B12704">{{itemsTotal | currency:'£'}}</span>
+                </div>
+                <button type="button" class="btn btn-style-primary pull-right" ng-click="checkout()">
+                    <span ng-show="checking"><i class="glyphicon glyphicon-refresh spinning"></i></span> Proceed to Checkout
+                </button>
+            </div>
+        </div>
+        <div ng-repeat="cartItem in cartItems">
+            <div class="col-xs-12 col-sm-6">
+                <div class="row">
+                    <div class="col-xs-6">
+                        <a href="#!/products/{{cartItem.code}}"><img class="img-responsive thumbnail" ng-src="{{cartItem.thumbnail}}"></a>
                     </div>
-                    <button type="button" class="btn btn-style-primary pull-right" ng-click="checkout()">Proceed to Checkout</button>
-               </div>
-          </div>
-          <div ng-repeat="cartItem in cartItems">
-               <div class = "col-xs-12 col-sm-6">
-                    <div class="row"> 
-                         <div class="col-xs-6">
-                              <a href="#!/products/{{cartItem.code}}"><img class="img-responsive thumbnail" ng-src="{{cartItem.thumbnail}}"></a>
-                         </div>
-                         <div class="col-xs-6">
-                              <div class="row">
-                                   <div class="col-xs-12">
-                                        <a href="#!/products/{{cartItem.code}}"><span class="product-name">{{cartItem.name}}</span></a>
-                                   </div>
-                              </div>
-                              <div class="row m-b-05">
-                                   <div class="col-xs-12">
-                                        <span class="product-sku">#{{cartItem.sku}}</span>
-                                   </div>
-                              </div>
-                              <div class="row m-b-02">
-                                   <div class="col-xs-12">
-                                        <span class="product-desc">{{cartItem.description}}</span>
-                                   </div>
-                              </div>
-                              <div class="row m-b-02">
-                                   <div class="col-xs-12">
-                                        <span class="fw-light">Price (each):&nbsp&nbsp</span>{{cartItem.price | currency:'£'}}
-                                   </div>
-                              </div>
-                              <div class="row m-b-02">
-                                   <div class="col-xs-12">
-                                        <span class="fw-light">Quantity:&nbsp&nbsp</span><select ng-model="cartItem.quantity" ng-options="n for n in [1,2,3,4,5,6,7,8,9,10]" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 1000, blur: 500}}"></select>
-                                   </div>
-                              </div>
-                              <div class="row m-b-05">
-                                   <div class="col-xs-12">
-                                        <span class="fw-light">Sub-total:&nbsp&nbsp</span>{{cartItem.subTotal | currency:'£'}}
-                                   </div>
-                              </div>
-                              <div class="row">
-                                   <div class="col-xs-12">
-                                        <a href ng-click="removeItem(cartItem)">Remove</a>
-                                   </div>
-                              </div>
-                         </div>
+                    <div class="col-xs-6">
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href="#!/products/{{cartItem.code}}"><span class="product-name">{{cartItem.name}}</span></a>
+                            </div>
+                        </div>
+                        <div class="row m-b-05">
+                            <div class="col-xs-12">
+                                <span class="product-sku">#{{cartItem.sku}}</span>
+                            </div>
+                        </div>
+                        <div class="row m-b-02">
+                            <div class="col-xs-12">
+                                <span class="product-desc">{{cartItem.description}}</span>
+                            </div>
+                        </div>
+                        <div class="row m-b-02">
+                            <div class="col-xs-12">
+                                <span class="fw-light">Price (each):&nbsp&nbsp</span>{{cartItem.price | currency:'£'}}
+                            </div>
+                        </div>
+                        <div class="row m-b-02">
+                            <div class="col-xs-12">
+                                <span class="fw-light">Quantity:&nbsp&nbsp</span>
+                                <select ng-model="cartItem.quantity" ng-options="n for n in [1,2,3,4,5,6,7,8,9,10]" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 1000, blur: 500}}"></select>
+                            </div>
+                        </div>
+                        <div class="row m-b-05">
+                            <div class="col-xs-12">
+                                <span class="fw-light">Sub-total:&nbsp&nbsp</span>{{cartItem.subTotal | currency:'£'}}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-xs-12">
+                                <a href ng-click="removeItem(cartItem)">Remove</a>
+                            </div>
+                        </div>
                     </div>
-               </div>
-          </div>
-     </div>   
-     <div class="row m-b-15" ng-show="cartUid">
-          <div class="title col-lg-2 col-sm-4">
-               <button type="button" class="btn btn-block btn-style-primary">Continue shopping</button>
-          </div>
-          <div class="title col-lg-8 col-sm-4"></div>
-          <div class="title col-lg-2 col-sm-4">
-               <button type="button" class="btn btn-block btn-style-primary" ng-click="checkout()">Proceed to Checkout</button>
-          </div>
-     </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 m-b-10">
+            <div class="pull-right">
+                <button type="button" class="btn btn-style-primary pull-right" ng-click="checkout()">
+                    <span ng-show="checking"><i class="glyphicon glyphicon-refresh spinning"></i></span> Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
 
-     <div class="row m-b-10" ng-show="!cartUid">
-          <div class="col-xs-12 fs-09 color-san-juan">
-               You have no items in your shopping cart.
-          </div>
-     </div>
+    <div class="row m-b-10" ng-show="!cartUid">
+        <div class="col-xs-12 fs-09 color-san-juan">
+            You have no items in your shopping cart.
+        </div>
+    </div>
 
 </div>

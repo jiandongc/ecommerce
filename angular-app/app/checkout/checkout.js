@@ -19,7 +19,7 @@ checkout.component('progressbar', {
 
 checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
 
-    $scope.template.header = 'checkout-header.html';
+    $scope.template.header = 'checkout-shipping-header.html';
     $scope.template.footer = 'default-footer.html';
     $scope.saveAddressLoading = false;
     $scope.customerId = $localstorage.get("customer_id");
@@ -58,18 +58,28 @@ checkout.controller('shippingCtrl', function($scope, $location, $localstorage, $
         shoppingCartFactory.addAddress(cartUid, addressData).then(function(response) {
             $rootScope.$broadcast('updateCartSummary', false);
             $scope.saveAddressLoading = false;
-            $location.path("/delivery");
+            $location.path("/checkout/delivery");
         });
     }
 });
 
-checkout.controller('addAddressCtrl', function($scope) {
-    $scope.template.header = 'checkout-header.html';
+checkout.controller('addShippingAddressCtrl', function($scope) {
+    $scope.template.header = 'checkout-shipping-header.html';
     $scope.template.footer = 'default-footer.html';
 });
 
-checkout.controller('editAddressCtrl', function($scope) {
-    $scope.template.header = 'checkout-header.html';
+checkout.controller('editShippingAddressCtrl', function($scope) {
+    $scope.template.header = 'checkout-shipping-header.html';
+    $scope.template.footer = 'default-footer.html';
+});
+
+checkout.controller('addBillingAddressCtrl', function($scope) {
+    $scope.template.header = 'checkout-billing-header.html';
+    $scope.template.footer = 'default-footer.html';
+});
+
+checkout.controller('editBillingAddressCtrl', function($scope) {
+    $scope.template.header = 'checkout-billing-header.html';
     $scope.template.footer = 'default-footer.html';
 });
 
@@ -79,7 +89,7 @@ checkout.controller('guestAddressCtrl', function($scope) {
 });
 
 checkout.controller('billingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
-    $scope.template.header = 'checkout-header.html';
+    $scope.template.header = 'checkout-billing-header.html';
     $scope.template.footer = 'default-footer.html';
     $scope.saveAddressLoading = false;
 
@@ -119,14 +129,14 @@ checkout.controller('billingCtrl', function($scope, $location, $localstorage, $r
         shoppingCartFactory.addAddress(cartUid, addressData).then(function(response) {
             $rootScope.$broadcast('updateCartSummary', false);
             $scope.saveAddressLoading = false;
-            $location.path("/payment");
+            $location.path("/checkout/payment");
         });
     }
 
 });
 
 checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory) {
-    $scope.template.header = 'checkout-header.html';
+    $scope.template.header = 'checkout-delivery-header.html';
     $scope.template.footer = 'default-footer.html';
     $scope.saveDeliveryOptionLoading = false;
 
@@ -141,9 +151,9 @@ checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $
             $rootScope.$broadcast('updateCartSummary', false);
             $scope.saveDeliveryOptionLoading = false;
             if ($localstorage.get('customer_id')) {
-                $location.path("/billing");
+                $location.path("/checkout/billing");
             } else {
-                $location.path("/payment");
+                $location.path("/checkout/payment");
             }
         });
     };
@@ -154,104 +164,8 @@ checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $
     };
 });
 
-checkout.controller('paymentCtrl', function($scope, $location, $localstorage, shoppingCartFactory, orderFactory) {
-    $scope.template.header = 'checkout-header.html';
-    $scope.template.footer = 'default-footer.html';
-    $scope.loading = false;
-
-    shoppingCartFactory.getSageMerchantKey().then(function(response) {
-        $scope.sageMerchantKey = response.merchantSessionKey;
-    });
-
-    var getOrderData = function() {
-        var cartUid = $localstorage.get('cart_uid');
-        return shoppingCartFactory.getOrderData(cartUid).then(function(orderData) {
-            return orderData;
-        }, function(error) {
-            return $q.reject("Failed to retrieve order data");
-        });
-    };
-
-    var createOrder = function(orderData) {
-        return orderFactory.createOrder(orderData).then(function(orderNumber) {
-            $scope.orderNumber = orderNumber;
-            return orderNumber;
-        }, function(error) {
-            return $q.reject("Failed to create order");
-        });
-    };
-
-    var submitTransactionToSage = function() {
-        return shoppingCartFactory.submitTrnsactionToSage($localstorage.get('cart_uid'), $scope.card).then(function(response) {
-            return response;
-        }, function(error) {
-            return $q.reject("Failed to submit order");
-        });
-    };
-
-    var markOrderAsPaid = function() {
-        var orderStatus = {
-            status: 'Processing',
-            description: 'Order paid'
-        };
-        return orderFactory.addOrderStatus($scope.orderNumber, orderStatus).then(function(order) {
-            return order;
-        }, function(error) {
-            return $q.reject("Failed to update order status");
-        });
-    };
-
-    var redirectToOrderConfirmationPage = function() {
-        $localstorage.remove('cart_uid');
-        var customerId = $localstorage.get('customer_id');
-        $location.path("/order-confirmation/" + $scope.orderNumber);
-    };
-
-    var failed = function(error) {
-        $scope.loading = false;
-        console.log(error);
-        console.log('failed to submit order');
-    };
-
-    $scope.select = function(option) {
-        $scope.option = option;
-    };
-
-    $scope.submitOrder = function() {
-        $scope.loading = true;
-        sagepayOwnForm({
-                merchantSessionKey: $scope.sageMerchantKey
-            })
-            .tokeniseCardDetails({
-                cardDetails: {
-                    cardholderName: $scope.card.name,
-                    cardNumber: $scope.card.number,
-                    expiryDate: $scope.card.expiryDate,
-                    securityCode: $scope.card.securityCode
-                },
-                onTokenised: function(result) {
-                    if (result.success) {
-
-                        $scope.card = {
-                            merchantSessionKey: $scope.sageMerchantKey,
-                            cardIdentifier: result.cardIdentifier
-                        };
-
-                        getOrderData()
-                            .then(createOrder)
-                            .then(submitTransactionToSage)
-                            .then(markOrderAsPaid)
-                            .then(redirectToOrderConfirmationPage, failed);
-                    } else {
-                        alert(JSON.stringify(result));
-                    }
-                }
-            });
-    };
-});
-
 checkout.controller('stripePaymentCtrl', function($scope, $location, $localstorage, shoppingCartFactory, orderFactory) {
-    $scope.template.header = 'checkout-header.html';
+    $scope.template.header = 'checkout-payment-header.html';
     $scope.template.footer = 'default-footer.html';
     shoppingCartFactory.getOrderData($localstorage.get('cart_uid')).then(function(response) {
         $scope.orderData = response;
@@ -366,23 +280,19 @@ checkout.controller('orderConfirmationCtrl', function($scope, $location, $locals
 checkout.config(
     function($routeProvider) {
         $routeProvider
-            .when('/shipping', {
+            .when('/checkout/shipping', {
                 templateUrl: 'checkout/shipping.html',
                 controller: 'shippingCtrl'
             })
-            .when('/delivery', {
+            .when('/checkout/delivery', {
                 templateUrl: 'checkout/delivery.html',
                 controller: 'deliveryCtrl'
             })
-            .when('/billing', {
+            .when('/checkout/billing', {
                 templateUrl: 'checkout/billing.html',
                 controller: 'billingCtrl'
             })
-            .when('/payment-sage', {
-                templateUrl: 'checkout/payment.html',
-                controller: 'paymentCtrl'
-            })
-            .when('/payment', {
+            .when('/checkout/payment', {
                 templateUrl: 'checkout/stripe-payment.html',
                 controller: 'stripePaymentCtrl'
             })
@@ -392,19 +302,19 @@ checkout.config(
             })
             .when('/checkout/shipping/address/add', {
                 templateUrl: 'checkout/add-shipping-address.html',
-                controller: 'addAddressCtrl'
+                controller: 'addShippingAddressCtrl'
             })
             .when('/checkout/shipping/:id/address/:addressId/edit', {
                 templateUrl: 'checkout/edit-shipping-address.html',
-                controller: 'editAddressCtrl'
+                controller: 'editShippingAddressCtrl'
             })
             .when('/checkout/billing/address/add', {
                 templateUrl: 'checkout/add-billing-address.html',
-                controller: 'addAddressCtrl'
+                controller: 'addBillingAddressCtrl'
             })
             .when('/checkout/billing/:id/address/:addressId/edit', {
                 templateUrl: 'checkout/edit-billing-address.html',
-                controller: 'editAddressCtrl'
+                controller: 'editBillingAddressCtrl'
             })
             .when('/checkout/guest/address', {
                 templateUrl: 'checkout/add-guest-address.html',

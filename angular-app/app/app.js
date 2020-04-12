@@ -135,7 +135,7 @@ app.factory('$localstorage', ['$window', function($window) {
     }
 }]);
 
-app.factory('accessTokenInterceptor', function($localstorage, $location, $q, authFactory, $injector) {
+app.factory('accessTokenInterceptor', function($localstorage, $location, $q, $rootScope, authFactory, $injector) {
     var service = this;
 
     service.request = function(config) {
@@ -161,6 +161,7 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q, aut
                 var $http = $injector.get('$http');
                 return $http(response.config);
             } else {
+                $rootScope.$broadcast('resetUserInfo');
                 $location.path("/login");
             }
         }
