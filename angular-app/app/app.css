@@ -658,6 +658,10 @@ a.clickable-label:hover {
 
 .width-60 {width: 60%;}
 
+.color-matterhorn {
+  color: #505050;
+}
+
 .color-tenne {
   color: #c45500;
 }

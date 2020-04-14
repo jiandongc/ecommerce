@@ -83,9 +83,85 @@ checkout.controller('editBillingAddressCtrl', function($scope) {
     $scope.template.footer = 'default-footer.html';
 });
 
-checkout.controller('guestAddressCtrl', function($scope) {
-    $scope.template.header = 'checkout-header.html';
+checkout.controller('guestAddressCtrl', function($scope, shoppingCartFactory, $localstorage, $rootScope, $location) {
+    $scope.template.header = 'checkout-shipping-header.html';
     $scope.template.footer = 'default-footer.html';
+
+    shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response){
+        $scope.shoppingCart = response;        
+    });
+
+    shoppingCartFactory.getDeliveryOption($localstorage.get('cart_uid')).then(function(response) {
+        $scope.deliveryOptions = response;
+        $scope.deliveryOption = $scope.deliveryOptions[0];
+    });
+
+    $scope.billToSameAddress = true;
+    $scope.shippingFormInvalid = false;
+    $scope.billingFormInvalid = false;
+    $scope.submitting = false;
+
+    $scope.shipping = {
+        addressType: 'Shipping',
+        country: 'United Kingdom'
+    };
+
+    $scope.billing = {
+        addressType: 'Billing',
+        country: 'United Kingdom'
+    };
+
+    $scope.toggle = function(){
+        if (!$scope.billToSameAddress) {
+            $scope.billing.title = $scope.shipping.title;
+            $scope.billing.name = $scope.shipping.name;
+            $scope.billing.addressLine1 = $scope.shipping.addressLine1;
+            $scope.billing.addressLine2 = $scope.shipping.addressLine2;
+            $scope.billing.city = $scope.shipping.city;
+            $scope.billing.postcode = $scope.shipping.postcode;
+            $scope.billing.mobile = $scope.shipping.mobile;
+        }
+    }
+
+    $scope.select = function(deliveryOption){
+        $scope.deliveryOption = deliveryOption;
+    }
+
+    $scope.submit = function(){
+        $scope.submitting = true;
+
+        if ($scope.billToSameAddress) {
+            $scope.billing.title = $scope.shipping.title;
+            $scope.billing.name = $scope.shipping.name;
+            $scope.billing.addressLine1 = $scope.shipping.addressLine1;
+            $scope.billing.addressLine2 = $scope.shipping.addressLine2;
+            $scope.billing.city = $scope.shipping.city;
+            $scope.billing.postcode = $scope.shipping.postcode;
+            $scope.billing.mobile = $scope.shipping.mobile;
+        }
+
+        $scope.shippingFormInvalid = $scope.shippingForm.$invalid;
+        $scope.billingFormInvalid = $scope.billingForm.$invalid;
+
+        if($scope.shippingFormInvalid || $scope.billingFormInvalid){
+            console.log($scope.shippingFormInvalid);
+            console.log($scope.billingFormInvalid);
+            $scope.submitting = false;
+            return;
+        }
+
+        shoppingCartFactory.addAddress($localstorage.get('cart_uid'), $scope.shipping).then(function(response) {
+            shoppingCartFactory.addAddress($localstorage.get('cart_uid'), $scope.billing).then(function(response) {
+                shoppingCartFactory.addDeliveryOption($localstorage.get('cart_uid'), $scope.deliveryOption).then(function(response) {
+                    $rootScope.$broadcast('updateCartSummary', false);
+                    $scope.submitting = false;
+                    $location.path("/checkout/payment");
+                });
+            });
+        });
+
+        
+    }
 });
 
 checkout.controller('billingCtrl', function($scope, $location, $localstorage, $rootScope, customerFactory, shoppingCartFactory) {
@@ -316,8 +392,8 @@ checkout.config(
                 templateUrl: 'checkout/edit-billing-address.html',
                 controller: 'editBillingAddressCtrl'
             })
-            .when('/checkout/guest/address', {
-                templateUrl: 'checkout/add-guest-address.html',
+            .when('/checkout/guest', {
+                templateUrl: 'checkout/guest-checkout.html',
                 controller: 'guestAddressCtrl'
             })
             .when('/checkout/guest/delivery', {
