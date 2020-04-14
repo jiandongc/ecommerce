@@ -45,12 +45,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3 fw-light required-field" style="text-align: left" for="shipping-addressLine2">Address Line 2:</label>
-                            <div class="col-sm-9" ng-class="{'has-error': shippingForm.addressLine2.$invalid && shippingFormInvalid}">
-                                <input type="text" class="form-control" name="addressLine2" ng-model="shipping.addressLine2" ng-required="true">
-                                <div ng-show="shippingForm.addressLine2.$invalid && shippingFormInvalid">
-                                    <small class="text-danger">Please enter Address Line 2</small>
-                                </div>
+                            <label class="control-label col-sm-3 fw-light" style="text-align: left" for="shipping-addressLine2">Address Line 2:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="addressLine2" ng-model="shipping.addressLine2">
                             </div>
                         </div>
                         <div class="form-group">
@@ -141,12 +138,9 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="control-label col-sm-3 fw-light required-field" style="text-align: left" for="billing-addressLine2">Address Line 2:</label>
-                            <div class="col-sm-9" ng-class="{'has-error': billingForm.addressLine2.$invalid && billingFormInvalid}">
-                                <input type="text" class="form-control" name="addressLine2" ng-model="billing.addressLine2" ng-required="true">
-                                <div ng-show="billingForm.addressLine2.$invalid && billingFormInvalid">
-                                    <small class="text-danger">Please enter Address Line 2</small>
-                                </div>
+                            <label class="control-label col-sm-3 fw-light" style="text-align: left" for="billing-addressLine2">Address Line 2:</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" name="addressLine2" ng-model="billing.addressLine2">
                             </div>
                         </div>
                         <div class="form-group">

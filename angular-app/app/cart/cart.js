@@ -19,7 +19,7 @@ cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $l
     }
 
     $scope.checkout = function() {
-        if ($localstorage.containsKey('cart_uid')) {
+        if ($localstorage.containsKey('customer_id')) {
             $scope.checking = true;
             shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response){
                 $scope.shoppingCart = response;
@@ -34,7 +34,22 @@ cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $l
                 }
             });
         } else {
-            $location.path("/login");
+            $scope.checking = true;
+            shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response){
+                $scope.shoppingCart = response;
+                if ($scope.shoppingCart.email == null) {
+                    $location.path("/login");
+                } else if ($scope.shoppingCart.shipping == null) {
+                    $location.path("/checkout/guest");
+                } else if ($scope.shoppingCart.deliveryOption == null){
+                    $location.path("/checkout/guest");
+                } else if ($scope.shoppingCart.billing == null){
+                    $location.path("/checkout/guest");
+                }  else {
+                    $location.path("/checkout/guest/payment");
+                }
+            });
+            
         }
     };
 });

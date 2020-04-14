@@ -87,29 +87,38 @@ checkout.controller('guestAddressCtrl', function($scope, shoppingCartFactory, $l
     $scope.template.header = 'checkout-shipping-header.html';
     $scope.template.footer = 'default-footer.html';
 
+    $scope.billToSameAddress = true;
+    $scope.shippingFormInvalid = false;
+    $scope.billingFormInvalid = false;
+    $scope.submitting = false;
+    
     shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response){
-        $scope.shoppingCart = response;        
+        $scope.shoppingCart = response;
+        if($scope.shoppingCart.shipping != null){
+            $scope.shipping = $scope.shoppingCart.shipping;
+            $scope.shipping.addressType = 'Shipping';
+        } else {
+            $scope.shipping = {
+                addressType: 'Shipping',
+                country: 'United Kingdom'
+            };
+        }
+
+        if($scope.shoppingCart.billing != null){
+            $scope.billing = $scope.shoppingCart.billing;
+            $scope.billing.addressType = 'Billing';
+        } else {
+            $scope.billing = {
+                addressType: 'Billing',
+                country: 'United Kingdom'
+            };
+        }    
     });
 
     shoppingCartFactory.getDeliveryOption($localstorage.get('cart_uid')).then(function(response) {
         $scope.deliveryOptions = response;
         $scope.deliveryOption = $scope.deliveryOptions[0];
     });
-
-    $scope.billToSameAddress = true;
-    $scope.shippingFormInvalid = false;
-    $scope.billingFormInvalid = false;
-    $scope.submitting = false;
-
-    $scope.shipping = {
-        addressType: 'Shipping',
-        country: 'United Kingdom'
-    };
-
-    $scope.billing = {
-        addressType: 'Billing',
-        country: 'United Kingdom'
-    };
 
     $scope.toggle = function(){
         if (!$scope.billToSameAddress) {
@@ -131,6 +140,11 @@ checkout.controller('guestAddressCtrl', function($scope, shoppingCartFactory, $l
         $scope.submitting = true;
 
         if ($scope.billToSameAddress) {
+            $scope.shippingFormInvalid = $scope.shippingForm.$invalid;
+            if($scope.shippingFormInvalid){
+                $scope.submitting = false;
+                return;
+            }
             $scope.billing.title = $scope.shipping.title;
             $scope.billing.name = $scope.shipping.name;
             $scope.billing.addressLine1 = $scope.shipping.addressLine1;
@@ -138,16 +152,14 @@ checkout.controller('guestAddressCtrl', function($scope, shoppingCartFactory, $l
             $scope.billing.city = $scope.shipping.city;
             $scope.billing.postcode = $scope.shipping.postcode;
             $scope.billing.mobile = $scope.shipping.mobile;
-        }
+        } else {
+            $scope.shippingFormInvalid = $scope.shippingForm.$invalid;
+            $scope.billingFormInvalid = $scope.billingForm.$invalid;
 
-        $scope.shippingFormInvalid = $scope.shippingForm.$invalid;
-        $scope.billingFormInvalid = $scope.billingForm.$invalid;
-
-        if($scope.shippingFormInvalid || $scope.billingFormInvalid){
-            console.log($scope.shippingFormInvalid);
-            console.log($scope.billingFormInvalid);
-            $scope.submitting = false;
-            return;
+            if($scope.shippingFormInvalid || $scope.billingFormInvalid){
+                $scope.submitting = false;
+                return;
+            }
         }
 
         shoppingCartFactory.addAddress($localstorage.get('cart_uid'), $scope.shipping).then(function(response) {
@@ -159,8 +171,6 @@ checkout.controller('guestAddressCtrl', function($scope, shoppingCartFactory, $l
                 });
             });
         });
-
-        
     }
 });
 
@@ -241,8 +251,15 @@ checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $
 });
 
 checkout.controller('stripePaymentCtrl', function($scope, $location, $localstorage, shoppingCartFactory, orderFactory) {
-    $scope.template.header = 'checkout-payment-header.html';
-    $scope.template.footer = 'default-footer.html';
+
+    if($localstorage.containsKey("customer_id")){
+        $scope.template.header = 'checkout-payment-header.html';
+        $scope.template.footer = 'default-footer.html';
+    } else {
+        $scope.template.header = 'guest-checkout-payment-header.html';
+        $scope.template.footer = 'default-footer.html';
+    }
+
     shoppingCartFactory.getOrderData($localstorage.get('cart_uid')).then(function(response) {
         $scope.orderData = response;
 
@@ -396,8 +413,8 @@ checkout.config(
                 templateUrl: 'checkout/guest-checkout.html',
                 controller: 'guestAddressCtrl'
             })
-            .when('/checkout/guest/delivery', {
-                templateUrl: 'checkout/delivery.html',
-                controller: 'deliveryCtrl'
+            .when('/checkout/guest/payment', {
+                templateUrl: 'checkout/stripe-payment.html',
+                controller: 'stripePaymentCtrl'
             });
     });
