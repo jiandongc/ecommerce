@@ -21,9 +21,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
-import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.HttpStatus.*;
 
 public class OrderControllerTest extends AbstractControllerTest {
 
@@ -334,6 +332,68 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberOne), is(1));
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberTwo), is(0));
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberThree), is(0));
+    }
+
+    @Test
+    public void shouldAddCustomerInfo(){
+        // Given
+        Order order = Order.builder().customerId(null)
+                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumber = orderService.createOrder(order);
+        final HttpEntity<String> httpEntity = new HttpEntity<>("1234", headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(CREATED));
+        Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
+        assertThat(orderOptional.get().getCustomerId(), is(1234L));
+    }
+
+    @Test
+    public void shouldRejectRequestToUpdateCustomerInfoWithGuestToken(){
+        // Given - guest token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
+        Order order = Order.builder().customerId(null)
+                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumber = orderService.createOrder(order);
+        final HttpEntity<String> httpEntity = new HttpEntity<>("1234", headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(FORBIDDEN));
+    }
+
+    @Test
+    public void shouldNotUpdateCustomerInfoIfAlreadySet(){
+        // Given
+        Order order = Order.builder().customerId(123L)
+                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumber = orderService.createOrder(order);
+        final HttpEntity<String> httpEntity = new HttpEntity<>("456", headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(CREATED));
+        Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
+        assertThat(orderOptional.get().getCustomerId(), is(123L));
     }
 
 }

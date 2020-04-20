@@ -47,6 +47,14 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
+    @RequestMapping(value = "{orderNumber}/customer", method = POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Order> addCustomerInfo(@PathVariable String orderNumber, @RequestBody String customerId) {
+        orderService.addCustomerInfo(orderNumber, Long.valueOf(customerId));
+        Optional<Order> order = orderService.findByOrderNumber(orderNumber);
+        return order.map(o -> new ResponseEntity<>(o, CREATED)).orElse(new ResponseEntity<>(NOT_FOUND));
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Order> getOrdersForCustomer(@RequestParam(value = "customerId") Long customerId,
                                             @RequestParam(value = "status", required = false) String status) {

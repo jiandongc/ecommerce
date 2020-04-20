@@ -50,6 +50,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
+    public void addCustomerInfo(String orderNumber, long customerId) {
+        Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
+        orderOptional.ifPresent(order -> {
+            if (order.getCustomerId() == null) {
+                order.setCustomerId(customerId);
+            }
+        });
+    }
+
+    @Override
+    @Transactional
     public void addOrderStatus(String orderNumber, OrderStatus orderStatus) {
         Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
         orderStatus.setCreationTime(LocalDateTime.now());
@@ -60,9 +71,9 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public List<Order> findOrders(Long customerId, String status) {
         final List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(customerId);
-        if("open".equalsIgnoreCase(status)){
+        if ("open".equalsIgnoreCase(status)) {
             return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("created|processing|shipped|payment succeeded")).collect(Collectors.toList());
-        } else if("completed".equalsIgnoreCase(status)){
+        } else if ("completed".equalsIgnoreCase(status)) {
             return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("delivered|returned|cancelled|failed")).collect(Collectors.toList());
         }
 

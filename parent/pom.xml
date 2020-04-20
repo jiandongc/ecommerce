@@ -21,6 +21,7 @@
         <module>../product</module>
         <module>../shopping-cart</module>
         <module>../review</module>
+        <module>../email</module>
         <!--<module>../integration-test</module>-->
     </modules>
 
