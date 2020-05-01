@@ -1,0 +1,92 @@
+<div class="container checkout">
+    <div class="clearfix">
+        <div class="pull-right">
+            <div class="fs-13 fw-bold">Order Confirmation</div>
+            <div>Order #<a href="">{{order.orderNumber}}</a></div>
+        </div>
+    </div>
+    <div class="fw-bold m-t-05 m-b-05">
+        Thanks for your order. Your estimated delivery date is indicated below.<br/>
+        <p class="m-t-05" ng-bind-html="message"></p>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 m-b-10">
+            <div class="a-box-group">
+                <div class="p-10 a-box">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Arriving</span>
+                            <div class="fw-bold" style="color:#009933;">{{order.eta}}</div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Your delivery option</span>
+                            <div class="fw-bold" style="color:#009933;">{{order.deliveryMethod}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-10 a-box">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Delivery Address</span>
+                            <div class="fs-09 m-b-05" ng-repeat="address in order.orderAddresses | filter:{addressType:'Shipping'}">
+                                <div>{{address.title}} {{address.name}}</div>
+                                <div>{{address.addressLine1}}</div>
+                                <div>{{address.addressLine2}}</div>
+                                <div>{{address.city}}, {{address.postcode}}</div>
+                                <div>{{address.country}}</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Billing Address</span>
+                            <div class="fs-09 m-b-05" ng-repeat="address in order.orderAddresses | filter:{addressType:'Billing'}">
+                                <div>{{address.title}} {{address.name}}</div>
+                                <div>{{address.addressLine1}}</div>
+                                <div>{{address.addressLine2}}</div>
+                                <div>{{address.city}}, {{address.postcode}}</div>
+                                <div>{{address.country}}</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Order Summary</span>
+                            <div class="fs-09 m-b-05">
+                                <div>Item(s) Subtotal: <span class="fw-bold">{{order.items + order.itemsVat | currency:'£'}}</span></div>
+                                <div>Postage & Packing: <span class="fw-bold">{{order.postage + order.postageVat | currency:'£'}}</span></div>
+                                <div>Grant Total: <span class="fw-bold">{{order.orderTotal | currency:'£'}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="col-xs-12 m-b-10">
+            <div class="a-box-group">
+                <div class="p-l-10 p-t-05 p-b-05 a-box a-color-offset-background fs-09 fw-bold">Order Details</div>
+                <div class="p-10 a-box" ng-repeat="orderItem in order.orderItems">
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div style="float: left;" class="m-r-10">
+                                <a href="#!/products/{{orderItem.code}}"><img class="img-responsive" ng-src="{{orderItem.imageUrl}}" style="width: 120px; height: 120px;"></a>
+                            </div>
+                            <div class="p-r-05">
+                                <div class="fs-09">
+                                    <a href="#!/products/{{orderItem.code}}"><span class="product-name">{{orderItem.name}}</span></a>
+                                </div>
+                                <div class="fs-09">
+                                    <span class="product-sku">#{{orderItem.sku}}</span>
+                                </div>
+                                <div class="fs-09">
+                                    <span class="product-desc">{{orderItem.description}}</span>
+                                </div>
+                                <div class="fs-09">
+                                    <span class="fw-light">Quantity:&nbsp&nbsp</span>{{orderItem.quantity}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
