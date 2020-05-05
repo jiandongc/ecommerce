@@ -37,11 +37,18 @@ order.factory('orderFactory', function($http, environment){
       }); 
   };
 
+  var addCustomerInfo = function(orderNumber, customerId) {
+    return $http.post(environment.orderUrl + '/orders/' + orderNumber + '/customer', customerId).then(function(response) {
+        return response.data;
+    });
+  };
+
 	return {
     	createOrder: createOrder,
     	addOrderStatus: addOrderStatus,
     	getOrderByNumber: getOrderByNumber,
       getOrderByCustomerId: getOrderByCustomerId,
-      downloadStripeClientSecret: downloadStripeClientSecret
+      downloadStripeClientSecret: downloadStripeClientSecret,
+      addCustomerInfo: addCustomerInfo
   	}
 });
