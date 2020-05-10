@@ -1,1 +1,1 @@
-CREATE USER product;
+CREATE USER product_owner;
