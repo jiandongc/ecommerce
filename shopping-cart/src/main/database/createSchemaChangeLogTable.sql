@@ -1,4 +1,4 @@
-CREATE TABLE changelog
+CREATE TABLE shoppingcart_owner.changelog
 (
 	change_number bigint NOT NULL,
  	delta_set varchar(10),

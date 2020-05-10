@@ -1,1 +1,1 @@
-CREATE SCHEMA shoppingcart AUTHORIZATION shoppingcart;
+CREATE SCHEMA shoppingcart_owner AUTHORIZATION shoppingcart_owner;

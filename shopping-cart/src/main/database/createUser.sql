@@ -1,1 +1,1 @@
-CREATE USER shoppingcart;
+CREATE USER shoppingcart_owner;
