@@ -1,1 +1,1 @@
-CREATE SCHEMA customer AUTHORIZATION customer;
+CREATE SCHEMA customer_owner AUTHORIZATION customer_owner;

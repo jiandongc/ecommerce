@@ -16,12 +16,8 @@
         <java.version>1.8</java.version>
         <postgresql.version>42.2.5</postgresql.version>
         <dbdeploy.version>3.0M3</dbdeploy.version>
-        <db.driver>org.postgresql.Driver</db.driver>
-        <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
         <lombok.version>1.18.6</lombok.version>
         <jjwt.version>0.7.0</jjwt.version>
-        <dbdeploy.user>customer</dbdeploy.user>
-        <dbdeploy.password>password</dbdeploy.password>
     </properties>
 
     <dependencies>
@@ -165,6 +161,27 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
+                <dbdeploy.user>customer</dbdeploy.user>
+                <dbdeploy.password>password</dbdeploy.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>staging</id>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://store-2552.cassjf4p6h1z.eu-west-1.rds.amazonaws.com:5432/store-2552</db.url>
+                <dbdeploy.user>customer_owner</dbdeploy.user>
+                <dbdeploy.password></dbdeploy.password>
+            </properties>
         </profile>
     </profiles>
 

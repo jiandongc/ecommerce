@@ -1,1 +1,1 @@
-CREATE USER customer;
+CREATE USER customer_owner;

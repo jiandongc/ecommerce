@@ -89,7 +89,7 @@
 				<db.driver>org.postgresql.Driver</db.driver>
 				<db.url>jdbc:postgresql://store-2552.cassjf4p6h1z.eu-west-1.rds.amazonaws.com:5432/store-2552</db.url>
 				<dbdeploy.user>shoppingcart_owner</dbdeploy.user>
-				<dbdeploy.password>password</dbdeploy.password>
+				<dbdeploy.password></dbdeploy.password>
 			</properties>
 		</profile>
 	</profiles>
