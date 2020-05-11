@@ -15,7 +15,7 @@
     </parent>
 
     <modules>
-        <module>authserver</module>
+        <module>authentication</module>
         <module>customer</module>
         <module>order</module>
         <module>product</module>
