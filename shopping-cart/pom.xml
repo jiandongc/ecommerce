@@ -5,7 +5,7 @@
 	<artifactId>shopping-cart</artifactId>
 	<packaging>jar</packaging>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>shopping-cart</name>
+	<name>shopping-cart service</name>
 
     <parent>
         <groupId>com.ecommerce</groupId>

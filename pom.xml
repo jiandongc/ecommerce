@@ -15,14 +15,13 @@
     </parent>
 
     <modules>
-        <module>../authserver</module>
-        <module>../customer</module>
-        <module>../order</module>
-        <module>../product</module>
-        <module>../shopping-cart</module>
-        <module>../review</module>
-        <module>../email</module>
-        <!--<module>../integration-test</module>-->
+        <module>authserver</module>
+        <module>customer</module>
+        <module>order</module>
+        <module>product</module>
+        <module>shopping-cart</module>
+        <module>review</module>
+        <module>email</module>
     </modules>
 
 </project>
