@@ -11,10 +11,12 @@
 	},
 	"uat" : {
 		"environment" : {
-			"authServerUrl": "http://cawaiiauthservice.rap9ugageu.eu-west-1.elasticbeanstalk.com",
-			"customerUrl": "http://cawaiicustomerservice.zkmkymkcgi.eu-west-1.elasticbeanstalk.com",
-			"shoppingCartUrl": "http://cawaiiorderservice.zef6waiujn.eu-west-1.elasticbeanstalk.com",
-			"productUrl": "http://cawaiiproductservice.5ydhdu2x39.eu-west-1.elasticbeanstalk.com"
+			"authServerUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/auth",
+			"customerUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/c",
+			"orderUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/o",
+			"shoppingCartUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/sc",
+			"productUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/p",
+			"reviewUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/r"
 		}	
 	}
 	

@@ -15,13 +15,14 @@
     </parent>
 
     <modules>
+        <module>email</module>
         <module>authentication</module>
-        <module>customer</module>
-        <module>order</module>
         <module>product</module>
         <module>shopping-cart</module>
+        <module>customer</module>
+        <module>order</module>
         <module>review</module>
-        <module>email</module>
+        <module>aws-assembly</module>
     </modules>
 
 </project>

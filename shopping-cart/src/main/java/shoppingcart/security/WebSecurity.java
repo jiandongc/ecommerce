@@ -26,6 +26,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers("/carts/stripe/webhook/payment_intents").permitAll()
+                .antMatchers("/health").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilter(this.jwtAuthorizationFilter())
                 .sessionManagement()
