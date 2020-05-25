@@ -3,4 +3,3 @@ product-service: java -Xmx128m -Dspring.profiles.active="staging" -jar product-1
 shopping-cart-service: java -Xmx128m -Dspring.profiles.active="staging" -jar shopping-cart-1.0-SNAPSHOT.jar
 customer-service: java -Xmx128m -Dspring.profiles.active="staging" -jar customer-1.0-SNAPSHOT.jar
 order-service: java -Xmx128m -Dspring.profiles.active="staging" -jar order-1.0-SNAPSHOT.jar
-review-service: java -Xmx128m -Dspring.profiles.active="staging" -jar review-1.0-SNAPSHOT.jar

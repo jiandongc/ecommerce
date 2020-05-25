@@ -25,7 +25,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
-                .antMatchers("/orders/stripe/webhook/payment_intents").permitAll()
+                .antMatchers("/orders/stripe/webhook/payment_intents", "/o/orders/stripe/webhook/payment_intents").permitAll()
                 .antMatchers("/health").permitAll()
                 .anyRequest().authenticated().and()
                 .addFilter(this.jwtAuthorizationFilter())

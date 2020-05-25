@@ -28,7 +28,7 @@ home.component('productpanel', {
       }
     }
   },
-  bindings: {title: '@', titlecolor: '@'}
+  bindings: {title: '@', color: '@', icon: '@'}
 });
 
 home.config(['$routeProvider',
