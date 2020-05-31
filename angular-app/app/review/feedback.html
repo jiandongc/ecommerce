@@ -21,20 +21,20 @@
     <div ng-hide="loading || data.size > 0" class="row p-25">
         <postfeedback seeallbutton=false></postfeedback>
     </div>
-    <div ng-hide="loading" class="row p-25" ng-repeat="item in data.feedback">
+    <div ng-hide="loading" class="row p-25" ng-repeat="item in data.comment">
         <div class="col-xs-12 underline">
             <span class="color-grey pull-right">{{item.creationTime | date:'yyyy-MM-dd @ h:mma'}}</span>
         </div>
         <div class="col-xs-12 p-b-10 p-t-10">
             <span class="color-cream-can fw-bold">Q: </span>
-            <span class="color-grey">{{item.text}}</span>
+            <span class="color-grey">{{item.comment}}</span>
         </div>
-        <div class="col-xs-12 p-b-10" ng-repeat="answerItem in item.answers">
+        <div class="col-xs-12 p-b-10" ng-repeat="response in item.responses">
             <span class="color-tiffany-green fw-bold">A: </span>
-            <span class="color-grey">{{answerItem.text}}</span>
+            <span class="color-grey">{{response.response}}</span>
         </div>
         <div class="col-xs-12">
-            <span ng-hide="voting[$index]" class="glyphicon glyphicon-thumbs-up color-grey fs-11" style="display: table-cell; vertical-align: middle; cursor: pointer;" ng-click="voteUp(item._id, $index)"></span>
+            <span ng-hide="voting[$index]" class="glyphicon glyphicon-thumbs-up color-grey fs-11" style="display: table-cell; vertical-align: middle; cursor: pointer;" ng-click="voteUp(item.id, $index)"></span>
             <span ng-show="voting[$index]" class="glyphicon glyphicon-refresh spinning color-grey fs-11" style="display: table-cell; vertical-align: middle;"></span>
             <span class="color-grey" style="display: table-cell; vertical-align: middle; padding-left: 8px">{{item.vote}}</span>
         </div>

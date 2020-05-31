@@ -1,0 +1,1 @@
+CREATE SCHEMA review_owner AUTHORIZATION review_owner;

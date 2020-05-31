@@ -20,7 +20,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 		$scope.loading = false;
 		$scope.data = response;
 		$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
-		angular.forEach(response.feedback, function(value, key) {
+		angular.forEach(response.comment, function(value, key) {
 			$scope.voting.push(false);
 		});
 	});
@@ -29,8 +29,8 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 		$scope.loadingMore = true;
 		$scope.offset = $scope.offset + $scope.limit;
 		reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
-			angular.forEach(response.feedback, function(value, key) {
-				$scope.data.feedback.push(value);
+			angular.forEach(response.comment, function(value, key) {
+				$scope.data.comment.push(value);
 				$scope.voting.push(false);
 			});
 			$scope.loadingMore = false;
@@ -51,7 +51,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 			$scope.loading = false;
 			$scope.data = response;
 			$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
-			angular.forEach(response.feedback, function(value, key) {
+			angular.forEach(response.comment, function(value, key) {
 				$scope.voting.push(false);
 			});
 		});
@@ -69,7 +69,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 			$scope.loading = false;
 			$scope.data = response;
 			$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
-			angular.forEach(response.feedback, function(value, key) {
+			angular.forEach(response.comment, function(value, key) {
 				$scope.voting.push(false);
 			});
 		});
@@ -78,7 +78,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 	$scope.voteUp = function(id, index){
 		$scope.voting[index] = true;
 		reviewFactory.voteUp(id).then(function(response){
-			$scope.data.feedback[index] = response;
+			$scope.data.comment[index] = response;
 			$scope.voting[index] = false;
 		});
 	};
@@ -88,36 +88,36 @@ review.factory('reviewFactory', function($http, environment){
 
 	var addFeedback = function(comment){
         var configs = {headers: {'Content-Type' : 'application/json'}};
-        var data = {text: comment};
-        return $http.post(environment.reviewUrl + '/reviews/', data, configs).then(function(response){
+        var data = {'comment': comment, 'code': 'site'};
+        return $http.post(environment.reviewUrl + '/comments/', data, configs).then(function(response){
             return response.data;
         });
 	};
 
 	var getFeedbackById = function(id){
-      return $http.get(environment.reviewUrl + '/reviews/' + id).then(function(response){
+      return $http.get(environment.reviewUrl + '/comments/' + id).then(function(response){
         return response.data;
       });
 	};
 
 	var getFeedback = function(search, sort, offset, limit){
-		var params = 'offset=' + offset + '&limit=' + limit;
+		var params = '&offset=' + offset + '&limit=' + limit;
 
 		if (sort) {
 			params = params + '&sort=' + sort;
 		}
 
 		if (search) {
-  			params = params + '&text=' + search;
+  			params = params + '&comment=' + search;
 		}
 
-      	return $http.get(environment.reviewUrl + '/reviews?' + params).then(function(response){
+      	return $http.get(environment.reviewUrl + '/comments?code=site' + params).then(function(response){
         	return response.data;
       	});
 	};
 
 	var voteUp = function(id){
-		return $http.post(environment.reviewUrl + '/reviews/' + id + "/vote").then(function(response){
+		return $http.post(environment.reviewUrl + '/comments/' + id + "/vote").then(function(response){
         	return response.data;
       	});
 	}
@@ -145,7 +145,7 @@ review.component('postfeedback', {
     	}
 
     	reviewFactory.addFeedback(feedback).then(function(response){
-      		$location.path("/feedback-received/" + response._id);
+      		$location.path("/feedback-received/" + response.id);
     	});
   	}	
   },

@@ -6,9 +6,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import review.Application;
-import review.repository.FeedbackRepository;
+import review.repository.CommentRepository;
 
 
 import java.util.Random;
@@ -26,11 +27,15 @@ public abstract class AbstractControllerTest {
     protected HttpHeaders headers = null;
 
     @Autowired
-    protected FeedbackRepository feedbackRepository;
+    protected JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    protected CommentRepository commentRepository;
 
     @Before
     public void before(){
-        feedbackRepository.deleteAll();
+        jdbcTemplate.update("delete from response");
+        jdbcTemplate.update("delete from comment");
         if (headers == null) {
             headers = new HttpHeaders();
             headers.setContentType(APPLICATION_JSON);
@@ -46,6 +51,7 @@ public abstract class AbstractControllerTest {
 
     @After
     public void after(){
-        feedbackRepository.deleteAll();
+        jdbcTemplate.update("delete from response");
+        jdbcTemplate.update("delete from comment");
     }
 }

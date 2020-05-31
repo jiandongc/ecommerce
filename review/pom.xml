@@ -17,24 +17,55 @@
 
     <properties>
         <java.version>1.8</java.version>
+        <postgresql.version>42.2.5</postgresql.version>
         <lombok.version>1.18.6</lombok.version>
+        <dbdeploy.version>3.0M3</dbdeploy.version>
         <jjwt.version>0.7.0</jjwt.version>
+        <stripe.version>17.6.0</stripe.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-rest</artifactId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>org.hibernate</artifactId>
+                    <groupId>hibernate-core</groupId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.2.10.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.2.10.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -45,6 +76,16 @@
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>${stripe.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ecommerce</groupId>
+            <artifactId>email</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <!-- Test Scope-->
         <dependency>
@@ -54,12 +95,72 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>local</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://127.0.0.1:5432/ecommerce</db.url>
+                <dbdeploy.user>review_owner</dbdeploy.user>
+                <dbdeploy.password>password</dbdeploy.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>staging</id>
+            <properties>
+                <db.driver>org.postgresql.Driver</db.driver>
+                <db.url>jdbc:postgresql://store-2552.cassjf4p6h1z.eu-west-1.rds.amazonaws.com:5432/store-2552</db.url>
+                <dbdeploy.user>review_owner</dbdeploy.user>
+                <dbdeploy.password></dbdeploy.password>
+            </properties>
+        </profile>
+    </profiles>
+
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>com.dbdeploy</groupId>
+                <artifactId>maven-dbdeploy-plugin</artifactId>
+                <version>${dbdeploy.version}</version>
+
+                <configuration>
+                    <scriptdirectory>src/main/database/deltas</scriptdirectory>
+                    <driver>${db.driver}</driver>
+                    <url>${db.url}</url>
+                    <userid>${dbdeploy.user}</userid>
+                    <password>${dbdeploy.password}</password>
+                    <dbms>pgsql</dbms>
+                    <delimiter>;</delimiter>
+                    <delimiterType>row</delimiterType>
+                    <outputfile>apply.sql</outputfile>
+                    <undoOutputfile>undo.sql</undoOutputfile>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
         </plugins>
     </build>
