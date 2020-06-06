@@ -15,7 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderData {
 
-    private Long customerId;
+    private String customerId;
 
     private String email;
 

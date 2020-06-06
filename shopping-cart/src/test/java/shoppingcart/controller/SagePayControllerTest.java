@@ -42,7 +42,7 @@ public class SagePayControllerTest extends AbstractControllerTest {
     @Test
     public void shouldSubmitTransactionToSage() {
         // Given
-        final UUID uuid = shoppingCartRepository.create(123L, null);
+        final UUID uuid = shoppingCartRepository.create("123e4567-e89b-12d3-a456-556642440000", null);
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()
                 .name("product")

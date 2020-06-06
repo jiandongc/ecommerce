@@ -22,10 +22,10 @@ import static java.util.Optional.empty;
 @Repository
 public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
-    private static final String INSERT_SQL = "INSERT INTO shopping_cart (cart_uid, customer_id, email) VALUES (?, ?, ?)";
+    private static final String INSERT_SQL = "INSERT INTO shopping_cart (cart_uid, customer_uid, email) VALUES (?, ?, ?)";
     private static final String SELECT_BY_UUID_SQL = "SELECT * FROM shopping_cart WHERE cart_uid = ? AND active = true";
-    private static final String SELECT_BY_CUSTOMER_ID_SQL = "SELECT * FROM shopping_cart WHERE customer_id = ? AND active = true";
-    private static final String UPDATE_CUSTOMER_ID = "UPDATE shopping_cart SET customer_id = ? WHERE cart_uid = ?";
+    private static final String SELECT_BY_CUSTOMER_ID_SQL = "SELECT * FROM shopping_cart WHERE customer_uid = ? AND active = true";
+    private static final String UPDATE_CUSTOMER_ID = "UPDATE shopping_cart SET customer_uid = ? WHERE cart_uid = ?";
     private static final String UPDATE_EMAIL = "UPDATE shopping_cart SET email = ? WHERE cart_uid = ?";
     private static final String INSERT_ADDRESS_SQL = "INSERT INTO address " +
             "(address_type, title, name, mobile, address_line_1, address_line_2, address_line_3, city, country, post_code, shopping_cart_id) " +
@@ -68,9 +68,9 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     }
 
     @Override
-    public UUID create(long customerId, String email) {
+    public UUID create(String customerUid, String email) {
         final UUID uuid = UUID.randomUUID();
-        jdbcTemplate.update(INSERT_SQL, uuid, customerId, email);
+        jdbcTemplate.update(INSERT_SQL, uuid, UUID.fromString(customerUid), email);
         return uuid;
     }
 
@@ -84,13 +84,13 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     }
 
     @Override
-    public List<ShoppingCart> findByCustomerId(Long customerId) {
-        return jdbcTemplate.query(SELECT_BY_CUSTOMER_ID_SQL, shoppingCartMapper, customerId);
+    public List<ShoppingCart> findByCustomerUid(UUID customerUid) {
+        return jdbcTemplate.query(SELECT_BY_CUSTOMER_ID_SQL, shoppingCartMapper, customerUid);
     }
 
     @Override
-    public int updateCustomerId(UUID cartUid, Long customerId) {
-        return jdbcTemplate.update(UPDATE_CUSTOMER_ID, customerId, cartUid);
+    public int updateCustomerUid(UUID cartUid, UUID customerUid) {
+        return jdbcTemplate.update(UPDATE_CUSTOMER_ID, customerUid, cartUid);
     }
 
     @Override

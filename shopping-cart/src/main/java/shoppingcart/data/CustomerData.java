@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CustomerData {
 
-    private Long id;
+    private String id;
 
     private String email;
 }

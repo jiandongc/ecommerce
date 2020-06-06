@@ -48,8 +48,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId) {
-        final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerId);
+    public Optional<ShoppingCart> getShoppingCartByCustomerUid(String customerUid) {
+        final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerUid(UUID.fromString(customerUid));
         if (shoppingCarts.size() > 0) {
             final ShoppingCart shoppingCart = shoppingCarts.get(0);
             shoppingCart.setShoppingCartItems(cartItemRepository.findByCartId(shoppingCart.getId()));
@@ -65,10 +65,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     @Transactional
     public void addCustomerInfo(UUID cartUid, CustomerData customerData) {
         if (customerData.getId() != null) {
-            final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerId(customerData.getId());
-            shoppingCarts.stream().filter(cart -> !cart.getCartUid().equals(cartUid))
-                    .forEach(this::deactivateShoppingCart);
-            cartRepository.updateCustomerId(cartUid, customerData.getId());
+            final List<ShoppingCart> shoppingCarts = cartRepository.findByCustomerUid(UUID.fromString(customerData.getId()));
+            shoppingCarts.stream().filter(cart -> !cart.getCartUid().equals(cartUid)).forEach(this::deactivateShoppingCart);
+            cartRepository.updateCustomerUid(cartUid, UUID.fromString(customerData.getId()));
         }
         cartRepository.updateEmail(cartUid, customerData.getEmail());
     }

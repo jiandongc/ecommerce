@@ -10,7 +10,7 @@ public class ShoppingCart {
 
     private long id;
     private UUID cartUid;
-    private Long customerId;
+    private UUID customerUid;
     private String email;
     private Date creationTime;
     private boolean active;
@@ -19,10 +19,10 @@ public class ShoppingCart {
     private Address shippingAddress;
     private DeliveryOption deliveryOption;
 
-    private ShoppingCart(long id, UUID cartUid, Long customerId, String email, Date creationTime, boolean active) {
+    private ShoppingCart(long id, UUID cartUid, UUID customerUid, String email, Date creationTime, boolean active) {
         this.id = id;
         this.cartUid = cartUid;
-        this.customerId = customerId;
+        this.customerUid = customerUid;
         this.email = email;
         this.creationTime = creationTime;
         this.active = active;
@@ -43,8 +43,8 @@ public class ShoppingCart {
         return cartUid;
     }
 
-    public Long getCustomerId() {
-        return customerId;
+    public UUID getCustomerUid() {
+        return customerUid;
     }
 
     public String getEmail() {
@@ -59,8 +59,8 @@ public class ShoppingCart {
         return active;
     }
 
-    public void setCustomerId(Long customerId) {
-        this.customerId = customerId;
+    public void setCustomerUid(UUID customerUid) {
+        this.customerUid = customerUid;
     }
 
     public List<ShoppingCartItem> getShoppingCartItems() {
@@ -137,7 +137,7 @@ public class ShoppingCart {
     public static class ShoppingCartBuilder {
         private long id;
         private UUID cartUid;
-        private Long customerId;
+        private UUID customerUid;
         private String email;
         private Date creationTime;
         private boolean active;
@@ -152,8 +152,8 @@ public class ShoppingCart {
             return this;
         }
 
-        public ShoppingCartBuilder customerId(Long customerId) {
-            this.customerId = customerId;
+        public ShoppingCartBuilder customerUid(UUID customerUid) {
+            this.customerUid = customerUid;
             return this;
         }
 
@@ -173,7 +173,7 @@ public class ShoppingCart {
         }
 
         public ShoppingCart build() {
-            return new ShoppingCart(id, cartUid, customerId, email, creationTime, active);
+            return new ShoppingCart(id, cartUid, customerUid, email, creationTime, active);
         }
 
     }

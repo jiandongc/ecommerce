@@ -10,10 +10,10 @@ import java.util.UUID;
 
 public interface ShoppingCartRepository {
     UUID create();
-    UUID create(long customerId, String email);
+    UUID create(String customerUid, String email);
     Optional<ShoppingCart> findByUUID(UUID uuid);
-    List<ShoppingCart> findByCustomerId(Long customerId);
-    int updateCustomerId(UUID cartUid, Long customerId);
+    List<ShoppingCart> findByCustomerUid(UUID customerUid);
+    int updateCustomerUid(UUID cartUid, UUID customerUid);
     int updateEmail(UUID cartUid, String email);
     int delete(long cartId);
     void deactivateShoppingCart(long cartId);

@@ -48,10 +48,10 @@ public class ShoppingCartServiceImplTest {
     @Test
     public void shouldCreateShoppingCartForUser(){
         // Given & When
-        service.createShoppingCartForUser(CustomerData.builder().id(1234L).email("email").build());
+        service.createShoppingCartForUser(CustomerData.builder().id("123e4567-e89b-12d3-a456-556642440000").email("email").build());
 
         // Then
-        verify(cartRepository, times(1)).create(1234L, "email");
+        verify(cartRepository, times(1)).create("123e4567-e89b-12d3-a456-556642440000", "email");
     }
 
     @Test
@@ -89,19 +89,19 @@ public class ShoppingCartServiceImplTest {
     public void shouldAddCustomerInfo(){
         // Given
         final UUID cartUid = UUID.randomUUID();
-        final Long customerId = 123L;
+        final String customerId = "123e4567-e89b-12d3-a456-556642440000";
         final ShoppingCart shoppingCartOne = ShoppingCart.builder().cartUid(UUID.randomUUID()).build();
         final ShoppingCart shoppingCartTwo = ShoppingCart.builder().cartUid(UUID.randomUUID()).build();
         final ShoppingCart shoppingCartThree = ShoppingCart.builder().cartUid(cartUid).build();
-        when(cartRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(shoppingCartOne, shoppingCartTwo, shoppingCartThree));
+        when(cartRepository.findByCustomerUid(UUID.fromString(customerId))).thenReturn(Arrays.asList(shoppingCartOne, shoppingCartTwo, shoppingCartThree));
 
         // When
-        service.addCustomerInfo(cartUid, CustomerData.builder().id(123L).email("joe@gmail.com").build());
+        service.addCustomerInfo(cartUid, CustomerData.builder().id("123e4567-e89b-12d3-a456-556642440000").email("joe@gmail.com").build());
 
         // Then
         verify(service, times(1)).deactivateShoppingCart(shoppingCartOne);
         verify(service, times(1)).deactivateShoppingCart(shoppingCartTwo);
-        verify(cartRepository, times(1)).updateCustomerId(cartUid,123L);
+        verify(cartRepository, times(1)).updateCustomerUid(cartUid, UUID.fromString("123e4567-e89b-12d3-a456-556642440000"));
         verify(cartRepository, times(1)).updateEmail(cartUid,"joe@gmail.com");
     }
 
@@ -119,10 +119,10 @@ public class ShoppingCartServiceImplTest {
     }
 
     @Test
-    public void shouldGetShoppingCartByCustomerId(){
+    public void shouldGetShoppingCartByCustomerUid(){
         // Given
-        final Long customerId = 100L;
-        when(cartRepository.findByCustomerId(customerId)).thenReturn(Arrays.asList(ShoppingCart.builder().id(1L).customerId(customerId).build()));
+        final String customerUid = "123e4567-e89b-12d3-a456-556642440000";
+        when(cartRepository.findByCustomerUid(UUID.fromString(customerUid))).thenReturn(Arrays.asList(ShoppingCart.builder().id(1L).customerUid(UUID.fromString(customerUid)).build()));
         final ShoppingCartItem cartItem = ShoppingCartItem.builder().cartId(1L).name("product").sku("123X7").build();
         when(cartItemRepository.findByCartId(1L)).thenReturn(asList(cartItem));
         final Address shippingAddress = new Address();
@@ -133,11 +133,11 @@ public class ShoppingCartServiceImplTest {
         when(cartRepository.findAddress(1L, "Billing")).thenReturn(Optional.of(billingAddress));
 
         // When
-        final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByCustomerId(customerId);
+        final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByCustomerUid(customerUid);
 
         // Then
         assertThat(shoppingCart.isPresent(), is(true));
-        assertThat(shoppingCart.get().getCustomerId(), is(100L));
+        assertThat(shoppingCart.get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
         assertThat(shoppingCart.get().getId(), is(1L));
         assertThat(shoppingCart.get().getShoppingCartItems().size(), is(1));
         assertThat(shoppingCart.get().getShoppingCartItems().get(0).getName(), is("product"));
@@ -147,13 +147,13 @@ public class ShoppingCartServiceImplTest {
     }
 
     @Test
-    public void shouldGetEmptyIfNoShoppingCardIfFoundUsingCustomerId(){
+    public void shouldGetEmptyIfNoShoppingCardIfFoundUsingCustomerUid(){
         // Given
-        final Long customerId = 100L;
-        when(cartRepository.findByCustomerId(customerId)).thenReturn(Collections.emptyList());
+        final String customerUid = "123e4567-e89b-12d3-a456-556642440000";
+        when(cartRepository.findByCustomerUid(UUID.fromString(customerUid))).thenReturn(Collections.emptyList());
 
         // When
-        final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByCustomerId(customerId);
+        final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByCustomerUid(customerUid);
 
         // Then
         assertThat(shoppingCart.isPresent(), is(false));

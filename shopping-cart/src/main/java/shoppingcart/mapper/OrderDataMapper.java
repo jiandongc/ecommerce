@@ -34,7 +34,7 @@ public class OrderDataMapper {
         BigDecimal orderTotal = shoppingCart.getOrderTotal();
 
         OrderData orderData = OrderData.builder()
-                .customerId(shoppingCart.getCustomerId())
+                .customerId(shoppingCart.getCustomerUid().toString())
                 .email(shoppingCart.getEmail())
                 .items(itemsBeforeVat)
                 .postage(postageBeforeVat)

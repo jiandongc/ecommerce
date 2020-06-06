@@ -13,7 +13,7 @@ public interface ShoppingCartService {
     UUID createShoppingCartForGuest();
     UUID createShoppingCartForUser(CustomerData customerData);
     Optional<ShoppingCart> getShoppingCartByUid(UUID cartUid);
-    Optional<ShoppingCart> getShoppingCartByCustomerId(long customerId);
+    Optional<ShoppingCart> getShoppingCartByCustomerUid(String customerUid);
     void addCustomerInfo(UUID cartUid, CustomerData customerData);
     void deactivateShoppingCart(ShoppingCart shoppingCart);
     void addAddress(UUID cartUid, Address address);

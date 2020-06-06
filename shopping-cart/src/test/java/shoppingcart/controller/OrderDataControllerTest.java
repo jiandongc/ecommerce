@@ -36,7 +36,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
     @Test
     public void shouldGetCartInOrderFormat(){
         // Given
-        final UUID uuid = shoppingCartRepository.create(123L, null);
+        final UUID uuid = shoppingCartRepository.create("123e4567-e89b-12d3-a456-556642440000", null);
         shoppingCartRepository.updateEmail(uuid, "john@gmail.com");
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()
@@ -99,7 +99,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
-        assertThat(response.getBody().getCustomerId(), is(123L));
+        assertThat(response.getBody().getCustomerId(), is("123e4567-e89b-12d3-a456-556642440000"));
         assertThat(response.getBody().getEmail(), is("john@gmail.com"));
         assertThat(response.getBody().getItems(), is(BigDecimal.valueOf(46.25)));
         assertThat(response.getBody().getPostage(), is(BigDecimal.valueOf(0.92)));

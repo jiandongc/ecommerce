@@ -30,7 +30,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     public void shouldCreateShoppingCartForUser(){
         // Given
         final String customerData = "{\n" +
-                "\"id\": \"123\",\n" +
+                "\"id\": \"123e4567-e89b-12d3-a456-556642440000\",\n" +
                 "\"email\": \"joe@gmail.com\"\n" +
                 "}";
 
@@ -44,7 +44,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         final UUID uuid = UUID.fromString(response.getBody());
         final ShoppingCart shoppingCart = repository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         assertThat(shoppingCart.getCartUid(), is(uuid));
-        assertThat(shoppingCart.getCustomerId(), is(123L));
+        assertThat(shoppingCart.getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
         assertThat(shoppingCart.getEmail(), is("joe@gmail.com"));
     }
 
@@ -52,7 +52,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     public void shouldCreateShoppingCartForUserWithNoEmail(){
         // Given
         final String customerData = "{\n" +
-                "\"id\": \"1234\"\n" +
+                "\"id\": \"123e4567-e89b-12d3-a456-556642440000\"\n" +
                 "}";
 
         final HttpEntity<String> payload = new HttpEntity<>(customerData, headers);
@@ -65,7 +65,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         final UUID uuid = UUID.fromString(response.getBody());
         final ShoppingCart shoppingCart = repository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         assertThat(shoppingCart.getCartUid(), is(uuid));
-        assertThat(shoppingCart.getCustomerId(), is(1234L));
+        assertThat(shoppingCart.getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
         assertThat(shoppingCart.getEmail(), is(nullValue()));
     }
 
@@ -80,7 +80,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         final UUID uuid = UUID.fromString(response.getBody());
         final ShoppingCart shoppingCart = repository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));;
         assertThat(shoppingCart.getCartUid(), is(uuid));
-        assertThat(shoppingCart.getCustomerId(), is(nullValue()));
+        assertThat(shoppingCart.getCustomerUid(), is(nullValue()));
     }
 
     @Test
@@ -153,7 +153,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     public void shouldRetrieveShoppingCartByCustomerID(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
-        final Long customerId = 100L;
+        final String customerId = "123e4567-e89b-12d3-a456-556642440000";
         final UUID cartUid = repository.create(customerId, null);
         final String itemOne = "{\n" +
                 "\"sku\": \"123456\",\n" +
@@ -177,7 +177,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
-        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + "?customerId=100", GET, payload, CartData.class);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + "?customerId=123e4567-e89b-12d3-a456-556642440000", GET, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
@@ -197,7 +197,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
-        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + "?customerId=999", GET, payload, CartData.class);
+        final ResponseEntity<CartData> response = rest.exchange(BASE_URL + "?customerId=123e4567-e89b-12d3-a456-556642440000", GET, payload, CartData.class);
 
         // Then
         assertThat(response.getStatusCode(), is(NOT_FOUND));
@@ -207,7 +207,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     public void shouldRejectRetrieveShoppingCartByCustomerIdRequestWithGuestToken(){
         // Given - set guest token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
-        repository.create(100L, null);
+        repository.create("123e4567-e89b-12d3-a456-556642440000", null);
 
         // When
         final HttpEntity<Long> payload = new HttpEntity<Long>(null, headers);
@@ -221,7 +221,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     public void shouldUpdateCustomerInfoForTheCartUidAndDeleteOtherCarts(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
-        final Long customerId = 12345L;
+        final String customerId = "123e4567-e89b-12d3-a456-556642440000";
         final UUID cartUidOne = repository.create(customerId, null);
         final UUID cartUidTwo = repository.create(customerId, null);
         final UUID cartUidThree = repository.create(customerId, null);
@@ -230,7 +230,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(repository.findByUUID(cartUidThree).isPresent(), is(true));
 
         final String customerData = "{\n" +
-                "\"id\": \"12345\",\n" +
+                "\"id\": \"123e4567-e89b-12d3-a456-556642440000\",\n" +
                 "\"email\": \"joe@gmail.com\"\n" +
                 "}";
 
@@ -241,7 +241,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(HttpStatus.OK));
         assertThat(repository.findByUUID(cartUidOne).get().isActive(), is(true));
-        assertThat(repository.findByUUID(cartUidOne).get().getCustomerId(), is(12345L));
+        assertThat(repository.findByUUID(cartUidOne).get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
         assertThat(repository.findByUUID(cartUidOne).get().getEmail(), is("joe@gmail.com"));
         assertThat(repository.findByUUID(cartUidTwo).isPresent(), is(false));
         assertThat(repository.findByUUID(cartUidThree).isPresent(), is(false));
@@ -299,7 +299,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     public void shouldAddAndUpdateAddress(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
-        final Long customerId = 12345L;
+        final String customerId = "123e4567-e89b-12d3-a456-556642440000";
         final UUID cartUid = repository.create(customerId, null);
 
         // When - add shipping address
@@ -370,7 +370,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
     public void shouldAddDeliveryOption(){
         // Given - set user token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
-        final Long customerId = 12345L;
+        final String customerId = "123e4567-e89b-12d3-a456-556642440000";
         final UUID cartUid = repository.create(customerId, null);
 
         // When - add delivery option

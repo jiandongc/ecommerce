@@ -28,7 +28,7 @@ public final class CartData {
 
     private String cartUid;
 
-    private Long customerId;
+    private String customerId;
 
     private String email;
 

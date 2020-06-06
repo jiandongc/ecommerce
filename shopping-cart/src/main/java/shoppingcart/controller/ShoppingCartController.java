@@ -58,8 +58,8 @@ public class ShoppingCartController {
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(method = GET)
-    public ResponseEntity<CartData> getShoppingCartByCustomerId(@RequestParam(value = "customerId") Long customerId) {
-        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByCustomerId(customerId);
+    public ResponseEntity<CartData> getShoppingCartByCustomerUid(@RequestParam(value = "customerId") String customerId) {
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByCustomerUid(customerId);
         return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                 .orElse(new ResponseEntity<>(NOT_FOUND));
     }
