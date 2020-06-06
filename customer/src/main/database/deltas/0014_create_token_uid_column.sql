@@ -1,0 +1,1 @@
+ALTER TABLE token ADD COLUMN token_uid uuid not null;

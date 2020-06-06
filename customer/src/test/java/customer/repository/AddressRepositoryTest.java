@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,6 +26,7 @@ public class AddressRepositoryTest extends AbstractRepositoryTest {
         customer.setName("Name");
         customer.setEmail("Email");
         customer.setPassword("Password");
+        customer.setCustomerUid(UUID.randomUUID());
 
         Address addressOne = new Address();
         addressOne.setTitle("Mr.");
@@ -34,6 +36,7 @@ public class AddressRepositoryTest extends AbstractRepositoryTest {
         addressOne.setCountry("United Kingdom");
         addressOne.setPostcode("M1 2DD");
         addressOne.setDefaultAddress(true);
+        addressOne.setAddressUid(UUID.randomUUID());
         customer.addAddress(addressOne);
 
         Address addressTwo = new Address();
@@ -44,6 +47,7 @@ public class AddressRepositoryTest extends AbstractRepositoryTest {
         addressTwo.setCountry("United Kingdom");
         addressTwo.setPostcode("BR1 7DE");
         addressTwo.setDefaultAddress(false);
+        addressTwo.setAddressUid(UUID.randomUUID());
         customer.addAddress(addressTwo);
 
         Customer savedCustomer = customerRepository.save(customer);

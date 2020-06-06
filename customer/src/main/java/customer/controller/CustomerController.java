@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import customer.service.CustomerService;
 
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -57,9 +58,9 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "{id}/password", method = PUT)
-    public ResponseEntity updatePassword(@PathVariable String id, @RequestBody String password) {
-        final Customer updatedCustomer = customerService.updatePassword(Long.valueOf(id), password);
+    @RequestMapping(value = "{customerUid}/password", method = PUT)
+    public ResponseEntity updatePassword(@PathVariable String customerUid, @RequestBody String password) {
+        final Customer updatedCustomer = customerService.updatePassword(UUID.fromString(customerUid), password);
         return new ResponseEntity<>(updatedCustomer, HttpStatus.OK);
     }
 
@@ -70,77 +71,75 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}", method = GET)
-    public Customer findById(@PathVariable String id) {
-        return customerService.findById(Long.valueOf(id));
+    @RequestMapping(value = "/{customerUid}", method = GET)
+    public Customer findByUid(@PathVariable String customerUid) {
+        return customerService.findByUid(UUID.fromString(customerUid));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses", method = GET)
-    public List<Address> findAddressesByCustomerId(@PathVariable String id) {
-        return customerService.findAddressesByCustomerId(Long.valueOf(id));
+    @RequestMapping(value = "/{customerUid}/addresses", method = GET)
+    public List<Address> findAddressesByCustomerUid(@PathVariable String customerUid) {
+        return customerService.findAddressesByCustomerUid(UUID.fromString(customerUid));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses/{addressId}", method = GET)
-    public Address findAddressById(@PathVariable String addressId) {
-        return customerService.findAddressById(Long.valueOf(addressId));
+    @RequestMapping(value = "/{customerUid}/addresses/{addressUid}", method = GET)
+    public Address findAddressByUid(@PathVariable String customerUid, @PathVariable String addressUid) {
+        return customerService.findAddressByUid(UUID.fromString(customerUid), UUID.fromString(addressUid));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses", method = POST)
-    public Address addAddress(@PathVariable String id, @RequestBody Address address) {
-        return customerService.addAddress(Long.valueOf(id), address);
+    @RequestMapping(value = "/{customerUid}/addresses", method = POST)
+    public Address addAddress(@PathVariable String customerUid, @RequestBody Address address) {
+        return customerService.addAddress(UUID.fromString(customerUid), address);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses/{addressId}", method = PUT)
-    public ResponseEntity updateAddress(@PathVariable String id, @PathVariable String addressId, @RequestBody Address address) {
+    @RequestMapping(value = "/{customerUid}/addresses/{addressUid}", method = PUT)
+    public ResponseEntity updateAddress(@PathVariable String customerUid, @PathVariable String addressUid, @RequestBody Address address) {
         try {
-            return new ResponseEntity<>(customerService.updateAddress(Long.valueOf(id), Long.valueOf(addressId), address), HttpStatus.OK);
+            return new ResponseEntity<>(customerService.updateAddress(UUID.fromString(customerUid), UUID.fromString(addressUid), address), HttpStatus.OK);
         } catch (IllegalArgumentException exe) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{id}/addresses/{addressId}", method = RequestMethod.DELETE)
-    public ResponseEntity removeAddress(@PathVariable String addressId) {
-        final Address address = customerService.findAddressById(Long.valueOf(addressId));
-        if (address != null) {
-            customerService.removeAddress(Long.valueOf(addressId));
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
+    @RequestMapping(value = "/{customerUid}/addresses/{addressUid}", method = RequestMethod.DELETE)
+    public ResponseEntity removeAddress(@PathVariable String customerUid, @PathVariable String addressUid) {
+        try {
+            customerService.removeAddress(UUID.fromString(customerUid), UUID.fromString(addressUid));
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (IllegalArgumentException exe) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{customerId}/products", method = POST)
-    public Product addProduct(@PathVariable String customerId, @RequestBody Product product) {
-        return customerService.addProduct(Long.valueOf(customerId), product);
+    @RequestMapping(value = "/{customerUid}/products", method = POST)
+    public Product addProduct(@PathVariable String customerUid, @RequestBody Product product) {
+        return customerService.addProduct(UUID.fromString(customerUid), product);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{customerId}/products", method = GET)
-    public List<Product> getProducts(@PathVariable String customerId, @RequestParam("type") String type) {
-        Customer customer = customerService.findById(Long.valueOf(customerId));
-        List<Product> validProducts = customer.getValidProducts();
+    @RequestMapping(value = "/{customerUid}/products", method = GET)
+    public List<Product> findProducts(@PathVariable UUID customerUid, @RequestParam("type") String type) {
+        List<Product> validProducts = customerService.findProductsByCustomerUid(customerUid);
         return validProducts.stream()
-                .filter(product -> product.getType().equals(Type.valueOf(type.toUpperCase())))
+                .filter(product -> product.getType().equals(Product.Type.valueOf(type.toUpperCase())))
                 .collect(toList());
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{customerId}/products/{productId}", method = DELETE)
-    public void removeProduct(@PathVariable String customerId, @PathVariable String productId) {
-        customerService.removeProduct(Long.valueOf(customerId), Long.valueOf(productId));
+    @RequestMapping(value = "/{customerUid}/products/{productUid}", method = DELETE)
+    public void removeProduct(@PathVariable String customerUid, @PathVariable String productUid) {
+        customerService.removeProduct(UUID.fromString(customerUid), UUID.fromString(productUid));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "/{customerId}/products", method = DELETE)
-    public void removeProduct(@PathVariable String customerId, @RequestParam("type") String type, @RequestParam("code") String productCode) {
-        customerService.removeProductByTypeAndCode(Long.valueOf(customerId), type, productCode);
+    @RequestMapping(value = "/{customerUid}/products", method = DELETE)
+    public void removeProduct(@PathVariable String customerUid, @RequestParam("type") String type, @RequestParam("code") String productCode) {
+        customerService.removeProductByTypeAndCode(UUID.fromString(customerUid), type, productCode);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")

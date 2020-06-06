@@ -1,10 +1,12 @@
 package customer.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -18,8 +20,13 @@ public class Token {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     @Column(name = "id")
     private long id;
+
+    @JsonProperty(value = "id", access = JsonProperty.Access.READ_WRITE)
+    @Column(name = "token_uid")
+    private UUID tokenUid;
 
     @Column(name = "text")
     private String text;

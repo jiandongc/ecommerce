@@ -1,8 +1,6 @@
 package customer.service;
 
 import customer.domain.*;
-import customer.repository.AddressRepository;
-import customer.repository.ProductRepository;
 import customer.repository.TokenRepository;
 import customer.security.HashService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +11,7 @@ import customer.repository.CustomerRepository;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -22,12 +21,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
-
-    @Autowired
-    private AddressRepository addressRepository;
-
-    @Autowired
-    private ProductRepository productRepository;
 
     @Autowired
     private TokenRepository tokenRepository;
@@ -44,6 +37,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         String rawPassword = customer.getPassword();
         customer.setPassword(hashService.generateHash(rawPassword));
+        customer.setCustomerUid(UUID.randomUUID());
 
         return customerRepository.save(customer);
     }
@@ -51,7 +45,7 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     @Transactional
     public Customer update(Customer customer) {
-        final Customer theCustomer = customerRepository.findOne(customer.getId());
+        final Customer theCustomer = customerRepository.findByCustomerUid(customer.getCustomerUid());
         theCustomer.setName(customer.getName());
         theCustomer.setTitle(customer.getTitle());
         theCustomer.setMobile(customer.getMobile());
@@ -69,8 +63,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional
-    public Customer updatePassword(long customerId, String password) {
-        final Customer customer = customerRepository.findOne(customerId);
+    public Customer updatePassword(UUID customerUid, String password) {
+        final Customer customer = customerRepository.findByCustomerUid(customerUid);
         customer.setPassword(hashService.generateHash(password));
         return customer;
     }
@@ -88,8 +82,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public Customer findById(Long Id) {
-        return customerRepository.findOne(Id);
+    public Customer findByUid(UUID uuid) {
+        return customerRepository.findByCustomerUid(uuid);
     }
 
     @Override
@@ -100,66 +94,78 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Address> findAddressesByCustomerId(Long customerId) {
-        return addressRepository.findByCustomerId(customerId);
+    public List<Address> findAddressesByCustomerUid(UUID uuid) {
+        Customer customer = customerRepository.findByCustomerUid(uuid);
+        if (customer != null) {
+            return customer.getAddresses();
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Address findAddressById(Long addressId) {
-        return addressRepository.findOne(addressId);
+    public Address findAddressByUid(UUID customerUid, UUID addressUid) {
+        Customer customer = customerRepository.findByCustomerUid(customerUid);
+        if (customer != null) {
+            return customer.getAddresses().stream()
+                    .filter(address -> address.getAddressUid().equals(addressUid))
+                    .findFirst()
+                    .orElse(null);
+        } else {
+            return null;
+        }
     }
 
     @Override
     @Transactional
-    public Address addAddress(Long customerId, Address newAddress) {
-        final Customer customer = customerRepository.findOne(customerId);
+    public Address addAddress(UUID customerUid, Address newAddress) {
+        Customer customer = customerRepository.findByCustomerUid(customerUid);
         if (newAddress.isDefaultAddress()) {
             customer.getAddresses().forEach(address -> address.setDefaultAddress(false));
         }
+        newAddress.setAddressUid(UUID.randomUUID());
         customer.addAddress(newAddress);
         return newAddress;
     }
 
     @Override
     @Transactional
-    public Address updateAddress(Long customerId, Long addressId, Address address) {
-        final Customer customer = customerRepository.findOne(customerId);
+    public Address updateAddress(UUID customerUid, UUID addressUid, Address address) {
+        final Customer customer = customerRepository.findByCustomerUid(customerUid);
         final List<Address> addresses = customer.getAddresses();
-        final Optional<Address> savedAddress = addresses.stream().filter(a -> a.getId() == addressId).findFirst();
-
-        savedAddress.ifPresent(a -> {
-            a.setTitle(address.getTitle());
-            a.setName(address.getName());
-            a.setMobile(address.getMobile());
-            a.setAddressLine1(address.getAddressLine1());
-            a.setAddressLine2(address.getAddressLine2());
-            a.setAddressLine3(address.getAddressLine3());
-            a.setCity(address.getCity());
-            a.setCountry(address.getCountry());
-            a.setPostcode(address.getPostcode());
-            a.setDefaultAddress(address.isDefaultAddress());
-        });
-
-        savedAddress.orElseThrow(() -> new IllegalArgumentException("Address not found"));
+        final Address savedAddress = addresses.stream().filter(a -> addressUid.equals(a.getAddressUid())).findFirst().orElseThrow(() -> new IllegalArgumentException("Address not found"));
+        savedAddress.setTitle(address.getTitle());
+        savedAddress.setName(address.getName());
+        savedAddress.setMobile(address.getMobile());
+        savedAddress.setAddressLine1(address.getAddressLine1());
+        savedAddress.setAddressLine2(address.getAddressLine2());
+        savedAddress.setAddressLine3(address.getAddressLine3());
+        savedAddress.setCity(address.getCity());
+        savedAddress.setCountry(address.getCountry());
+        savedAddress.setPostcode(address.getPostcode());
+        savedAddress.setDefaultAddress(address.isDefaultAddress());
 
         if (address.isDefaultAddress()) {
-            addresses.stream().filter(a -> a.getId() != addressId).forEach(a -> a.setDefaultAddress(false));
+            addresses.stream().filter(a -> !addressUid.equals(a.getAddressUid())).forEach(a -> a.setDefaultAddress(false));
         }
 
-        return savedAddress.get();
+        return savedAddress;
     }
 
     @Override
     @Transactional
-    public void removeAddress(Long addressId) {
-        addressRepository.delete(addressId);
+    public void removeAddress(UUID customerUid, UUID addressUid) {
+        final Customer customer = customerRepository.findByCustomerUid(customerUid);
+        final List<Address> addresses = customer.getAddresses();
+        final Address savedAddress = addresses.stream().filter(a -> addressUid.equals(a.getAddressUid())).findFirst().orElseThrow(() -> new IllegalArgumentException("Address not found"));
+        customer.removeAddress(savedAddress);
     }
 
     @Override
     @Transactional
-    public Product addProduct(Long customerId, Product product) {
-        final Customer customer = customerRepository.findOne(customerId);
+    public Product addProduct(UUID customerUid, Product product) {
+        final Customer customer = customerRepository.findByCustomerUid(customerUid);
         final List<Product> validProducts = customer.getValidProducts();
 
         Optional<Product> existingProduct = validProducts.stream().filter(p -> p.hasSameProductCodeAndType(product)).findFirst();
@@ -167,6 +173,7 @@ public class CustomerServiceImpl implements CustomerService {
             existingProduct.get().setStartDate(LocalDate.now());
         } else {
             product.setStartDate(LocalDate.now());
+            product.setProductUid(UUID.randomUUID());
             customer.addProduct(product);
         }
 
@@ -175,25 +182,31 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Product> findProductsByCustomerId(Long customerId) {
-        return productRepository.findByCustomerId(customerId);
-    }
-
-    @Override
-    public void removeProduct(Long customerId, Long productId) {
-        Product product = productRepository.findOne(productId);
-        if (product != null && product.getCustomer().getId() == customerId) {
-            productRepository.delete(productId);
+    public List<Product> findProductsByCustomerUid(UUID customerUid) {
+        Customer customer = customerRepository.findByCustomerUid(customerUid);
+        if (customer != null) {
+            return customer.getValidProducts();
+        } else {
+            return Collections.emptyList();
         }
     }
 
     @Override
-    public void removeProductByTypeAndCode(Long customerId, String type, String productCode) {
-        final Type productType = Type.valueOf(type.toUpperCase());
-        final List<Product> products = productRepository.findByCustomerId(customerId);
-        products.stream().filter(product -> product.getType().equals(productType) && product.getProductCode().equals(productCode))
-                .forEach(product -> productRepository.delete(product.getId()));
+    @Transactional
+    public void removeProduct(UUID customerUid, UUID productUid) {
+        final Customer customer = customerRepository.findByCustomerUid(customerUid);
+        final List<Product> products = customer.getValidProducts();
+        final Product savedProduct = products.stream().filter(a -> productUid.equals(a.getProductUid())).findFirst().orElseThrow(() -> new IllegalArgumentException("Entity not found"));
+        customer.removeProduct(savedProduct);
+    }
 
+    @Override
+    @Transactional
+    public void removeProductByTypeAndCode(UUID customerUid, String type, String productCode) {
+        final Product.Type productType = Product.Type.valueOf(type.toUpperCase());
+        final Customer customer = customerRepository.findByCustomerUid(customerUid);
+        final List<Product> products = customer.getValidProducts();
+        products.stream().filter(product -> product.getType().equals(productType) && product.getProductCode().equals(productCode)).forEach(customer::removeProduct);
     }
 
     @Override
@@ -205,6 +218,7 @@ public class CustomerServiceImpl implements CustomerService {
                 .text(UUID.randomUUID().toString())
                 .startDateTime(LocalDateTime.now())
                 .endDateTime(LocalDateTime.now().plusMinutes(30L))
+                .tokenUid(UUID.randomUUID())
                 .build();
         customer.addToken(token);
         return token;
@@ -212,8 +226,13 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Token> findTokensByCustomerId(Long customerId) {
-        return tokenRepository.findByCustomerId(customerId);
+    public List<Token> findTokensByCustomerUid(UUID customerUid) {
+        Customer customer = customerRepository.findByCustomerUid(customerUid);
+        if (customer != null) {
+            return customer.getValidTokens();
+        } else {
+            return Collections.emptyList();
+        }
     }
 
     @Override

@@ -3,8 +3,8 @@ package customer.domain;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 
-import static customer.domain.Type.FAVOURITE;
-import static customer.domain.Type.NOTIFY_IN_STOCK;
+import static customer.domain.Product.Type.FAVOURITE;
+import static customer.domain.Product.Type.NOTIFY_IN_STOCK;
 import static java.time.LocalDate.now;
 import static org.junit.Assert.*;
 

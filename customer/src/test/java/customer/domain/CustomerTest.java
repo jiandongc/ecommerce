@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static customer.domain.Type.FAVOURITE;
+import static customer.domain.Product.Type.FAVOURITE;
 import static java.time.LocalDate.now;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;

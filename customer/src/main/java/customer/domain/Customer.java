@@ -25,8 +25,13 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     @Column(name = "id")
     private long id;
+
+    @JsonProperty(value = "id", access = JsonProperty.Access.READ_WRITE)
+    @Column(name = "customer_uid")
+    private UUID customerUid;
 
     @Column(name = "title")
     private String title;
@@ -45,15 +50,15 @@ public class Customer {
     private String password;
 
     @JsonIgnore
-    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer", orphanRemoval = true)
     private List<Address> addresses;
 
     @JsonIgnore
-    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer", orphanRemoval = true)
     private List<Product> products;
 
     @JsonIgnore
-    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer")
+    @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "customer", orphanRemoval = true)
     private List<Token> tokens;
 
     public void addAddress(Address address) {
@@ -65,6 +70,10 @@ public class Customer {
         address.setCustomer(this);
     }
 
+    public void removeAddress(Address address){
+        this.addresses.remove(address);
+    }
+
     public void addProduct(Product product) {
         if (products == null) {
             products = new ArrayList<>();
@@ -72,6 +81,10 @@ public class Customer {
 
         this.products.add(product);
         product.setCustomer(this);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
     }
 
     public void addToken(Token token) {
@@ -94,5 +107,14 @@ public class Customer {
         return products.stream().filter(product ->  (product.getStartDate() != null && !today.isBefore(product.getStartDate()))
                 && (product.getEndDate() == null || !today.isAfter(product.getEndDate())))
                 .collect(Collectors.toList());
+    }
+
+    @JsonIgnore
+    public List<Token> getValidTokens() {
+        if (tokens == null) {
+            return null;
+        } else {
+            return tokens.stream().filter(Token::isValid).collect(Collectors.toList());
+        }
     }
 }

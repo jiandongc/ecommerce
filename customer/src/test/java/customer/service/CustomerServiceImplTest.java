@@ -1,6 +1,5 @@
 package customer.service;
 
-import static java.lang.Long.valueOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Matchers.any;
@@ -8,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import customer.domain.Address;
-import customer.repository.AddressRepository;
 import customer.security.HashService;
 import org.junit.Test;
 
@@ -20,14 +18,13 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.UUID;
+
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerServiceImplTest {
 
 	@Mock
 	private CustomerRepository customerRepository;
-
-	@Mock
-	private AddressRepository addressRepository;
 
 	@Mock
 	private HashService hashService;
@@ -72,9 +69,10 @@ public class CustomerServiceImplTest {
 		customer.setEmail("Email");
 		customer.setTitle("Mr");
 		customer.setMobile("Mobile");
+		customer.setCustomerUid(UUID.randomUUID());
 
 		Customer theCustomer = Mockito.mock(Customer.class);
-		when(customerRepository.findOne(any(Long.class))).thenReturn(theCustomer);
+		when(customerRepository.findByCustomerUid(any(UUID.class))).thenReturn(theCustomer);
 
 		// When
 		customerService.update(customer);
@@ -98,7 +96,7 @@ public class CustomerServiceImplTest {
 		Customer theCustomer = Mockito.mock(Customer.class);
 		Mockito.when(theCustomer.getEmail()).thenReturn("Email");
 		when(customerRepository.findByEmail("NewEmail")).thenReturn(new Customer());
-		when(customerRepository.findOne(any(Long.class))).thenReturn(theCustomer);
+		when(customerRepository.findByCustomerUid(any(UUID.class))).thenReturn(theCustomer);
 
 		// When & Then
 		customerService.update(customer);
@@ -107,11 +105,11 @@ public class CustomerServiceImplTest {
 	@Test
 	public void shouldFindCustomerById(){
 		// Given 
-		final long id = valueOf(2);
+		final UUID uuid = UUID.randomUUID();
 		// When
-		customerService.findById(id);
+		customerService.findByUid(uuid);
 		// Then
-		verify(customerRepository).findOne(id);
+		verify(customerRepository).findByCustomerUid(uuid);
 	}
 	
 	@Test
@@ -125,19 +123,22 @@ public class CustomerServiceImplTest {
 	}
 
 	@Test
-	public void shouldFindAddressesByCustomerId(){
+	public void shouldFindAddressesByCustomerUid(){
 		// When
-		customerService.findAddressesByCustomerId(1L);
+		UUID uuid = UUID.randomUUID();
+		customerService.findAddressesByCustomerUid(uuid);
 		// Then
-		verify(addressRepository).findByCustomerId(1L);
+		verify(customerRepository).findByCustomerUid(uuid);
 	}
 
 	@Test
-	public void shouldFindAddressById(){
+	public void shouldFindAddressByUid(){
 		// When
-		customerService.findAddressById(1L);
+		UUID customerUid = UUID.randomUUID();
+		UUID addressUid = UUID.randomUUID();
+		customerService.findAddressByUid(customerUid, addressUid);
 		// Then
-		verify(addressRepository).findOne(1L);
+		verify(customerRepository).findByCustomerUid(customerUid);
 	}
 
 	@Test
@@ -149,10 +150,11 @@ public class CustomerServiceImplTest {
 		customer.addAddress(existingAddress);
 		Address newAddress = new Address();
 		newAddress.setDefaultAddress(true);
-		when(customerRepository.findOne(1L)).thenReturn(customer);
+		UUID uuid = UUID.randomUUID();
+		when(customerRepository.findByCustomerUid(uuid)).thenReturn(customer);
 
 		// When
-		customerService.addAddress(1L, newAddress);
+		customerService.addAddress(uuid, newAddress);
 
 		// Then
 		assertThat(customer.getAddresses().get(0).isDefaultAddress(), is(false));
@@ -162,9 +164,15 @@ public class CustomerServiceImplTest {
 	@Test
 	public void shouldRemoveAddress(){
 		// When
-		customerService.removeAddress(1L);
+		UUID customerUid = UUID.randomUUID();
+		UUID addressUid = UUID.randomUUID();
+		Customer customer = Customer.builder().customerUid(customerUid).build();
+		customer.addAddress(Address.builder().addressUid(addressUid).build());
+		when(customerRepository.findByCustomerUid(any(UUID.class))).thenReturn(customer);
+		customerService.removeAddress(customerUid, addressUid);
 		// Then
-		verify(addressRepository).delete(1L);
+		verify(customerRepository).findByCustomerUid(customerUid);
+		assertThat(customer.getAddresses().size(), is(0));
 	}
 
 }

@@ -1,0 +1,1 @@
+ALTER TABLE customer ADD COLUMN customer_uid uuid not null;

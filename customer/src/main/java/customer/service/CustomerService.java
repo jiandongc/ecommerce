@@ -6,24 +6,25 @@ import customer.domain.Product;
 import customer.domain.Token;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface CustomerService {
 	Customer save(Customer customer);
 	Customer update(Customer customer);
-	Customer updatePassword(long customerId, String password);
+	Customer updatePassword(UUID customerUid, String password);
 	void updatePassword(Token token, String password);
-	Customer findById(Long Id);
+	Customer findByUid(UUID uuid);
 	Customer findByEmail(String email);
-	List<Address> findAddressesByCustomerId(Long customerId);
-	Address findAddressById(Long addressId);
-	Address addAddress(Long customerId, Address address);
-	Address updateAddress(Long customerId, Long addressId, Address address);
-	void removeAddress(Long addressId);
-	Product addProduct(Long customerId, Product product);
-	List<Product> findProductsByCustomerId(Long customerId);
-	void removeProduct(Long customerId, Long productId);
-	void removeProductByTypeAndCode(Long customerId, String type, String productCode);
+	List<Address> findAddressesByCustomerUid(UUID uuid);
+	Address findAddressByUid(UUID customerUid, UUID addressUid);
+	Address addAddress(UUID customerUid, Address address);
+	Address updateAddress(UUID customerUid, UUID addressUid, Address address);
+	void removeAddress(UUID customerUid, UUID addressUid);
+	Product addProduct(UUID customerUid, Product product);
+	List<Product> findProductsByCustomerUid(UUID customerUid);
+	void removeProduct(UUID customerUid, UUID productUid);
+	void removeProductByTypeAndCode(UUID customerUid, String type, String productCode);
 	Token addToken(Long customerId, Token.Type type);
-	List<Token> findTokensByCustomerId(Long customerId);
+	List<Token> findTokensByCustomerUid(UUID customerUid);
 	Token findValidToken(String text);
 }

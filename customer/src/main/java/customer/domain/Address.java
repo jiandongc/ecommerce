@@ -1,12 +1,12 @@
 package customer.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.*;
 
 import javax.persistence.*;
+
+import java.util.UUID;
 
 import static javax.persistence.FetchType.LAZY;
 
@@ -20,8 +20,13 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonIgnore
     @Column(name = "id")
     private long id;
+
+    @JsonProperty(value = "id", access = JsonProperty.Access.READ_WRITE)
+    @Column(name = "address_uid")
+    private UUID addressUid;
 
     @Column(name = "title")
     private String title;
@@ -54,6 +59,8 @@ public class Address {
     private boolean defaultAddress;
 
     @JsonIgnore
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "customer_id")
     private Customer customer;
