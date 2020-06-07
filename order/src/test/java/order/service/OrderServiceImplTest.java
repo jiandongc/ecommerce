@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -40,10 +41,10 @@ public class OrderServiceImplTest {
         orderFive.addOrderStatus(OrderStatus.builder().status("Returned").build());
         Order orderSix = new Order();
         orderSix.addOrderStatus(OrderStatus.builder().status("PAYMENT SUCCEEDED").build());
-        Mockito.when(orderRepository.findByCustomerIdOrderByOrderDateDesc(1L)).thenReturn(Arrays.asList(orderOne, orderTwo, orderThree, orderFour, orderFive, orderSix));
+        Mockito.when(orderRepository.findByCustomerUidOrderByOrderDateDesc(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))).thenReturn(Arrays.asList(orderOne, orderTwo, orderThree, orderFour, orderFive, orderSix));
 
         // When
-        List<Order> openOrders = orderServiceImpl.findOrders(1L, "open");
+        List<Order> openOrders = orderServiceImpl.findOrders(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"), "open");
 
         // Then
         assertThat(openOrders.size(), CoreMatchers.is(4));
@@ -53,7 +54,7 @@ public class OrderServiceImplTest {
         assertThat(openOrders.get(3).getCurrentStatus(), CoreMatchers.is("PAYMENT SUCCEEDED"));
 
         // When
-        List<Order> completedOrders = orderServiceImpl.findOrders(1L, "completed");
+        List<Order> completedOrders = orderServiceImpl.findOrders(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"), "completed");
 
         // Then
         assertThat(completedOrders.size(), CoreMatchers.is(2));
@@ -61,7 +62,7 @@ public class OrderServiceImplTest {
         assertThat(completedOrders.get(1).getCurrentStatus(), CoreMatchers.is("Returned"));
 
         // When
-        List<Order> allOrders = orderServiceImpl.findOrders(1L, null);
+        List<Order> allOrders = orderServiceImpl.findOrders(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"), null);
 
         // Then
         assertThat(allOrders.size(), CoreMatchers.is(6));

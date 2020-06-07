@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.math.BigDecimal.ONE;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,7 +36,7 @@ public class OrderControllerTest extends AbstractControllerTest {
     public void shouldCreateOrder() {
         // Given
         final String payload = "{\n" +
-                "  \"customerId\": 1,\n" +
+                "  \"customerId\": \"123e4567-e89b-42d3-a456-556642440000\",\n" +
                 "  \"email\": \"abc@db.com\",\n" +
                 "  \"items\": 20.2,\n" +
                 "  \"postage\": 3,\n" +
@@ -107,7 +108,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(CREATED));
         Optional<Order> orderOptional = orderService.findByOrderNumber(response.getBody());
         assertThat(orderOptional.isPresent(), is(true));
-        assertThat(orderOptional.get().getCustomerId(), is(1L));
+        assertThat(orderOptional.get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")));
         assertThat(orderOptional.get().getEmail(), is("abc@db.com"));
         assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
         assertThat(orderOptional.get().getOrderItems().size(), is(2));
@@ -184,7 +185,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(CREATED));
         Optional<Order> orderOptional = orderService.findByOrderNumber(response.getBody());
         assertThat(orderOptional.isPresent(), is(true));
-        assertThat(orderOptional.get().getCustomerId(), is(nullValue()));
+        assertThat(orderOptional.get().getCustomerUid(), is(nullValue()));
         assertThat(orderOptional.get().getEmail(), is("abc@gmail.com"));
         assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
         assertThat(orderOptional.get().getOrderItems().size(), is(1));
@@ -197,7 +198,7 @@ public class OrderControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddOrderStatus() {
         // Given
-        Order order = Order.builder().customerId(123L)
+        Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
@@ -242,7 +243,7 @@ public class OrderControllerTest extends AbstractControllerTest {
     @Test
     public void shouldReturnOrderByOrderNumber() {
         // Given
-        Order order = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
+        Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
@@ -256,7 +257,7 @@ public class OrderControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
-        assertThat(response.getBody(), containsString("\"customerId\":123"));
+        assertThat(response.getBody(), containsString("\"customerId\":\"123e4567-e89b-42d3-a456-556642440000\""));
         assertThat(response.getBody(), containsString("\"eta\""));
     }
 
@@ -275,7 +276,7 @@ public class OrderControllerTest extends AbstractControllerTest {
     @Test
     public void shouldReturnOrdersByCustomerId() {
         // Given
-        Order orderOne = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
+        Order orderOne = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
@@ -284,7 +285,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         String orderNumberOne = orderService.createOrder(orderOne);
         orderService.addOrderStatus(orderNumberOne, OrderStatus.builder().status("Delivered").build());
 
-        Order orderTwo = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
+        Order orderTwo = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
@@ -292,7 +293,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         orderTwo.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumberTwo = orderService.createOrder(orderTwo);
 
-        Order orderThree = Order.builder().customerId(123L).minDaysRequired(1).maxDaysRequired(3)
+        Order orderThree = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
@@ -304,31 +305,31 @@ public class OrderControllerTest extends AbstractControllerTest {
         final HttpEntity<?> httpEntity = new HttpEntity<Long>(null, headers);
 
         // When
-        ResponseEntity<String> response = rest.exchange(BASE_URL + "?customerId=123", GET, httpEntity, String.class);
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "?customerId=123e4567-e89b-42d3-a456-556642440000", GET, httpEntity, String.class);
 
         // Then
         assertThat(response.getStatusCode(), is(OK));
-        assertThat(StringUtils.countOccurrencesOf(response.getBody(), "\"customerId\":123"), is(3));
+        assertThat(StringUtils.countOccurrencesOf(response.getBody(), "\"customerId\":\"123e4567-e89b-42d3-a456-556642440000\""), is(3));
         assertThat(StringUtils.countOccurrencesOf(response.getBody(), orderNumberOne), is(1));
         assertThat(StringUtils.countOccurrencesOf(response.getBody(), orderNumberTwo), is(1));
         assertThat(StringUtils.countOccurrencesOf(response.getBody(), orderNumberThree), is(1));
 
         // When
-        ResponseEntity<String> responseTwo = rest.exchange(BASE_URL + "?customerId=123&status=open", GET, httpEntity, String.class);
+        ResponseEntity<String> responseTwo = rest.exchange(BASE_URL + "?customerId=123e4567-e89b-42d3-a456-556642440000&status=open", GET, httpEntity, String.class);
 
         // Then
         assertThat(responseTwo.getStatusCode(), is(OK));
-        assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), "\"customerId\":123"), is(2));
+        assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), "\"customerId\":\"123e4567-e89b-42d3-a456-556642440000\""), is(2));
         assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), orderNumberOne), is(0));
         assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), orderNumberTwo), is(1));
         assertThat(StringUtils.countOccurrencesOf(responseTwo.getBody(), orderNumberThree), is(1));
 
         // When
-        ResponseEntity<String> responseThree = rest.exchange(BASE_URL + "?customerId=123&status=completed", GET, httpEntity, String.class);
+        ResponseEntity<String> responseThree = rest.exchange(BASE_URL + "?customerId=123e4567-e89b-42d3-a456-556642440000&status=completed", GET, httpEntity, String.class);
 
         // Then
         assertThat(responseTwo.getStatusCode(), is(OK));
-        assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), "\"customerId\":123"), is(1));
+        assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), "\"customerId\":\"123e4567-e89b-42d3-a456-556642440000\""), is(1));
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberOne), is(1));
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberTwo), is(0));
         assertThat(StringUtils.countOccurrencesOf(responseThree.getBody(), orderNumberThree), is(0));
@@ -337,14 +338,14 @@ public class OrderControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddCustomerInfo(){
         // Given
-        Order order = Order.builder().customerId(null)
+        Order order = Order.builder().customerUid(null)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
-        final HttpEntity<String> httpEntity = new HttpEntity<>("1234", headers);
+        final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642440000", headers);
 
         // When
         ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
@@ -352,21 +353,21 @@ public class OrderControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
         Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
-        assertThat(orderOptional.get().getCustomerId(), is(1234L));
+        assertThat(orderOptional.get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")));
     }
 
     @Test
     public void shouldRejectRequestToUpdateCustomerInfoWithGuestToken(){
         // Given - guest token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
-        Order order = Order.builder().customerId(null)
+        Order order = Order.builder().customerUid(null)
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
-        final HttpEntity<String> httpEntity = new HttpEntity<>("1234", headers);
+        final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642440000", headers);
 
         // When
         ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
@@ -378,14 +379,14 @@ public class OrderControllerTest extends AbstractControllerTest {
     @Test
     public void shouldNotUpdateCustomerInfoIfAlreadySet(){
         // Given
-        Order order = Order.builder().customerId(123L)
+        Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
-        final HttpEntity<String> httpEntity = new HttpEntity<>("456", headers);
+        final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642441111", headers);
 
         // When
         ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
@@ -393,7 +394,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         // Then
         assertThat(response.getStatusCode(), is(CREATED));
         Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
-        assertThat(orderOptional.get().getCustomerId(), is(123L));
+        assertThat(orderOptional.get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")));
     }
 
 }

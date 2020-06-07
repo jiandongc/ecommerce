@@ -13,6 +13,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 
+import java.util.UUID;
+
 import static java.math.BigDecimal.ONE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.http.HttpMethod.POST;
@@ -30,7 +32,7 @@ public class StripePayControllerTest extends AbstractControllerTest {
     @Test
     public void shouldDownloadStripeClientSecret() {
         // Given
-        Order order = Order.builder().customerId(123L)
+        Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();

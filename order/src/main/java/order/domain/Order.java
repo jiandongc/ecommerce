@@ -1,6 +1,7 @@
 package order.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,10 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.LAZY;
@@ -36,8 +34,9 @@ public class Order {
     @Column(name = "order_number")
     private String orderNumber;
 
-    @Column(name = "customer_id")
-    private Long customerId;
+    @JsonProperty(value = "customerId", access = JsonProperty.Access.READ_WRITE)
+    @Column(name = "customer_uid")
+    private UUID customerUid;
 
     @Column(name = "email")
     private String email;

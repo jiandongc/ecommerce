@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -49,15 +50,15 @@ public class OrderController {
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "{orderNumber}/customer", method = POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order> addCustomerInfo(@PathVariable String orderNumber, @RequestBody String customerId) {
-        orderService.addCustomerInfo(orderNumber, Long.valueOf(customerId));
+        orderService.addCustomerInfo(orderNumber, UUID.fromString(customerId));
         Optional<Order> order = orderService.findByOrderNumber(orderNumber);
         return order.map(o -> new ResponseEntity<>(o, CREATED)).orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Order> getOrdersForCustomer(@RequestParam(value = "customerId") Long customerId,
+    public List<Order> getOrdersForCustomer(@RequestParam(value = "customerId") String customerId,
                                             @RequestParam(value = "status", required = false) String status) {
-        return orderService.findOrders(customerId, status);
+        return orderService.findOrders(UUID.fromString(customerId), status);
     }
 }

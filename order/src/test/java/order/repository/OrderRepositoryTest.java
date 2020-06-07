@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -25,7 +26,7 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
         // Given
         final Order order = Order.builder()
                 .orderNumber("1111-2222-3333")
-                .customerId(1L)
+                .customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
                 .items(new BigDecimal("20.2"))
                 .postage(new BigDecimal("3.0"))
                 .promotion(new BigDecimal("-2.0"))
@@ -52,6 +53,7 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
         // Then
         Order actual = orderRepository.getOne(order.getId());
         assertThat(actual.getOrderNumber(), is("1111-2222-3333"));
+        assertThat(actual.getCustomerUid(), is(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")));
         assertThat(actual.getOrderStatuses().size(), is(1));
         assertThat(actual.getOrderStatuses().get(0).getStatus(), is("PAID"));
         assertThat(actual.getOrderItems().size(), is(1));
@@ -65,10 +67,10 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
     }
 
     @Test
-    public void shouldFindOrderByCustomerId(){
+    public void shouldFindOrderByCustomerUid(){
         final Order orderOne = Order.builder()
                 .orderNumber("20191230")
-                .customerId(1L)
+                .customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
                 .items(new BigDecimal("20.2"))
                 .postage(new BigDecimal("3.0"))
                 .promotion(new BigDecimal("-2.0"))
@@ -88,7 +90,7 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
 
         final Order orderTwo = Order.builder()
                 .orderNumber("20191229")
-                .customerId(1L)
+                .customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
                 .items(new BigDecimal("20.2"))
                 .postage(new BigDecimal("3.0"))
                 .promotion(new BigDecimal("-2.0"))
@@ -108,7 +110,7 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
 
         final Order orderThree = Order.builder()
                 .orderNumber("20191231")
-                .customerId(1L)
+                .customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
                 .items(new BigDecimal("20.2"))
                 .postage(new BigDecimal("3.0"))
                 .promotion(new BigDecimal("-2.0"))
@@ -127,13 +129,13 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
         orderRepository.save(orderThree);
 
         // When & Then
-        List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(1L);
+        List<Order> orders = orderRepository.findByCustomerUidOrderByOrderDateDesc(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"));
         assertThat(orders.size(), is(3));
         assertThat(orders.get(0).getOrderNumber(), is("20191231"));
         assertThat(orders.get(1).getOrderNumber(), is("20191230"));
         assertThat(orders.get(2).getOrderNumber(), is("20191229"));
 
-        orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(2L);
+        orders = orderRepository.findByCustomerUidOrderByOrderDateDesc(UUID.fromString("123e4567-e89b-42d3-a456-556642441111"));
         assertThat(orders.size(), is(0));
 
     }

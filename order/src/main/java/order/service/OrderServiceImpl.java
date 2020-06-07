@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,11 +51,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void addCustomerInfo(String orderNumber, long customerId) {
+    public void addCustomerInfo(String orderNumber, UUID customerUid) {
         Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
         orderOptional.ifPresent(order -> {
-            if (order.getCustomerId() == null) {
-                order.setCustomerId(customerId);
+            if (order.getCustomerUid() == null) {
+                order.setCustomerUid(customerUid);
             }
         });
     }
@@ -69,8 +70,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<Order> findOrders(Long customerId, String status) {
-        final List<Order> orders = orderRepository.findByCustomerIdOrderByOrderDateDesc(customerId);
+    public List<Order> findOrders(UUID customerUid, String status) {
+        final List<Order> orders = orderRepository.findByCustomerUidOrderByOrderDateDesc(customerUid);
         if ("open".equalsIgnoreCase(status)) {
             return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("created|processing|shipped|payment succeeded")).collect(Collectors.toList());
         } else if ("completed".equalsIgnoreCase(status)) {
@@ -82,11 +83,11 @@ public class OrderServiceImpl implements OrderService {
 
     private void validateOrder(Order order) {
         if (order.getOrderItems() == null || order.getOrderItems().isEmpty()) {
-            throw new RuntimeException("OrderItems is empty for customer: " + order.getCustomerId());
+            throw new RuntimeException("OrderItems is empty for customer: " + order.getCustomerUid());
         }
 
         if (order.getOrderAddresses() == null || order.getOrderAddresses().isEmpty()) {
-            throw new RuntimeException("OrderAddress is empty for customer: " + order.getCustomerId());
+            throw new RuntimeException("OrderAddress is empty for customer: " + order.getCustomerUid());
         }
     }
 }
