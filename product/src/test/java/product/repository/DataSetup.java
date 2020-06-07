@@ -45,7 +45,7 @@ public class DataSetup extends AbstractRepositoryTest {
         Brand vitasoy = Brand.builder()
                 .name("VITASOY维他奶")
                 .code("vitasoy")
-                .imageUrl("/images/brand/brand-vitasoy.png")
+                .imageUrl("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/brand/brand-vitasoy.png")
                 .description("维他奶（英文：Vitasoy）1940年至今，是香港家喻户晓的饮料品牌，该豆奶饮料自1940年开始在香港生产，现时生产厂房遍及中国大陆、香港、澳大利亚和美国。\n" +
                 "维他奶包括果汁、牛奶、茶类饮品，汽水、蒸馏水及豆腐等产品的品牌。")
                 .startDate(LocalDate.now())
@@ -59,7 +59,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1110003496"),
                 "香港VITA维他 柠檬茶 6盒装 1500ml",
                 100,
-                Arrays.asList("/images/1110003496.webp", "/images/1110003496-1.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1110003496.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1110003496-1.webp"),
                 Arrays.asList(BigDecimal.valueOf(4.09)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
@@ -81,7 +81,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1110003493"),
                 "泰国ROYAL BOAT 南洋泰式奶茶 480ml",
                 100,
-                Arrays.asList("/images/1110003493.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1110003493.webp"),
                 Arrays.asList(BigDecimal.valueOf(1.04)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
@@ -103,7 +103,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1110003495"),
                 "南方 黑芝麻糊 无糖 560g",
                 100,
-                Arrays.asList("/images/1110003495.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1110003495.webp"),
                 Arrays.asList(BigDecimal.valueOf(7.79)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
@@ -125,7 +125,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1110003494"),
                 "【全网最低价】三顿半 1-6号超即溶精品咖啡冷萃冷泡拿铁纯黑咖啡 24颗装 72g",
                 2,
-                Arrays.asList("/images/1110003494.webp", "/images/1110003494-1.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1110003494.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1110003494-1.webp"),
                 Arrays.asList(BigDecimal.valueOf(37.99), BigDecimal.valueOf(34.99)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
@@ -191,7 +191,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1017004481", "1017004481-1"),
                 "韩国HAITAI海太 蜂蜜黄油薯片 60g",
                 100,
-                Arrays.asList("/images/1017004481.webp", "/images/1017004481-1.webp", "/images/1017004481-2.webp", "/images/1017004481-3.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481-1.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481-2.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481-3.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
@@ -210,7 +210,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1017016711"),
                 "哎哟咪 小梅的零食 山药薄片 酱香牛排味 90g",
                 1,
-                Arrays.asList("/images/1017016711.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017016711.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.59)),
                 Arrays.asList(
                         ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
@@ -229,7 +229,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("3017008651"),
                 "【日本直邮】卡乐B薯条三兄弟 北海道最具人气伴手礼 10包入",
                 100,
-                Arrays.asList("/images/3017008651.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/3017008651.webp"),
                 Arrays.asList(BigDecimal.valueOf(16)),
                 Arrays.asList(ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()),
                 Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
@@ -242,7 +242,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1017000211"),
                 "台湾维力 张君雅小妹妹 点心面 日式串烧烧烤味 80g 新老包装随发",
                 1,
-                Arrays.asList("/images/1017000211.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017000211.webp"),
                 Arrays.asList(BigDecimal.valueOf(1.39)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
@@ -253,7 +253,7 @@ public class DataSetup extends AbstractRepositoryTest {
         Brand lays = Brand.builder()
                 .name("Lay's乐事")
                 .code("lay-s")
-                .imageUrl("/images/brand/lays.png")
+                .imageUrl("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/brand/lays.png")
                 .description("乐事（Lay's，台灣初使用波卡（POCA）品牌、於英国與爱尔兰称为Walkers、埃及称为Chipsy、越南称为Poca、以色列称为Tapuchips、墨西哥称为Sabritas），" +
                         "是一种马铃薯片系列的商品名，也是一个创立于1938年的马铃薯片的品牌。自1965年起乐事薯片作为百事公司所拥有的菲多利的子品牌销售。其他菲多利旗下的商品包含多力多滋、波乐、奇多等。")
                 .startDate(LocalDate.now())
@@ -267,7 +267,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1017003871"),
                 "百事LAY'S乐事 薯片 翡翠黄瓜味 桶装 104g",
                 100,
-                Arrays.asList("/images/1017003871.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017003871.webp"),
                 Arrays.asList(BigDecimal.valueOf(3.29)),
                 Arrays.asList(
                         ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build()
@@ -282,7 +282,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 Arrays.asList("1017003872"),
                 "Lay's Classic Potato Chips - 15.75oz",
                 100,
-                Arrays.asList("/images/1017003872.webp"),
+                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017003872.webp"),
                 Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
                 Arrays.asList(
                         ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
