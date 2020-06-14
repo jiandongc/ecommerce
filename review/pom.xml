@@ -21,7 +21,6 @@
         <lombok.version>1.18.6</lombok.version>
         <dbdeploy.version>3.0M3</dbdeploy.version>
         <jjwt.version>0.7.0</jjwt.version>
-        <stripe.version>17.6.0</stripe.version>
     </properties>
 
     <dependencies>
@@ -75,11 +74,6 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>${jjwt.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.stripe</groupId>
-            <artifactId>stripe-java</artifactId>
-            <version>${stripe.version}</version>
         </dependency>
         <dependency>
             <groupId>com.ecommerce</groupId>
