@@ -356,6 +356,12 @@ html, body {
   color: #111 !important;
 }
 
+@media (max-width: 768px){
+  .btn-style-secondary {
+    margin-top: 0.5em;
+  }
+}
+
 a.link-primary {
   color: #e47911;
 }

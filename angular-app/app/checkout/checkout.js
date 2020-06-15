@@ -355,16 +355,14 @@ checkout.controller('stripePaymentCtrl', function($scope, $location, $localstora
     }
 });
 
-checkout.controller('orderConfirmationCtrl', function($scope, $localstorage, $routeParams, orderFactory) {
+checkout.controller('orderConfirmationCtrl', function($scope, $localstorage, $routeParams, orderFactory, environment) {
     $scope.template.header = 'cart-header.html';
     $scope.template.footer = 'default-footer.html';
 
     if($localstorage.containsKey("customer_id")){
-        $scope.message = 'You can view the status of your order by visting Your Orders on <a href="http://localhost:8000/app/#!/home">Cawaii.co.uk</a>';
+        $scope.message = 'You can view the status of your order by visiting Your Orders on <a href="'+environment.homePage+'">'+environment.siteName+'</a>';
     } else {
-        $scope.message = 'Would you like to create an account with us to track your order on Cawaii.co.uk? <a href="http://localhost:8000/app/#!/register/' 
-        + $routeParams.orderNumber 
-        + '">Click here to create account</a>';
+        $scope.message = 'Would you like to create an account with us to track your order on '+environment.siteName+'? <a href="' + environment.registrationPage + $routeParams.orderNumber + '">Click here to create account</a>';
     }
 
     orderFactory.getOrderByNumber($routeParams.orderNumber).then(function(response) {

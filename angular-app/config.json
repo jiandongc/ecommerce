@@ -6,7 +6,10 @@
 			"orderUrl": "http://localhost:8082",
 			"shoppingCartUrl": "http://localhost:8084",
 			"productUrl": "http://localhost:8083",
-			"reviewUrl": "http://localhost:8085"
+			"reviewUrl": "http://localhost:8085",
+			"siteName": "Cawaii.co.uk",
+			"homePage": "http://localhost:8000/app/#!/home",
+			"registrationPage": "http://localhost:8000/app/#!/register/"
 		}	
 	},
 	"uat" : {
@@ -16,7 +19,10 @@
 			"orderUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/o",
 			"shoppingCartUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/sc",
 			"productUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/p",
-			"reviewUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/r"
+			"reviewUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/r",
+			"siteName": "Noodle Monster",
+			"homePage": "",
+			"registrationPage": ""
 		}	
 	}
 	

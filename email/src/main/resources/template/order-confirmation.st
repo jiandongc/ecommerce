@@ -58,12 +58,12 @@ order-confirmation(customerName, orderNumber, orderEta, orderDeliveryMethod, shi
               <tr style="margin-bottom: 0.5em;">
                 <td width="30%">
                     <div class="col-xs-6">
-                        <a href="#!/products/$orderItem.code$"><img style="display: block; padding: 4px; background-color: #fff; border: 1px solid #ddd; border-radius: 4px; vertical-align: middle; max-width: 100%; height: auto;" src="/Users/jiandongchen/Projects/ecommerce/angular-app/images/1017004481.webp"></a>
+                        <img style="display: block; padding: 4px; background-color: #fff; border: 1px solid #ddd; border-radius: 4px; vertical-align: middle; max-width: 100%; height: auto;" src="$orderItem.imageUrl$">
                     </div>
                 </td>
                 <td style="vertical-align: top;" width="70%">
                     <div style="padding-left: 30px;">
-                        <a href="#!/products/$orderItem.code$"><span style="color: #4c4445; font-size: 1.0em; font-weight: bold;">$orderItem.name$</span></a>
+                        <span style="color: #4c4445; font-size: 1.0em; font-weight: bold;">$orderItem.name$</span>
                     </div>
                     <div style="padding-left: 30px;">
                         <span style="font-weight: 200;">#$orderItem.sku$</span>
@@ -72,13 +72,7 @@ order-confirmation(customerName, orderNumber, orderEta, orderDeliveryMethod, shi
                         <span style="font-weight: 300;">$orderItem.description$</span>
                     </div>
                     <div style="padding-left: 30px;">
-                        <span style="font-weight: 200;">Price (each): </span>£ $orderItem.price$
-                    </div>
-                    <div style="padding-left: 30px;">
                         <span style="font-weight: 200;">Quantity: </span>$orderItem.quantity$
-                    </div>
-                    <div style="padding-left: 30px;">
-                        <span style="font-weight: 200;">Sub-total: </span>£ $orderItem.subTotal$
                     </div>
                 </td>
               </tr>
