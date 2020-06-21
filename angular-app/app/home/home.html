@@ -75,6 +75,41 @@
 	<productpanel tag="促销" title="Sale" color="color-grey" icon="/images/Tilda_Icons_3st_discount.svg"></productpanel>
     <productpanel tag="新款到货" title="New In" color="color-grey" icon="/images/Tilda_Icons_2web_star.svg"></productpanel>
 
+	<div class="p-05 underline">
+		<img src="/images/Blck_Tilda_Icons_46_ny_discount.svg" style="width: 30px; height: 30px; vertical-align: middle;">
+		<span class="fw-bold fs-15 color-grey" style="vertical-align: middle;">Tags</span>
+	</div>
+	<div ng-repeat="item in tags" class="p-t-10 p-r-05 p-b-10" style="display: inline-block;">
+		<a class="clickable-label" href="#!/tags/{{item.tag}}">
+			<span class="fs-12 label" style="background-color: {{item.colorHex}}">#{{item.tag}}</span>
+		</a>
+	</div>
+	<div class="p-b-20">
+		<span class="pull-right"><a href="#!/tags">VIEW MORE</a></span>
+	</div>
+
+	<div class="p-05 underline">
+		<img src="/images/Tilda_Icons_9ta_medal.svg" style="width: 30px; height: 30px; vertical-align: middle;">
+		<span class="fw-bold fs-15 color-grey" style="vertical-align: middle;">Brands</span>
+	</div>
+	<div ng-show="!loadingBrands" class="row auto-clear">
+		<div ng-repeat="brand in brands | limitTo:6" class="col-lg-2 col-md-3 col-sm-4 col-xs-6 p-b-10">
+			<div class="thumbnail" style="border: 0px;">
+				<a href="#!/brands/{{brand.code}}">
+					<img class="media-object img-circle" ng-src='{{brand.imageUrl}}'>
+				</a>
+				<div class="caption">
+					<div style="text-align: center;">
+						{{brand.name}}&nbsp;&nbsp;<i class="fas fa-check-circle" style="color:#00acee;"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="p-b-20">
+		<span class="pull-right"><a href="#!/brands">VIEW MORE</a></span>
+	</div>
+
 	<div class="p-t-05 p-b-15 clearfix">
 		<div class="row">
 			<div class="col-md-3 hidden-xs hidden-sm">

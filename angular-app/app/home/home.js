@@ -1,7 +1,22 @@
 var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-home.controller('homeCtrl', function($rootScope) {
+home.controller('homeCtrl', function($rootScope, $scope, tagFactory, brandFactory) {
   $rootScope.$broadcast('initialiseData');
+
+  $scope.loadingTags = true;
+  tagFactory.getAllTags().then(function(response){
+  	$scope.tags = response;
+  	$scope.loadingTags = false;
+  });
+
+  $scope.loadingBrands = true;
+  brandFactory.getAllBrands().then(function(response){
+  	$scope.brands = response;
+  	for (var i in $scope.brands) {
+        $scope.brands[i].imageUrl = $scope.brands[i].imageUrl ? $scope.brands[i].imageUrl : '/images/brand/notfound.png';
+    }
+    $scope.loadingBrands = false;
+  });
 });
 
 home.component('productpanel', {
