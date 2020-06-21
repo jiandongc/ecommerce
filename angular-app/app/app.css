@@ -150,10 +150,6 @@ html, body {
   font-size: 1em;
 }
 
-.product-detail select {
-  width:400px;
-}
-
 .product-detail .qty {
 	color: #4c4445;
   font-weight: 300;
