@@ -250,7 +250,7 @@ checkout.controller('deliveryCtrl', function($scope, $location, $localstorage, $
     };
 });
 
-checkout.controller('stripePaymentCtrl', function($scope, $location, $localstorage, shoppingCartFactory, orderFactory, $rootScope) {
+checkout.controller('stripePaymentCtrl', function($scope, $location, $localstorage, shoppingCartFactory, orderFactory, $rootScope, environment) {
 
     if($localstorage.containsKey("customer_id")){
         $scope.template.header = 'checkout-payment-header.html';
@@ -263,7 +263,7 @@ checkout.controller('stripePaymentCtrl', function($scope, $location, $localstora
     shoppingCartFactory.getOrderData($localstorage.get('cart_uid')).then(function(response) {
         $scope.orderData = response;
 
-        var stripe = Stripe('pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM');
+        var stripe = Stripe(environment.stripePublishableKey);
         var elements = stripe.elements();
 
         var style = {

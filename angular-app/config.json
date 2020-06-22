@@ -9,7 +9,8 @@
 			"reviewUrl": "http://localhost:8085",
 			"siteName": "Cawaii.co.uk",
 			"homePage": "http://localhost:8000/app/#!/home",
-			"registrationPage": "http://localhost:8000/app/#!/register/"
+			"registrationPage": "http://localhost:8000/app/#!/register/",
+			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM"
 		}	
 	},
 	"uat" : {
@@ -22,7 +23,8 @@
 			"reviewUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/r",
 			"siteName": "Noodle Monster",
 			"homePage": "",
-			"registrationPage": ""
+			"registrationPage": "",
+			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM"
 		}	
 	}
 	
