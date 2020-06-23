@@ -4,9 +4,10 @@
 </div>
 <div class="p-05 underline">
     <ul class="nav nav-pills">
-        <li role="presentation" class="active"><a href ng-click="refresh()">全站</a></li>
-        <li role="presentation"><a href ng-click="refresh('ls')">零食</a></li>
-        <li role="presentation"><a href ng-click="refresh('yl')">饮料</a></li>
+        <li role="presentation" class="active"><a href ng-click="refresh()">All</a></li>
+        <li role="presentation" ng-repeat="category in $ctrl.categories">
+            <a href ng-click="refresh(category.code)">{{category.name}}</a>
+        </li>
     </ul>
 </div>
 <div class="row auto-clear product-list" ng-class="loading">

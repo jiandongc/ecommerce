@@ -21,9 +21,10 @@
     <div ng-show="!loading" class="row m-b-10">
         <div class="col-xs-6">
             <ul class="nav nav-pills">
-                <li role="presentation" class="active"><a href ng-click="refresh()">全站</a></li>
-                <li role="presentation"><a href ng-click="refresh('ls')">零食</a></li>
-                <li role="presentation"><a href ng-click="refresh('yl')">饮料</a></li>
+                <li role="presentation" class="active"><a href ng-click="refresh()">All</a></li>
+                <li role="presentation" ng-repeat="category in categories">
+                    <a href ng-click="refresh(category.code)">{{category.name}}</a>
+                </li>
             </ul>
         </div>
         <div class="col-xs-6">

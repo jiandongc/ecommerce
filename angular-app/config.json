@@ -10,7 +10,8 @@
 			"siteName": "Cawaii.co.uk",
 			"homePage": "http://localhost:8000/app/#!/home",
 			"registrationPage": "http://localhost:8000/app/#!/register/",
-			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM"
+			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
+			"categories": ["ls", "yl"]
 		}	
 	},
 	"uat" : {
@@ -24,7 +25,8 @@
 			"siteName": "Noodle Monster",
 			"homePage": "",
 			"registrationPage": "",
-			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM"
+			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
+			"categories": ["ls", "yl"]
 		}	
 	}
 	

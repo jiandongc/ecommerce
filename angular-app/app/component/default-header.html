@@ -2,35 +2,18 @@
     <div class="container-fluid">
         <div class="navbar-header pull-left">
             <div class="p-05" style="text-align: center;">
-                <a href="#"><img src="/images/logo_yellow.png" style="max-height: 33.22px;"></a>
+                <a href="#"><img src="/images/logo_grey.png" style="max-height: 33.22px;"></a>
             </div>
         </div>
 
         <div class="hidden-xs pull-left">
             <ul class="nav navbar-nav navbar-left">
-                <li class="dropdown">
-                    <a href="#!/category/ls" class="dropdown-toggle fs-09">零食</a>
+                <li class="dropdown" ng-repeat="category in categories">
+                    <a href="#!/category/{{category.code}}" class="dropdown-toggle fs-09">{{category.name}}</a>
                     <ul class="dropdown-menu" style="width: 800px;">
                         <li>
                             <div class="row p-10">
-                                <div ng-repeat="children in categoryOne.children" class="col-xs-4 m-b-10 box">
-                                    <div class="fw-bold fs-09 m-b-05">
-                                        <a href="#!/category/{{children.code}}" class="link-primary">{{children.name}}</a>
-                                    </div>
-                                    <div ng-repeat="grandChildren in children.children" class="fs-08 m-b-05">
-                                        <a href="#!/category/{{grandChildren.code}}">{{grandChildren.name}}</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a href="#!/category/yl" class="dropdown-toggle fs-09">饮料</a>
-                    <ul class="dropdown-menu" style="width: 800px;">
-                        <li>
-                            <div class="row p-10">
-                                <div ng-repeat="children in categoryTwo.children" class="col-xs-4 m-b-10 box">
+                                <div ng-repeat="children in category.children" class="col-xs-4 m-b-10 box">
                                     <div class="fw-bold fs-09 m-b-05">
                                         <a href="#!/category/{{children.code}}" class="link-primary">{{children.name}}</a>
                                     </div>

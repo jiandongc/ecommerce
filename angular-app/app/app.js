@@ -15,7 +15,7 @@ var app = angular.module('store', [
     'brand'
 ]);
 
-app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, shoppingCartFactory, categoryFactory) {
+app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, $q, environment, shoppingCartFactory, categoryFactory) {
 
     $scope.template = {
         header: "default-header.html",
@@ -46,6 +46,24 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
             if ($localstorage.get('cart_uid') !== false) {
                 $rootScope.$broadcast('updateCartSummary', false);
             }
+        }
+    });
+
+    $scope.$watch(function() {
+        return $scope.categories;
+    }, function(newValue, oldValue) {
+        if (typeof $scope.categories === "undefined") {
+            $scope.categories = [];
+            var promises = [];
+            for (i = 0; i < environment.categories.length; i = i + 1) {
+                promises.push(categoryFactory.getSubCategories(environment.categories[i], 2));
+            }
+
+            $q.all(promises).then(function(response) {
+                for (var i = 0; i < response.length; i++) {
+                    $scope.categories.push(response[i]);;
+                }
+            })
         }
     });
 
@@ -86,16 +104,6 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
     $scope.$on('$routeChangeStart', function($event, next, current) {
         $scope.template.header = 'default-header.html';
         $scope.template.footer = 'default-footer.html';
-    });
-
-    $scope.$on('initialiseData', function(event, args) {
-        categoryFactory.getSubCategories("ls", 2).then(function(response) {
-            $scope.categoryOne = response;
-        });
-
-        categoryFactory.getSubCategories("yl", 2).then(function(response) {
-            $scope.categoryTwo = response;
-        });
     });
 
     $scope.removeItem = function(cartItem) {

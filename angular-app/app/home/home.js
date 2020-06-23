@@ -1,8 +1,6 @@
 var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-home.controller('homeCtrl', function($rootScope, $scope, tagFactory, brandFactory) {
-  $rootScope.$broadcast('initialiseData');
-
+home.controller('homeCtrl', function($scope, tagFactory, brandFactory) {
   $scope.loadingTags = true;
   tagFactory.getAllTags().then(function(response){
   	$scope.tags = response;
@@ -43,7 +41,7 @@ home.component('productpanel', {
       }
     }
   },
-  bindings: {title: '@', color: '@', icon: '@'}
+  bindings: {title: '@', color: '@', icon: '@', categories: '='}
 });
 
 home.config(['$routeProvider',
