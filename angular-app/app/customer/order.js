@@ -26,13 +26,8 @@ order.factory('orderFactory', function($http, environment){
       });
   }
 
-  var downloadStripeClientSecret = function(orderNumber, shoppingCartUid, name){
-      var data = {
-        shoppingCartId : shoppingCartUid,
-        userName : name
-      };
-
-      return $http.post(environment.orderUrl + '/orders/stripe/' + orderNumber, data).then(function(response){
+  var downloadStripeClientSecret = function(orderNumber, stripeMetaData){
+      return $http.post(environment.orderUrl + '/orders/stripe/' + orderNumber, stripeMetaData).then(function(response){
         return response.data;
       }); 
   };

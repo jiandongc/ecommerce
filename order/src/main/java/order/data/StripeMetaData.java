@@ -12,4 +12,7 @@ import lombok.NoArgsConstructor;
 public class StripeMetaData {
     private String shoppingCartId;
     private String userName;
+    private String siteName;
+    private String homePage;
+    private String registrationPage;
 }

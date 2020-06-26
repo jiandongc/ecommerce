@@ -35,6 +35,13 @@
             <artifactId>ST4</artifactId>
             <version>${spring.template.version}</version>
         </dependency>
+
+        <!-- Test Scope-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

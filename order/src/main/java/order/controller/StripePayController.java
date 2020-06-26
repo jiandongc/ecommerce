@@ -82,6 +82,9 @@ public class StripePayController {
         final PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
         final String orderNumber = paymentIntent.getMetadata().get("order_number");
         final String name = paymentIntent.getMetadata().get("name");
+        final String siteName = paymentIntent.getMetadata().get("siteName");
+        final String registrationPage = paymentIntent.getMetadata().get("registrationPage");
+        final String homePage = paymentIntent.getMetadata().get("homePage");
 
         // Handle the event
         if (event.getType().equalsIgnoreCase("payment_intent.succeeded")) {
@@ -110,7 +113,7 @@ public class StripePayController {
                         .collect(Collectors.toList());
                 OrderConfirmationData orderConfirmationData = OrderConfirmationData.builder()
                         .sendTo(Arrays.asList(order.getEmail()))
-                        .customerName(name != null && !name.equals("Guest") ? name : order.getShippingAddress().get().getName())
+                        .customerName(name)
                         .orderNumber(order.getOrderNumber())
                         .orderEta(order.getEta())
                         .orderDeliveryMethod(order.getDeliveryMethod())
@@ -124,7 +127,12 @@ public class StripePayController {
                                         .city(shippingAddress.getCity())
                                         .country(shippingAddress.getCountry())
                                         .build()
-                        ).build();
+                        )
+                        .guest(order.getCustomerUid() == null)
+                        .siteName(siteName)
+                        .homePage(homePage)
+                        .registrationPage(registrationPage)
+                        .build();
 
                 emailService.sendMessage(orderConfirmationData);
             } else {
@@ -169,7 +177,10 @@ public class StripePayController {
                 .setAmount(new Long(order.getOrderTotal().setScale(2, BigDecimal.ROUND_HALF_UP).movePointRight(2).toPlainString()))
                 .putMetadata("shopping_cart_uid", stripeMetaData.getShoppingCartId())
                 .putMetadata("order_number", orderNumber)
-                .putMetadata("name", stripeMetaData.getUserName() != null ? stripeMetaData.getUserName() : "Guest");
+                .putMetadata("name", !"false".equalsIgnoreCase(stripeMetaData.getUserName()) ? stripeMetaData.getUserName() : order.getShippingAddress().get().getName())
+                .putMetadata("siteName", stripeMetaData.getSiteName())
+                .putMetadata("homePage", stripeMetaData.getHomePage())
+                .putMetadata("registrationPage", stripeMetaData.getRegistrationPage());
 
         final Optional<OrderAddress> shippingAddressOptional = order.getShippingAddress();
         if (shippingAddressOptional.isPresent()) {

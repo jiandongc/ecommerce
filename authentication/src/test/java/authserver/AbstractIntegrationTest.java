@@ -42,6 +42,8 @@ public abstract class AbstractIntegrationTest {
 
     @After
     public void cleanup(){
+        jdbcTemplate.update("delete from product");
+        jdbcTemplate.update("delete from token");
         jdbcTemplate.update("delete from address");
         jdbcTemplate.update("delete from customer");
     }

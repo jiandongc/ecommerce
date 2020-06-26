@@ -23,8 +23,8 @@
 			"productUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/p",
 			"reviewUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/r",
 			"siteName": "Noodle Monster",
-			"homePage": "",
-			"registrationPage": "",
+			"homePage": "http://cawaii.co.uk/#!/home",
+			"registrationPage": "http://cawaii.co.uk/#!/register/",
 			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
 			"categories": ["ls", "yl"]
 		}	

@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -35,7 +36,7 @@ public class UserRepositoryTest {
 	@Test
 	public void shouldFindCustomerByEmail(){
 		// Given
-		final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '12345')";
+		final String sql = "insert into customer (name, email, password, customer_uid) values ('chen', 'chen@gmail.com', '12345', '"+ UUID.randomUUID() + "')";
 		jdbcTemplate.execute(sql);
 
 		// When

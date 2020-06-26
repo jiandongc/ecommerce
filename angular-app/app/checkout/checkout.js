@@ -306,7 +306,15 @@ checkout.controller('stripePaymentCtrl', function($scope, $location, $localstora
             orderFactory.createOrder($scope.orderData).then(function(orderNumber) {
                 $scope.orderNumber = orderNumber;
 
-                orderFactory.downloadStripeClientSecret($scope.orderNumber, $localstorage.get('cart_uid'), $localstorage.get('current_user')).then(function(response) {
+                var stripeMetaData = {
+                    shoppingCartId : $localstorage.get('cart_uid'),
+                    userName : $localstorage.get('current_user'),
+                    siteName : environment.siteName,
+                    homePage : environment.homePage,
+                    registrationPage : environment.registrationPage
+                };
+
+                orderFactory.downloadStripeClientSecret($scope.orderNumber, stripeMetaData).then(function(response) {
                     $scope.clientSecret = response;
                     stripe.confirmCardPayment($scope.clientSecret, {
                         payment_method: {

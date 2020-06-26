@@ -1,4 +1,4 @@
-order-confirmation(customerName, orderNumber, orderEta, orderDeliveryMethod, shippingAddress, orderItems) ::= <<
+order-confirmation(customerName, orderNumber, orderEta, orderDeliveryMethod, shippingAddress, orderItems, guest, siteName, homePage, registrationPage) ::= <<
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,7 +7,7 @@ order-confirmation(customerName, orderNumber, orderEta, orderDeliveryMethod, shi
 
 <div class="container" style="background-color: #ffffff; max-width: 600px; margin: 0 auto; overflow: hidden; border-radius: 5px; font-family: sans-serif;">
     <div class="header" style="background-color: #f6f6f6; padding-bottom: 10px; padding-top: 10px;">
-        <img src="https://lh3.googleusercontent.com/n7geLROEAZMDDkCRSN7ztgze9D-hAIznjkAuiTrYGKbsGitkSxjn5xn_0k-1rxLpU7idXBi7OkLgo0w_U1SSqyF5-Q8jp2n00E5-sIrhLveUussQ-95uxga2r7cCkpiZ4YCT11nMQr7foEEjWhwYgzcADS6l4MTozH4xtc8GCYuxzj28nchjZKXvuWjpH5FdE6VVDXSHKO2hdIgjsqCuY6LwRJ55ToEUCYRf3lN_WprmruQTE6Q3vKpkWN-RK273Ua8S4TD57oXXesnvF4p-jfAXZnS6n9DrTPObLjlZ_UYlxGR6kQu8JznAYVEmSBOyceaSGs5SNcTkrHqgplq3wBG-7I8HazKC5uwsmkOJv9khvmEQFFffF2p-fC3c1zSfLRt8RcFGJ2iZxRmejvk_LYRCNyx8viqJd3GTxrHn93BF2n1EbfHwJRXu7CNJzTgqc7MGHIGYVzS7MK19JChnF5rKLXWAd-BNZRdbBDxuGhSWl4fB1buRymSX0JesCEcY9DTsOgjP3P3-YdLKwlGN_TKL0EHWOXCWUVMMSWg-9ohFjVifgr44u2oA7b3FBf6_DAAaHZu0Yse16aeFnrTlAcbIGVINHC-Hdn-_BEBOVqLhXtv4YOTDKpQ5FKBUwGSfJ0j3A0W8ZCp_ounn6solkARQKKafYXZMddfNixyBjtaqZug9WKuZ7Q=w1000-h647-no" style="max-height: 40px;">
+        <img src="https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/logo_grey.png" style="max-height: 40px;">
     </div>
     <div class="message" style="margin: 20px; line-height: 1.5;">
         <div style="overflow: auto; color: #333; font-size: 14px;">
@@ -19,7 +19,12 @@ order-confirmation(customerName, orderNumber, orderEta, orderDeliveryMethod, shi
 
         <div style="font-size: 14px; margin-bottom: 0.5em;"><span style="color:#f0c14b;">Hello,</span> <a href="">$customerName$</a></div>
         <div style="font-size: 14px; font-weight: bold; margin-bottom: 0.5em;">
-            Thanks for your order. We'll let you know once your item(s) have dispatched. Your estimated delivery date is indicated below. You can view the status of your order by visiting Your Orders on <a href="">Cawaii.co.uk</a>.
+            Thanks for your order. Your estimated delivery date is indicated below.<br/>
+            $if(guest)$
+            Would you like to create an account with us to track your order on $siteName$? <a href="$registrationPage$$orderNumber$">Click here to create account</a>
+            $else$
+            You can view the status of your order by visiting Your Orders on <a href="$homePage$">$siteName$</a>
+            $endif$
         </div>
 
         <div style="background-color: #E8E8E8; margin-bottom: 0.5em;">
@@ -83,7 +88,7 @@ order-confirmation(customerName, orderNumber, orderEta, orderDeliveryMethod, shi
 
     </div>
     <div class="footer" style="padding-top: 30px; padding-bottom: 15px; background-color: #f6f6f6; text-align: center; color: grey; font-size: 12px; letter-spacing: 0.8px;">
-        @ 2019 CAWAII. INC.
+        @ 2020 Noodle-Monster. INC.
     </div>
 </div>
 

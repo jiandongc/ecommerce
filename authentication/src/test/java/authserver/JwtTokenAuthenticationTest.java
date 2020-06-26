@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.ResourceAccessException;
 
+import java.util.UUID;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpMethod.POST;
@@ -18,7 +20,7 @@ public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
     public void shouldReturnJasonWebTokenIfUserProvideValidUsernameAndPassword() {
         // Given
         String hashedPassword = passwordEncoder.encode("12345");
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
+        final String sql = "insert into customer (name, email, password, customer_uid) values ('chen', 'chen@gmail.com', '" + hashedPassword + "', '"+ UUID.randomUUID() + "')";
         jdbcTemplate.execute(sql);
 
         // When
@@ -37,7 +39,7 @@ public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
     public void shouldNotReturnJasonWebTokenIfPasswordIsIncorrect() {
         // Given
         String hashedPassword = passwordEncoder.encode("12345");
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
+        final String sql = "insert into customer (name, email, password, customer_uid) values ('chen', 'chen@gmail.com', '" + hashedPassword + "', '"+ UUID.randomUUID() + "')";
         jdbcTemplate.execute(sql);
 
         // When
@@ -53,7 +55,7 @@ public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
     public void shouldNotReturnJasonWebTokenIfEmailIsIncorrect() {
         // Given
         String hashedPassword = passwordEncoder.encode("12345");
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
+        final String sql = "insert into customer (name, email, password, customer_uid) values ('chen', 'chen@gmail.com', '" + hashedPassword + "', '"+ UUID.randomUUID() + "')";
         jdbcTemplate.execute(sql);
 
         // When
@@ -70,7 +72,7 @@ public class JwtTokenAuthenticationTest extends AbstractIntegrationTest {
         // Given
         headers.remove("Authentication");
         String hashedPassword = passwordEncoder.encode("12345");
-        final String sql = "insert into customer (name, email, password) values ('chen', 'chen@gmail.com', '" + hashedPassword + "')";
+        final String sql = "insert into customer (name, email, password, customer_uid) values ('chen', 'chen@gmail.com', '" + hashedPassword + "', '"+ UUID.randomUUID() + "')";
         jdbcTemplate.execute(sql);
 
         // When
