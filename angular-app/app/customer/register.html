@@ -1,8 +1,8 @@
 <div class="container">
-	<div class = "row login">
-		<div class="col-sm-6 col-md-4"">
+	<div class = "row p-b-30" style="position:relative;">
+		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
 			<form name="regForm" ng-submit="regForm.$valid && registerCustomer()" novalidate>
-			  <h3>Create account</h3>
+			  <h3 class="p-b-05">Create account</h3>
 			  <div id="error" ng-show="error" class="alert alert-danger">{{errorMsg}}</div>
 			  <div class="form-group">
 			    <label for="registerTitle">Title</label>
@@ -80,6 +80,9 @@
 					<span ng-show="loading"><i class="glyphicon glyphicon-refresh spinning"></i></span>&nbsp;Create your account
 				</button>
 			</form>
-		</div> 
+		</div>
+		<div class="hidden-xs col-sm-6 col-md-8 col-lg-8 text-center" style='position:absolute;bottom:3.0em;right:0;'>
+			<img src="/images/the-munchies.png">
+		</div>
 	</div>
 </div>

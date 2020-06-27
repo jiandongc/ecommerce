@@ -224,19 +224,6 @@ html, body {
     width: 100%;
 }
 
-/* login page */
-.login {
-	color: #111;
-}
-
-.login form {
-	padding-bottom: 7%;
-}
-
-.login h3 {
-	padding-bottom: 2%;
-}
-
 /* account page */
 .account {
   padding-top: 16px;
@@ -595,6 +582,7 @@ a.clickable-label:hover {
 .p-b-20 { padding-bottom: 2.0em; }
 .p-b-25 { padding-bottom: 2.5em; }
 .p-b-30 { padding-bottom: 3.0em; }
+.p-b-40 { padding-bottom: 4.0em; }
 .p-r-02 { padding-right: 0.2em; }
 .p-r-05 { padding-right: 0.5em; }
 .p-r-10 { padding-right: 1.0em; }
@@ -757,24 +745,4 @@ div > .glyphicon-thumbs-up:hover  {
 @-webkit-keyframes spin2 {
     from { -webkit-transform: rotate(0deg); }
     to { -webkit-transform: rotate(360deg); }
-}
-
-@media (min-width: 1009px) and (orientation: landscape)
-.background {
-    background-image: url(https://ichef.bbci.co.uk/images/ic/1280xn/p04qth2y.jpg) !important;
-}
-
-@media (min-width: 800px) and (orientation: landscape), (min-width: 37.5em) and (orientation: portrait)
-.background {
-    background-image: url(https://ichef.bbci.co.uk/images/ic/1152xn/p04qth2y.jpg) !important;
-}
-
-@media (min-width: 37.5em) and (orientation: landscape)
-.background {
-    background-image: url(https://ichef.bbci.co.uk/images/ic/800xn/p04qth2y.jpg) !important;
-}
-
-.background {
-    background-image: url("/images/106948.jpg") !important;
-    padding-bottom: 150px;
 }
