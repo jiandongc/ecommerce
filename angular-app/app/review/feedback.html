@@ -16,10 +16,10 @@
     <div ng-show="loading" class="m-t-10 m-b-10 fs-20" style="text-align: center;">
         <span><i class="glyphicon glyphicon-refresh spinning"></i></span>
     </div>
-    <div ng-hide="loading || data.size > 0" class="row p-25">
+    <div ng-hide="loading || data.size > 0" class="m-t-10 m-b-10">
         <postfeedback seeallbutton=false></postfeedback>
     </div>
-    <div ng-hide="loading" class="p-t-25 p-b-25" ng-repeat="item in data.comment">
+    <div ng-hide="loading" class="p-t-25" ng-repeat="item in data.comment">
         <div class="col-xs-12 underline">
             <span class="color-grey pull-right">{{item.creationTime | date:'yyyy-MM-dd @ h:mma'}}</span>
         </div>
@@ -31,7 +31,7 @@
             <span class="color-tiffany-green fw-bold">A: </span>
             <span class="color-grey">{{response.response}}</span>
         </div>
-        <div class="col-xs-12">
+        <div class="col-xs-12 p-b-10">
             <span ng-hide="voting[$index]" class="glyphicon glyphicon-thumbs-up color-grey fs-11" style="display: table-cell; vertical-align: middle; cursor: pointer;" ng-click="voteUp(item.id, $index)"></span>
             <span ng-show="voting[$index]" class="glyphicon glyphicon-refresh spinning color-grey fs-11" style="display: table-cell; vertical-align: middle;"></span>
             <span class="color-grey" style="display: table-cell; vertical-align: middle; padding-left: 8px">{{item.vote}}</span>
