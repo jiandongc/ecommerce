@@ -23,8 +23,8 @@
 			"productUrl": "https://service.noodle-monster.co.uk/p",
 			"reviewUrl": "https://service.noodle-monster.co.uk/r",
 			"siteName": "Noodle Monster",
-			"homePage": "http://cawaii.co.uk/#!/home",
-			"registrationPage": "http://cawaii.co.uk/#!/register/",
+			"homePage": "https://noodle-monster.co.uk/#!/home",
+			"registrationPage": "https://noodle-monster.co.uk/#!/register/",
 			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
 			"categories": ["ls", "yl"]
 		}	
