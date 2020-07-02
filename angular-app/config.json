@@ -16,12 +16,12 @@
 	},
 	"uat" : {
 		"environment" : {
-			"authServerUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/auth",
-			"customerUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/c",
-			"orderUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/o",
-			"shoppingCartUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/sc",
-			"productUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/p",
-			"reviewUrl": "http://store-2552.eu-west-1.elasticbeanstalk.com/r",
+			"authServerUrl": "https://service.noodle-monster.co.uk/auth",
+			"customerUrl": "https://service.noodle-monster.co.uk/c",
+			"orderUrl": "https://service.noodle-monster.co.uk/o",
+			"shoppingCartUrl": "https://service.noodle-monster.co.uk/sc",
+			"productUrl": "https://service.noodle-monster.co.uk/p",
+			"reviewUrl": "https://service.noodle-monster.co.uk/r",
 			"siteName": "Noodle Monster",
 			"homePage": "http://cawaii.co.uk/#!/home",
 			"registrationPage": "http://cawaii.co.uk/#!/register/",
