@@ -25,9 +25,11 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     @Test
     @Rollback(false)
     public void initialise() {
-        cookingNoodles();
-        instanceNoodles();
-        mate();
+//        cookingNoodles();
+//        instanceNoodles();
+//        mate();
+
+        brands();
 
     }
 
@@ -80,6 +82,25 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
 
         Category luwei = Category.builder().name("滷味 Braised dishes").description("Braised dishes").code("luwei").parent(mate).build();
         categoryRepository.save(luwei);
+    }
+
+    private void brands(){
+//        Brand samyang = Brand.builder().name("三養食品").code("samyang").startDate(LocalDate.now()).imageUrl("/images/brand/samyang.png").build();
+//        brandRepository.save(samyang);
+
+//        Brand nongshim = Brand.builder().name("農心").code("nongshim").startDate(LocalDate.now()).imageUrl("/images/brand/nongshim.jpg").build();
+//        brandRepository.save(nongshim);
+
+//        Brand nissin = Brand.builder().name("日清食品").code("nissin").startDate(LocalDate.now()).imageUrl("/images/brand/nissin.png").build();
+//        brandRepository.save(nissin);
+//
+//        Brand tongyi = Brand.builder().name("統一").code("tongyi").startDate(LocalDate.now()).imageUrl("/images/brand/tongyi.jpg").build();
+//        brandRepository.save(tongyi);
+
+        Brand masterKong = Brand.builder().name("康师傅").code("masterkong").startDate(LocalDate.now()).imageUrl("/images/brand/masterkong.jpg").build();
+        brandRepository.save(masterKong);
+
+
     }
 
     private void lsCategory() {
