@@ -11,7 +11,7 @@
 			"homePage": "http://localhost:8000/app/#!/home",
 			"registrationPage": "http://localhost:8000/app/#!/register/",
 			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
-			"categories": ["ls", "yl"]
+			"categories": ["noodles", "ins-noodles", "noodles-mate"]
 		}	
 	},
 	"uat" : {
