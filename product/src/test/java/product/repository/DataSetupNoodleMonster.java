@@ -8,7 +8,6 @@ import product.domain.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class DataSetupNoodleMonster extends AbstractRepositoryTest {
@@ -25,16 +24,16 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     @Test
     @Rollback(false)
     public void initialise() {
-//        cookingNoodlesCategory();
-//        instanceNoodlesCategory();
-//        mateCategory();
-//        brands();
+        cookingNoodlesCategory();
+        instanceNoodlesCategory();
+        mateCategory();
+        brands();
 
-//        instanceNoodlesSamyang();
-//        instanceNoodlesNongshim();
-//        instanceNoodlesNissin();
-//        instanceNoodlesMasterkong();
-//        instanceNoodlesTongyi();
+        instanceNoodlesSamyang();
+        instanceNoodlesNongshim();
+        instanceNoodlesNissin();
+        instanceNoodlesMasterkong();
+        instanceNoodlesTongyi();
 
         mateBeverage();
 
@@ -408,20 +407,20 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
         Category category = categoryRepository.findByCode("beverage").get();
         Brand brand = brandRepository.findByCode("xiangpiaopiao").get();
 
-//        addProduct(
-//                category,
-//                brand,
-//                "1017004531",
-//                Arrays.asList("1017004531"),
-//                "香港兰芳园 正宗港式丝袜奶茶 开盖即饮 280ml",
-//                100,
-//                Arrays.asList("/images/products/1017004531.webp", "/images/products/1017004531-1.webp"),
-//                Arrays.asList(BigDecimal.valueOf(1.99)),
-//                Arrays.asList(
-//                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
-//                ),
-//                null
-//        );
+        addProduct(
+                category,
+                brand,
+                "1017004531",
+                Arrays.asList("1017004531"),
+                "香港兰芳园 正宗港式丝袜奶茶 开盖即饮 280ml",
+                100,
+                Arrays.asList("/images/products/1017004531.webp", "/images/products/1017004531-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(1.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
 
         addProduct(
                 category,

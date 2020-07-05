@@ -8,7 +8,7 @@ home.controller('homeCtrl', function($scope, tagFactory, brandFactory) {
   });
 
   $scope.loadingBrands = true;
-  brandFactory.getAllBrands().then(function(response){
+  brandFactory.getAllBrandsInRandomOrder().then(function(response){
   	$scope.brands = response;
   	for (var i in $scope.brands) {
         $scope.brands[i].imageUrl = $scope.brands[i].imageUrl ? $scope.brands[i].imageUrl : '/images/brand/notfound.png';
@@ -22,7 +22,7 @@ home.component('productpanel', {
   controller: function($scope, $element, productFactory){
     $scope.tag = $element.attr("tag");
 
-    productFactory.getProductsWithTag($scope.tag).then(function(response){
+    productFactory.getProductsWithTagInOrder($scope.tag, 'random').then(function(response){
         $scope.products = response;
     });
 

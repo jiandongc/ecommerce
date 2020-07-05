@@ -98,6 +98,10 @@ public class ProductServiceImpl implements ProductService {
             products = products.stream().sorted(ProductPredicate.priceDescComparator()).collect(Collectors.toList());
         }
 
+        if (sort != null && sort.equalsIgnoreCase("random")) {
+            Collections.shuffle(products);
+        }
+
         return products;
     }
 }

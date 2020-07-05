@@ -51,9 +51,16 @@ brand.factory('brandFactory', function($http, environment){
     });  	
   }
 
+  var getAllBrandsInRandomOrder = function(){
+    return $http.get(environment.productUrl + '/brands?sort=random').then(function(response){
+      return response.data;
+    });
+  }
+
   return {
     getBrandWithCode: getBrandWithCode,
-    getAllBrands: getAllBrands
+    getAllBrands: getAllBrands,
+    getAllBrandsInRandomOrder: getAllBrandsInRandomOrder
   }
 });
 

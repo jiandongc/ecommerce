@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import product.domain.Brand;
 import product.service.BrandService;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -34,8 +33,13 @@ public class BrandController {
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(method= RequestMethod.GET)
-    public ResponseEntity findAll(){
-        return new ResponseEntity<>(brandService.findAll(), HttpStatus.OK);
+    public ResponseEntity findAll(@RequestParam(value = "sort", required = false) String sort){
+        List<Brand> brands = brandService.findAll();
+        if (sort != null && sort.equalsIgnoreCase("random")) {
+            Collections.shuffle(brands);
+        }
+
+        return new ResponseEntity<>(brands, HttpStatus.OK);
     }
 
 }
