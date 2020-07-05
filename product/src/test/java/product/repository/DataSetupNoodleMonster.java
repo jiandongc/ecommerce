@@ -25,15 +25,22 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     @Test
     @Rollback(false)
     public void initialise() {
-//        cookingNoodles();
-//        instanceNoodles();
-//        mate();
+//        cookingNoodlesCategory();
+//        instanceNoodlesCategory();
+//        mateCategory();
+//        brands();
 
-        brands();
+//        instanceNoodlesSamyang();
+//        instanceNoodlesNongshim();
+//        instanceNoodlesNissin();
+//        instanceNoodlesMasterkong();
+//        instanceNoodlesTongyi();
+
+        mateBeverage();
 
     }
 
-    private void cookingNoodles() {
+    private void cookingNoodlesCategory() {
         Category noodles = Category.builder().name("煮食面").description("Noodles").code("noodles").build();
         categoryRepository.save(noodles);
 
@@ -53,7 +60,7 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
         categoryRepository.save(japan);
     }
 
-    private void instanceNoodles() {
+    private void instanceNoodlesCategory() {
         Category instanceNoodles = Category.builder().name("即食面").description("Instant Noodles").code("ins-noodles").build();
         categoryRepository.save(instanceNoodles);
 
@@ -73,7 +80,7 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
         categoryRepository.save(japan);
     }
 
-    private void mate() {
+    private void mateCategory() {
         Category mate = Category.builder().name("面條伴侶").description("Noodles mate").code("noodles-mate").build();
         categoryRepository.save(mate);
 
@@ -85,206 +92,374 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     }
 
     private void brands(){
-//        Brand samyang = Brand.builder().name("三養食品").code("samyang").startDate(LocalDate.now()).imageUrl("/images/brand/samyang.png").build();
-//        brandRepository.save(samyang);
+        Brand samyang = Brand.builder().name("三養食品").code("samyang").startDate(LocalDate.now()).imageUrl("/images/brand/samyang.png").description("三养食品是一个韩国食品品牌，创立于1961年，所属公司韩国三养集团。2014年，因火鸡面超辣口感，在中国成为网红泡面之一。2017年，从韩国政府获得“1亿美元出口之塔”奖。2018年4月15日，三养食品成3X3黄金联赛伙伴").build();
+        brandRepository.save(samyang);
 
-//        Brand nongshim = Brand.builder().name("農心").code("nongshim").startDate(LocalDate.now()).imageUrl("/images/brand/nongshim.jpg").build();
-//        brandRepository.save(nongshim);
+        Brand nongshim = Brand.builder().name("農心").code("nongshim").startDate(LocalDate.now()).imageUrl("/images/brand/nongshim.jpg").description("株式会社农心成立于1965年，是以制造方便面、膨化食品（饼干）及其它食品加工为主导产业的韩国大型食品生产集团。").build();
+        brandRepository.save(nongshim);
 
-//        Brand nissin = Brand.builder().name("日清食品").code("nissin").startDate(LocalDate.now()).imageUrl("/images/brand/nissin.png").build();
-//        brandRepository.save(nissin);
-//
-//        Brand tongyi = Brand.builder().name("統一").code("tongyi").startDate(LocalDate.now()).imageUrl("/images/brand/tongyi.jpg").build();
-//        brandRepository.save(tongyi);
+        Brand nissin = Brand.builder().name("日清食品").code("nissin").startDate(LocalDate.now()).imageUrl("/images/brand/nissin.png").description("日清食品是一间日本食品公司，以推出各种即食食品著名，是总部位于大阪府大阪市淀川区的日本食品加工公司。由开发了世界最早的方便面Chicken Ramen的安藤百福创办。").build();
+        brandRepository.save(nissin);
 
-        Brand masterKong = Brand.builder().name("康师傅").code("masterkong").startDate(LocalDate.now()).imageUrl("/images/brand/masterkong.jpg").build();
+        Brand tongyi = Brand.builder().name("統一").code("tongyi").startDate(LocalDate.now()).imageUrl("/images/brand/tongyi.jpg").description("统一企业正式成立于中国台湾地区台南市永康区,其总部位于台南市永康区。公司产品主要有饮料和方便面。").build();
+        brandRepository.save(tongyi);
+
+        Brand masterKong = Brand.builder().name("康师傅").code("masterkong").startDate(LocalDate.now()).imageUrl("/images/brand/masterkong.jpg").description("康师傅自1992年研发生产出第一包方便面后，迅速成长为国内乃至全球最大的方便面生产销售企业。").build();
         brandRepository.save(masterKong);
 
-
+        Brand xiangpiaopiao = Brand.builder().name("香飘飘").code("xiangpiaopiao").startDate(LocalDate.now()).imageUrl("/images/brand/xiangpiaopiao.jpg").description("香飘飘是香飘飘食品股份有限公司旗下杯装奶茶品牌，成立于2005年，专业从事奶茶产品的研发、生产和销售。").build();
+        brandRepository.save(xiangpiaopiao);
     }
 
-    private void lsCategory() {
-
-        Category ls = Category.builder().name("零食").code("ls").build();
-        categoryRepository.save(ls);
-
-        Category xps = Category.builder().name("休闲 膨化 薯片").code("xps").parent(ls).build();
-        xps.addCategoryAttribute(CategoryAttribute.builder().key("Salty").ordering(0).build());
-        categoryRepository.save(xps);
-
-        Category bgt = Category.builder().name("饼干 糕点 甜品").code("bgt").parent(ls).build();
-        categoryRepository.save(bgt);
-
-        Category rhjm = Category.builder().name("肉类 海味 坚果 蜜饯").code("rhjm").parent(ls).build();
-        categoryRepository.save(rhjm);
-
-        Category yrwq = Category.builder().name("硬糖 软糖 味觉糖 巧克力").code("yrwq").parent(ls).build();
-        categoryRepository.save(yrwq);
-
-        Category yzq = Category.builder().name("月饼 粽子 青团").code("yzq").parent(ls).build();
-        categoryRepository.save(yzq);
-
-
-        //饼干 糕点 甜品
-        Category bcks = Category.builder().name("饼干 脆棒 烤馍片 酥饼").code("bcks").parent(bgt).build();
-        categoryRepository.save(bcks);
-
-        Category fms = Category.builder().name("凤梨酥 麻薯 沙琪玛").code("fms").parent(bgt).build();
-        categoryRepository.save(fms);
-
-        Category dmpt = Category.builder().name("蛋糕 面包 派 铜锣烧").code("dmpt").parent(bgt).build();
-        categoryRepository.save(dmpt);
-
-        //月饼 粽子 青团
-        Category yb = Category.builder().name("月饼限时特价").code("yb").parent(yzq).build();
-        categoryRepository.save(yb);
-
-        Category zz = Category.builder().name("粽子").code("zz").parent(yzq).build();
-        categoryRepository.save(zz);
-
-        Category qt = Category.builder().name("青团").code("qt").parent(yzq).build();
-        categoryRepository.save(qt);
-
-        //休闲 膨化 薯片
-        Category msxdm = Category.builder().name("膨化 薯片 虾条 点心面 米果").code("msxdm").parent(xps).build();
-        categoryRepository.save(msxdm);
-
-        Brand haitai = Brand.builder().name("HAITAI海太").code("haitai").startDate(LocalDate.now()).build();
-        brandRepository.save(haitai);
+    private void instanceNoodlesSamyang(){
+        Category category = categoryRepository.findByCode("ins-noodles-korea").get();
+        Brand brand = brandRepository.findByCode("samyang").get();
 
         addProduct(
-                msxdm,
-                haitai,
+                category,
+                brand,
                 "1017004481",
-                Arrays.asList("1017004481", "1017004481-1"),
-                "韩国HAITAI海太 蜂蜜黄油薯片 60g",
+                Arrays.asList("1017004481"),
+                "韩国SAMYANG三养 奶油芝士火鸡面 粉色限定新口味 5包入 650g",
                 100,
-                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481-1.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481-2.webp", "https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017004481-3.webp"),
-                Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
+                Arrays.asList("/images/products/1017004481.webp", "/images/products/1017004481-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(6.99), BigDecimal.valueOf(5.59)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
                         ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
-                Arrays.asList(ProductAttribute.builder().key("Salty").value("light").build())
+                null
         );
 
-        Brand aiyomi = Brand.builder().name("小梅的零食").code("aiyomi").startDate(LocalDate.now()).build();
-        brandRepository.save(aiyomi);
-
         addProduct(
-                msxdm,
-                aiyomi,
-                "1017016711",
-                Arrays.asList("1017016711"),
-                "哎哟咪 小梅的零食 山药薄片 酱香牛排味 90g",
-                1,
-                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017016711.webp"),
-                Arrays.asList(BigDecimal.valueOf(2.59)),
+                category,
+                brand,
+                "1017004482",
+                Arrays.asList("1017004481"),
+                "韩国SAMYANG三养 超辣鸡肉味拌面 5包入 700g",
+                100,
+                Arrays.asList("/images/products/1017004482.webp", "/images/products/1017004482-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(5.99), BigDecimal.valueOf(4.79)),
                 Arrays.asList(
-                        ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build(),
                         ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
-                Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
+                null
         );
 
-        Brand calbee = Brand.builder().name("卡乐B").code("calbee").startDate(LocalDate.now()).build();
-        brandRepository.save(calbee);
-
         addProduct(
-                msxdm,
-                calbee,
-                "3017008651",
-                Arrays.asList("3017008651"),
-                "【日本直邮】卡乐B薯条三兄弟 北海道最具人气伴手礼 10包入",
+                category,
+                brand,
+                "1017004483",
+                Arrays.asList("1017004483"),
+                "韩国 SAMYANG三养 超辣咖喱火鸡面 桶装 105g",
                 100,
-                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/3017008651.webp"),
-                Arrays.asList(BigDecimal.valueOf(16)),
-                Arrays.asList(ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()),
-                Arrays.asList(ProductAttribute.builder().key("Salty").value("none").build())
+                Arrays.asList("/images/products/1017004483.webp", "/images/products/1017004483-1.webp", "/images/products/1017004483-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(2.39)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
         );
 
         addProduct(
-                msxdm,
-                null,
-                "1017000211",
-                Arrays.asList("1017000211"),
-                "台湾维力 张君雅小妹妹 点心面 日式串烧烧烤味 80g 新老包装随发",
-                1,
-                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017000211.webp"),
-                Arrays.asList(BigDecimal.valueOf(1.39)),
+                category,
+                brand,
+                "1017004484",
+                Arrays.asList("1017004484"),
+                "韩国 SAMYANG三养 韩版超辣汤面 鸡肉味 碗装 120g",
+                100,
+                Arrays.asList("/images/products/1017004484.webp", "/images/products/1017004484-1.webp", "/images/products/1017004484-2.webp", "/images/products/1017004484-3.webp"),
+                Arrays.asList(BigDecimal.valueOf(2.39)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004485",
+                Arrays.asList("1017004485"),
+                "韩国 SAMYANG三养 超辣火鸡汤面 145g*5",
+                100,
+                Arrays.asList("/images/products/1017004485.webp", "/images/products/1017004485-1.webp", "/images/products/1017004485-2.webp", "/images/products/1017004485-3.webp"),
+                Arrays.asList(BigDecimal.valueOf(6.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+    }
+
+    private void instanceNoodlesNongshim(){
+        Category category = categoryRepository.findByCode("ins-noodles-korea").get();
+        Brand brand = brandRepository.findByCode("nongshim").get();
+
+        addProduct(
+                category,
+                brand,
+                "1017004491",
+                Arrays.asList("1017004491"),
+                "韩国NONGSHIM农心 红色辛拉面 杯装 75g",
+                100,
+                Arrays.asList("/images/products/1017004491.webp", "/images/products/1017004491-1.webp", "/images/products/1017004491-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(1.59), BigDecimal.valueOf(1.29)),
                 Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
                 ),
-                Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
-        );
-
-        Brand lays = Brand.builder()
-                .name("Lay's乐事")
-                .code("lay-s")
-                .imageUrl("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/brand/lays.png")
-                .description("乐事（Lay's，台灣初使用波卡（POCA）品牌、於英国與爱尔兰称为Walkers、埃及称为Chipsy、越南称为Poca、以色列称为Tapuchips、墨西哥称为Sabritas），" +
-                        "是一种马铃薯片系列的商品名，也是一个创立于1938年的马铃薯片的品牌。自1965年起乐事薯片作为百事公司所拥有的菲多利的子品牌销售。其他菲多利旗下的商品包含多力多滋、波乐、奇多等。")
-                .startDate(LocalDate.now())
-                .build();
-        brandRepository.save(lays);
-
-        addProduct(
-                msxdm,
-                lays,
-                "1017003871",
-                Arrays.asList("1017003871"),
-                "百事LAY'S乐事 薯片 翡翠黄瓜味 桶装 104g",
-                100,
-                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017003871.webp"),
-                Arrays.asList(BigDecimal.valueOf(3.29)),
-                Arrays.asList(
-                        ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build()
-                ),
-                Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
+                null
         );
 
         addProduct(
-                msxdm,
-                lays,
-                "1017003872",
-                Arrays.asList("1017003872"),
-                "Lay's Classic Potato Chips - 15.75oz",
+                category,
+                brand,
+                "1017004492",
+                Arrays.asList("1017004492"),
+                "韩国NONGSHIM农心 速食辣泡菜杯面 75g",
                 100,
-                Arrays.asList("https://s3-eu-west-1.amazonaws.com/cawaii.co.uk/images/1017003872.webp"),
-                Arrays.asList(BigDecimal.valueOf(2.29), BigDecimal.valueOf(1.99)),
+                Arrays.asList("/images/products/1017004492.webp", "/images/products/1017004492-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(1.49)),
+                null,
+                null
+        );
+
+    }
+
+    private void instanceNoodlesNissin(){
+        Category nissinHongkong = categoryRepository.findByCode("ins-noodles-hongkong").get();
+        Category nissinJapan = categoryRepository.findByCode("ins-noodles-japan").get();
+        Brand brand = brandRepository.findByCode("nissin").get();
+
+        addProduct(
+                nissinHongkong,
+                brand,
+                "1017004501",
+                Arrays.asList("1017004501"),
+                "日本NISSIN日清 出前一丁 即食汤面 黑蒜油猪骨汤味 碗装 106g",
+                100,
+                Arrays.asList("/images/products/1017004501.webp", "/images/products/1017004501-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(2.39)),
                 Arrays.asList(
-                        ProductTag.builder().tag("学生最爱").startDate(LocalDate.now()).colorHex("#4BF0C1").build(),
                         ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
-                Arrays.asList(ProductAttribute.builder().key("Salty").value("strong").build())
+                null
         );
 
+        addProduct(
+                nissinHongkong,
+                brand,
+                "1017004502",
+                Arrays.asList("1017004502"),
+                "日本NISSIN日清 UFO 飞碟炒面 四川鱼香肉丝风味 116g",
+                100,
+                Arrays.asList("/images/products/1017004502.webp", "/images/products/1017004502-1.webp", "/images/products/1017004502-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(2.59), BigDecimal.valueOf(2.00)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                ),
+                null
+        );
 
-        Category xdmg = Category.builder().name("威化 蛋卷 麻花 锅巴").code("xdmg").parent(xps).build();
-        categoryRepository.save(xdmg);
+        addProduct(
+                nissinJapan,
+                brand,
+                "1017004503",
+                Arrays.asList("1017004503"),
+                "日本NISSIN日清 欧风芝士咖喱风味杯面 85g",
+                100,
+                Arrays.asList("/images/products/1017004503.webp", "/images/products/1017004503-1.webp", "/images/products/1017004503-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(4.50), BigDecimal.valueOf(3.60)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                ),
+                null
+        );
 
+        addProduct(
+                nissinJapan,
+                brand,
+                "1017004504",
+                Arrays.asList("1017004504"),
+                "日本日清NISSIN 网红泡饭 小鸡杯面 海鲜鲜虾拉面口味泡饭 90克",
+                100,
+                Arrays.asList("/images/products/1017004504.webp", "/images/products/1017004504-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(5.99), BigDecimal.valueOf(4.80)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                ),
+                null
+        );
 
-        // 肉类 海味 坚果 蜜饯
-        Category rrrl = Category.builder().name("肉类 肉肠 肉干 卤味").code("rrrl").parent(rhjm).build();
-        categoryRepository.save(rrrl);
+        addProduct(
+                nissinJapan,
+                brand,
+                "1017004505",
+                Arrays.asList("1017004505"),
+                "日本NISSIN日清 北海道限定 牛奶海鲜杯面 81g",
+                100,
+                Arrays.asList("/images/products/1017004505.webp", "/images/products/1017004505-1.webp", "/images/products/1017004505-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(5.99)),
+                null,
+                null
+        );
 
-        Category hyh = Category.builder().name("海味小食 鱼肠 海苔").code("hyh").parent(rhjm).build();
-        categoryRepository.save(hyh);
+        addProduct(
+                nissinJapan,
+                brand,
+                "1017004506",
+                Arrays.asList("1017004506"),
+                "NISSIN日清 元祖鸡汁拉面 汤面网红方便面 速食早餐碗面 85g",
+                100,
+                Arrays.asList("/images/products/1017004506.webp", "/images/products/1017004506-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(3.20)),
+                null,
+                null
+        );
+    }
 
-        Category jhgc = Category.builder().name("坚果 花生 瓜子 炒货").code("jhgc").parent(rhjm).build();
-        categoryRepository.save(jhgc);
+    private void instanceNoodlesMasterkong(){
+        Category category = categoryRepository.findByCode("ins-noodles-china").get();
+        Brand brand = brandRepository.findByCode("masterkong").get();
 
-        Category smds = Category.builder().name("蔬果干 蜜饯 豆制品 素肉").code("smds").parent(rhjm).build();
-        categoryRepository.save(smds);
+        addProduct(
+                category,
+                brand,
+                "1017004511",
+                Arrays.asList("1017004511"),
+                "康师傅 日式豚骨面 方便面 量贩装 五包入 510g",
+                100,
+                Arrays.asList("/images/products/1017004511.webp", "/images/products/1017004511-1.webp", "/images/products/1017004511-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(6.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
 
-        //硬糖 软糖 味觉糖 巧克力
-        Category ggg = Category.builder().name("果冻 果冻爽 龟苓膏").code("ggg").parent(yrwq).build();
-        categoryRepository.save(ggg);
+        addProduct(
+                category,
+                brand,
+                "1017004512",
+                Arrays.asList("1017004512"),
+                "康师傅 金汤虾球面 方便面 量贩装 5包入 520g",
+                100,
+                Arrays.asList("/images/products/1017004512.webp", "/images/products/1017004512-1.webp", "/images/products/1017004512-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(6.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004513",
+                Arrays.asList("1017004513"),
+                "康师傅 蘑菇鲜蔬面 5包入 500g 量贩装",
+                100,
+                Arrays.asList("/images/products/1017004513.webp", "/images/products/1017004513-1.webp", "/images/products/1017004513-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(6.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+    }
+
+    private void instanceNoodlesTongyi(){
+        Category category = categoryRepository.findByCode("ins-noodles-taiwan").get();
+        Brand brand = brandRepository.findByCode("tongyi").get();
+
+        addProduct(
+                category,
+                brand,
+                "1017004521",
+                Arrays.asList("1017004521"),
+                "台湾统一 来一桶 红椒牛肉面 110g",
+                100,
+                Arrays.asList("/images/products/1017004521.webp", "/images/products/1017004521-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(1.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004521",
+                Arrays.asList("1017004522"),
+                "台湾统一 小浣熊干脆面 新奥尔良烤翅味 46g",
+                100,
+                Arrays.asList("/images/products/1017004522.webp", "/images/products/1017004522-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(0.89)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+    }
+
+    private void mateBeverage(){
+        Category category = categoryRepository.findByCode("beverage").get();
+        Brand brand = brandRepository.findByCode("xiangpiaopiao").get();
+
+//        addProduct(
+//                category,
+//                brand,
+//                "1017004531",
+//                Arrays.asList("1017004531"),
+//                "香港兰芳园 正宗港式丝袜奶茶 开盖即饮 280ml",
+//                100,
+//                Arrays.asList("/images/products/1017004531.webp", "/images/products/1017004531-1.webp"),
+//                Arrays.asList(BigDecimal.valueOf(1.99)),
+//                Arrays.asList(
+//                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+//                ),
+//                null
+//        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004532",
+                Arrays.asList("1017004532"),
+                "香港兰芳园 太妃榛果 鸳鸯奶茶 季节限定款 280ml",
+                100,
+                Arrays.asList("/images/products/1017004532.webp", "/images/products/1017004532-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(2.99), BigDecimal.valueOf(2.39)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build(),
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004533",
+                Arrays.asList("1017004533"),
+                "香港兰芳园 正宗港式鸳鸯咖啡奶茶 280ml",
+                100,
+                Arrays.asList("/images/products/1017004533.webp", "/images/products/1017004533-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(2.99), BigDecimal.valueOf(2.39)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build(),
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                ),
+                null
+        );
     }
 
     private void addProduct(Category category, Brand brand, String code, List<String> skus, String name,
                             Integer stockQuantity, List<String> imageUrls, List<BigDecimal> prices,
                             List<ProductTag> productTags, List<ProductAttribute> productAttributes) {
+
         Product product = Product.builder()
                 .category(category)
                 .brand(brand)
@@ -294,7 +469,6 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
         for (int j = 0; j < skus.size(); j++) {
             Sku sku = Sku.builder().sku(skus.get(j)).stockQuantity(stockQuantity).build();
             sku.addPrice(Price.builder().startDate(LocalDate.now()).price(prices.get(0).subtract(BigDecimal.valueOf(j))).build());
-            sku.addAttribute(SkuAttribute.builder().key("Size").value(Integer.toString(j)).build());
             for (int i = 1; i < prices.size(); i++) {
                 sku.addPrice(Price.builder().startDate(LocalDate.now()).price(prices.get(i).subtract(BigDecimal.valueOf(j))).endDate(LocalDate.now().plusDays(100)).discountRate("20%").build());
             }
