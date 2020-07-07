@@ -35,6 +35,11 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
         instanceNoodlesMasterkong();
         instanceNoodlesTongyi();
 
+        noodlesZeng();
+        noodlesGuangyou();
+        noodlesJinpaiganliu();
+        noodlesOttogi();
+
         mateBeverage();
 
     }
@@ -49,14 +54,14 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
         Category taiwan = Category.builder().name("臺灣 Taiwan").code("noodles-taiwan").parent(noodles).build();
         categoryRepository.save(taiwan);
 
-        Category hongkong = Category.builder().name("香港 Hong Kong").code("noodles-hongkong").parent(noodles).build();
-        categoryRepository.save(hongkong);
+//        Category hongkong = Category.builder().name("香港 Hong Kong").code("noodles-hongkong").parent(noodles).build();
+//        categoryRepository.save(hongkong);
 
         Category korea = Category.builder().name("韓國 Korea").code("noodles-korea").parent(noodles).build();
         categoryRepository.save(korea);
 
-        Category japan = Category.builder().name("日本 Japan").code("noodles-japan").parent(noodles).build();
-        categoryRepository.save(japan);
+//        Category japan = Category.builder().name("日本 Japan").code("noodles-japan").parent(noodles).build();
+//        categoryRepository.save(japan);
     }
 
     private void instanceNoodlesCategory() {
@@ -108,6 +113,20 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
 
         Brand xiangpiaopiao = Brand.builder().name("香飘飘").code("xiangpiaopiao").startDate(LocalDate.now()).imageUrl("/images/brand/xiangpiaopiao.jpg").description("香飘飘是香飘飘食品股份有限公司旗下杯装奶茶品牌，成立于2005年，专业从事奶茶产品的研发、生产和销售。").build();
         brandRepository.save(xiangpiaopiao);
+
+        Brand zeng = Brand.builder().name("曾拌面").code("zeng").startDate(LocalDate.now()).imageUrl("/images/brand/zeng.jpg").description("主持过大小美食节目的曾国城，嚐遍各国美食，独独衷爱「面」，累积了30年闻面香、观面相、品面嚐的心得，更心心念念的是如何让大家吃到值得期待的面。于是，「曾拌面」在他的坚持之下诞生了。曾拌面改良关庙面的波浪面体，手工日晒、自然风乾，让它更弹牙的同时，充分吸附酱汁。「一个人可以吃得很简单，但绝对不随便」是曾拌面的初衷，也是希望传达的心意。").build();
+        brandRepository.save(zeng);
+
+        Brand jinpaiganliu = Brand.builder().name("金牌干溜").code("jinpaiganliu").startDate(LocalDate.now()).imageUrl("/images/brand/jinpaiganliu.jpg").description(" 麦香四溢、韧性劲道. 重庆特色、味道醇正. 细腻口感、饱含嚼劲. 选材挑剔、舌尖美味.").build();
+        brandRepository.save(jinpaiganliu);
+
+        Brand guangyou = Brand.builder().name("光友薯业").code("guangyou").startDate(LocalDate.now()).imageUrl("/images/brand/guangyou.png").description("1960年12月，四川省三台县邹家大院诞生了一个小男孩，从小吃红薯长大，与红薯结下了不解之缘。这个“小男孩”就是“方便粉丝发明人”、“方便粉丝专家”邹光友。").build();
+        brandRepository.save(guangyou);
+
+        Brand ottogi = Brand.builder().name("OTTOGI").code("ottogi").startDate(LocalDate.now()).imageUrl("/images/brand/ottogi.jpeg").description("OTTOGI韓國不倒翁成立於1969年,從那時起不倒翁公司就已經著眼於改善韓國大眾的飲食習慣成長為追求食品的更高品質、更富營養、更加高級的專業化食品公司。").build();
+        brandRepository.save(ottogi);
+
+
     }
 
     private void instanceNoodlesSamyang(){
@@ -449,6 +468,160 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
                 Arrays.asList(BigDecimal.valueOf(2.99), BigDecimal.valueOf(2.39)),
                 Arrays.asList(
                         ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build(),
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                ),
+                null
+        );
+    }
+
+    private void noodlesZeng(){
+        Category category = categoryRepository.findByCode("noodles-taiwan").get();
+        Brand brand = brandRepository.findByCode("zeng").get();
+
+        addProduct(
+                category,
+                brand,
+                "1017004541",
+                Arrays.asList("1017004541"),
+                "曾拌面 青葱椒麻拌面 4包入 464g 台湾手工面",
+                100,
+                Arrays.asList("/images/products/1017004541.webp", "/images/products/1017004541-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(10.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004542",
+                Arrays.asList("1017004542"),
+                "曾拌面 胡麻酱香拌面 4包入 508g 台湾手工面",
+                100,
+                Arrays.asList("/images/products/1017004542.webp", "/images/products/1017004542-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(10.99), BigDecimal.valueOf(8.79)),
+                Arrays.asList(
+                        ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
+                ),
+                null
+        );
+    }
+
+    private void noodlesGuangyou(){
+        Category category = categoryRepository.findByCode("noodles-china").get();
+        Brand brand = brandRepository.findByCode("guangyou").get();
+
+        addProduct(
+                category,
+                brand,
+                "1017004551",
+                Arrays.asList("1017004551"),
+                "光友 非油炸 绵阳米粉 牛肉米粉 4包入 540g",
+                100,
+                Arrays.asList("/images/products/1017004551.webp", "/images/products/1017004551-1.webp", "/images/products/1017004551-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(5.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004552",
+                Arrays.asList("1017004552"),
+                "光友 重庆小面 麻辣面 桶装 105g",
+                100,
+                Arrays.asList("/images/products/1017004552.webp", "/images/products/1017004552-1.webp", "/images/products/1017004552-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(1.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004553",
+                Arrays.asList("1017004553"),
+                "光友 非油炸 自热酸辣粉 手工鲜粉 230g",
+                100,
+                Arrays.asList("/images/products/1017004553.webp", "/images/products/1017004553-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(4.39)),
+                null,
+                null
+        );
+
+    }
+
+    private void noodlesJinpaiganliu(){
+        Category category = categoryRepository.findByCode("noodles-china").get();
+        Brand brand = brandRepository.findByCode("jinpaiganliu").get();
+
+        addProduct(
+                category,
+                brand,
+                "1017004561",
+                Arrays.asList("1017004561"),
+                "金牌干溜 金牌酸辣粉 四川特产 300g",
+                100,
+                Arrays.asList("/images/products/1017004561.webp", "/images/products/1017004561-1.webp", "/images/products/1017004561-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(4.39)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004571",
+                Arrays.asList("1017004571"),
+                "金牌干溜 重庆小面 180g",
+                100,
+                Arrays.asList("/images/products/1017004571.webp", "/images/products/1017004571-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(4.39)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+    }
+
+    private void noodlesOttogi(){
+        Category category = categoryRepository.findByCode("noodles-korea").get();
+        Brand brand = brandRepository.findByCode("ottogi").get();
+
+        addProduct(
+                category,
+                brand,
+                "1017004581",
+                Arrays.asList("1017004581"),
+                "韩国OTTOGI不倒翁 炸酱面 北京风味 5包入 675g",
+                100,
+                Arrays.asList("/images/products/1017004581.webp", "/images/products/1017004581-1.webp", "/images/products/1017004581-2.webp"),
+                Arrays.asList(BigDecimal.valueOf(4.99)),
+                Arrays.asList(
+                        ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
+                ),
+                null
+        );
+
+        addProduct(
+                category,
+                brand,
+                "1017004582",
+                Arrays.asList("1017004582"),
+                "韩国OTTOGI 不倒翁芝士拉面 4连包",
+                1,
+                Arrays.asList("/images/products/1017004582.webp", "/images/products/1017004582-1.webp"),
+                Arrays.asList(BigDecimal.valueOf(4.99), BigDecimal.valueOf(3.99)),
+                Arrays.asList(
                         ProductTag.builder().tag("促销").startDate(LocalDate.now()).colorHex("#F0C14B").build()
                 ),
                 null
