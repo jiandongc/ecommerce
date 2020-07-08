@@ -4,8 +4,9 @@ productTag.controller('tagCtrl', function($scope, $routeParams, productFactory) 
 	$scope.loading = true;
 	$scope.tag = $routeParams.tag;
 	$scope.sort = {display: "Our favourites", code: undefined};
+	$scope.category = {display: 'All', code: undefined};
 
-	productFactory.getProductsWithTag($scope.tag).then(function(response){
+	productFactory.getProductsWithTagInOrder($scope.tag, 'random').then(function(response){
 		$scope.products = response;
 		$scope.size = response.length;
 		$scope.loading = false;
@@ -14,27 +15,55 @@ productTag.controller('tagCtrl', function($scope, $routeParams, productFactory) 
 	$scope.sortby = function(display, sortcode){
 		$scope.refreshing = 'opacity-05';
     	$scope.sort = {display: display, code: sortcode};
-    	productFactory.getProductsWithTagInOrder($scope.tag, sortcode).then(function(response){
-			$scope.products = response;
-			$scope.size = response.length;
-			$scope.refreshing = '';
-		});
+    	if($scope.category.code == undefined){
+            productFactory.getProductsWithTagInOrder($scope.tag, sortcode).then(function(response){
+                $scope.products = response;
+                $scope.size = response.length;
+                $scope.refreshing = '';
+            });
+    	} else {
+            productFactory.getProductsWithTagInCategoryInOrder($scope.tag, $scope.category.code, sortcode).then(function(response){
+                $scope.products = response;
+                $scope.size = response.length;
+                $scope.refreshing = '';
+            });
+    	}
   	}
 
-    $scope.refresh = function(categoryCode){
+    $scope.refresh = function(category, categoryCode){
     	$scope.refreshing = 'opacity-05';
       	if(categoryCode == undefined){
-        	productFactory.getProductsWithTag($scope.tag).then(function(response){
-				$scope.products = response;
-				$scope.size = response.length;
-				$scope.refreshing = '';
-          	});
+      	    $scope.category = {display: 'All', code: undefined};
+      	    if($scope.sort.code == undefined){
+                productFactory.getProductsWithTag($scope.tag).then(function(response){
+                    $scope.products = response;
+                    $scope.size = response.length;
+                    $scope.refreshing = '';
+                });
+      	    } else {
+                productFactory.getProductsWithTagInOrder($scope.tag, $scope.sort.code).then(function(response){
+                    $scope.products = response;
+                    $scope.size = response.length;
+                    $scope.refreshing = '';
+                });
+      	    }
+
       	} else {
-          	productFactory.getProductsWithTagInCategory($scope.tag, categoryCode).then(function(response){
-				$scope.products = response;
-				$scope.size = response.length;
-				$scope.refreshing = '';
-          	});
+      	    $scope.category = {display: category, code: categoryCode};
+      	    if($scope.sort.code == undefined){
+                productFactory.getProductsWithTagInCategory($scope.tag, categoryCode).then(function(response){
+                    $scope.products = response;
+                    $scope.size = response.length;
+                    $scope.refreshing = '';
+                });
+      	    } else {
+                productFactory.getProductsWithTagInCategoryInOrder($scope.tag, categoryCode, $scope.sort.code).then(function(response){
+                    $scope.products = response;
+                    $scope.size = response.length;
+                    $scope.refreshing = '';
+                });
+      	    }
+
       	}
     }
 });

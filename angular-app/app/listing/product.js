@@ -161,6 +161,12 @@ productDetail.factory('productFactory', function($http, environment) {
         });
     }
 
+    var getProductsWithTagInCategoryInOrder = function(tag, categoryCode, sort) {
+        return $http.get(environment.productUrl + '/products?tg=' + tag + '&cc=' + categoryCode + '&sort=' + sort).then(function(response) {
+            return response.data;
+        });
+    }
+
     var getProductsWithBrand = function(brand) {
         return $http.get(environment.productUrl + '/products?br=' + brand).then(function(response) {
             return response.data;
@@ -180,6 +186,7 @@ productDetail.factory('productFactory', function($http, environment) {
         getProductsWithTag: getProductsWithTag,
         getProductsWithTagInCategory: getProductsWithTagInCategory,
         getProductsWithTagInOrder: getProductsWithTagInOrder,
+        getProductsWithTagInCategoryInOrder: getProductsWithTagInCategoryInOrder,
         getProductsWithBrand: getProductsWithBrand,
         getProductsWithBrandInOrder: getProductsWithBrandInOrder
     }

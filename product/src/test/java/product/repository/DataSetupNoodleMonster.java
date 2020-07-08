@@ -54,14 +54,14 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
         Category taiwan = Category.builder().name("臺灣 Taiwan").code("noodles-taiwan").parent(noodles).build();
         categoryRepository.save(taiwan);
 
-//        Category hongkong = Category.builder().name("香港 Hong Kong").code("noodles-hongkong").parent(noodles).build();
-//        categoryRepository.save(hongkong);
+        Category hongkong = Category.builder().name("香港 Hong Kong").code("noodles-hongkong").parent(noodles).build();
+        categoryRepository.save(hongkong);
 
         Category korea = Category.builder().name("韓國 Korea").code("noodles-korea").parent(noodles).build();
         categoryRepository.save(korea);
 
-//        Category japan = Category.builder().name("日本 Japan").code("noodles-japan").parent(noodles).build();
-//        categoryRepository.save(japan);
+        Category japan = Category.builder().name("日本 Japan").code("noodles-japan").parent(noodles).build();
+        categoryRepository.save(japan);
     }
 
     private void instanceNoodlesCategory() {

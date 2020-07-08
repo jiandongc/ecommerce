@@ -20,12 +20,25 @@
     </div>
     <div ng-show="!loading" class="row m-b-10">
         <div class="col-xs-6">
-            <ul class="nav nav-pills">
+            <ul class="nav nav-pills hidden-xs hidden-sm">
                 <li role="presentation" class="active"><a href ng-click="refresh()">All</a></li>
                 <li role="presentation" ng-repeat="category in categories">
-                    <a href ng-click="refresh(category.code)">{{category.name}}</a>
+                    <a href ng-click="refresh(category.name, category.code)">{{category.name}}</a>
                 </li>
             </ul>
+
+            <div class="btn-group hidden-md hidden-lg">
+                <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+                    {{category.display}}&nbsp;&nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li role="presentation"><a href ng-click="refresh()">All</a></li>
+                    <li role="presentation" ng-repeat="category in categories">
+                        <a href ng-click="refresh(category.name, category.code)">{{category.name}}</a>
+                    </li>
+                </ul>
+            </div>
+
         </div>
         <div class="col-xs-6">
             <div class="btn-group pull-right">
