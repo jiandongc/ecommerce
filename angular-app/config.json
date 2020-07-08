@@ -26,7 +26,7 @@
 			"homePage": "https://noodle-monster.co.uk/#!/home",
 			"registrationPage": "https://noodle-monster.co.uk/#!/register/",
 			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
-			"categories": ["ls", "yl"]
+			"categories": ["noodles", "ins-noodles", "noodles-mate"]
 		}	
 	}
 	
