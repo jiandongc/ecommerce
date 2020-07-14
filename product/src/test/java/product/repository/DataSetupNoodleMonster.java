@@ -21,6 +21,9 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     @Autowired
     private BrandRepository brandRepository;
 
+    @Autowired
+    private ProductGroupRepository productGroupRepository;
+
     @Test
     @Rollback(false)
     public void initialise() {
@@ -153,7 +156,7 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
                 category,
                 brand,
                 "1017004482",
-                Arrays.asList("1017004481"),
+                Arrays.asList("1017004482"),
                 "韩国SAMYANG三养 超辣鸡肉味拌面 5包入 700g",
                 100,
                 Arrays.asList("/images/products/1017004482.webp", "/images/products/1017004482-1.webp"),
@@ -208,6 +211,10 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
                         ProductTag.builder().tag("新款到货").startDate(LocalDate.now()).colorHex("#C14BF0").build()
                 ),
                 null
+        );
+
+        productRepository.findByCategoryCode("ins-noodles-korea").forEach(product ->
+            productGroupRepository.add(1L, "tier", product.getId())
         );
     }
 

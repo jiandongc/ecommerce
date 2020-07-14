@@ -21,7 +21,7 @@ public interface ProductRepository extends JpaRepository<Product, Long>{
     @Query(value = "SELECT g2.product_id " +
             "FROM product_group g1 " +
             "JOIN product_group g2 ON g1.product_group = g2.product_group AND g1.product_id <> g2.product_id " +
-            "WHERE g1.type = 'Color' " +
+            "WHERE UPPER(g1.type) = :type " +
             "AND g1.product_id = :productId", nativeQuery = true)
-    List<Integer> findColorVariantIds(@Param("productId") long productId);
+    List<Integer> findRelatedProductIds(@Param("type") String type, @Param("productId") long productId);
 }

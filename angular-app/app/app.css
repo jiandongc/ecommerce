@@ -113,24 +113,19 @@ html, body {
   margin-bottom: 1.5%
 }
 
-.product-detail .color-variant {
-  width: 220px;
-  margin-bottom: 2%;
-}
-
-.product-detail .color-variant img {
+.product-detail .related-products img {
   width: 50px;
   height: 50px;
   border-radius: 8px;
   /*padding-bottom: 2px;*/
 }
 
-.product-detail .color-variant img.active {
+.product-detail .related-products img.active {
   border: 2px solid transparent;
   border-color: #58CBD5;
 }
 
-.product-detail .color-variant a:hover img {
+.product-detail .related-products a:hover img {
 /*  opacity: 0.8;*/
   border: 2px solid transparent;
   border-color: #58CBD5;

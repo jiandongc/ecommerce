@@ -199,12 +199,12 @@ public class ProductServiceImplTest {
 		p3.setCode("p3");
 
 		when(productRepository.findByCode("p1")).thenReturn(Optional.of(p1));
-		when(productRepository.findColorVariantIds(1L)).thenReturn(Arrays.asList(2, 3));
+		when(productRepository.findRelatedProductIds("COLOR", 1L )).thenReturn(Arrays.asList(2, 3));
 		when(productRepository.findOne(2L)).thenReturn(p2);
 		when(productRepository.findOne(3L)).thenReturn(p3);
 
 		// Then
-		List<Product> products = productService.findColorVariant("p1");
+		List<Product> products = productService.findRelatedProducts("color", "p1");
 		assertThat(products.size(), is(2));
 		assertThat(products, hasItems(p2, p3));
 	}
@@ -215,7 +215,7 @@ public class ProductServiceImplTest {
 		when(productRepository.findByCode("p1")).thenReturn(Optional.empty());
 
 		// Then
-		List<Product> products = productService.findColorVariant("p1");
+		List<Product> products = productService.findRelatedProducts( "color", "p1");
 		assertThat(products.size(), is(0));
 	}
 

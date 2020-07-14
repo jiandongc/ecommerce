@@ -21,6 +21,10 @@ public class ProductGroupRepository {
         jdbcTemplate.update(INSERT_SQL, groupId, "Color", productId);
     }
 
+    public void add(long groupId, String type, long productId){
+        jdbcTemplate.update(INSERT_SQL, groupId, type, productId);
+    }
+
     public void deleteAll(){
         jdbcTemplate.update(TRUNCATE_SQL);
     }

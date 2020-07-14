@@ -162,17 +162,17 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 
 
 		// When & Then
-		final List<Integer> idsOne = productRepository.findColorVariantIds(productOneId);
+		final List<Integer> idsOne = productRepository.findRelatedProductIds("COLOR", productOneId);
 		assertThat(idsOne, hasSize(2));
 		assertThat(idsOne, hasItems(productTwoId.intValue(), productThreeId.intValue()));
 
 		// When & Then
-		final List<Integer> idsTwo = productRepository.findColorVariantIds(productTwoId);
+		final List<Integer> idsTwo = productRepository.findRelatedProductIds("COLOR", productTwoId);
 		assertThat(idsTwo, hasSize(2));
 		assertThat(idsTwo, hasItems(productOneId.intValue(), productThreeId.intValue()));
 
 		// When & Then
-		final List<Integer> idsThree = productRepository.findColorVariantIds(productThreeId);
+		final List<Integer> idsThree = productRepository.findRelatedProductIds("COLOR", productThreeId);
 		assertThat(idsThree, hasSize(2));
 		assertThat(idsThree, hasItems(productOneId.intValue(), productTwoId.intValue()));
 	}

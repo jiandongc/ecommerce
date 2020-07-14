@@ -38,8 +38,8 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
         }
     });
 
-    productFactory.getProductWithColorVariants($routeParams.code).then(function(response) {
-        $scope.colorVariant = response;
+    productFactory.getRelatedProducts('tier', $routeParams.code).then(function(response) {
+        $scope.relatedProducts = response;
     });
 
     $scope.select = function(attribute, value) {
@@ -136,10 +136,9 @@ productDetail.factory('productFactory', function($http, environment) {
         });
     }
 
-    var getProductWithColorVariants = function(productCode) {
-        return $http.get(environment.productUrl + '/products/color/' + productCode).then(function(response) {
+    var getRelatedProducts = function(type, productCode) {
+        return $http.get(environment.productUrl + '/products/' + type + '/' + productCode).then(function(response) {
             return response.data;
-            $scope.colorVariant = response.data;
         });
     }
 
@@ -182,7 +181,7 @@ productDetail.factory('productFactory', function($http, environment) {
 
     return {
         getProductWithCode: getProductWithCode,
-        getProductWithColorVariants: getProductWithColorVariants,
+        getRelatedProducts: getRelatedProducts,
         getProductsWithTag: getProductsWithTag,
         getProductsWithTagInCategory: getProductsWithTagInCategory,
         getProductsWithTagInOrder: getProductsWithTagInOrder,

@@ -44,16 +44,12 @@
 					<span class="fs-09 label m-r-05" style="background-color: {{item.colorHex}}">#{{item.tag}}</span>
 				</a>
 			</div>
-			<div ng-show="colorVariant" class="row color-variant m-b-05">
-				<div class="col-xs-3">
-					<img class="active" ng-src='{{product.images[0]}}'/>
-				</div>
-				<div class="col-xs-3" ng-repeat='variant in colorVariant'>
-					<a href="#!/products/{{variant.code}}">
-						<img ng-src='{{variant.imageUrl}}'/>
-					</a>
-				</div>
-			</div>			
+			<div ng-show="relatedProducts.length > 0" class="related-products m-b-05 m-t-10">
+				<img class="active" ng-src='{{product.images[0]}}'>
+				<a ng-repeat='product in relatedProducts' href="#!/products/{{product.code}}">
+					<img ng-src='{{product.imageUrl}}'>
+				</a>
+			</div>
 			<div class="divider"></div>
 			<div ng-repeat="(attribute, values) in product.attributes">
 				<div class="form-group">

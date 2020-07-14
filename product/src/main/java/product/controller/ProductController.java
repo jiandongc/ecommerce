@@ -82,16 +82,11 @@ public class ProductController {
     }
 
 	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
-	@RequestMapping(value = "/color/{code}", method=RequestMethod.GET)
-	public ResponseEntity findColorVariant(@PathVariable String code){
-		final List<ProductSimpleData> products = productService.findColorVariant(code).stream()
-				.map(simpleProductMapper::map).collect(Collectors.toList());
-
-		if(!products.isEmpty()){
-			return new ResponseEntity<>(products, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+	@RequestMapping(value = "/{type}/{code}", method=RequestMethod.GET)
+	public List<ProductSimpleData> findRelatedProducts(@PathVariable(value = "type") String type, @PathVariable String code){
+		return productService.findRelatedProducts(type, code)
+				.stream().map(simpleProductMapper::map)
+				.collect(Collectors.toList());
 	}
     
 }
