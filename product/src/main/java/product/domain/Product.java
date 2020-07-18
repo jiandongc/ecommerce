@@ -1,5 +1,6 @@
 package product.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -65,6 +66,14 @@ public class Product {
 
     @OneToMany(fetch = EAGER, cascade = ALL, mappedBy = "product")
     private List<ProductTag> tags;
+
+    @JsonIgnore
+    @Column(name = "start_date")
+    private LocalDate startDate;
+
+    @JsonIgnore
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     public void addImage(Image image) {
         if (images == null) {
@@ -176,6 +185,12 @@ public class Product {
         }
 
         return false;
+    }
+
+    public boolean isActive(){
+        final LocalDate today = LocalDate.now();
+        return (this.getStartDate() != null && !today.isBefore(this.getStartDate()))
+                && (this.getEndDate() == null || !today.isAfter(this.getEndDate()));
     }
 
 }

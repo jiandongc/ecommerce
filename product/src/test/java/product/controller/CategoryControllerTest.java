@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import product.data.CategoryData;
 import product.domain.*;
 
+import java.time.LocalDate;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -65,24 +67,28 @@ public class CategoryControllerTest extends AbstractControllerTest {
         p1.setCode("p1");
         p1.setName("p1");
         p1.setCategory(c3);
+        p1.setStartDate(LocalDate.now());
         productRepository.save(p1);
 
         final Product p2 = new Product();
         p2.setCode("p2");
         p2.setName("p2");
         p2.setCategory(c4);
+        p2.setStartDate(LocalDate.now());
         productRepository.save(p2);
 
         final Product p3 = new Product();
         p3.setCode("p3");
         p3.setName("p3");
         p3.setCategory(c5);
+        p3.setStartDate(LocalDate.now());
         productRepository.save(p3);
 
         final Product p4 = new Product();
         p4.setCode("p4");
         p4.setName("p4");
         p4.setCategory(c5);
+        p4.setStartDate(LocalDate.now());
         productRepository.save(p4);
 
         // When & Then

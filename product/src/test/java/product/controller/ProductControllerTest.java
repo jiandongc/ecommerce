@@ -99,6 +99,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.addImage(image1);
 		productOne.addImage(image2);
 		productOne.addSku(sku);
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		// When & Then
@@ -127,6 +128,28 @@ public class ProductControllerTest extends AbstractControllerTest {
 	}
 
 	@Test
+	public void shouldNotReturnInactiveProduct(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.setBrand(brand);
+		productOne.addImage(image);
+		productOne.addImage(image1);
+		productOne.addImage(image2);
+		productOne.addSku(sku);
+		productOne.setStartDate(LocalDate.now().plusDays(10));
+		productRepository.save(productOne);
+
+		// When & Then
+		final Product p = productRepository.findOne(productOne.getId());
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		final ResponseEntity<ProductData> response = rest.exchange(BASE_URL + p.getCode(), GET, httpEntity, ProductData.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+	}
+
+	@Test
 	public void shouldReturn404IfProductCodeDoesNotExist(){
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		final ResponseEntity<ProductData> response = rest.exchange(BASE_URL + "12345", GET, httpEntity, ProductData.class);
@@ -142,6 +165,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setCategory(category);
 		productOne.addImage(image);
 		productOne.addSku(sku);
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
@@ -149,12 +173,14 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setDescription("Shoes description");
 		productTwo.setCategory(category);
 		productTwo.addSku(sku2);
+		productTwo.setStartDate(LocalDate.now());
 		productRepository.save(productTwo);
 
 		final Product productThree = new Product();
 		productThree.setName("Cloth");
 		productThree.setDescription("Cloth description");
 		productThree.setCategory(anotherCategory);
+		productThree.setStartDate(LocalDate.now());
 		productRepository.save(productThree);
 
 		// When & Then
@@ -171,6 +197,38 @@ public class ProductControllerTest extends AbstractControllerTest {
 	}
 
 	@Test
+	public void shouldOnlyReturnActiveProductsInCategory(){
+		// Given
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.addImage(image);
+		productOne.addSku(sku);
+		productOne.setStartDate(LocalDate.now());
+		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Shoes");
+		productTwo.setDescription("Shoes description");
+		productTwo.setCategory(category);
+		productTwo.addSku(sku2);
+		productTwo.setStartDate(LocalDate.now().minusDays(10));
+		productTwo.setEndDate(LocalDate.now().minusDays(5));
+		productRepository.save(productTwo);
+
+		// When & Then
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?cc=FD", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+		assertThat(response.getBody()[0].getName(), is("Chester"));
+		assertThat(response.getBody()[0].getCode(), startsWith("FD"));
+		assertThat(response.getBody()[0].getImageUrl(), startsWith("img/0002.jpg"));
+		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10.00"));
+	}
+
+	@Test
 	public void shouldFindProductsByBrand(){
 		// Given
 		Brand nike = Brand.builder().code("nike").name("Nike").build();
@@ -183,6 +241,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
 		productOne.setBrand(nike);
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
@@ -190,6 +249,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setDescription("Shoes description");
 		productTwo.setCategory(category);
 		productTwo.setBrand(nike);
+		productTwo.setStartDate(LocalDate.now());
 		productRepository.save(productTwo);
 
 		final Product productThree = new Product();
@@ -197,6 +257,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productThree.setDescription("Cloth description");
 		productThree.setCategory(category);
 		productThree.setBrand(adidas);
+		productThree.setStartDate(LocalDate.now());
 		productRepository.save(productThree);
 
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -214,6 +275,36 @@ public class ProductControllerTest extends AbstractControllerTest {
 	}
 
 	@Test
+	public void shouldOnlyReturnActiveProductsInBrand(){
+		// Given
+		Brand nike = Brand.builder().code("nike").name("Nike").build();
+		brandRepository.save(nike);
+
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.setBrand(nike);
+		productOne.setStartDate(LocalDate.now());
+		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Shoes");
+		productTwo.setDescription("Shoes description");
+		productTwo.setCategory(category);
+		productTwo.setBrand(nike);
+		productTwo.setStartDate(LocalDate.now().minusDays(10));
+		productTwo.setEndDate(LocalDate.now().minusDays(5));
+		productRepository.save(productTwo);
+
+
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?br=nike", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+	}
+
+	@Test
 	public void shouldFindProductByTag(){
 		final Product productOne = new Product();
 		productOne.setName("Chester");
@@ -221,6 +312,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setCategory(category);
 		productOne.addTag(ProductTag.builder().tag("SALE").startDate(LocalDate.now()).build());
 		productOne.addTag(ProductTag.builder().tag("POPULAR").startDate(LocalDate.now()).build());
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
@@ -228,6 +320,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setDescription("Shoes description");
 		productTwo.setCategory(category);
 		productTwo.addTag(ProductTag.builder().tag("SALE").startDate(LocalDate.now()).build());
+		productTwo.setStartDate(LocalDate.now());
 		productRepository.save(productTwo);
 
 		final Product productThree = new Product();
@@ -235,6 +328,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productThree.setDescription("Cloth description");
 		productThree.setCategory(category);
 		productThree.addTag(ProductTag.builder().tag("SEASON").startDate(LocalDate.now()).build());
+		productThree.setStartDate(LocalDate.now());
 		productRepository.save(productThree);
 
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -262,6 +356,31 @@ public class ProductControllerTest extends AbstractControllerTest {
 	}
 
 	@Test
+	public void shouldOnlyReturnActiveProductsInTag(){
+		final Product productOne = new Product();
+		productOne.setName("Chester");
+		productOne.setDescription("Chester description");
+		productOne.setCategory(category);
+		productOne.addTag(ProductTag.builder().tag("SALE").startDate(LocalDate.now()).build());
+		productOne.setStartDate(LocalDate.now());
+		productRepository.save(productOne);
+
+		final Product productTwo = new Product();
+		productTwo.setName("Shoes");
+		productTwo.setDescription("Shoes description");
+		productTwo.setCategory(category);
+		productTwo.addTag(ProductTag.builder().tag("SALE").startDate(LocalDate.now()).build());
+		productTwo.setStartDate(LocalDate.now().plusDays(10));
+		productRepository.save(productTwo);
+
+
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+		ResponseEntity<ProductSimpleData[]> response = rest.exchange(BASE_URL + "?tg=sale", GET, httpEntity, ProductSimpleData[].class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().length, is(1));
+	}
+
+	@Test
 	public void shouldOrderProductByPrice(){
 		// Given
 		final Product productOne = new Product();
@@ -270,6 +389,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setCategory(category);
 		productOne.addImage(image);
 		productOne.addSku(sku);
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
@@ -277,6 +397,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setDescription("Shoes description");
 		productTwo.setCategory(category);
 		productTwo.addSku(sku2);
+		productTwo.setStartDate(LocalDate.now());
 		productRepository.save(productTwo);
 
 		// When & Then
@@ -309,7 +430,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.addTag(ProductTag.builder().tag("POPULAR").startDate(LocalDate.now()).build());
 		productOne.addSku(sku);
 		productOne.setBrand(nike);
-
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		// When & Then
@@ -338,6 +459,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 		productGroupRepository.addColorVariant(1, productOne.getId());
 
@@ -345,6 +467,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setName("Shoes");
 		productTwo.setDescription("Shoes description");
 		productTwo.setCategory(category);
+		productTwo.setStartDate(LocalDate.now());
 		productRepository.save(productTwo);
 		productGroupRepository.addColorVariant(1, productTwo.getId());
 
@@ -352,6 +475,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productThree.setName("Tea");
 		productThree.setDescription("English Tea");
 		productThree.setCategory(category);
+		productThree.setStartDate(LocalDate.now());
 		productRepository.save(productThree);
 		productGroupRepository.addColorVariant(1, productThree.getId());
 
@@ -389,6 +513,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
 		productOne.addAttribute(ProductAttribute.builder().key("Color").value("Red").build());
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -430,6 +555,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setDescription("Chester description");
 		productOne.setCategory(category);
 		productOne.addSku(sku); // 10.0
+		productOne.setStartDate(LocalDate.now());
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
@@ -437,7 +563,14 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setDescription("Good book");
 		productTwo.setCategory(category);
 		productTwo.addSku(sku2); // 1.0
+		productTwo.setStartDate(LocalDate.now());
 		productRepository.save(productTwo);
+
+		final Product productThree = new Product();
+		productThree.setName("Inactive");
+		productThree.setCategory(category);
+		productThree.setStartDate(LocalDate.now().plusDays(10));
+		productRepository.save(productThree);
 
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 

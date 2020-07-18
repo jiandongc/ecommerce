@@ -30,7 +30,10 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public List<Product> findByCategoryCode(String categoryCode) {
-        final List<Product> products = this.productRepository.findByCategoryCode(categoryCode);
+        final List<Product> products = this.productRepository.findByCategoryCode(categoryCode).stream()
+                .filter(Product::isActive)
+                .collect(Collectors.toList());
+
         final List<Category> subCategories = this.categoryService.findSubCategories(categoryCode);
         final List<Product> subCategoriesProducts = subCategories.stream()
                 .map(subCategory -> this.findByCategoryCode(subCategory.getCode()))
@@ -56,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Product> findByCode(String code) {
-        return productRepository.findByCode(code);
+        return productRepository.findByCode(code).filter(Product::isActive);
     }
 
     @Override
@@ -65,7 +68,10 @@ public class ProductServiceImpl implements ProductService {
         final Optional<Product> product = this.findByCode(code);
         if (product.isPresent()) {
             final List<Integer> ids = productRepository.findRelatedProductIds(type.toUpperCase(), product.get().getId());
-            return ids.stream().map(id -> productRepository.findOne(Long.valueOf(id))).collect(Collectors.toList());
+            return ids.stream()
+                    .map(id -> productRepository.findOne(Long.valueOf(id)))
+                    .filter(Product::isActive)
+                    .collect(Collectors.toList());
         } else {
             return Collections.emptyList();
         }
@@ -77,7 +83,7 @@ public class ProductServiceImpl implements ProductService {
     public List<Product> findProducts(String categoryCode, List<String> tags, String brand, String sort) {
         List<Product> products;
         if (categoryCode == null) {
-            products = productRepository.findAll();
+            products = productRepository.findAll().stream().filter(Product::isActive).collect(Collectors.toList());
         } else {
             products = this.findByCategoryCode(categoryCode);
         }

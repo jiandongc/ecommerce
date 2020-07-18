@@ -14,6 +14,7 @@ import product.domain.Category;
 import product.domain.Product;
 import product.repository.ProductRepository;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -44,10 +45,13 @@ public class ProductServiceImplTest {
 
 		final Product productOne = new Product();
 		productOne.setCode("P1");
+		productOne.setStartDate(LocalDate.now());
 		final Product productTwo = new Product();
 		productTwo.setCode("P2");
+		productTwo.setStartDate(LocalDate.now());
 		final Product productThree = new Product();
 		productThree.setCode("P3");
+		productThree.setStartDate(LocalDate.now());
 		when(productRepository.findByCategoryCode("FD")).thenReturn(emptyList());
 		when(productRepository.findByCategoryCode("FD1")).thenReturn(asList(productOne));
 		when(productRepository.findByCategoryCode("FD2")).thenReturn(asList(productTwo, productThree));
@@ -87,22 +91,31 @@ public class ProductServiceImplTest {
 
 		final Product productOne = new Product();
 		productOne.setCode("P1");
+		productOne.setStartDate(LocalDate.now());
 		final Product productTwo = new Product();
 		productTwo.setCode("P2");
+		productTwo.setStartDate(LocalDate.now());
 		final Product productThree = new Product();
 		productThree.setCode("P3");
+		productThree.setStartDate(LocalDate.now());
 		final Product productFour = new Product();
 		productFour.setCode("P4");
+		productFour.setStartDate(LocalDate.now());
 		final Product productFive = new Product();
 		productFive.setCode("P5");
+		productFive.setStartDate(LocalDate.now());
 		final Product productSix = new Product();
 		productSix.setCode("P6");
+		productSix.setStartDate(LocalDate.now());
 		final Product productSeven = new Product();
 		productSeven.setCode("P7");
+		productSeven.setStartDate(LocalDate.now());
 		final Product productEight = new Product();
 		productEight.setCode("P8");
+		productEight.setStartDate(LocalDate.now());
 		final Product productNine = new Product();
 		productNine.setCode("P9");
+		productNine.setStartDate(LocalDate.now());
 		when(productRepository.findByCategoryCode("FD")).thenReturn(emptyList());
 		when(productRepository.findByCategoryCode("FD1")).thenReturn(asList(productEight, productNine));
 		when(productRepository.findByCategoryCode("FD2")).thenReturn(asList(productOne, productTwo));
@@ -155,18 +168,25 @@ public class ProductServiceImplTest {
 
 		final Product p1 = new Product();
 		p1.setCode("p1");
+		p1.setStartDate(LocalDate.now());
 		final Product p2 = new Product();
 		p2.setCode("p2");
+		p2.setStartDate(LocalDate.now());
 		final Product p3 = new Product();
 		p3.setCode("p3");
+		p3.setStartDate(LocalDate.now());
 		final Product p4 = new Product();
 		p4.setCode("p4");
+		p4.setStartDate(LocalDate.now());
 		final Product p5 = new Product();
 		p5.setCode("p5");
+		p5.setStartDate(LocalDate.now());
 		final Product p6 = new Product();
 		p6.setCode("p6");
+		p6.setStartDate(LocalDate.now());
 		final Product p7 = new Product();
 		p7.setCode("p7");
+		p7.setStartDate(LocalDate.now());
 		when(productRepository.findByCategoryCode("C1")).thenReturn(asList(p1, p2));
 		when(productRepository.findByCategoryCode("C2")).thenReturn(asList(p3, p4));
 		when(productRepository.findByCategoryCode("C3")).thenReturn(asList(p5, p6, p7));
@@ -191,12 +211,15 @@ public class ProductServiceImplTest {
 		final Product p1 = new Product();
 		p1.setId(1);
 		p1.setCode("p1");
+		p1.setStartDate(LocalDate.now());
 		final Product p2 = new Product();
 		p2.setId(2);
 		p2.setCode("p2");
+		p2.setStartDate(LocalDate.now());
 		final Product p3 = new Product();
 		p3.setId(3);
 		p3.setCode("p3");
+		p3.setStartDate(LocalDate.now());
 
 		when(productRepository.findByCode("p1")).thenReturn(Optional.of(p1));
 		when(productRepository.findRelatedProductIds("COLOR", 1L )).thenReturn(Arrays.asList(2, 3));

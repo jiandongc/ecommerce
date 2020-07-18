@@ -176,4 +176,51 @@ public class ProductTest {
         assertThat(product.hasTag(Arrays.asList("unknown", "unknown1")), is(false));
     }
 
+    @Test
+    public void shouldReturnTrueIfProductIsActive(){
+        // Given
+        Product product = new Product();
+        product.setStartDate(LocalDate.now());
+
+        assertThat(product.isActive(), is(true));
+
+        product = new Product();
+        product.setStartDate(LocalDate.now().minusDays(10));
+
+        assertThat(product.isActive(), is(true));
+
+        product = new Product();
+        product.setStartDate(LocalDate.now());
+        product.setEndDate(LocalDate.now().plusDays(10));
+
+        assertThat(product.isActive(), is(true));
+
+        product = new Product();
+        product.setStartDate(LocalDate.now().minusDays(10));
+        product.setEndDate(LocalDate.now().plusDays(10));
+
+        assertThat(product.isActive(), is(true));
+
+        product = new Product();
+        product.setStartDate(LocalDate.now().minusDays(10));
+        product.setEndDate(LocalDate.now());
+
+        assertThat(product.isActive(), is(true));
+    }
+
+    @Test
+    public void shouldReturnFalseIfProductIsInactive(){
+        // Given
+        Product product = new Product();
+        product.setStartDate(LocalDate.now().plusDays(10));
+
+        assertThat(product.isActive(), is(false));
+
+        product = new Product();
+        product.setStartDate(LocalDate.now().minusDays(10));
+        product.setEndDate(LocalDate.now().minusDays(1));
+
+        assertThat(product.isActive(), is(false));
+    }
+
 }
