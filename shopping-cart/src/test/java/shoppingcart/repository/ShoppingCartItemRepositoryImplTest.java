@@ -36,6 +36,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .sku("109283")
                 .imageUrl("/image.jpeg")
                 .description("Size: S")
+                .vatRate(20)
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
 
@@ -46,6 +47,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
                 .description("Size: M")
+                .vatRate(0)
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem2);
 
@@ -59,6 +61,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(cartItems.get(0).getQuantity(), is(1));
         assertThat(cartItems.get(0).getImageUrl(), is("/image.jpeg"));
         assertThat(cartItems.get(0).getDescription(), is("Size: S"));
+        assertThat(cartItems.get(0).getVatRate(), is(20));
         assertThat(cartItems.get(1).getName(), is("product2"));
         assertThat(cartItems.get(1).getCode(), is("code2"));
         assertThat(cartItems.get(1).getPrice(), is(BigDecimal.valueOf(10).setScale(2, ROUND_HALF_UP)));
@@ -66,6 +69,7 @@ public class ShoppingCartItemRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(cartItems.get(1).getQuantity(), is(1));
         assertThat(cartItems.get(1).getImageUrl(), is("/image2.jpeg"));
         assertThat(cartItems.get(1).getDescription(), is("Size: M"));
+        assertThat(cartItems.get(1).getVatRate(), is(0));
     }
 
     @Test

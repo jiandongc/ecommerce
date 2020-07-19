@@ -35,6 +35,7 @@ public class CartDataMapper {
                         .subTotal(cartItem.getItemTotal())
                         .thumbnail(cartItem.getImageUrl())
                         .code(cartItem.getCode())
+                        .vatRate(cartItem.getVatRate())
                         .build()
         ).collect(Collectors.toList());
         final AddressData shipping = shoppingCart.getShippingAddress() != null ? map(shoppingCart.getShippingAddress()) : null;

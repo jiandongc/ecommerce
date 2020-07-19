@@ -17,7 +17,7 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
     private static final String SELECT_SQL = "select * from shopping_cart_item where shopping_cart_id = ? order by creation_time asc";
     private static final String SELECT_BY_SKU_SQL = "select * from shopping_cart_item where shopping_cart_id = ? and sku = ?";
     private static final String INSERT_SQL = "insert into shopping_cart_item " +
-            "(shopping_cart_id, product_code, sku, product_name, unit_price, image_url, description) values (?, ?, ?, ?, ?, ?, ?)";
+            "(shopping_cart_id, product_code, sku, product_name, unit_price, image_url, description, vat_rate) values (?, ?, ?, ?, ?, ?, ?, ?)";
     private static final String UPDATE_QTY_SQL = "update shopping_cart_item set quantity = ? where shopping_cart_id = ? and sku = ?";
     private static final String DELETE_BY_CART_ID_AND_SKU_SQL = "delete from shopping_cart_item where shopping_cart_id = ? and sku = ?";
     private static final String DELETE_BY_CARA_ID_SQL = "delete from shopping_cart_item where shopping_cart_id = ?";
@@ -37,7 +37,8 @@ public class ShoppingCartItemRepositoryImpl implements ShoppingCartItemRepositor
                 cartItem.getName(),
                 cartItem.getPrice(),
                 cartItem.getImageUrl(),
-                cartItem.getDescription());
+                cartItem.getDescription(),
+                cartItem.getVatRate());
     }
 
     @Override

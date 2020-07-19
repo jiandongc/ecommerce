@@ -10,6 +10,7 @@ public class ShoppingCartItem {
     private String code;
     private String sku;
     private String name;
+    private int vatRate;
     private BigDecimal price;
     private int quantity;
     private String imageUrl;
@@ -22,6 +23,7 @@ public class ShoppingCartItem {
                              String code,
                              String sku,
                              String name,
+                             int vatRate,
                              BigDecimal price,
                              int quantity,
                              String imageUrl,
@@ -33,6 +35,7 @@ public class ShoppingCartItem {
         this.code = code;
         this.sku = sku;
         this.name = name;
+        this.vatRate = vatRate;
         this.price = price;
         this.quantity = quantity;
         this.imageUrl = imageUrl;
@@ -66,6 +69,10 @@ public class ShoppingCartItem {
 
     public String getName() {
         return name;
+    }
+
+    public int getVatRate(){
+        return vatRate;
     }
 
     public BigDecimal getPrice() {
@@ -109,6 +116,7 @@ public class ShoppingCartItem {
         if (code != null ? !code.equals(that.code) : that.code != null) return false;
         if (sku != null ? !sku.equals(that.sku) : that.sku != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
+        if (vatRate != that.vatRate) return false;
         if (price != null ? !price.equals(that.price) : that.price != null) return false;
         if (imageUrl != null ? !imageUrl.equals(that.imageUrl) : that.imageUrl != null) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
@@ -125,6 +133,7 @@ public class ShoppingCartItem {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (price != null ? price.hashCode() : 0);
         result = 31 * result + quantity;
+        result = 31 * result + vatRate;
         result = 31 * result + (imageUrl != null ? imageUrl.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (creationTime != null ? creationTime.hashCode() : 0);
@@ -138,6 +147,7 @@ public class ShoppingCartItem {
         private String code;
         private String sku;
         private String name;
+        private int vatRate;
         private BigDecimal price;
         private int quantity;
         private String imageUrl;
@@ -180,6 +190,11 @@ public class ShoppingCartItem {
             return this;
         }
 
+        public ShoppingCartItemBuilder vatRate(int vatRate) {
+            this.vatRate = vatRate;
+            return this;
+        }
+
         public ShoppingCartItemBuilder imageUrl(String imageUrl) {
             this.imageUrl = imageUrl;
             return this;
@@ -201,7 +216,7 @@ public class ShoppingCartItem {
         }
 
         public ShoppingCartItem build() {
-            return new ShoppingCartItem(id, cartId, code, sku, name, price, quantity, imageUrl, description, creationTime, lastUpdateTime);
+            return new ShoppingCartItem(id, cartId, code, sku, name, vatRate, price, quantity, imageUrl, description, creationTime, lastUpdateTime);
         }
 
 

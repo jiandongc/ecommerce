@@ -30,4 +30,6 @@ public final class ItemData {
     private String imageUrl;
 
     private BigDecimal subTotal;
+
+    private Integer vatRate;
 }

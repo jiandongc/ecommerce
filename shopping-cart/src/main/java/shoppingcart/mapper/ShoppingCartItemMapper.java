@@ -19,6 +19,7 @@ public class ShoppingCartItemMapper implements RowMapper<ShoppingCartItem> {
                 .code(rs.getString("product_code"))
                 .sku(rs.getString("sku"))
                 .name(rs.getString("product_name"))
+                .vatRate(rs.getInt("vat_rate"))
                 .price(rs.getBigDecimal("unit_price").setScale(2, BigDecimal.ROUND_HALF_UP))
                 .quantity(rs.getInt("quantity"))
                 .imageUrl(rs.getString("image_url"))

@@ -45,6 +45,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "\"price\": \"10.99\",\n" +
                 "\"imageUrl\": \"/cloth.jpeg\",\n" +
                 "\"description\": \"Size: M\",\n" +
+                "\"vatRate\": 20,\n" +
                 "\"code\": \"code\"\n" +
                 "}";
 
@@ -64,6 +65,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         assertThat(response.getBody().getCartItems().get(0).getQuantity(), is(1));
         assertThat(response.getBody().getCartItems().get(0).getDescription(), is("Size: M"));
         assertThat(response.getBody().getCartItems().get(0).getCode(), is("code"));
+        assertThat(response.getBody().getCartItems().get(0).getVatRate(), is(20));
     }
 
     @Test
@@ -94,6 +96,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
                 "\"sku\": \"123456\",\n" +
                 "\"name\": \"kid's cloth\",\n" +
                 "\"price\": \"10.99\",\n" +
+                "\"vatRate\": 20,\n" +
                 "\"imageUrl\": \"/cloth.jpeg\"\n" +
                 "}";
 
@@ -117,6 +120,7 @@ public class ShoppingCartItemControllerTest extends AbstractControllerTest {
         assertThat(cartItems.get(0).getPrice(), is(BigDecimal.valueOf(10.99)));
         assertThat(cartItems.get(0).getImageUrl(), is("/cloth.jpeg"));
         assertThat(cartItems.get(0).getQuantity(), is(4));
+        assertThat(cartItems.get(0).getVatRate(), is(20));
     }
 
     @Test
