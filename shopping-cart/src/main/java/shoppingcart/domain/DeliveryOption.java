@@ -26,4 +26,6 @@ public class DeliveryOption {
 
     private Date lastUpdateTime;
 
+    private Integer vatRate;
+
 }

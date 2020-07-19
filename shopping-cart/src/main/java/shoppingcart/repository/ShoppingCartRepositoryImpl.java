@@ -35,10 +35,10 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
             "address_line_2=EXCLUDED.address_line_2, address_line_3=EXCLUDED.address_line_3, city=EXCLUDED.city, country=EXCLUDED.country, post_code=EXCLUDED.post_code ";
     private static final String SELECT_ADDRESS_SQL = "SELECT * FROM address WHERE shopping_cart_id=? AND address_type=?";
     private static final String INSERT_DELIVERY_OPTION_SQL = "INSERT INTO delivery_option " +
-            "(method, charge, min_days_required, max_days_required, shopping_cart_id) " +
-            "VALUES (:method, :charge, :min_days_required, :max_days_required, :shopping_cart_id) " +
+            "(method, charge, min_days_required, max_days_required, shopping_cart_id, vat_rate) " +
+            "VALUES (:method, :charge, :min_days_required, :max_days_required, :shopping_cart_id, :vat_rate) " +
             "ON CONFLICT ON CONSTRAINT delivery_option_constraint " +
-            "DO UPDATE SET method=EXCLUDED.method, charge=EXCLUDED.charge, min_days_required=EXCLUDED.min_days_required, max_days_required=EXCLUDED.max_days_required, last_update_time=now()";
+            "DO UPDATE SET method=EXCLUDED.method, charge=EXCLUDED.charge, min_days_required=EXCLUDED.min_days_required, max_days_required=EXCLUDED.max_days_required, vat_rate=EXCLUDED.vat_rate, last_update_time=now()";
     private static final String SELECT_DELIVERY_OPTION_SQL = "SELECT * FROM delivery_option WHERE shopping_cart_id=?";
     private static final String DELETE_SHOPPING_CART_BY_ID_SQL = "DELETE FROM shopping_cart where id = ?";
     private static final String DELETE_ADDRESS_BY_SESSION_ID_SQL = "DELETE FROM address where shopping_cart_id = ?";
@@ -144,6 +144,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
         namedParameters.addValue("min_days_required", deliveryOption.getMinDaysRequired(), Types.INTEGER);
         namedParameters.addValue("max_days_required", deliveryOption.getMaxDaysRequired(), Types.INTEGER);
         namedParameters.addValue("shopping_cart_id", cartId, Types.INTEGER);
+        namedParameters.addValue("vat_rate", deliveryOption.getVatRate(), Types.INTEGER);
         namedParameterJdbcTemplate.update(INSERT_DELIVERY_OPTION_SQL, namedParameters);
     }
 

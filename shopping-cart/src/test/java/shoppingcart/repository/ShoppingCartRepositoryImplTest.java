@@ -179,6 +179,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
                 .minDaysRequired(3)
                 .maxDaysRequired(5)
                 .cartId(cart.getId())
+                .vatRate(20)
                 .build();
 
         // When
@@ -192,12 +193,14 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(actual.getMaxDaysRequired(), Matchers.is(5));
         assertThat(actual.getCreationTime(), Matchers.is(notNullValue()));
         assertThat(actual.getLastUpdateTime(), Matchers.is(nullValue()));
+        assertThat(actual.getVatRate(), Matchers.is(20));
 
         // Given - Update delivery option
         deliveryOption.setMethod("Express Delivery");
         deliveryOption.setCharge(2.9d);
         deliveryOption.setMinDaysRequired(1);
         deliveryOption.setMaxDaysRequired(2);
+        deliveryOption.setVatRate(10);
 
         // When
         shoppingCartRepository.addDeliveryOption(cart.getId(), deliveryOption);
@@ -210,5 +213,6 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(actual.getMaxDaysRequired(), Matchers.is(2));
         assertThat(actual.getCreationTime(), Matchers.is(notNullValue()));
         assertThat(actual.getLastUpdateTime(), Matchers.is(notNullValue()));
+        assertThat(actual.getVatRate(), Matchers.is(10));
     }
 }

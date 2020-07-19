@@ -378,7 +378,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
                 "\"method\": \"FREE Delivery\",\n" +
                 "\"charge\": \"3.0\",\n" +
                 "\"minDaysRequired\": \"1\",\n" +
-                "\"maxDaysRequired\": \"3\"\n" +
+                "\"maxDaysRequired\": \"3\",\n" +
+                "\"vatRate\": 20\n" +
                 "}";
         final HttpEntity<String> deliveryOptionPayload = new HttpEntity<>(deliveryOption, headers);
         final ResponseEntity<CartData> cartDataResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/deliveryoption", POST, deliveryOptionPayload, CartData.class);
@@ -390,13 +391,15 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getCharge(), is(3D));
         assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMinDaysRequired(), is(1));
         assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(3));
+        assertThat(cartDataResponseEntity.getBody().getDeliveryOption().getVatRate(), is(20));
 
         // When - update delivery option
         final String deliveryOptionUpdate = "{\n" +
                 "\"method\": \"Express Delivery\",\n" +
                 "\"charge\": \"5.0\",\n" +
                 "\"minDaysRequired\": \"1\",\n" +
-                "\"maxDaysRequired\": \"2\"\n" +
+                "\"maxDaysRequired\": \"2\",\n" +
+                "\"vatRate\": 10\n" +
                 "}";
         final HttpEntity<String> deliveryOptionUpdatePayload = new HttpEntity<>(deliveryOptionUpdate, headers);
         final ResponseEntity<CartData> cartDataUpdateResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/deliveryoption", POST, deliveryOptionUpdatePayload, CartData.class);
@@ -408,6 +411,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getCharge(), is(5D));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMinDaysRequired(), is(1));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(2));
+        assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getVatRate(), is(10));
     }
 
 }

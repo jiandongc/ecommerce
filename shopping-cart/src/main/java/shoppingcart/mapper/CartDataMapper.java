@@ -90,6 +90,7 @@ public class CartDataMapper {
                 .minDaysRequired(deliveryOption.getMinDaysRequired())
                 .maxDaysRequired(deliveryOption.getMaxDaysRequired())
                 .eta(eta)
+                .vatRate(deliveryOption.getVatRate())
                 .build();
     }
 

@@ -20,6 +20,7 @@ public class DeliveryOptionMapper implements RowMapper<DeliveryOption> {
                 .cartId(rs.getLong("shopping_cart_id"))
                 .creationTime(rs.getDate("creation_time"))
                 .lastUpdateTime(rs.getDate("last_update_time"))
+                .vatRate(rs.getInt("vat_rate"))
                 .build();
     }
 }

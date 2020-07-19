@@ -20,4 +20,6 @@ public final class DeliveryOptionData {
     private Integer maxDaysRequired;
 
     private String eta;
+
+    private Integer vatRate;
 }
