@@ -22,6 +22,8 @@ public class ProductData {
 
     private String categoryCode;
 
+    private Integer vat;
+
     private BigDecimal price;
 
     private BigDecimal originalPrice;

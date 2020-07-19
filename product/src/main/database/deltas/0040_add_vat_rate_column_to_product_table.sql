@@ -1,0 +1,1 @@
+ALTER TABLE product ADD COLUMN vat_rate varchar(50) REFERENCES vat_rate(name);

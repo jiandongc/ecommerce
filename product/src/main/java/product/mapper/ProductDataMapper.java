@@ -41,6 +41,7 @@ public class ProductDataMapper {
                 .name(product.getName())
                 .description(product.getDescription())
                 .categoryCode(product.getCategoryCode())
+                .vat(product.getVat() != null ? product.getVat().getRate() : 0)
                 .price(product.getCurrentPrice())
                 .originalPrice(product.getOriginalPrice())
                 .discountRate(product.getDiscountRate())

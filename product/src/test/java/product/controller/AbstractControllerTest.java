@@ -37,6 +37,9 @@ public abstract class AbstractControllerTest {
     protected BrandRepository brandRepository;
 
     @Autowired
+    protected VatRepository vatRepository;
+
+    @Autowired
     protected ProductGroupRepository productGroupRepository;
 
     protected HttpHeaders headers = null;

@@ -28,6 +28,7 @@ public class ProductDataMapperTest {
         product.setName("name");
         product.setDescription("description");
         product.setBrand(Brand.builder().name("nike").code("abc").build());
+        product.setVat(Vat.builder().rate(20).name("uk_standard").build());
 
         final Category category = new Category();
         category.setCode("FH");
@@ -113,6 +114,7 @@ public class ProductDataMapperTest {
                 "name",
                 "description",
                 "FH",
+                20,
                 BigDecimal.valueOf(1.5).setScale(2, ROUND_HALF_UP),
                 BigDecimal.valueOf(1.5).setScale(2, ROUND_HALF_UP),
                 null,

@@ -50,6 +50,10 @@ public class Product {
     @JoinColumn(name = "brand_id")
     private Brand brand;
 
+    @ManyToOne(fetch = EAGER)
+    @JoinColumn(name = "vat_rate")
+    private Vat vat;
+
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "parent_id")
     private Product parent;

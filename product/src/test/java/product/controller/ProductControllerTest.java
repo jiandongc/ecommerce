@@ -39,6 +39,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private Image image2;
 	private Sku sku;
 	private Sku sku2;
+	private Vat vat;
 
 	@Before
 	public void setUp(){
@@ -61,6 +62,9 @@ public class ProductControllerTest extends AbstractControllerTest {
 
 		brand = Brand.builder().code("shj").name("ShangHaoJia").build();
 		brandRepository.save(brand);
+
+		vat = Vat.builder().name("uk_standard").rate(20).build();
+		vatRepository.save(vat);
 
 		image = new Image();
 		image.setUrl("img/0002.jpg");
@@ -100,6 +104,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.addImage(image2);
 		productOne.addSku(sku);
 		productOne.setStartDate(LocalDate.now());
+		productOne.setVat(vat);
 		productRepository.save(productOne);
 
 		// When & Then
