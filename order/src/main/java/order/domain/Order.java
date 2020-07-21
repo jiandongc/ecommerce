@@ -92,6 +92,9 @@ public class Order {
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "order")
     private List<OrderStatus> orderStatuses;
 
+    @Column(name = "payment_ref")
+    private String paymentRef;
+
     @Transient
     private String eta;
 

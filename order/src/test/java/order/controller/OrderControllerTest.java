@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -59,6 +60,9 @@ public class OrderControllerTest extends AbstractControllerTest {
                 "      \"price\": 2.1,\n" +
                 "      \"quantity\": 2,\n" +
                 "      \"subTotal\": 4.2,\n" +
+                "      \"vatRate\": 20,\n" +
+                "      \"vat\": 0.7,\n" +
+                "      \"sale\": 3.5,\n" +
                 "      \"imageUrl\": \"http://localhost\"\n" +
                 "    },\n" +
                 "    {\n" +
@@ -69,6 +73,9 @@ public class OrderControllerTest extends AbstractControllerTest {
                 "      \"price\": 2.2,\n" +
                 "      \"quantity\": 2,\n" +
                 "      \"subTotal\": 4.4,\n" +
+                "      \"vatRate\": 20,\n" +
+                "      \"vat\": 0.73,\n" +
+                "      \"sale\": 3.67,\n" +
                 "      \"imageUrl\": \"http://localhost\"\n" +
                 "    }\n" +
                 "  ],\n" +
@@ -112,6 +119,8 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(orderOptional.get().getEmail(), is("abc@db.com"));
         assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
         assertThat(orderOptional.get().getOrderItems().size(), is(2));
+        assertThat(orderOptional.get().getOrderItems().get(0).getVatRate(), is(20));
+        assertThat(orderOptional.get().getOrderItems().get(1).getVatRate(), is(20));
         assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
         assertThat(orderOptional.get().getOrderStatuses().size(), is(1));
         assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("CREATED"));
@@ -146,6 +155,9 @@ public class OrderControllerTest extends AbstractControllerTest {
                 "         \"description\":\"\",\n" +
                 "         \"code\":\"mzg0001695\",\n" +
                 "         \"imageUrl\":\"/images/ps0013.jpg\",\n" +
+                "         \"vatRate\": 20,\n" +
+                "         \"vat\": 0.7,\n" +
+                "         \"sale\": 3.5,\n" +
                 "         \"subTotal\":4\n" +
                 "      }\n" +
                 "   ],\n" +
@@ -189,6 +201,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(orderOptional.get().getEmail(), is("abc@gmail.com"));
         assertThat(orderOptional.get().getDeliveryMethod(), is("Standard Delivery"));
         assertThat(orderOptional.get().getOrderItems().size(), is(1));
+        assertThat(orderOptional.get().getOrderItems().get(0).getVatRate(), is(20));
         assertThat(orderOptional.get().getOrderAddresses().size(), is(2));
         assertThat(orderOptional.get().getOrderStatuses().size(), is(1));
         assertThat(orderOptional.get().getOrderStatuses().get(0).getStatus(), is("CREATED"));
@@ -202,7 +215,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
         String payload = "{\n" +
@@ -247,7 +260,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(BigDecimal.valueOf(0.2)).sale(BigDecimal.valueOf(0.8)).vatRate(20).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
         final HttpEntity<?> httpEntity = new HttpEntity<Long>(null, headers);
@@ -280,7 +293,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        orderOne.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        orderOne.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(ONE).sale(ONE).vatRate(20).build());
         orderOne.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumberOne = orderService.createOrder(orderOne);
         orderService.addOrderStatus(orderNumberOne, OrderStatus.builder().status("Delivered").build());
@@ -289,7 +302,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        orderTwo.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        orderTwo.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(ONE).sale(ONE).vatRate(20).build());
         orderTwo.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumberTwo = orderService.createOrder(orderTwo);
 
@@ -297,7 +310,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        orderThree.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        orderThree.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(ONE).sale(ONE).vatRate(20).build());
         orderThree.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumberThree = orderService.createOrder(orderThree);
         orderService.addOrderStatus(orderNumberThree, OrderStatus.builder().status("PAYMENT SUCCEEDED").build());
@@ -342,7 +355,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
         final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642440000", headers);
@@ -364,7 +377,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
         final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642440000", headers);
@@ -383,7 +396,7 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
         final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642441111", headers);

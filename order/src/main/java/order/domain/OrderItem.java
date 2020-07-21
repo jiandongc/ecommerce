@@ -47,6 +47,15 @@ public class OrderItem {
     @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "vat_rate")
+    private Integer vatRate;
+
+    @Column(name = "vat")
+    private BigDecimal vat;
+
+    @Column(name = "sale")
+    private BigDecimal sale;
+
     @JsonIgnore
     @ToString.Exclude
     @ManyToOne(fetch = LAZY)

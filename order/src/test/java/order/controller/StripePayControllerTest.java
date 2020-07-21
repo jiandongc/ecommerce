@@ -36,7 +36,7 @@ public class StripePayControllerTest extends AbstractControllerTest {
                 .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
-        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).build());
+        order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
 
