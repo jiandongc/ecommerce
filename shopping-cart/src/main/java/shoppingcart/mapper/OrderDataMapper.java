@@ -17,15 +17,12 @@ public class OrderDataMapper {
 
     public OrderData map(ShoppingCart shoppingCart) {
 
-        BigDecimal itemSubTotal = shoppingCart.getItemSubTotal();
         BigDecimal itemsVat = shoppingCart.getItemsVat();
-        BigDecimal itemsBeforeVat = itemSubTotal.subtract(itemsVat);
+        BigDecimal itemsBeforeVat = shoppingCart.getItemsSale();
 
-        BigDecimal postage = shoppingCart.getPostage();
         BigDecimal postageVat = shoppingCart.getPostageVat();
-        BigDecimal postageBeforeVat = postage.subtract(postageVat);
+        BigDecimal postageBeforeVat = shoppingCart.getPostageSale();
 
-        BigDecimal promotion = ZERO.setScale(2, ROUND_HALF_UP);
         BigDecimal promotionVat = ZERO.setScale(2, ROUND_HALF_UP);
         BigDecimal promotionBeforeVat = ZERO.setScale(2, ROUND_HALF_UP);
 
@@ -60,6 +57,9 @@ public class OrderDataMapper {
                     .quantity(cartItem.getQuantity())
                     .subTotal(cartItem.getItemTotal())
                     .imageUrl(cartItem.getImageUrl())
+                    .vatRate(cartItem.getVatRate())
+                    .vat(cartItem.getVat())
+                    .sale(cartItem.getSale())
                     .build();
             orderData.addOrderItem(itemData);
         });

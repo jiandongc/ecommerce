@@ -105,13 +105,19 @@ public class ShoppingCart {
     public BigDecimal getItemSubTotal() {
         return this.getShoppingCartItems().stream()
                 .map(ShoppingCartItem::getItemTotal)
-                .reduce(ZERO.setScale(2, ROUND_HALF_UP), BigDecimal::add);
+                .reduce(ZERO.setScale(2, ROUND_HALF_UP),BigDecimal::add);
     }
 
     public BigDecimal getItemsVat() {
-        BigDecimal itemSubTotal = getItemSubTotal();
-        BigDecimal itemsBeforeVat = itemSubTotal.divide(new BigDecimal(1.2), 2, ROUND_HALF_UP);
-        return itemSubTotal.subtract(itemsBeforeVat);
+        return this.getShoppingCartItems().stream()
+                .map(ShoppingCartItem::getVat)
+                .reduce(ZERO.setScale(2, ROUND_HALF_UP),BigDecimal::add);
+    }
+
+    public BigDecimal getItemsSale() {
+        return this.getShoppingCartItems().stream()
+                .map(ShoppingCartItem::getSale)
+                .reduce(ZERO.setScale(2, ROUND_HALF_UP),BigDecimal::add);
     }
 
     public BigDecimal getPostage() {
@@ -123,9 +129,13 @@ public class ShoppingCart {
     }
 
     public BigDecimal getPostageVat() {
-        BigDecimal postage = getPostage();
-        BigDecimal postageBeforeVat = postage.divide(new BigDecimal(1.2), 2, ROUND_HALF_UP);
-        return postage.subtract(postageBeforeVat);
+        return this.getPostage().subtract(this.getPostageSale());
+    }
+
+    public BigDecimal getPostageSale(){
+        int postageVatRate = this.getDeliveryOption() == null ? 0 : this.getDeliveryOption().getVatRate();
+        double divisor = (double) postageVatRate / 100 + 1;
+        return getPostage().divide(BigDecimal.valueOf(divisor), 2, ROUND_HALF_UP);
     }
 
     public BigDecimal getOrderTotal() {

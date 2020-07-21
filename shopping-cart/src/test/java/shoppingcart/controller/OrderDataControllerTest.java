@@ -47,6 +47,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
                 .sku("109283")
                 .imageUrl("/image.jpeg")
                 .description("Size: S")
+                .vatRate(20)
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
         shoppingCartItemRepository.updateQuantity(cart.getId(), "109283", 9);
@@ -57,6 +58,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
                 .description("Size: M")
+                .vatRate(20)
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem2);
         shoppingCartItemRepository.updateQuantity(cart.getId(), "219283", 6);
@@ -66,6 +68,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
                 .minDaysRequired(3)
                 .maxDaysRequired(5)
                 .cartId(cart.getId())
+                .vatRate(20)
                 .build();
         shoppingCartRepository.addDeliveryOption(cart.getId(), deliveryOption);
 
@@ -112,6 +115,10 @@ public class OrderDataControllerTest extends AbstractControllerTest {
         assertThat(response.getBody().getMinDaysRequired(), is(3));
         assertThat(response.getBody().getMaxDaysRequired(), is(5));
         assertThat(response.getBody().getOrderItems().size(), is(2));
+        assertThat(response.getBody().getOrderItems().get(0).getVat(), is(BigDecimal.valueOf(1.95).setScale(2)));
+        assertThat(response.getBody().getOrderItems().get(0).getSale(), is(BigDecimal.valueOf(9.75).setScale(2)));
+        assertThat(response.getBody().getOrderItems().get(1).getVat(), is(BigDecimal.valueOf(7.30).setScale(2)));
+        assertThat(response.getBody().getOrderItems().get(1).getSale(), is(BigDecimal.valueOf(36.50).setScale(2)));
         assertThat(response.getBody().getOrderAddresses().size(), is(2));
     }
 
@@ -128,6 +135,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
                 .sku("109283")
                 .imageUrl("/image.jpeg")
                 .description("Size: S")
+                .vatRate(20)
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem);
         shoppingCartItemRepository.updateQuantity(cart.getId(), "109283", 9);
@@ -138,6 +146,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
                 .sku("219283")
                 .imageUrl("/image2.jpeg")
                 .description("Size: M")
+                .vatRate(20)
                 .build();
         shoppingCartItemRepository.save(cart.getId(), cartItem2);
         shoppingCartItemRepository.updateQuantity(cart.getId(), "219283", 6);
@@ -147,6 +156,7 @@ public class OrderDataControllerTest extends AbstractControllerTest {
                 .minDaysRequired(3)
                 .maxDaysRequired(5)
                 .cartId(cart.getId())
+                .vatRate(20)
                 .build();
         shoppingCartRepository.addDeliveryOption(cart.getId(), deliveryOption);
 
@@ -193,6 +203,10 @@ public class OrderDataControllerTest extends AbstractControllerTest {
         assertThat(response.getBody().getMinDaysRequired(), is(3));
         assertThat(response.getBody().getMaxDaysRequired(), is(5));
         assertThat(response.getBody().getOrderItems().size(), is(2));
+        assertThat(response.getBody().getOrderItems().get(0).getVat(), is(BigDecimal.valueOf(1.95).setScale(2)));
+        assertThat(response.getBody().getOrderItems().get(0).getSale(), is(BigDecimal.valueOf(9.75).setScale(2)));
+        assertThat(response.getBody().getOrderItems().get(1).getVat(), is(BigDecimal.valueOf(7.30).setScale(2)));
+        assertThat(response.getBody().getOrderItems().get(1).getSale(), is(BigDecimal.valueOf(36.50).setScale(2)));
         assertThat(response.getBody().getOrderAddresses().size(), is(2));
     }
 
