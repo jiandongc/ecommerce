@@ -93,7 +93,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             if ($localstorage.containsKey("customer_id")) {
                 customerFactory.getCustomerById($localstorage.get("customer_id")).then(function(customerData) {
                     shoppingCartFactory.createShoppingCartForCustomer(customerData).then(function(cartUid) {
-                        shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data) {
+                        shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid, product.vat).then(function(data) {
                             $localstorage.set('cart_uid', cartUid);
                             $rootScope.$broadcast('updateCartSummary', true);
                             $scope.addingItem = false;
@@ -103,7 +103,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
                 });
             } else {
                 shoppingCartFactory.createShoppingCartForGuest().then(function(cartUid) {
-                    shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data) {
+                    shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid, product.vat).then(function(data) {
                         $localstorage.set('cart_uid', cartUid);
                         $rootScope.$broadcast('updateCartSummary', true);
                         $scope.addingItem = false;
@@ -112,7 +112,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             }
         } else {
             var cartUid = $localstorage.get('cart_uid', undefined);
-            shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid).then(function(data) {
+            shoppingCartFactory.addItemToShoppingCart(product.name, product.code, $scope.price, imageUrl, $scope.sku, $scope.description, cartUid, product.vat).then(function(data) {
                 $rootScope.$broadcast('updateCartSummary', true);
                 $scope.addingItem = false;
             });

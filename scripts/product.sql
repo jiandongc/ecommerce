@@ -9,3 +9,4 @@ delete from product_owner.product_tag;
 delete from product_owner.product;
 delete from product_owner.category;
 delete from product_owner.brand;
+delete from product_owner.vat_rate;

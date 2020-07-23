@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class DataSetupNoodleMonster extends AbstractRepositoryTest {
 
@@ -24,9 +25,14 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     @Autowired
     private ProductGroupRepository productGroupRepository;
 
+    @Autowired
+    private VatRepository vatRepository;
+
     @Test
     @Rollback(false)
     public void initialise() {
+        vat();
+
         cookingNoodlesCategory();
         instanceNoodlesCategory();
         mateCategory();
@@ -45,6 +51,12 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
 
         mateBeverage();
 
+    }
+
+    private void vat(){
+        vatRepository.save(Vat.builder().name("uk-standard").rate(20).build());
+        vatRepository.save(Vat.builder().name("uk-reduced-rate").rate(5).build());
+        vatRepository.save(Vat.builder().name("uk-zero-rate").rate(0).build());
     }
 
     private void cookingNoodlesCategory() {
@@ -639,11 +651,15 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
                             Integer stockQuantity, List<String> imageUrls, List<BigDecimal> prices,
                             List<ProductTag> productTags, List<ProductAttribute> productAttributes) {
 
+        List<Vat> vats = vatRepository.findAll();
+        Random random = new Random();
         Product product = Product.builder()
                 .category(category)
                 .brand(brand)
                 .code(code)
                 .name(name)
+                .vat(vats.get(random.nextInt(vats.size())))
+                .startDate(LocalDate.now())
                 .build();
         for (int j = 0; j < skus.size(); j++) {
             Sku sku = Sku.builder().sku(skus.get(j)).stockQuantity(stockQuantity).build();
