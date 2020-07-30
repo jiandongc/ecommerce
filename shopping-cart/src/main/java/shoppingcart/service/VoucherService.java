@@ -7,5 +7,7 @@ import java.util.UUID;
 
 public interface VoucherService {
 
-    List<Voucher> findByCustomerUid(UUID customerUid);
+    List<Voucher> findByCustomerUid(UUID customerUid, String status);
+
+    Integer getNumberOfUses(String code);
 }

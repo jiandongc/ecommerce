@@ -21,6 +21,11 @@ public class VoucherRepositoryImpl implements VoucherRepository {
 
     private static final String SELECT_CUSTOMER_VOUCHER_SQL = "select * from voucher where customer_uid = ? and soft_delete = false";
 
+    private static final String NUMBER_OF_USES = "select count(p.id) from promotion p " +
+            "join shopping_cart sc on p.shopping_cart_id = sc.id " +
+            "where sc.active = false " +
+            "and p.voucher_code = ?";
+
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
@@ -49,5 +54,10 @@ public class VoucherRepositoryImpl implements VoucherRepository {
     @Override
     public List<Voucher> findByCustomerUid(UUID customerUid) {
         return jdbcTemplate.query(SELECT_CUSTOMER_VOUCHER_SQL, voucherMapper, customerUid);
+    }
+
+    @Override
+    public Integer findNumberOfUses(String code) {
+        return jdbcTemplate.queryForObject(NUMBER_OF_USES, new Object[] {code}, Integer.class);
     }
 }

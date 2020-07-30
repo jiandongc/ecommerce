@@ -25,6 +25,4 @@ public class VoucherData {
 
     private String creationTime;
 
-    private Boolean valid;
-
 }

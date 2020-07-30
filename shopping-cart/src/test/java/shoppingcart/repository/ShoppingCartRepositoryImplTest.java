@@ -5,8 +5,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
+import shoppingcart.domain.Promotion;
 import shoppingcart.domain.ShoppingCart;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -214,5 +216,45 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(actual.getCreationTime(), Matchers.is(notNullValue()));
         assertThat(actual.getLastUpdateTime(), Matchers.is(notNullValue()));
         assertThat(actual.getVatRate(), Matchers.is(10));
+    }
+
+    @Test
+    public void shouldAddPromotion(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create("123e4567-e89b-12d3-a456-556642440000", null);
+        final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final Promotion promotion = Promotion.builder()
+                .voucherCode("ABC-15")
+                .vatRate(20)
+                .discountAmount(BigDecimal.ONE)
+                .cartId(cart.getId())
+                .build();
+
+        // When
+        shoppingCartRepository.addPromotion(cart.getId(), promotion);
+
+        // Then
+        Promotion actual = shoppingCartRepository.findPromotion(cart.getId()).get();
+        assertThat(actual.getVoucherCode(), Matchers.is("ABC-15"));
+        assertThat(actual.getDiscountAmount(), Matchers.is(BigDecimal.ONE.setScale(2)));
+        assertThat(actual.getCreationTime(), Matchers.is(notNullValue()));
+        assertThat(actual.getLastUpdateTime(), Matchers.is(nullValue()));
+        assertThat(actual.getVatRate(), Matchers.is(20));
+
+        // Given
+        promotion.setVoucherCode("ABC-16");
+        promotion.setDiscountAmount(BigDecimal.TEN);
+        promotion.setVatRate(0);
+
+        // When
+        shoppingCartRepository.addPromotion(cart.getId(), promotion);
+
+        // Then
+        actual = shoppingCartRepository.findPromotion(cart.getId()).get();
+        assertThat(actual.getVoucherCode(), Matchers.is("ABC-16"));
+        assertThat(actual.getDiscountAmount(), Matchers.is(BigDecimal.TEN.setScale(2)));
+        assertThat(actual.getCreationTime(), Matchers.is(notNullValue()));
+        assertThat(actual.getLastUpdateTime(), Matchers.is(notNullValue()));
+        assertThat(actual.getVatRate(), Matchers.is(0));
     }
 }

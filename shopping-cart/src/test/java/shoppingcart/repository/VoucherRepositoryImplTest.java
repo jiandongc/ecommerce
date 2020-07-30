@@ -3,6 +3,8 @@ package shoppingcart.repository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import shoppingcart.domain.Promotion;
+import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.Voucher;
 
 import java.math.BigDecimal;
@@ -18,6 +20,9 @@ public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
 
     @Autowired
     private VoucherRepository voucherRepository;
+
+    @Autowired
+    private ShoppingCartRepository shoppingCartRepository;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -80,6 +85,47 @@ public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
 
         // Then
         assertThat(actual.size(), is(0));
+    }
+
+    @Test
+    public void shouldReturnZeroUse(){
+        // Given - cart is active
+        final UUID uuid = shoppingCartRepository.create("123e4567-e89b-12d3-a456-556642440000", null);
+        final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final Promotion promotion = Promotion.builder()
+                .voucherCode("ABC-15")
+                .vatRate(20)
+                .discountAmount(BigDecimal.ONE)
+                .cartId(cart.getId())
+                .build();
+        shoppingCartRepository.addPromotion(cart.getId(), promotion);
+
+        // When
+        Integer actual = voucherRepository.findNumberOfUses("ABC-15");
+
+        // Then
+        assertThat(actual, is(0));
+    }
+
+    @Test
+    public void shouldReturnOneUse(){
+        // Given - cart is de-activated
+        final UUID uuid = shoppingCartRepository.create("123e4567-e89b-12d3-a456-556642440000", null);
+        final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final Promotion promotion = Promotion.builder()
+                .voucherCode("ABC-15")
+                .vatRate(20)
+                .discountAmount(BigDecimal.ONE)
+                .cartId(cart.getId())
+                .build();
+        shoppingCartRepository.addPromotion(cart.getId(), promotion);
+        shoppingCartRepository.deactivateShoppingCart(cart.getId());
+
+        // When
+        Integer actual = voucherRepository.findNumberOfUses("ABC-15");
+
+        // Then
+        assertThat(actual, is(1));
     }
 
 }

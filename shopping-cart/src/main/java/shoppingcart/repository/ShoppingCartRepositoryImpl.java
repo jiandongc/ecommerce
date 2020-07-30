@@ -7,9 +7,11 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
+import shoppingcart.domain.Promotion;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.mapper.AddressMapper;
 import shoppingcart.mapper.DeliveryOptionMapper;
+import shoppingcart.mapper.PromotionMapper;
 import shoppingcart.mapper.ShoppingCartMapper;
 
 import java.sql.Types;
@@ -44,6 +46,12 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     private static final String DELETE_ADDRESS_BY_SESSION_ID_SQL = "DELETE FROM address where shopping_cart_id = ?";
     private static final String DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL = "DELETE FROM delivery_option where shopping_cart_id = ?";
     private static final String DEACTIVATE_SHOPPING_CART = "UPDATE shopping_cart SET active = false WHERE id = ?";
+    private static final String INSERT_PROMOTION_SQL = "INSERT INTO promotion " +
+            "(voucher_code, discount_amount, vat_rate, shopping_cart_id) " +
+            "VALUES (:voucher_code, :discount_amount, :vat_rate, :shopping_cart_id) " +
+            "ON CONFLICT ON CONSTRAINT promotion_constraint " +
+            "DO UPDATE SET voucher_code=EXCLUDED.voucher_code, discount_amount=EXCLUDED.discount_amount, vat_rate=EXCLUDED.vat_rate, last_update_time=now()";
+    private static final String SELECT_PROMOTION_SQL = "SELECT * FROM promotion WHERE shopping_cart_id=?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -59,6 +67,9 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
     @Autowired
     private DeliveryOptionMapper deliveryOptionMapper;
+
+    @Autowired
+    private PromotionMapper promotionMapper;
 
     @Override
     public UUID create() {
@@ -152,6 +163,25 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     public Optional<DeliveryOption> findDeliveryOption(long cartId) {
         try {
             return Optional.of(jdbcTemplate.queryForObject(SELECT_DELIVERY_OPTION_SQL, deliveryOptionMapper, cartId));
+        } catch (Exception e) {
+            return empty();
+        }
+    }
+
+    @Override
+    public void addPromotion(long cartId, Promotion promotion) {
+        final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("voucher_code", promotion.getVoucherCode(), Types.VARCHAR);
+        namedParameters.addValue("discount_amount", promotion.getDiscountAmount(), Types.DOUBLE);
+        namedParameters.addValue("vat_rate", promotion.getVatRate(), Types.INTEGER);
+        namedParameters.addValue("shopping_cart_id", cartId, Types.INTEGER);
+        namedParameterJdbcTemplate.update(INSERT_PROMOTION_SQL, namedParameters);
+    }
+
+    @Override
+    public Optional<Promotion> findPromotion(long cartId) {
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(SELECT_PROMOTION_SQL, promotionMapper, cartId));
         } catch (Exception e) {
             return empty();
         }

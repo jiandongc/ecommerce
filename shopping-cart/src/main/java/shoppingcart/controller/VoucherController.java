@@ -27,8 +27,9 @@ public class VoucherController {
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(method = GET)
-    public List<VoucherData> getVouchers(@RequestParam(value = "customerId") String customerId) {
-        return voucherService.findByCustomerUid(UUID.fromString(customerId))
+    public List<VoucherData> getVouchers(@RequestParam(value = "customerId") String customerId,
+                                         @RequestParam(value = "status", required = false) String status) {
+        return voucherService.findByCustomerUid(UUID.fromString(customerId), status)
                 .stream().map(voucherDataMapper::map)
                 .collect(Collectors.toList());
     }

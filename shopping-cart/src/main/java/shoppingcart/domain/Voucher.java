@@ -1,5 +1,6 @@
 package shoppingcart.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -40,5 +41,16 @@ public class Voucher {
     public enum Type {
         CUSTOMER_SIGN_UP_VOUCHER,
         PROMOTION_VOUCHER
+    }
+
+    public boolean isActive() {
+        final LocalDate today = LocalDate.now();
+        return (this.getStartDate() != null && !today.isBefore(this.getStartDate()))
+                && (this.getEndDate() == null || !today.isAfter(this.getEndDate()));
+    }
+
+    public boolean isExpired() {
+        final LocalDate today = LocalDate.now();
+        return this.getEndDate() != null && today.isAfter(this.getEndDate());
     }
 }

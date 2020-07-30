@@ -1,0 +1,1 @@
+ALTER TABLE promotion ADD CONSTRAINT promotion_constraint UNIQUE (shopping_cart_id);

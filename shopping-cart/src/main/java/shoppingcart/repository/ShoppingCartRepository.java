@@ -2,6 +2,7 @@ package shoppingcart.repository;
 
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
+import shoppingcart.domain.Promotion;
 import shoppingcart.domain.ShoppingCart;
 
 import java.util.List;
@@ -21,4 +22,6 @@ public interface ShoppingCartRepository {
     Optional<Address> findAddress(long cartId, String addressType);
     void addDeliveryOption(long cartId, DeliveryOption deliveryOption);
     Optional<DeliveryOption> findDeliveryOption(long cartId);
+    void addPromotion(long cartId, Promotion promotion);
+    Optional<Promotion> findPromotion(long cartId);
 }

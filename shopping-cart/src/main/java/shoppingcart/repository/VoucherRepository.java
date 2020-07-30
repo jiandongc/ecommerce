@@ -9,4 +9,5 @@ public interface VoucherRepository {
 
     void save(Voucher voucher);
     List<Voucher> findByCustomerUid(UUID customerUid);
+    Integer findNumberOfUses(String code);
 }
