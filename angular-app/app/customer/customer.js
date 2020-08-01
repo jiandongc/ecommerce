@@ -372,6 +372,16 @@ customer.controller('resetPasswordCtrl', function($scope, customerFactory, $rout
     }
 });
 
+customer.controller('voucherCtrl', function($scope, $routeParams, customerFactory, shoppingCartFactory) {
+    customerFactory.getCustomerById($routeParams.id).then(function(response) {
+        $scope.customer = response;
+        $scope.status = $routeParams.status;
+        shoppingCartFactory.getVoucher($routeParams.id, $routeParams.status).then(function(response) {
+            $scope.vouchers = response;
+        });
+    });
+});
+
 customer.factory('customerFactory', function($http, environment) {
 
     var getCustomerByEmail = function(credentials) {
@@ -614,5 +624,8 @@ customer.config(
         }).when('/account/:id/favourites', {
             templateUrl: 'customer/favourites.html',
             controller: 'favouriteCtrl'
+        }).when('/account/:id/vouchers', {
+            templateUrl: 'customer/vouchers.html',
+            controller: 'voucherCtrl'
         });
     });

@@ -149,6 +149,12 @@ cart.factory('shoppingCartFactory', function($http, environment) {
         });
     };
 
+    var getVoucher = function(customerId, status) {
+        return $http.get(environment.shoppingCartUrl + '/carts/vouchers?customerId=' + customerId + '&status=' + status).then(function(response) {
+           return response.data;
+        });
+    };
+
     return {
         addCustomerInfo: addCustomerInfo,
         addItemToShoppingCart: addItemToShoppingCart,
@@ -163,7 +169,8 @@ cart.factory('shoppingCartFactory', function($http, environment) {
         getDeliveryOption: getDeliveryOption,
         getSageMerchantKey: getSageMerchantKey,
         submitTrnsactionToSage: submitTrnsactionToSage,
-        getOrderData: getOrderData
+        getOrderData: getOrderData,
+        getVoucher: getVoucher
     }
 });
 
