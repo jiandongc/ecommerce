@@ -10,6 +10,7 @@ import shoppingcart.domain.Voucher;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -59,6 +60,58 @@ public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(actual.get(0).getStartDate(), is(LocalDate.of(2020, 1, 1)));
         assertThat(actual.get(0).getEndDate(), is(LocalDate.of(2020, 6, 21)));
         assertThat(actual.get(0).getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-426614174000")));
+    }
+
+    @Test
+    public void shouldFindVoucherByVoucherCode(){
+        // Given
+        Voucher voucher = Voucher.builder()
+                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .code("ABC-12")
+                .name("name")
+                .maxUses(10)
+                .maxUsesUser(1)
+                .minSpend(BigDecimal.ONE)
+                .discountAmount(BigDecimal.TEN)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 6, 21))
+                .customerUid(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+                .build();
+
+        voucherRepository.save(voucher);
+
+        // When & Then
+        Optional<Voucher> actual = voucherRepository.findByVoucherCode("ABC-12");
+        assertThat(actual.isPresent(), is(true));
+        assertThat(actual.get().getCode(), is("ABC-12"));
+
+        // When & Then
+        actual = voucherRepository.findByVoucherCode("ABC-13");
+        assertThat(actual.isPresent(), is(false));
+    }
+
+    @Test
+    public void shouldFindVoucherByVoucherCodeIfRecordIsSoftDeleted(){
+        // Given
+        Voucher voucher = Voucher.builder()
+                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .code("ABC-12")
+                .name("name")
+                .maxUses(10)
+                .maxUsesUser(1)
+                .minSpend(BigDecimal.ONE)
+                .discountAmount(BigDecimal.TEN)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 6, 21))
+                .customerUid(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+                .build();
+
+        voucherRepository.save(voucher);
+        jdbcTemplate.update("update voucher set soft_delete = true where code = 'ABC-12'");
+
+        // When & Then
+        Optional<Voucher> actual = voucherRepository.findByVoucherCode("ABC-12");
+        assertThat(actual.isPresent(), is(false));
     }
 
     @Test

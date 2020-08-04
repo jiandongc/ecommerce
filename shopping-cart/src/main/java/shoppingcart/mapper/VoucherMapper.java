@@ -20,11 +20,11 @@ public class VoucherMapper implements RowMapper<Voucher> {
                 .name(rs.getString("name"))
                 .maxUses(rs.getInt("max_uses"))
                 .maxUsesUser(rs.getInt("max_uses_user"))
-                .minSpend(rs.getBigDecimal("min_spend").setScale(2, BigDecimal.ROUND_HALF_UP))
+                .minSpend(rs.getBigDecimal("min_spend") != null ? rs.getBigDecimal("min_spend").setScale(2, BigDecimal.ROUND_HALF_UP) : null)
                 .discountAmount(rs.getBigDecimal("discount_amount").setScale(2, BigDecimal.ROUND_HALF_UP))
                 .startDate(rs.getDate("start_date").toLocalDate())
-                .endDate(rs.getDate("end_date").toLocalDate())
-                .customerUid(UUID.fromString(rs.getString("customer_uid")))
+                .endDate(rs.getDate("end_date") != null ? rs.getDate("end_date").toLocalDate() : null)
+                .customerUid(rs.getString("customer_uid") != null ? UUID.fromString(rs.getString("customer_uid")) : null)
                 .creationTime(rs.getTimestamp("creation_time").toLocalDateTime())
                 .build();
     }

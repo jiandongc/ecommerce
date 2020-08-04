@@ -5,10 +5,7 @@ import shoppingcart.data.AddressData;
 import shoppingcart.data.CartData;
 import shoppingcart.data.ItemData;
 import shoppingcart.data.DeliveryOptionData;
-import shoppingcart.domain.Address;
-import shoppingcart.domain.DeliveryOption;
-import shoppingcart.domain.ShoppingCart;
-import shoppingcart.domain.ShoppingCartItem;
+import shoppingcart.domain.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -49,7 +46,8 @@ public class CartDataMapper {
                 .quantity(quantity)
                 .itemsTotal(shoppingCart.getItemSubTotal())
                 .postage(shoppingCart.getPostage())
-                .promotion(ZERO.setScale(2, ROUND_HALF_UP))
+                .promotion(shoppingCart.getPromotion() != null ? shoppingCart.getPromotion().getDiscountAmount() : null)
+                .voucherCode(shoppingCart.getPromotion() != null ? shoppingCart.getPromotion().getVoucherCode() : null)
                 .vat(shoppingCart.getItemsVat().add(shoppingCart.getPostageVat()))
                 .orderTotal(shoppingCart.getOrderTotal())
                 .cartItems(cartItems)

@@ -39,4 +39,8 @@ public final class CartData {
     private AddressData billing;
 
     private DeliveryOptionData deliveryOption;
+
+    private String voucherCode;
+
+
 }

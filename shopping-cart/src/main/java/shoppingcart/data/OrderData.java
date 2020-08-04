@@ -23,7 +23,7 @@ public class OrderData {
 
     private BigDecimal postage;
 
-    private BigDecimal promotion;
+    private BigDecimal discount;
 
     private BigDecimal totalBeforeVat;
 
@@ -31,7 +31,7 @@ public class OrderData {
 
     private BigDecimal postageVat;
 
-    private BigDecimal promotionVat;
+    private BigDecimal discountVat;
 
     private BigDecimal totalVat;
 

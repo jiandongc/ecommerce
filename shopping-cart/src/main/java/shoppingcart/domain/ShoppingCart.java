@@ -1,6 +1,7 @@
 package shoppingcart.domain;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
@@ -18,6 +19,7 @@ public class ShoppingCart {
     private Address billingAddress;
     private Address shippingAddress;
     private DeliveryOption deliveryOption;
+    private Promotion promotion;
 
     private ShoppingCart(long id, UUID cartUid, UUID customerUid, String email, Date creationTime, boolean active) {
         this.id = id;
@@ -102,22 +104,30 @@ public class ShoppingCart {
         this.deliveryOption = deliveryOption;
     }
 
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(Promotion promotion) {
+        this.promotion = promotion;
+    }
+
     public BigDecimal getItemSubTotal() {
         return this.getShoppingCartItems().stream()
                 .map(ShoppingCartItem::getItemTotal)
-                .reduce(ZERO.setScale(2, ROUND_HALF_UP),BigDecimal::add);
+                .reduce(ZERO.setScale(2, ROUND_HALF_UP), BigDecimal::add);
     }
 
     public BigDecimal getItemsVat() {
         return this.getShoppingCartItems().stream()
                 .map(ShoppingCartItem::getVat)
-                .reduce(ZERO.setScale(2, ROUND_HALF_UP),BigDecimal::add);
+                .reduce(ZERO.setScale(2, ROUND_HALF_UP), BigDecimal::add);
     }
 
-    public BigDecimal getItemsSale() {
+    public BigDecimal getItemsBeforeVat() {
         return this.getShoppingCartItems().stream()
                 .map(ShoppingCartItem::getSale)
-                .reduce(ZERO.setScale(2, ROUND_HALF_UP),BigDecimal::add);
+                .reduce(ZERO.setScale(2, ROUND_HALF_UP), BigDecimal::add);
     }
 
     public BigDecimal getPostage() {
@@ -129,19 +139,42 @@ public class ShoppingCart {
     }
 
     public BigDecimal getPostageVat() {
-        return this.getPostage().subtract(this.getPostageSale());
+        return this.getPostage().subtract(this.getPostageBeforeVat());
     }
 
-    public BigDecimal getPostageSale(){
+    public BigDecimal getPostageBeforeVat() {
         int postageVatRate = this.getDeliveryOption() == null ? 0 : this.getDeliveryOption().getVatRate();
         double divisor = (double) postageVatRate / 100 + 1;
         return getPostage().divide(BigDecimal.valueOf(divisor), 2, ROUND_HALF_UP);
     }
 
+    public BigDecimal getDiscount() {
+        if (this.getPromotion() != null && this.getPromotion().getDiscountAmount() != null) {
+            return this.getPromotion().getDiscountAmount().setScale(2, ROUND_HALF_UP);
+        } else {
+            return ZERO.setScale(2, ROUND_HALF_UP);
+        }
+    }
+
+    public BigDecimal getDiscountBeforeVat() {
+        return getDiscount().divide(getDiscountVatRate(), 2, ROUND_HALF_UP);
+    }
+
+    public BigDecimal getDiscountVat() {
+        return this.getDiscount().subtract(this.getDiscountBeforeVat());
+    }
+
+    private BigDecimal getDiscountVatRate() {
+        BigDecimal vat = getItemsVat().add(getPostageVat());
+        BigDecimal total = getItemSubTotal().add(getPostage());
+        return vat.divide(total, 2, ROUND_HALF_UP).add(BigDecimal.ONE);
+    }
+
     public BigDecimal getOrderTotal() {
         BigDecimal itemSubTotal = getItemSubTotal();
         BigDecimal postage = getPostage();
-        return itemSubTotal.add(postage);
+        BigDecimal discountAmount = getDiscount();
+        return itemSubTotal.add(postage).subtract(discountAmount);
     }
 
     public static class ShoppingCartBuilder {

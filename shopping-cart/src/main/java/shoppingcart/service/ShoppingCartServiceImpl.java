@@ -4,11 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shoppingcart.data.CustomerData;
-import shoppingcart.domain.Address;
-import shoppingcart.domain.DeliveryOption;
-import shoppingcart.domain.ShoppingCart;
+import shoppingcart.domain.*;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
+import shoppingcart.repository.VoucherRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +21,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
 
     @Autowired
     private ShoppingCartItemRepository cartItemRepository;
+
+    @Autowired
+    private VoucherRepository voucherRepository;
 
     @Override
     @Transactional
@@ -43,6 +45,7 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         cartOptional.ifPresent(cart -> cart.setShippingAddress(cartRepository.findAddress(cart.getId(), "Shipping").orElse(null)));
         cartOptional.ifPresent(cart -> cart.setBillingAddress(cartRepository.findAddress(cart.getId(), "Billing").orElse(null)));
         cartOptional.ifPresent(cart -> cart.setDeliveryOption(cartRepository.findDeliveryOption(cart.getId()).orElse(null)));
+        cartOptional.ifPresent(cart -> cart.setPromotion(cartRepository.findPromotion(cart.getId()).orElse(null)));
         return cartOptional;
     }
 
@@ -90,5 +93,19 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void addDeliveryOption(UUID cartUid, DeliveryOption deliveryOption) {
         final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
         cartOptional.ifPresent(cart -> cartRepository.addDeliveryOption(cart.getId(), deliveryOption));
+    }
+
+    @Override
+    public void addPromotion(UUID cartUid, String voucherCode) {
+        final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
+        final Optional<Voucher> voucherOptional = voucherRepository.findByVoucherCode(voucherCode);
+        if (cartOptional.isPresent() && voucherOptional.isPresent()) {
+            Promotion promotion = Promotion.builder()
+                    .voucherCode(voucherOptional.get().getCode())
+                    .discountAmount(voucherOptional.get().getDiscountAmount())
+                    .vatRate(20)
+                    .build();
+            cartRepository.addPromotion(cartOptional.get().getId(), promotion);
+        }
     }
 }

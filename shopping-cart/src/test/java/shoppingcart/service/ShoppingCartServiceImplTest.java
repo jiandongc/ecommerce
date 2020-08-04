@@ -6,10 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import shoppingcart.data.CustomerData;
-import shoppingcart.domain.Address;
-import shoppingcart.domain.DeliveryOption;
-import shoppingcart.domain.ShoppingCart;
-import shoppingcart.domain.ShoppingCartItem;
+import shoppingcart.domain.*;
 import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 
@@ -69,6 +66,8 @@ public class ShoppingCartServiceImplTest {
         when(cartRepository.findAddress(1L, "Billing")).thenReturn(Optional.of(billingAddress));
         final DeliveryOption deliveryOption = DeliveryOption.builder().method("Free Delivery").build();
         when(cartRepository.findDeliveryOption(1L)).thenReturn(Optional.of(deliveryOption));
+        final Promotion promotion = Promotion.builder().voucherCode("ABC-12").build();
+        when(cartRepository.findPromotion(1L)).thenReturn(Optional.of(promotion));
 
         // When
         final Optional<ShoppingCart> shoppingCart = service.getShoppingCartByUid(cartUid);
@@ -83,6 +82,7 @@ public class ShoppingCartServiceImplTest {
         assertThat(shoppingCart.get().getShippingAddress().getPostcode(), is("SE6 7DE"));
         assertThat(shoppingCart.get().getBillingAddress().getPostcode(), is("SE7 7DE"));
         assertThat(shoppingCart.get().getDeliveryOption().getMethod(), is("Free Delivery"));
+        assertThat(shoppingCart.get().getPromotion().getVoucherCode(), is("ABC-12"));
     }
 
     @Test

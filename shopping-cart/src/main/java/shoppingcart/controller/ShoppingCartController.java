@@ -1,6 +1,7 @@
 package shoppingcart.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,8 +12,10 @@ import shoppingcart.data.DeliveryOptionData;
 import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
+import shoppingcart.domain.ValidationResult;
 import shoppingcart.mapper.CartDataMapper;
 import shoppingcart.service.ShoppingCartService;
+import shoppingcart.service.VoucherValidationService;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
@@ -31,11 +34,15 @@ public class ShoppingCartController {
 
     private final ShoppingCartService shoppingCartService;
     private final CartDataMapper cartDataMapper;
+    private final VoucherValidationService voucherValidationService;
 
     @Autowired
-    public ShoppingCartController(ShoppingCartService shoppingCartService, CartDataMapper cartDataMapper) {
+    public ShoppingCartController(ShoppingCartService shoppingCartService,
+                                  CartDataMapper cartDataMapper,
+                                  VoucherValidationService voucherValidationService) {
         this.shoppingCartService = shoppingCartService;
         this.cartDataMapper = cartDataMapper;
+        this.voucherValidationService = voucherValidationService;
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
@@ -107,6 +114,20 @@ public class ShoppingCartController {
                     cartDataMapper.map(DeliveryOption.builder().method("FREE Delivery").charge(0D).minDaysRequired(3).maxDaysRequired(5).build()),
                     cartDataMapper.map(DeliveryOption.builder().method("Tracked Express Delivery").charge(3D).minDaysRequired(1).maxDaysRequired(1).build())
             );
+        }
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @RequestMapping(value = "{cartUid}/promotion", method = POST)
+    public ResponseEntity addPromotion(@PathVariable UUID cartUid, @RequestBody String voucherCode) {
+        ValidationResult validationResult = voucherValidationService.validate(cartUid, voucherCode);
+        if (validationResult.isValid()) {
+            shoppingCartService.addPromotion(cartUid, voucherCode);
+            final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
+            return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+                    .orElse(new ResponseEntity<>(NOT_FOUND));
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult.getErrorMsg());
         }
     }
 

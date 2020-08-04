@@ -6,9 +6,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import shoppingcart.data.CartData;
 import shoppingcart.domain.ShoppingCart;
+import shoppingcart.domain.Voucher;
 import shoppingcart.repository.ShoppingCartRepository;
+import shoppingcart.repository.VoucherRepository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,6 +20,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.*;
+import static shoppingcart.domain.Voucher.Type.CUSTOMER_SIGN_UP_VOUCHER;
 
 public class ShoppingCartControllerTest extends AbstractControllerTest {
 
@@ -25,6 +29,9 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
     @Autowired
     private ShoppingCartRepository repository;
+
+    @Autowired
+    private VoucherRepository voucherRepository;
 
     @Test
     public void shouldCreateShoppingCartForUser(){
@@ -412,6 +419,107 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMinDaysRequired(), is(1));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(2));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getVatRate(), is(10));
+    }
+
+    @Test
+    public void shouldAddPromotion(){
+        // Given
+        final UUID cartUid = repository.create();
+        final Voucher voucher = Voucher.builder()
+                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .code("ABC-12")
+                .name("name")
+                .maxUses(10)
+                .maxUsesUser(1)
+                .minSpend(BigDecimal.ZERO)
+                .discountAmount(BigDecimal.TEN)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2099, 6, 21))
+                .build();
+        voucherRepository.save(voucher);
+
+        final Voucher voucher1 = Voucher.builder()
+                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .code("ABC-22")
+                .name("name")
+                .maxUses(10)
+                .maxUsesUser(1)
+                .minSpend(BigDecimal.ZERO)
+                .discountAmount(BigDecimal.ONE)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2099, 6, 21))
+                .build();
+        voucherRepository.save(voucher1);
+
+        // When - add promotion
+        HttpEntity<String> payload = new HttpEntity<>("ABC-12", headers);
+        ResponseEntity<CartData> cartDataResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/promotion", POST, payload, CartData.class);
+
+        // Then
+        assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-12"));
+        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.TEN.setScale(2)));
+        assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-10L).setScale(2)));
+
+        // When - add another promotion
+        payload = new HttpEntity<>("ABC-22", headers);
+        cartDataResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/promotion", POST, payload, CartData.class);
+
+        // Then
+        assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-22"));
+        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ONE.setScale(2)));
+        assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-1L).setScale(2)));
+
+        // When - add same promotion again
+        payload = new HttpEntity<>("ABC-22", headers);
+        cartDataResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/promotion", POST, payload, CartData.class);
+
+        // Then
+        assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-22"));
+        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ONE.setScale(2)));
+        assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-1L).setScale(2)));
+    }
+
+    @Test
+    public void shouldReturnErrorMessageWhenVoucherCodeIsInvalid(){
+        // Given
+        final UUID cartUid = repository.create();
+
+        // When - add promotion
+        final HttpEntity<String> payload = new HttpEntity<>("ABC-INVALID", headers);
+        final ResponseEntity<String> cartDataResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/promotion", POST, payload, String.class);
+
+        // Then
+        assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+        assertThat(cartDataResponseEntity.getBody(), is("Invalid code: ABC-INVALID"));
+    }
+
+    @Test
+    public void shouldReturnErrorMessageWhenVoucherHasExpired(){
+        // Given
+        final UUID cartUid = repository.create();
+        final Voucher voucher = Voucher.builder()
+                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .code("ABC-12")
+                .name("name")
+                .maxUses(10)
+                .maxUsesUser(1)
+                .minSpend(BigDecimal.ZERO)
+                .discountAmount(BigDecimal.TEN)
+                .startDate(LocalDate.of(2020, 1, 1))
+                .endDate(LocalDate.of(2020, 6, 21))
+                .build();
+        voucherRepository.save(voucher);
+
+        // When - add promotion
+        final HttpEntity<String> payload = new HttpEntity<>("ABC-12", headers);
+        final ResponseEntity<String> cartDataResponseEntity = rest.exchange(BASE_URL + cartUid.toString() + "/promotion", POST, payload, String.class);
+
+        // Then
+        assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+        assertThat(cartDataResponseEntity.getBody(), is("Voucher ABC-12 has expired. Valid until: 2020-06-21."));
     }
 
 }

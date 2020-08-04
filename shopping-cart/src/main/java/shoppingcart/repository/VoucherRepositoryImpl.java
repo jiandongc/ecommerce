@@ -10,7 +10,10 @@ import shoppingcart.mapper.VoucherMapper;
 
 import java.sql.Types;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import static java.util.Optional.empty;
 
 @Repository
 public class VoucherRepositoryImpl implements VoucherRepository {
@@ -20,6 +23,8 @@ public class VoucherRepositoryImpl implements VoucherRepository {
             "VALUES (:type, :code, :name, :max_uses, :max_uses_user, :min_spend, :discount_amount, :start_date, :end_date, :customer_uid)";
 
     private static final String SELECT_CUSTOMER_VOUCHER_SQL = "select * from voucher where customer_uid = ? and soft_delete = false";
+
+    private static final String SELECT_VOUCHER_BY_CODE_SQL = "select * from voucher where code = ? and soft_delete = false";
 
     private static final String NUMBER_OF_USES = "select count(p.id) from promotion p " +
             "join shopping_cart sc on p.shopping_cart_id = sc.id " +
@@ -54,6 +59,15 @@ public class VoucherRepositoryImpl implements VoucherRepository {
     @Override
     public List<Voucher> findByCustomerUid(UUID customerUid) {
         return jdbcTemplate.query(SELECT_CUSTOMER_VOUCHER_SQL, voucherMapper, customerUid);
+    }
+
+    @Override
+    public Optional<Voucher> findByVoucherCode(String voucherCode) {
+        try {
+            return Optional.of(jdbcTemplate.queryForObject(SELECT_VOUCHER_BY_CODE_SQL, voucherMapper, voucherCode));
+        } catch (Exception e) {
+            return empty();
+        }
     }
 
     @Override

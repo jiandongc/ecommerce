@@ -18,4 +18,5 @@ public interface ShoppingCartService {
     void deactivateShoppingCart(ShoppingCart shoppingCart);
     void addAddress(UUID cartUid, Address address);
     void addDeliveryOption(UUID cartUid, DeliveryOption deliveryOption);
+    void addPromotion(UUID cartUid, String voucherCode);
 }

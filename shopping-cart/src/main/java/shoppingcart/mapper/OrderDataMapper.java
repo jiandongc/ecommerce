@@ -18,16 +18,16 @@ public class OrderDataMapper {
     public OrderData map(ShoppingCart shoppingCart) {
 
         BigDecimal itemsVat = shoppingCart.getItemsVat();
-        BigDecimal itemsBeforeVat = shoppingCart.getItemsSale();
+        BigDecimal itemsBeforeVat = shoppingCart.getItemsBeforeVat();
 
         BigDecimal postageVat = shoppingCart.getPostageVat();
-        BigDecimal postageBeforeVat = shoppingCart.getPostageSale();
+        BigDecimal postageBeforeVat = shoppingCart.getPostageBeforeVat();
 
-        BigDecimal promotionVat = ZERO.setScale(2, ROUND_HALF_UP);
-        BigDecimal promotionBeforeVat = ZERO.setScale(2, ROUND_HALF_UP);
+        BigDecimal discountVat = shoppingCart.getDiscountVat();
+        BigDecimal discountBeforeVat = shoppingCart.getDiscountBeforeVat();
 
-        BigDecimal totalBeforeVat = itemsBeforeVat.add(postageBeforeVat).add(promotionBeforeVat);
-        BigDecimal totalVat = itemsVat.add(postageVat).add(promotionVat);
+        BigDecimal totalBeforeVat = itemsBeforeVat.add(postageBeforeVat).subtract(discountBeforeVat);
+        BigDecimal totalVat = itemsVat.add(postageVat).subtract(discountVat);
         BigDecimal orderTotal = shoppingCart.getOrderTotal();
 
         OrderData orderData = OrderData.builder()
@@ -35,11 +35,11 @@ public class OrderDataMapper {
                 .email(shoppingCart.getEmail())
                 .items(itemsBeforeVat)
                 .postage(postageBeforeVat)
-                .promotion(promotionBeforeVat)
+                .discount(discountBeforeVat)
                 .totalBeforeVat(totalBeforeVat)
                 .itemsVat(itemsVat)
                 .postageVat(postageVat)
-                .promotionVat(promotionVat)
+                .discountVat(discountVat)
                 .totalVat(totalVat)
                 .orderTotal(orderTotal)
                 .deliveryMethod(shoppingCart.getDeliveryOption().getMethod())
