@@ -493,7 +493,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-        assertThat(cartDataResponseEntity.getBody(), is("Invalid code: ABC-INVALID"));
+        assertThat(cartDataResponseEntity.getBody(), is("{\"errorMsg\":\"Invalid code: ABC-INVALID\",\"valid\":false}"));
     }
 
     @Test
@@ -519,7 +519,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
         // Then
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
-        assertThat(cartDataResponseEntity.getBody(), is("Voucher ABC-12 has expired. Valid until: 2020-06-21."));
+        assertThat(cartDataResponseEntity.getBody(), is("{\"errorMsg\":\"Voucher ABC-12 has expired. Valid until: 2020-06-21.\",\"valid\":false}"));
     }
 
 }

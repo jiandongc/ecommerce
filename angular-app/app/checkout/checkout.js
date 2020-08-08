@@ -6,7 +6,34 @@ checkout.component('summary', {
         shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response) {
             $scope.shoppingCartData = response;
         });
-    }
+
+        $scope.applying = false;
+        $scope.hasError = false;
+        $scope.code = '';
+
+        $scope.apply = function(){
+            $scope.hasError = false;
+            $scope.applying = true;
+            if (!$localstorage.containsKey('cart_uid') || $scope.code == '') {
+                $scope.hasError = true;
+                $scope.errorMsg = 'Something went wrong, please try again.';
+                $scope.applying = false;
+                $scope.code = '';
+            } else {
+                shoppingCartFactory.applyVoucher($localstorage.get('cart_uid'), $scope.code).then(function(response) {
+                    $scope.shoppingCartData = response;
+                    $scope.applying = false;
+                    $scope.code = '';
+                }, function(error){
+                    $scope.hasError = true;
+                    $scope.errorMsg = error.data.errorMsg;
+                    $scope.applying = false;
+                    $scope.code = '';
+                });
+            }
+        }
+    },
+    bindings: {novoucher: '@'}
 });
 
 checkout.component('progressbar', {

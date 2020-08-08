@@ -9,8 +9,6 @@ import shoppingcart.domain.ShoppingCart;
 
 import java.math.BigDecimal;
 
-import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.math.BigDecimal.ZERO;
 
 @Component
 public class OrderDataMapper {
@@ -27,7 +25,7 @@ public class OrderDataMapper {
         BigDecimal discountBeforeVat = shoppingCart.getDiscountBeforeVat();
 
         BigDecimal totalBeforeVat = itemsBeforeVat.add(postageBeforeVat).subtract(discountBeforeVat);
-        BigDecimal totalVat = itemsVat.add(postageVat).subtract(discountVat);
+        BigDecimal totalVat = shoppingCart.getVatTotal();
         BigDecimal orderTotal = shoppingCart.getOrderTotal();
 
         OrderData orderData = OrderData.builder()

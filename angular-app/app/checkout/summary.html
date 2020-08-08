@@ -23,23 +23,33 @@
         </div>
     </div>
     <div class="row p-t-05 p-b-05">
-        <div class="col-xs-6">
+        <div class="col-xs-9">
             <span class="title">Items</span>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-3">
             <span class="value pull-right">{{shoppingCartData.itemsTotal | currency:"£"}}</span>
         </div>
     </div>
     <div class="row p-t-05 p-b-05" ng-show="shoppingCartData.deliveryOption">
-        <div class="col-xs-6">
+        <div class="col-xs-9">
             <span class="title">Postage</span>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-3">
             <span class="value pull-right" ng-show="shoppingCartData.deliveryOption.charge > 0">
                 {{shoppingCartData.postage | currency:"£"}}
             </span>
             <span class="value pull-right" ng-show="shoppingCartData.deliveryOption.charge <= 0">
                 Free
+            </span>
+        </div>
+    </div>
+    <div class="row p-t-05 p-b-05" ng-show="shoppingCartData.promotion > 0">
+        <div class="col-xs-9">
+            <span class="title">Discount</span> (<a href ng-click="removeItem(cartItem)">Remove {{shoppingCartData.voucherCode}}</a>)
+        </div>
+        <div class="col-xs-3">
+            <span class="value pull-right">
+                -{{shoppingCartData.promotion | currency:"£"}}
             </span>
         </div>
     </div>
@@ -53,5 +63,20 @@
         <div class="col-xs-6">
             <span class="value pull-right">{{shoppingCartData.orderTotal | currency:"£"}}</span>
         </div>
+    </div>
+</div>
+
+<div ng-hide="$ctrl.novoucher" class="m-t-10">
+    <div ng-show="hasError" class="alert alert-danger" style="margin-bottom:5px;">
+        {{errorMsg}}
+    </div>
+    <div class="input-group">
+        <input type="text" class="form-control" ng-model="code" placeholder="Enter voucher code" aria-describedby="basic-addon2">
+        <span class="input-group-btn">
+        <button class="btn btn-default" type="button" ng-click="apply()" style="background-color: #f0c14b; border-color: #a88734 #9c7e31 #846a29">
+            <span ng-show="applying"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+            Apply code
+        </button>
+    </span>
     </div>
 </div>

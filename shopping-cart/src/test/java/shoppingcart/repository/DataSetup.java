@@ -30,7 +30,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 .discountAmount(BigDecimal.ONE)
                 .startDate(LocalDate.now())
                 .endDate(LocalDate.now().plusDays(10))
-                .customerUid(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+                .customerUid(UUID.fromString("954a1c32-869e-485a-8213-33195be50244"))
                 .build();
 
         voucherRepository.save(voucherOne);
@@ -45,7 +45,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 .discountAmount(BigDecimal.TEN)
                 .startDate(LocalDate.now().minusDays(10))
                 .endDate(LocalDate.now())
-                .customerUid(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+                .customerUid(UUID.fromString("954a1c32-869e-485a-8213-33195be50244"))
                 .build();
 
         voucherRepository.save(voucherTwo);
@@ -60,7 +60,7 @@ public class DataSetup extends AbstractRepositoryTest {
                 .discountAmount(BigDecimal.TEN)
                 .startDate(LocalDate.now().minusDays(10))
                 .endDate(LocalDate.now().minusDays(2))
-                .customerUid(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+                .customerUid(UUID.fromString("954a1c32-869e-485a-8213-33195be50244"))
                 .build();
 
         voucherRepository.save(voucherThree);

@@ -177,6 +177,13 @@ public class ShoppingCart {
         return itemSubTotal.add(postage).subtract(discountAmount);
     }
 
+    public BigDecimal getVatTotal() {
+        BigDecimal itemsVat = getItemsVat();
+        BigDecimal postageVat = getPostageVat();
+        BigDecimal discountVat = getDiscountVat();
+        return itemsVat.add(postageVat).subtract(discountVat);
+    }
+
     public static class ShoppingCartBuilder {
         private long id;
         private UUID cartUid;

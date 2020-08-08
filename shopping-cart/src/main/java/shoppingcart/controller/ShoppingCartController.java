@@ -127,7 +127,7 @@ public class ShoppingCartController {
             return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
                     .orElse(new ResponseEntity<>(NOT_FOUND));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult.getErrorMsg());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
         }
     }
 
