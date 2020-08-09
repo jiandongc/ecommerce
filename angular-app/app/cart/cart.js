@@ -155,8 +155,14 @@ cart.factory('shoppingCartFactory', function($http, environment) {
         });
     };
 
-    var applyVoucher = function(cartUid, voucherCode){
+    var applyVoucher = function(cartUid, voucherCode) {
         return $http.post(environment.shoppingCartUrl + '/carts/' + cartUid + '/promotion', voucherCode).then(function(response) {
+            return response.data;
+        });
+    }
+
+    var removeVoucher = function(cartUid) {
+        return $http.delete(environment.shoppingCartUrl + '/carts/' + cartUid + '/promotion').then(function(response) {
             return response.data;
         });
     }
@@ -177,7 +183,8 @@ cart.factory('shoppingCartFactory', function($http, environment) {
         submitTrnsactionToSage: submitTrnsactionToSage,
         getOrderData: getOrderData,
         getVoucher: getVoucher,
-        applyVoucher: applyVoucher
+        applyVoucher: applyVoucher,
+        removeVoucher: removeVoucher
     }
 });
 

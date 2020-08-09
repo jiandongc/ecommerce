@@ -14,6 +14,7 @@ checkout.component('summary', {
         }
 
         $scope.applying = false;
+        $scope.removing = false;
         $scope.hasError = false;
         $scope.code = '';
         $scope.showVouchers = false;
@@ -39,6 +40,14 @@ checkout.component('summary', {
                     $scope.code = '';
                 });
             }
+        }
+
+        $scope.removeVoucher = function(){
+            $scope.removing = true;
+            shoppingCartFactory.removeVoucher($localstorage.get('cart_uid')).then(function(response) {
+                $scope.shoppingCartData = response;
+                $scope.removing = false;
+            });
         }
     },
     bindings: {novoucher: '@'}
