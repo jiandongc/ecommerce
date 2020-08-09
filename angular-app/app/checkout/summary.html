@@ -79,4 +79,31 @@
         </button>
     </span>
     </div>
+    <div ng-show="vouchers.length>0" class="row m-t-15">
+        <div class="col-xs-12 form-check m-b-10">
+            <input type="checkbox" class="form-check-input" id="showVouchers" ng-model="showVouchers">
+            <label class="form-check-label" for="showVouchers">Show my vouchers</label>
+        </div>
+        <div class="col-xs-12" ng-if="showVouchers" ng-repeat="voucher in vouchers" style="height:250px;">
+            <div class="p-15 a-dashed-box" style="width: 100%; background-color: #f0f5f5;">
+                <div class="row">
+                    <div class="col-xs-12 fw-bold fs-20 color-dark-grey">
+                        Gift Voucher
+                    </div>
+                    <div class="col-xs-12 fw-bold fs-15 color-valencia">
+                        {{voucher.discountAmount | currency:"£"}}
+                    </div>
+                    <div class="col-xs-12 m-t-15 m-b-15" style="font-style: italic;">
+                        {{voucher.name}}
+                    </div>
+                    <div class="col-xs-12 fs-10">
+                        Voucher code: {{voucher.code}}
+                    </div>
+                    <div class="col-xs-12 fs-10">
+                        Valid until: {{voucher.endDate}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

@@ -7,9 +7,17 @@ checkout.component('summary', {
             $scope.shoppingCartData = response;
         });
 
+        if($localstorage.containsKey("customer_id")){
+            shoppingCartFactory.getVoucher($localstorage.get("customer_id"), 'active').then(function(response) {
+                $scope.vouchers = response;
+            });
+        }
+
         $scope.applying = false;
         $scope.hasError = false;
         $scope.code = '';
+        $scope.showVouchers = false;
+        $scope.vouchers = [];
 
         $scope.apply = function(){
             $scope.hasError = false;
