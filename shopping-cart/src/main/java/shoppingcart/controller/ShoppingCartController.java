@@ -24,9 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.*;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 @RestController
 @RequestMapping("/carts")
@@ -129,6 +127,15 @@ public class ShoppingCartController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validationResult);
         }
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @RequestMapping(value = "{cartUid}/promotion", method = DELETE)
+    public ResponseEntity deletePromotion(@PathVariable UUID cartUid) {
+        shoppingCartService.deletePromotion(cartUid);
+        final Optional<ShoppingCart> cartOptional = shoppingCartService.getShoppingCartByUid(cartUid);
+        return cartOptional.map(cart -> new ResponseEntity<>(cartDataMapper.map(cart), OK))
+                .orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
 }

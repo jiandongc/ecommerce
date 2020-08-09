@@ -157,7 +157,9 @@ public class ShoppingCart {
     }
 
     public BigDecimal getDiscountBeforeVat() {
-        return getDiscount().divide(getDiscountVatRate(), 2, ROUND_HALF_UP);
+        BigDecimal discountVatRate = getDiscountVatRate();
+        BigDecimal divisor = discountVatRate.add(BigDecimal.ONE);
+        return getDiscount().divide(divisor, 2, ROUND_HALF_UP);
     }
 
     public BigDecimal getDiscountVat() {
@@ -167,7 +169,7 @@ public class ShoppingCart {
     private BigDecimal getDiscountVatRate() {
         BigDecimal vat = getItemsVat().add(getPostageVat());
         BigDecimal total = getItemSubTotal().add(getPostage());
-        return vat.divide(total, 2, ROUND_HALF_UP).add(BigDecimal.ONE);
+        return total.compareTo(BigDecimal.ZERO) <= 0 ? BigDecimal.ZERO.setScale(2) : vat.divide(total, 2, ROUND_HALF_UP);
     }
 
     public BigDecimal getOrderTotal() {

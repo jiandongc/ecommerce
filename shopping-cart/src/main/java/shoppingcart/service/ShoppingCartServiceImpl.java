@@ -108,4 +108,10 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
             cartRepository.addPromotion(cartOptional.get().getId(), promotion);
         }
     }
+
+    @Override
+    public void deletePromotion(UUID cartUid) {
+        final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
+        cartOptional.ifPresent(cart -> cartRepository.deletePromotion(cart.getId()));
+    }
 }

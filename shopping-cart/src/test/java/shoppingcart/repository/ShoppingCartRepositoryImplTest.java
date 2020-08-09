@@ -257,4 +257,27 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         assertThat(actual.getLastUpdateTime(), Matchers.is(notNullValue()));
         assertThat(actual.getVatRate(), Matchers.is(0));
     }
+
+    @Test
+    public void shouldDeletePromotion(){
+        // Given
+        final UUID uuid = shoppingCartRepository.create("123e4567-e89b-12d3-a456-556642440000", null);
+        final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final Promotion promotion = Promotion.builder()
+                .voucherCode("ABC-15")
+                .vatRate(20)
+                .discountAmount(BigDecimal.ONE)
+                .cartId(cart.getId())
+                .build();
+        shoppingCartRepository.addPromotion(cart.getId(), promotion);
+        Optional<Promotion> actual = shoppingCartRepository.findPromotion(cart.getId());
+        assertThat(actual.isPresent(), is(true));
+
+        // When
+        shoppingCartRepository.deletePromotion(cart.getId());
+
+        // Then
+        actual = shoppingCartRepository.findPromotion(cart.getId());
+        assertThat(actual.isPresent(), is(false));
+    }
 }

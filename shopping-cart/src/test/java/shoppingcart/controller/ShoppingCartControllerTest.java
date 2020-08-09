@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import shoppingcart.data.CartData;
+import shoppingcart.domain.Promotion;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.Voucher;
 import shoppingcart.repository.ShoppingCartRepository;
@@ -17,6 +18,7 @@ import java.util.UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.*;
@@ -520,6 +522,29 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         assertThat(cartDataResponseEntity.getBody(), is("{\"errorMsg\":\"Voucher ABC-12 has expired. Valid until: 2020-06-21.\",\"valid\":false}"));
+    }
+
+    @Test
+    public void shouldDeletePromotion(){
+        // Given
+        final UUID uuid = repository.create("123e4567-e89b-12d3-a456-556642440000", null);
+        final ShoppingCart cart = repository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
+        final Promotion promotion = Promotion.builder()
+                .voucherCode("ABC-15")
+                .vatRate(20)
+                .discountAmount(BigDecimal.ONE)
+                .cartId(cart.getId())
+                .build();
+        repository.addPromotion(cart.getId(), promotion);
+
+        // When
+        final HttpEntity<Long> emptyPayload = new HttpEntity<Long>(null, headers);
+        final ResponseEntity<CartData> cartDataResponseEntity = rest.exchange(BASE_URL + uuid.toString() + "/promotion", DELETE, emptyPayload, CartData.class);
+
+        // Then
+        assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is(nullValue()));
+        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(nullValue()));
     }
 
 }

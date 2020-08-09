@@ -24,4 +24,5 @@ public interface ShoppingCartRepository {
     Optional<DeliveryOption> findDeliveryOption(long cartId);
     void addPromotion(long cartId, Promotion promotion);
     Optional<Promotion> findPromotion(long cartId);
+    void deletePromotion(long cartId);
 }

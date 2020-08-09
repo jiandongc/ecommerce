@@ -52,6 +52,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
             "ON CONFLICT ON CONSTRAINT promotion_constraint " +
             "DO UPDATE SET voucher_code=EXCLUDED.voucher_code, discount_amount=EXCLUDED.discount_amount, vat_rate=EXCLUDED.vat_rate, last_update_time=now()";
     private static final String SELECT_PROMOTION_SQL = "SELECT * FROM promotion WHERE shopping_cart_id=?";
+    private static final String DELETE_PROMOTION_SQL = "DELETE FROM promotion where shopping_cart_id = ?";
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -185,5 +186,10 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
         } catch (Exception e) {
             return empty();
         }
+    }
+
+    @Override
+    public void deletePromotion(long cartId) {
+        jdbcTemplate.update(DELETE_PROMOTION_SQL, cartId);
     }
 }
