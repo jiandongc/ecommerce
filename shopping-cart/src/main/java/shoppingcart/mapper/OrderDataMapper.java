@@ -24,7 +24,7 @@ public class OrderDataMapper {
         BigDecimal discountVat = shoppingCart.getDiscountVat();
         BigDecimal discountBeforeVat = shoppingCart.getDiscountBeforeVat();
 
-        BigDecimal totalBeforeVat = itemsBeforeVat.add(postageBeforeVat).subtract(discountBeforeVat);
+        BigDecimal totalBeforeVat = shoppingCart.getTotalBeforeVat();
         BigDecimal totalVat = shoppingCart.getVatTotal();
         BigDecimal orderTotal = shoppingCart.getOrderTotal();
 

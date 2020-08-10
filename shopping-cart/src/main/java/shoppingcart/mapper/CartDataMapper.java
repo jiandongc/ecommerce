@@ -46,7 +46,7 @@ public class CartDataMapper {
                 .quantity(quantity)
                 .itemsTotal(shoppingCart.getItemSubTotal())
                 .postage(shoppingCart.getPostage())
-                .promotion(shoppingCart.getPromotion() != null ? shoppingCart.getPromotion().getDiscountAmount() : null)
+                .promotion(shoppingCart.getPromotion() != null ? shoppingCart.getDiscount() : null)
                 .voucherCode(shoppingCart.getPromotion() != null ? shoppingCart.getPromotion().getVoucherCode() : null)
                 .voucherType(shoppingCart.getPromotion() != null ? shoppingCart.getPromotion().getVoucherType().name() : null)
                 .vat(shoppingCart.getVatTotal())

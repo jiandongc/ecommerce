@@ -90,8 +90,11 @@
                     <div class="col-xs-12 fw-bold fs-20 color-dark-grey">
                         Gift Voucher
                     </div>
-                    <div class="col-xs-12 fw-bold fs-15 color-valencia">
+                    <div class="col-xs-12 fw-bold fs-15 color-valencia" ng-if="voucher.type == 'MONETARY'">
                         {{voucher.discountAmount | currency:"£"}}
+                    </div>
+                    <div class="col-xs-12 fw-bold fs-15 color-valencia" ng-if="voucher.type == 'PERCENTAGE'">
+                        {{voucher.discountAmount}}% OFF
                     </div>
                     <div class="col-xs-12 m-t-15 m-b-15" style="font-style: italic;">
                         {{voucher.name}}

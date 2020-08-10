@@ -99,11 +99,13 @@ public class VoucherControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(OK));
         assertThat(response.getBody().length, is(2));
         assertThat(response.getBody()[0].getCode(), is("code-1"));
+        assertThat(response.getBody()[0].getType(), is("MONETARY"));
         assertThat(response.getBody()[0].getName(), is("Thank you for signing up!"));
         assertThat(response.getBody()[0].getDiscountAmount(), is(BigDecimal.ONE.setScale(2)));
         assertThat(response.getBody()[0].getStartDate(), is(LocalDate.now().toString()));
         assertThat(response.getBody()[0].getEndDate(), is(LocalDate.now().plusDays(10).toString()));
         assertThat(response.getBody()[1].getCode(), is("code-2"));
+        assertThat(response.getBody()[1].getType(), is("MONETARY"));
         assertThat(response.getBody()[1].getName(), is("Thank you for signing up!"));
         assertThat(response.getBody()[1].getDiscountAmount(), is(BigDecimal.TEN.setScale(2)));
         assertThat(response.getBody()[1].getStartDate(), is(LocalDate.now().minusDays(10).toString()));
@@ -146,6 +148,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(OK));
         assertThat(response.getBody().length, is(1));
         assertThat(response.getBody()[0].getCode(), is("code-3"));
+        assertThat(response.getBody()[0].getType(), is("MONETARY"));
         assertThat(response.getBody()[0].getName(), is("name-3"));
         assertThat(response.getBody()[0].getDiscountAmount(), is(BigDecimal.TEN.setScale(2)));
         assertThat(response.getBody()[0].getStartDate(), is(LocalDate.now().minusDays(10).toString()));
@@ -176,6 +179,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(OK));
         assertThat(response.getBody().length, is(1));
         assertThat(response.getBody()[0].getCode(), is("code-3"));
+        assertThat(response.getBody()[0].getType(), is("MONETARY"));
         assertThat(response.getBody()[0].getName(), is("name-3"));
         assertThat(response.getBody()[0].getDiscountAmount(), is(BigDecimal.TEN.setScale(2)));
         assertThat(response.getBody()[0].getStartDate(), is(LocalDate.now().minusDays(10).toString()));

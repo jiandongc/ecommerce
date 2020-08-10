@@ -15,6 +15,8 @@ public class VoucherData {
 
     private String code;
 
+    private String type;
+
     private String name;
 
     private BigDecimal discountAmount;

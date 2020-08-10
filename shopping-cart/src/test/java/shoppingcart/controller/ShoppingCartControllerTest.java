@@ -473,8 +473,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-22"));
         assertThat(cartDataResponseEntity.getBody().getVoucherType(), is("PERCENTAGE"));
-        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ONE.setScale(2)));
-        assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-1L).setScale(2)));
+        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ZERO.setScale(2)));
+        assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.ZERO.setScale(2)));
 
         // When - add same promotion again
         payload = new HttpEntity<>("ABC-22", headers);
@@ -484,8 +484,8 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-22"));
         assertThat(cartDataResponseEntity.getBody().getVoucherType(), is("PERCENTAGE"));
-        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ONE.setScale(2)));
-        assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-1L).setScale(2)));
+        assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ZERO.setScale(2)));
+        assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.ZERO.setScale(2)));
     }
 
     @Test

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.UUID;
 
 import static shoppingcart.domain.Voucher.Type.MONETARY;
+import static shoppingcart.domain.Voucher.Type.PERCENTAGE;
 
 public class DataSetup extends AbstractRepositoryTest {
 
@@ -64,5 +65,19 @@ public class DataSetup extends AbstractRepositoryTest {
                 .build();
 
         voucherRepository.save(voucherThree);
+
+        Voucher voucherFour = Voucher.builder()
+                .type(PERCENTAGE)
+                .code("code-4")
+                .name("name-4")
+                .maxUses(1)
+                .maxUsesUser(1)
+                .discountAmount(BigDecimal.TEN)
+                .startDate(LocalDate.now().minusDays(10))
+                .endDate(LocalDate.now().plusDays(10))
+                .customerUid(UUID.fromString("954a1c32-869e-485a-8213-33195be50244"))
+                .build();
+
+        voucherRepository.save(voucherFour);
     }
 }

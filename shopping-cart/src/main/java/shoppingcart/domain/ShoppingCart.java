@@ -1,11 +1,12 @@
 package shoppingcart.domain;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
 
 import static java.math.BigDecimal.ROUND_HALF_UP;
 import static java.math.BigDecimal.ZERO;
+import static shoppingcart.domain.Voucher.Type.MONETARY;
+import static shoppingcart.domain.Voucher.Type.PERCENTAGE;
 
 public class ShoppingCart {
 
@@ -149,8 +150,11 @@ public class ShoppingCart {
     }
 
     public BigDecimal getDiscount() {
-        if (this.getPromotion() != null && this.getPromotion().getDiscountAmount() != null) {
+        if (this.getPromotion() != null && MONETARY.equals(this.getPromotion().getVoucherType()) && this.getPromotion().getDiscountAmount() != null) {
             return this.getPromotion().getDiscountAmount().setScale(2, ROUND_HALF_UP);
+        } if (this.getPromotion() != null && PERCENTAGE.equals(this.getPromotion().getVoucherType()) && this.getPromotion().getDiscountAmount() != null) {
+            final BigDecimal total = getPostage().add(getItemSubTotal());
+            return total.multiply(this.getPromotion().getDiscountAmount().divide(BigDecimal.valueOf(100))).setScale(2);
         } else {
             return ZERO.setScale(2, ROUND_HALF_UP);
         }
@@ -184,6 +188,13 @@ public class ShoppingCart {
         BigDecimal postageVat = getPostageVat();
         BigDecimal discountVat = getDiscountVat();
         return itemsVat.add(postageVat).subtract(discountVat);
+    }
+
+    public BigDecimal getTotalBeforeVat() {
+        BigDecimal itemsBeforeVat = getItemsBeforeVat();
+        BigDecimal postageBeforeVat = getPostageBeforeVat();
+        BigDecimal discountBeforeVat = getDiscountBeforeVat();
+        return itemsBeforeVat.add(postageBeforeVat).subtract(discountBeforeVat);
     }
 
     public static class ShoppingCartBuilder {

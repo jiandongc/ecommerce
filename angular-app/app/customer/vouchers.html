@@ -29,13 +29,16 @@
 			<span class="fs-09">We can't find any vouchers.</span>
 		</div>
 		<div class="col-xs-12 col-md-4 m-b-15" ng-if="vouchers.length>0" ng-repeat="voucher in vouchers" style="height:250px;">
-			<div class="p-15 a-dashed-box" style="width: 100%; background-color: #f0f5f5;">
+			<div class="p-15 a-dashed-box" style="width: 100%;">
 				<div class="row">
 					<div class="col-xs-12 fw-bold fs-20 color-dark-grey">
 						Gift Voucher
 					</div>
-					<div class="col-xs-12 fw-bold fs-15 color-valencia">
+					<div class="col-xs-12 fw-bold fs-15 color-valencia" ng-if="voucher.type == 'MONETARY'">
 						{{voucher.discountAmount | currency:"£"}}
+					</div>
+					<div class="col-xs-12 fw-bold fs-15 color-valencia" ng-if="voucher.type == 'PERCENTAGE'">
+						{{voucher.discountAmount}}% OFF
 					</div>
 					<div class="col-xs-12 m-t-15 m-b-15" style="font-style: italic;">
 						{{voucher.name}}

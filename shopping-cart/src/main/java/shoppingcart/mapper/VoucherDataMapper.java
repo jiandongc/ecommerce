@@ -10,6 +10,7 @@ public class VoucherDataMapper {
     public VoucherData map(Voucher voucher) {
         return VoucherData.builder()
                 .code(voucher.getCode())
+                .type(voucher.getType().name())
                 .name(voucher.getName())
                 .discountAmount(voucher.getDiscountAmount())
                 .startDate(voucher.getStartDate().toString())

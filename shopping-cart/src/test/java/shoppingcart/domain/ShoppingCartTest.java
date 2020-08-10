@@ -1,13 +1,13 @@
 package shoppingcart.domain;
 
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static org.mockito.Mockito.doReturn;
+import static shoppingcart.domain.Voucher.Type.MONETARY;
+import static shoppingcart.domain.Voucher.Type.PERCENTAGE;
 
 public class ShoppingCartTest {
 
@@ -135,7 +135,7 @@ public class ShoppingCartTest {
     }
 
     @Test
-    public void shouldCalculateDiscountVat(){
+    public void shouldCalculateMonetaryDiscountVat(){
         final ShoppingCart shoppingCart = ShoppingCart.builder().build();
         final ShoppingCartItem cartItem = ShoppingCartItem.builder()
                 .name("product")
@@ -150,14 +150,38 @@ public class ShoppingCartTest {
         shoppingCart.addItem(cartItem);
         final DeliveryOption deliveryOption = DeliveryOption.builder().charge(6D).vatRate(20).build();
         shoppingCart.setDeliveryOption(deliveryOption);
-        final Promotion promotion = Promotion.builder().discountAmount(BigDecimal.valueOf(5D)).build();
+        final Promotion promotion = Promotion.builder().voucherType(MONETARY).discountAmount(BigDecimal.valueOf(5D)).build();
         shoppingCart.setPromotion(promotion);
 
         assertThat(shoppingCart.getDiscount(), is(BigDecimal.valueOf(5).setScale(2)));
         assertThat(shoppingCart.getDiscountVat(), is(BigDecimal.valueOf(0.24).setScale(2)));
         assertThat(shoppingCart.getDiscountBeforeVat(), is(BigDecimal.valueOf(4.76).setScale(2)));
         assertThat(shoppingCart.getOrderTotal(), is(BigDecimal.valueOf(15).setScale(2)));
+    }
 
+    @Test
+    public void shouldCalculatePercentageDiscountVat(){
+        final ShoppingCart shoppingCart = ShoppingCart.builder().build();
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .code("code1")
+                .price(BigDecimal.valueOf(14))
+                .quantity(1)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .description("Size: S")
+                .vatRate(0)
+                .build();
+        shoppingCart.addItem(cartItem);
+        final DeliveryOption deliveryOption = DeliveryOption.builder().charge(6D).vatRate(20).build();
+        shoppingCart.setDeliveryOption(deliveryOption);
+        final Promotion promotion = Promotion.builder().voucherType(PERCENTAGE).discountAmount(BigDecimal.valueOf(5D)).build();
+        shoppingCart.setPromotion(promotion);
+
+        assertThat(shoppingCart.getDiscount(), is(BigDecimal.valueOf(1).setScale(2)));
+        assertThat(shoppingCart.getDiscountVat(), is(BigDecimal.valueOf(0.05).setScale(2)));
+        assertThat(shoppingCart.getDiscountBeforeVat(), is(BigDecimal.valueOf(0.95).setScale(2)));
+        assertThat(shoppingCart.getOrderTotal(), is(BigDecimal.valueOf(19).setScale(2)));
     }
 
 
