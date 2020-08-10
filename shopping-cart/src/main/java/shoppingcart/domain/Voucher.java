@@ -38,8 +38,8 @@ public class Voucher {
     private UUID customerUid;
 
     public enum Type {
-        CUSTOMER_SIGN_UP_VOUCHER,
-        PROMOTION_VOUCHER
+        MONETARY,
+        PERCENTAGE
     }
 
     public boolean isActive() {

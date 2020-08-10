@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
-import static shoppingcart.domain.Voucher.Type.CUSTOMER_SIGN_UP_VOUCHER;
+import static shoppingcart.domain.Voucher.Type.MONETARY;
 
 public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
 
@@ -32,7 +32,7 @@ public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
     public void shouldFindVoucherByCustomerUid(){
         // Given
         Voucher voucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("ABC-12")
                 .name("name")
                 .maxUses(10)
@@ -66,7 +66,7 @@ public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
     public void shouldFindVoucherByVoucherCode(){
         // Given
         Voucher voucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("ABC-12")
                 .name("name")
                 .maxUses(10)
@@ -94,7 +94,7 @@ public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
     public void shouldFindVoucherByVoucherCodeIfRecordIsSoftDeleted(){
         // Given
         Voucher voucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("ABC-12")
                 .name("name")
                 .maxUses(10)
@@ -118,7 +118,7 @@ public class VoucherRepositoryImplTest extends AbstractRepositoryTest {
     public void shouldNotLoadSoftDeletedRecord(){
         // Given
         Voucher voucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("ABC-12")
                 .name("name")
                 .maxUses(10)

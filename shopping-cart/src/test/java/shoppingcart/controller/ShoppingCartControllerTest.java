@@ -22,7 +22,7 @@ import static org.springframework.http.HttpMethod.DELETE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.*;
-import static shoppingcart.domain.Voucher.Type.CUSTOMER_SIGN_UP_VOUCHER;
+import static shoppingcart.domain.Voucher.Type.MONETARY;
 
 public class ShoppingCartControllerTest extends AbstractControllerTest {
 
@@ -428,7 +428,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Given
         final UUID cartUid = repository.create();
         final Voucher voucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("ABC-12")
                 .name("name")
                 .maxUses(10)
@@ -441,7 +441,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         voucherRepository.save(voucher);
 
         final Voucher voucher1 = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("ABC-22")
                 .name("name")
                 .maxUses(10)
@@ -503,7 +503,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Given
         final UUID cartUid = repository.create();
         final Voucher voucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("ABC-12")
                 .name("name")
                 .maxUses(10)

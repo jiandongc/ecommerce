@@ -20,7 +20,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.OK;
-import static shoppingcart.domain.Voucher.Type.CUSTOMER_SIGN_UP_VOUCHER;
+import static shoppingcart.domain.Voucher.Type.MONETARY;
 
 public class VoucherControllerTest extends AbstractControllerTest {
 
@@ -37,7 +37,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
     public void shouldGetActiveVouchersForCustomer() {
         // Given
         Voucher voucherOne = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-1")
                 .name("Thank you for signing up!")
                 .maxUses(1)
@@ -52,7 +52,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
         voucherRepository.save(voucherOne);
 
         Voucher voucherTwo = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-2")
                 .name("Thank you for signing up!")
                 .maxUses(1)
@@ -67,7 +67,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
         voucherRepository.save(voucherTwo);
 
         Voucher voucherThree = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-3")
                 .name("Thank you for signing up!")
                 .maxUses(1)
@@ -113,7 +113,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
     public void shouldGetUsedVouchersForCustomer() {
         // Given
         Voucher usedVoucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-3")
                 .name("name-3")
                 .maxUses(1)
@@ -154,7 +154,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
     public void shouldGetExpiredVouchersForCustomer() {
         // Given
         Voucher usedVoucher = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-3")
                 .name("name-3")
                 .maxUses(1)

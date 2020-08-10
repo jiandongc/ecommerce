@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-import static shoppingcart.domain.Voucher.Type.CUSTOMER_SIGN_UP_VOUCHER;
+import static shoppingcart.domain.Voucher.Type.MONETARY;
 
 public class DataSetup extends AbstractRepositoryTest {
 
@@ -21,7 +21,7 @@ public class DataSetup extends AbstractRepositoryTest {
     public void addVouchers() {
 
         Voucher voucherOne = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-1")
                 .name("name-1")
                 .maxUses(1)
@@ -36,7 +36,7 @@ public class DataSetup extends AbstractRepositoryTest {
         voucherRepository.save(voucherOne);
 
         Voucher voucherTwo = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-2")
                 .name("name-2")
                 .maxUses(1)
@@ -51,7 +51,7 @@ public class DataSetup extends AbstractRepositoryTest {
         voucherRepository.save(voucherTwo);
 
         Voucher voucherThree = Voucher.builder()
-                .type(CUSTOMER_SIGN_UP_VOUCHER)
+                .type(MONETARY)
                 .code("code-3")
                 .name("name-3")
                 .maxUses(1)
