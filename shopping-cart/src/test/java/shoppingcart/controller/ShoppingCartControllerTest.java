@@ -23,6 +23,7 @@ import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.*;
 import static shoppingcart.domain.Voucher.Type.MONETARY;
+import static shoppingcart.domain.Voucher.Type.PERCENTAGE;
 
 public class ShoppingCartControllerTest extends AbstractControllerTest {
 
@@ -441,7 +442,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         voucherRepository.save(voucher);
 
         final Voucher voucher1 = Voucher.builder()
-                .type(MONETARY)
+                .type(PERCENTAGE)
                 .code("ABC-22")
                 .name("name")
                 .maxUses(10)
@@ -460,6 +461,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-12"));
+        assertThat(cartDataResponseEntity.getBody().getVoucherType(), is("MONETARY"));
         assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.TEN.setScale(2)));
         assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-10L).setScale(2)));
 
@@ -470,6 +472,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-22"));
+        assertThat(cartDataResponseEntity.getBody().getVoucherType(), is("PERCENTAGE"));
         assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ONE.setScale(2)));
         assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-1L).setScale(2)));
 
@@ -480,6 +483,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         // Then
         assertThat(cartDataResponseEntity.getStatusCode(), is(HttpStatus.OK));
         assertThat(cartDataResponseEntity.getBody().getVoucherCode(), is("ABC-22"));
+        assertThat(cartDataResponseEntity.getBody().getVoucherType(), is("PERCENTAGE"));
         assertThat(cartDataResponseEntity.getBody().getPromotion(), is(BigDecimal.ONE.setScale(2)));
         assertThat(cartDataResponseEntity.getBody().getOrderTotal(), is(BigDecimal.valueOf(-1L).setScale(2)));
     }
@@ -531,6 +535,7 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         final ShoppingCart cart = repository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final Promotion promotion = Promotion.builder()
                 .voucherCode("ABC-15")
+                .voucherType(MONETARY)
                 .vatRate(20)
                 .discountAmount(BigDecimal.ONE)
                 .cartId(cart.getId())

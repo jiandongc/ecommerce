@@ -47,10 +47,10 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     private static final String DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL = "DELETE FROM delivery_option where shopping_cart_id = ?";
     private static final String DEACTIVATE_SHOPPING_CART = "UPDATE shopping_cart SET active = false WHERE id = ?";
     private static final String INSERT_PROMOTION_SQL = "INSERT INTO promotion " +
-            "(voucher_code, discount_amount, vat_rate, shopping_cart_id) " +
-            "VALUES (:voucher_code, :discount_amount, :vat_rate, :shopping_cart_id) " +
+            "(voucher_code, voucher_type, discount_amount, vat_rate, shopping_cart_id) " +
+            "VALUES (:voucher_code, :voucher_type, :discount_amount, :vat_rate, :shopping_cart_id) " +
             "ON CONFLICT ON CONSTRAINT promotion_constraint " +
-            "DO UPDATE SET voucher_code=EXCLUDED.voucher_code, discount_amount=EXCLUDED.discount_amount, vat_rate=EXCLUDED.vat_rate, last_update_time=now()";
+            "DO UPDATE SET voucher_code=EXCLUDED.voucher_code, voucher_type=EXCLUDED.voucher_type, discount_amount=EXCLUDED.discount_amount, vat_rate=EXCLUDED.vat_rate, last_update_time=now()";
     private static final String SELECT_PROMOTION_SQL = "SELECT * FROM promotion WHERE shopping_cart_id=?";
     private static final String DELETE_PROMOTION_SQL = "DELETE FROM promotion where shopping_cart_id = ?";
 
@@ -173,6 +173,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     public void addPromotion(long cartId, Promotion promotion) {
         final MapSqlParameterSource namedParameters = new MapSqlParameterSource();
         namedParameters.addValue("voucher_code", promotion.getVoucherCode(), Types.VARCHAR);
+        namedParameters.addValue("voucher_type", promotion.getVoucherType().name(), Types.VARCHAR);
         namedParameters.addValue("discount_amount", promotion.getDiscountAmount(), Types.DOUBLE);
         namedParameters.addValue("vat_rate", promotion.getVatRate(), Types.INTEGER);
         namedParameters.addValue("shopping_cart_id", cartId, Types.INTEGER);

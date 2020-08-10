@@ -42,5 +42,7 @@ public final class CartData {
 
     private String voucherCode;
 
+    private String voucherType;
+
 
 }

@@ -18,6 +18,8 @@ public class Promotion {
 
     private String voucherCode;
 
+    private Voucher.Type voucherType;
+
     private BigDecimal discountAmount;
 
     private Integer vatRate;

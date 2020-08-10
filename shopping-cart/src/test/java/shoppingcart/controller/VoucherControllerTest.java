@@ -85,6 +85,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final Promotion promotion = Promotion.builder()
                 .voucherCode("code-3")
+                .voucherType(MONETARY)
                 .vatRate(20)
                 .discountAmount(BigDecimal.TEN)
                 .cartId(cart.getId())
@@ -131,6 +132,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final Promotion promotion = Promotion.builder()
                 .voucherCode("code-3")
+                .voucherType(MONETARY)
                 .vatRate(20)
                 .discountAmount(BigDecimal.TEN)
                 .cartId(cart.getId())

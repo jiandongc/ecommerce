@@ -17,6 +17,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static shoppingcart.domain.Voucher.Type.MONETARY;
 
 public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
 
@@ -225,6 +226,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final Promotion promotion = Promotion.builder()
                 .voucherCode("ABC-15")
+                .voucherType(MONETARY)
                 .vatRate(20)
                 .discountAmount(BigDecimal.ONE)
                 .cartId(cart.getId())
@@ -265,6 +267,7 @@ public class ShoppingCartRepositoryImplTest extends AbstractRepositoryTest {
         final ShoppingCart cart = shoppingCartRepository.findByUUID(uuid).orElseThrow(() -> new RuntimeException("cart uid not found"));
         final Promotion promotion = Promotion.builder()
                 .voucherCode("ABC-15")
+                .voucherType(MONETARY)
                 .vatRate(20)
                 .discountAmount(BigDecimal.ONE)
                 .cartId(cart.getId())

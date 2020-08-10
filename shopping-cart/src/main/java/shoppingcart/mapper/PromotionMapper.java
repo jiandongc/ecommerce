@@ -3,6 +3,7 @@ package shoppingcart.mapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 import shoppingcart.domain.Promotion;
+import shoppingcart.domain.Voucher;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
@@ -15,6 +16,7 @@ public class PromotionMapper implements RowMapper<Promotion> {
     public Promotion mapRow(ResultSet rs, int i) throws SQLException {
         return Promotion.builder()
                 .voucherCode(rs.getString("voucher_code"))
+                .voucherType(Voucher.Type.valueOf(rs.getString("voucher_type")))
                 .discountAmount(rs.getBigDecimal("discount_amount").setScale(2, BigDecimal.ROUND_HALF_UP))
                 .vatRate(rs.getInt("vat_rate"))
                 .creationTime(rs.getDate("creation_time"))

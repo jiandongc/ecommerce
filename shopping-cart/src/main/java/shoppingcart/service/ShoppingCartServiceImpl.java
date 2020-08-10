@@ -102,8 +102,8 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         if (cartOptional.isPresent() && voucherOptional.isPresent()) {
             Promotion promotion = Promotion.builder()
                     .voucherCode(voucherOptional.get().getCode())
+                    .voucherType(voucherOptional.get().getType())
                     .discountAmount(voucherOptional.get().getDiscountAmount())
-                    .vatRate(20)
                     .build();
             cartRepository.addPromotion(cartOptional.get().getId(), promotion);
         }
