@@ -154,7 +154,7 @@ public class ShoppingCart {
             return this.getPromotion().getDiscountAmount().setScale(2, ROUND_HALF_UP);
         } if (this.getPromotion() != null && PERCENTAGE.equals(this.getPromotion().getVoucherType()) && this.getPromotion().getDiscountAmount() != null) {
             final BigDecimal total = getPostage().add(getItemSubTotal());
-            return total.multiply(this.getPromotion().getDiscountAmount().divide(BigDecimal.valueOf(100))).setScale(2);
+            return total.multiply(this.getPromotion().getDiscountAmount().divide(BigDecimal.valueOf(100))).setScale(2, ROUND_HALF_UP);
         } else {
             return ZERO.setScale(2, ROUND_HALF_UP);
         }

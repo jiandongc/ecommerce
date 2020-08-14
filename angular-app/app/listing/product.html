@@ -81,7 +81,71 @@
 					<!--<span class="color-cream-can glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;Email me when available-->
 				<!--</button>-->
 			<!--</div>-->
-			<div class="desc" dynamic="product.description"></div>
+			<div class="m-t-20 m-b-10">
+				<ul class="nav nav-tabs">
+					<li role="presentation" ng-class="display==='itemInfo' ? 'active' : ''">
+						<a href ng-click="toggle('itemInfo')">
+							<span ng-class="display==='itemInfo' ? 'color-tenne' : ''">Item Information</span>
+						</a>
+					</li>
+					<li role="presentation" ng-class="display==='reviews' ? 'active' : ''">
+						<a href ng-click="toggle('reviews')">
+							<span ng-class="display==='reviews' ? 'color-tenne' : ''">Reviews <span ng-if="reviews.size>0" class="badge">{{reviews.size}}</span></span>
+						</a>
+					</li>
+				</ul>
+				<div ng-if="display==='itemInfo'" class="m-t-10">
+					<div ng-bind-html="product.description"></div>
+				</div>
+				<div ng-if="display==='reviews'" class="m-t-10">
+					<div class="btn-group btn-group-justified m-b-10" role="group" aria-label="...">
+						<div class="btn-group">
+							<a class="btn btn-style-primary" ng-href="#!/products/create-review/{{product.code}}">
+								<i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Write a Review
+							</a>
+						</div>
+						<div class="btn-group">
+							<button class="btn btn-style-secondary dropdown-toggle" type="button" data-toggle="dropdown">
+								{{sort.display}}&nbsp;&nbsp;<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li class="m-l-05"><a href="" ng-click="sortBy('Newest First', 'date.desc')">Newest First</a></li>
+								<li class="m-l-05"><a href="" ng-click="sortBy('Most Helpful first', 'vote.desc')">Most Helpful first</a></li>
+							</ul>
+						</div>
+					</div>
+					<div ng-show="loadingReviews" class="m-t-10 m-b-10 fs-20" style="text-align: center;">
+						<span><i class="glyphicon glyphicon-refresh spinning"></i></span>
+					</div>
+					<div ng-hide="loadingReviews" ng-repeat="item in reviews.comment">
+						<div class="col-xs-12 underline">
+							<span class="color-grey pull-right">{{item.creationTime | date:'yyyy-MM-dd'}}</span>
+						</div>
+						<div class="col-xs-12 p-b-10 p-t-10">
+							<span class="color-cream-can fw-bold">Customer: </span>
+							<span class="color-grey">{{item.comment}}</span>
+						</div>
+						<div class="col-xs-12 p-b-10" ng-repeat="response in item.responses">
+							<span class="color-tiffany-green fw-bold">Noodle-Monster: </span>
+							<span class="color-grey">{{response.response}}</span>
+						</div>
+						<div class="col-xs-12 p-b-10">
+							<span ng-hide="voting[$index]" class="glyphicon glyphicon-thumbs-up color-grey fs-11" style="display: table-cell; vertical-align: middle; cursor: pointer;" ng-click="voteUp(item.id, $index)"></span>
+							<span ng-show="voting[$index]" class="glyphicon glyphicon-refresh spinning color-grey fs-11" style="display: table-cell; vertical-align: middle;"></span>
+							<span class="color-grey" style="display: table-cell; vertical-align: middle; padding-left: 8px">{{item.vote}}</span>
+						</div>
+					</div>
+					<div ng-hide="loadingReviews" ng-if="reviews.size==0">
+						Be the first to review this product
+					</div>
+					<div ng-show="showLoadMoreButton" class="m-b-10" style="text-align: center;">
+						<button class="btn btn-default btn-style-primary" type="button" ng-click="loadMore()">
+							<span ng-show="loadingMoreReviews"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+							<span ng-hide="loadingMoreReviews"><i class="glyphicon glyphicon-refresh"></i></span> &nbsp;Load more&nbsp;
+						</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>

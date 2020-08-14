@@ -1,12 +1,13 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
-productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, productFactory, shoppingCartFactory, customerFactory, categoryFactory) {
+productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, productFactory, shoppingCartFactory, customerFactory, categoryFactory, reviewFactory) {
     $scope.addingItem = false;
     $scope.selectOptionAlert = false;
     $scope.addingItemToFavourites = false;
     $scope.addedToFavouriteAlert = false;
     $scope.loading = true;
     $scope.customerId = $localstorage.get("customer_id");
+    $scope.display = 'itemInfo';
 
     productFactory.getProductWithCode($routeParams.code).then(function(response) {
         $scope.product = response;
@@ -127,6 +128,92 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             $scope.addedToFavouriteAlert = true;
         });
     }
+
+    $scope.toggle = function(value) {
+        $scope.display = value;
+    }
+
+    $scope.loadingReviews = true;
+    $scope.loadingMoreReviews = false;
+    $scope.showLoadMoreButton = false;
+    $scope.offset = 0;
+    $scope.limit = 10;
+    $scope.sort = {
+        display: "Newest First",
+        code: 'date.desc'
+    };
+    $scope.voting = [];
+
+    reviewFactory.getReviews($routeParams.code, undefined, $scope.sort.code, $scope.offset, $scope.limit).then(function(response) {
+        $scope.loadingReviews = false;
+        $scope.reviews = response;
+        $scope.showLoadMoreButton = $scope.reviews.size > $scope.offset + $scope.limit;
+        angular.forEach(response.comment, function(value, key) {
+            $scope.voting.push(false);
+        });
+    });
+
+    $scope.loadMore = function() {
+        $scope.loadingMoreReviews = true;
+        $scope.offset = $scope.offset + $scope.limit;
+        reviewFactory.getReviews($routeParams.code, undefined, $scope.sort.code, $scope.offset, $scope.limit).then(function(response) {
+            angular.forEach(response.comment, function(value, key) {
+                $scope.reviews.comment.push(value);
+                $scope.voting.push(false);
+            });
+            $scope.loadingMoreReviews = false;
+            $scope.showLoadMoreButton = $scope.reviews.size > $scope.offset + $scope.limit;
+        });
+    };
+
+    $scope.sortBy = function(display, code) {
+        $scope.loadingReviews = true;
+        $scope.loadingMoreReviews = false;
+        $scope.showLoadMoreButton = false;
+        $scope.offset = 0;
+        $scope.limit = 10;
+        $scope.sort = {
+            display: display,
+            code: code
+        };
+        $scope.voting = [];
+
+        reviewFactory.getReviews($routeParams.code, undefined, $scope.sort.code, $scope.offset, $scope.limit).then(function(response) {
+            $scope.loadingReviews = false;
+            $scope.reviews = response;
+            $scope.showLoadMoreButton = $scope.reviews.size > $scope.offset + $scope.limit;
+            angular.forEach(response.comment, function(value, key) {
+                $scope.voting.push(false);
+            });
+        });
+    };
+
+    $scope.voteUp = function(id, index) {
+        $scope.voting[index] = true;
+        reviewFactory.voteUp(id).then(function(response) {
+            $scope.reviews.comment[index] = response;
+            $scope.voting[index] = false;
+        });
+    };
+});
+
+productDetail.controller('createProductReviewCtrl', function($scope, $routeParams, $location, productFactory, reviewFactory) {
+    productFactory.getProductWithCode($routeParams.code).then(function(response) {
+        $scope.product = response;
+    });
+
+    $scope.adding = false;
+    $scope.addReview = function(review) {
+        console.log(review);
+        if(typeof review === "undefined"){
+            return;
+        }
+        $scope.adding = true;
+        reviewFactory.addReview(review, $routeParams.code).then(function(response){
+            $scope.adding = false;
+            $location.path("/products/" + $routeParams.code);
+        });
+    }
 });
 
 productDetail.factory('productFactory', function($http, environment) {
@@ -223,10 +310,14 @@ productDetail.directive('dynamic', function($compile) {
 
 productDetail.config(['$routeProvider',
     function($routeProvider) {
-        $routeProvider.
-        when('/products/:code', {
+        $routeProvider
+        .when('/products/:code', {
             templateUrl: 'listing/product.html',
             controller: 'productDetailCtrl'
+        })
+        .when('/products/create-review/:code', {
+             templateUrl: 'listing/create-product-review.html',
+             controller: 'createProductReviewCtrl'
         });
     }
 ]);

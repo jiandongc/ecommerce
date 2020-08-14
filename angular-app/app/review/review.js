@@ -1,7 +1,7 @@
 var review = angular.module('review', ['ngRoute','ngResource']);
 
 review.controller('feedbackReceivedCtrl', function($scope, $routeParams, reviewFactory) {
-	reviewFactory.getFeedbackById($routeParams.feedbackId).then(function(response){
+	reviewFactory.getReviewById($routeParams.feedbackId).then(function(response){
 		$scope.feedback = response;
 	});
 });
@@ -16,7 +16,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 	$scope.voting = [];
 	$scope.search;
 
-	reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
+	reviewFactory.getReviews('site', $scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 		$scope.loading = false;
 		$scope.data = response;
 		$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
@@ -28,7 +28,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 	$scope.loadMore = function() {
 		$scope.loadingMore = true;
 		$scope.offset = $scope.offset + $scope.limit;
-		reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
+		reviewFactory.getReviews('site', $scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 			angular.forEach(response.comment, function(value, key) {
 				$scope.data.comment.push(value);
 				$scope.voting.push(false);
@@ -47,7 +47,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 		$scope.sort = {display: display, code: code};
 		$scope.voting = [];
 
-		reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
+		reviewFactory.getReviews('site', $scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 			$scope.loading = false;
 			$scope.data = response;
 			$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
@@ -65,7 +65,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 		$scope.limit = 10;
 		$scope.voting = [];
 
-		reviewFactory.getFeedback($scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
+		reviewFactory.getReviews('site', $scope.search, $scope.sort.code, $scope.offset, $scope.limit).then(function(response){
 			$scope.loading = false;
 			$scope.data = response;
 			$scope.showLoadMoreButton = $scope.data.size > $scope.offset + $scope.limit;
@@ -86,21 +86,21 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 
 review.factory('reviewFactory', function($http, environment){
 
-	var addFeedback = function(comment){
+	var addReview = function(comment, code){
         var configs = {headers: {'Content-Type' : 'application/json'}};
-        var data = {'comment': comment, 'code': 'site'};
+        var data = {'comment': comment, 'code': code};
         return $http.post(environment.reviewUrl + '/comments/', data, configs).then(function(response){
             return response.data;
         });
 	};
 
-	var getFeedbackById = function(id){
+	var getReviewById = function(id){
       return $http.get(environment.reviewUrl + '/comments/' + id).then(function(response){
         return response.data;
       });
 	};
 
-	var getFeedback = function(search, sort, offset, limit){
+	var getReviews = function(code, search, sort, offset, limit){
 		var params = '&offset=' + offset + '&limit=' + limit;
 
 		if (sort) {
@@ -111,7 +111,7 @@ review.factory('reviewFactory', function($http, environment){
   			params = params + '&comment=' + search;
 		}
 
-      	return $http.get(environment.reviewUrl + '/comments?code=site' + params).then(function(response){
+      	return $http.get(environment.reviewUrl + '/comments?code=' + code + params).then(function(response){
         	return response.data;
       	});
 	};
@@ -123,9 +123,9 @@ review.factory('reviewFactory', function($http, environment){
 	}
 
     return {
-         addFeedback: addFeedback,
-         getFeedbackById: getFeedbackById,
-         getFeedback: getFeedback,
+         addReview: addReview,
+         getReviewById: getReviewById,
+         getReviews: getReviews,
          voteUp: voteUp
     };
 
@@ -135,16 +135,16 @@ review.component('postfeedback', {
   templateUrl: 'component/post-feedback.html',
   controller: function($scope, $location, reviewFactory){
 
-  	reviewFactory.getFeedback(undefined, undefined, 0, 1).then(function(response){
+  	reviewFactory.getReviews('site', undefined, undefined, 0, 1).then(function(response){
     	$scope.feedbackSize = '(' + response.size + ')';
   	});
 
-    $scope.addFeedback = function(feedback){
+    $scope.addReview = function(feedback){
     	if(typeof feedback === "undefined"){
     		return;
     	}
 
-    	reviewFactory.addFeedback(feedback).then(function(response){
+    	reviewFactory.addReview(feedback, 'site').then(function(response){
       		$location.path("/feedback-received/" + response.id);
     	});
   	}	
