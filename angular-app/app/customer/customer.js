@@ -311,11 +311,21 @@ customer.controller('favouriteCtrl', function($scope, $localstorage, $q, $route,
     customerFactory.getFavouriteItems($localstorage.get('customer_id')).then(function(response) {
         var promises = [];
         for (i = 0; i < response.length; i = i + 1) {
-            promises.push(productFactory.getProductWithCode(response[i].productCode));
+            promises.push(
+                productFactory.getProductWithCode(response[i].productCode).then(function(response){
+                    return response;
+                }, function(error){
+                }
+            ));
         }
 
         $q.all(promises).then(function(response) {
             for (var i = 0; i < response.length; i++) {
+
+                if (typeof response[i] === 'undefined') {
+                    continue;
+                }
+
                 var product = {
                     code: response[i].code,
                     images: response[i].images,
