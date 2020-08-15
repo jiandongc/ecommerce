@@ -54,7 +54,7 @@ cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $l
     };
 });
 
-cart.factory('shoppingCartFactory', function($http, environment) {
+cart.factory('shoppingCartFactory', function($http, $localstorage, environment) {
     var addCustomerInfo = function(cartUid, customerData) {
         return $http.put(environment.shoppingCartUrl + '/carts/' + cartUid, customerData).then(function(response) {
             return response.data;
@@ -92,12 +92,16 @@ cart.factory('shoppingCartFactory', function($http, environment) {
     var getShoppingCart = function(cartUid) {
         return $http.get(environment.shoppingCartUrl + '/carts/' + cartUid).then(function(response) {
             return response.data;
+        }, function(error){
+            $localstorage.remove('cart_uid');
         });
     }
 
     var getShoppingCartByCustomerId = function(customerId) {
         return $http.get(environment.shoppingCartUrl + '/carts?customerId=' + customerId).then(function(response) {
             return response.data;
+        }, function(error){
+            $localstorage.remove('cart_uid');
         });
     }
 

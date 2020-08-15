@@ -69,6 +69,14 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
 
     $scope.$on('updateCartSummary', function(event, showDropDown) {
         shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(data) {
+            if (typeof data === "undefined") {
+                $scope.cartUid = null;
+                $scope.totalQuantity = null;
+                $scope.itemsTotal = null;
+                $scope.cartItems = null;
+                return;
+            }
+
             $scope.cartUid = data.cartUid;
             $scope.totalQuantity = (data.quantity != 0 ? data.quantity : null);
             $scope.itemsTotal = (data.itemsTotal != 0 ? data.itemsTotal : null);
@@ -79,11 +87,6 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
                     dropdown.stop(true, true).delay(5000).fadeOut(3800);
                 });
             }
-        }, function(error) {
-            $scope.cartUid = null;
-            $scope.totalQuantity = null;
-            $scope.itemsTotal = null;
-            $scope.cartItems = null;
         });
     });
 
@@ -164,7 +167,7 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q, $ro
     };
 
     service.responseError = function(response) {
-        if (response.status === 403) {
+        if (response.status === 403 || response.status === 401) {
             if (response.config.headers.Authentication == undefined) {
                 var $http = $injector.get('$http');
                 return $http(response.config);
