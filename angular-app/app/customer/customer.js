@@ -163,7 +163,7 @@ customer.controller('registerCtrl', function($scope, $routeParams, $localstorage
             $scope.error = true;
             $scope.loading = false;
             if (error.status === 409) {
-                $scope.errorMsg = "This the email address is already used.";
+                $scope.errorMsg = "This email address is already used.";
             } else {
                 $scope.errorMsg = "Technical error, please contact site admin: jiandong.c@gmail.com";
             }

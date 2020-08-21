@@ -100,8 +100,6 @@ cart.factory('shoppingCartFactory', function($http, $localstorage, environment) 
     var getShoppingCartByCustomerId = function(customerId) {
         return $http.get(environment.shoppingCartUrl + '/carts?customerId=' + customerId).then(function(response) {
             return response.data;
-        }, function(error){
-            $localstorage.remove('cart_uid');
         });
     }
 
