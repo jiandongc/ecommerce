@@ -37,7 +37,7 @@ public class OrderConfirmationData extends MailData {
                                  String siteName,
                                  String homePage,
                                  String registrationPage) {
-        super("chenjiandong666@hotmail.com", String.format("%s Order", siteName), sendTo, format("Your %s order confirmation #", siteName) + orderNumber);
+        super("jiandong.c@gmail.com", String.format("%s Order", siteName), sendTo, format("Your %s order confirmation #", siteName) + orderNumber);
         this.customerName = customerName;
         this.orderNumber = orderNumber;
         this.orderEta = orderEta;
