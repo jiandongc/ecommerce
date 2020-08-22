@@ -33,8 +33,8 @@ public class StripePayControllerTest extends AbstractControllerTest {
     public void shouldDownloadStripeClientSecret() {
         // Given
         Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());

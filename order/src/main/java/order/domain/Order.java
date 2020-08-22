@@ -47,8 +47,8 @@ public class Order {
     @Column(name = "postage")
     private BigDecimal postage;
 
-    @Column(name = "promotion")
-    private BigDecimal promotion;
+    @Column(name = "discount")
+    private BigDecimal discount;
 
     @Column(name = "total_before_vat")
     private BigDecimal totalBeforeVat;
@@ -59,8 +59,8 @@ public class Order {
     @Column(name = "postage_vat")
     private BigDecimal postageVat;
 
-    @Column(name = "promotion_vat")
-    private BigDecimal promotionVat;
+    @Column(name = "discount_vat")
+    private BigDecimal discountVat;
 
     @Column(name = "total_vat")
     private BigDecimal totalVat;

@@ -41,11 +41,11 @@ public class OrderControllerTest extends AbstractControllerTest {
                 "  \"email\": \"abc@db.com\",\n" +
                 "  \"items\": 20.2,\n" +
                 "  \"postage\": 3,\n" +
-                "  \"promotion\": -2,\n" +
+                "  \"discount\": -2,\n" +
                 "  \"totalBeforeVat\": 21.2,\n" +
                 "  \"itemsVat\": 0.3,\n" +
                 "  \"postageVat\": 0.2,\n" +
-                "  \"promotionVat\": -0.1,\n" +
+                "  \"discountVat\": -0.1,\n" +
                 "  \"totalVat\": 0.4,\n" +
                 "  \"orderTotal\": 21.6,\n" +
                 "  \"deliveryMethod\": \"Standard Delivery\",\n" +
@@ -135,11 +135,11 @@ public class OrderControllerTest extends AbstractControllerTest {
                 "   \"email\":\"abc@gmail.com\",\n" +
                 "   \"items\":3.33,\n" +
                 "   \"postage\":2.5,\n" +
-                "   \"promotion\":0,\n" +
+                "   \"discount\":0,\n" +
                 "   \"totalBeforeVat\":5.83,\n" +
                 "   \"itemsVat\":0.67,\n" +
                 "   \"postageVat\":0.5,\n" +
-                "   \"promotionVat\":0,\n" +
+                "   \"discountVat\":0,\n" +
                 "   \"totalVat\":1.17,\n" +
                 "   \"orderTotal\":7,\n" +
                 "   \"deliveryMethod\":\"Standard Delivery\",\n" +
@@ -212,8 +212,8 @@ public class OrderControllerTest extends AbstractControllerTest {
     public void shouldAddOrderStatus() {
         // Given
         Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
@@ -257,8 +257,8 @@ public class OrderControllerTest extends AbstractControllerTest {
     public void shouldReturnOrderByOrderNumber() {
         // Given
         Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(BigDecimal.valueOf(0.2)).sale(BigDecimal.valueOf(0.8)).vatRate(20).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
@@ -290,8 +290,8 @@ public class OrderControllerTest extends AbstractControllerTest {
     public void shouldReturnOrdersByCustomerId() {
         // Given
         Order orderOne = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         orderOne.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(ONE).sale(ONE).vatRate(20).build());
         orderOne.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
@@ -299,16 +299,16 @@ public class OrderControllerTest extends AbstractControllerTest {
         orderService.addOrderStatus(orderNumberOne, OrderStatus.builder().status("Delivered").build());
 
         Order orderTwo = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         orderTwo.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(ONE).sale(ONE).vatRate(20).build());
         orderTwo.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumberTwo = orderService.createOrder(orderTwo);
 
         Order orderThree = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")).minDaysRequired(1).maxDaysRequired(3)
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         orderThree.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vat(ONE).sale(ONE).vatRate(20).build());
         orderThree.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
@@ -352,8 +352,8 @@ public class OrderControllerTest extends AbstractControllerTest {
     public void shouldAddCustomerInfo(){
         // Given
         Order order = Order.builder().customerUid(null)
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
@@ -374,8 +374,8 @@ public class OrderControllerTest extends AbstractControllerTest {
         // Given - guest token
         headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndWVzdCIsInJvbGVzIjpbImd1ZXN0Il0sImV4cCI6NDY2ODM4MzY2Nn0.LB82m9mCmxIipOAR7mx58MUoeBBDBeIF4mP4kcOpHZvy5RyYhBiL5C5AJP3j8YNCMWaMAVANP6zrlU8031oBMA");
         Order order = Order.builder().customerUid(null)
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
@@ -393,8 +393,8 @@ public class OrderControllerTest extends AbstractControllerTest {
     public void shouldNotUpdateCustomerInfoIfAlreadySet(){
         // Given
         Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
-                .items(ONE).postage(ONE).promotion(ONE).totalBeforeVat(ONE)
-                .itemsVat(ONE).postageVat(ONE).promotionVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
