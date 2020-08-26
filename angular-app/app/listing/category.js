@@ -1,6 +1,6 @@
 var category = angular.module('category', ['ngRoute', 'checklist-model']);
 
-category.controller('categoryCtrl', function($scope, $routeParams, categoryService) {
+category.controller('categoryCtrl', function($scope, $window, $routeParams, categoryService) {
   $scope.loading = true;
   $scope.processing = {};
   $scope.selectedBrands = {};
@@ -16,6 +16,9 @@ category.controller('categoryCtrl', function($scope, $routeParams, categoryServi
     $scope.productTotal = category.productTotal;
     $scope.parentcategories = category.parents;
     $scope.subcategories = category.children;
+
+    var title = $scope.parentcategories.map(function(c){return c.name;}).join(", ");
+    $window.document.title = title + ' | Noodle Monster (英国)';
     $scope.loading = false;
   });
 

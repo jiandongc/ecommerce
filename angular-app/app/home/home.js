@@ -1,6 +1,7 @@
 var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-home.controller('homeCtrl', function($scope, tagFactory, brandFactory) {
+home.controller('homeCtrl', function($scope, $window, tagFactory, brandFactory) {
+  $window.document.title = '煮食面, 即食面, 面條伴侶  | Noodle Monster (英国)';
   $scope.loadingTags = true;
   tagFactory.getAllTags().then(function(response){
   	$scope.tags = response;

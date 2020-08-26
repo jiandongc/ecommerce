@@ -1,8 +1,9 @@
 var brand = angular.module('brand', ['ngRoute']);
 
-brand.controller('brandCtl', function($scope, $routeParams, brandFactory, productFactory) {
+brand.controller('brandCtl', function($scope, $routeParams, $window, brandFactory, productFactory) {
 	brandFactory.getBrandWithCode($routeParams.code).then(function(response){
 		$scope.brand = response;
+		$window.document.title = $scope.brand.name + ' | Noodle Monster (英国)';
 		$scope.brand.imageUrl = $scope.brand.imageUrl ? $scope.brand.imageUrl : '/images/brand/notfound.png';
 	});
 
@@ -27,7 +28,8 @@ brand.controller('brandCtl', function($scope, $routeParams, brandFactory, produc
   	}
 });
 
-brand.controller('brandListCtl', function($scope, brandFactory) {
+brand.controller('brandListCtl', function($scope, $window, brandFactory) {
+    $window.document.title = 'Brands | Noodle Monster (英国)';
 	$scope.loading = true;
 	brandFactory.getAllBrands().then(function(response){
 		$scope.brands = response;

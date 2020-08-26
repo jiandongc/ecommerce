@@ -1,6 +1,6 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
-productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, productFactory, shoppingCartFactory, customerFactory, categoryFactory, reviewFactory) {
+productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, $window, productFactory, shoppingCartFactory, customerFactory, categoryFactory, reviewFactory) {
     $scope.addingItem = false;
     $scope.selectOptionAlert = false;
     $scope.addingItemToFavourites = false;
@@ -10,6 +10,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
     $scope.display = 'itemInfo';
 
     productFactory.getProductWithCode($routeParams.code).then(function(response) {
+        $window.document.title = response.name + ' | Noodle Monster (英国)';
         $scope.product = response;
         $scope.loading = false;
 

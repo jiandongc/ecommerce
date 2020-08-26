@@ -1,8 +1,9 @@
 var productTag = angular.module('productTag', ['ngRoute']);
 
-productTag.controller('tagCtrl', function($scope, $routeParams, productFactory) {
+productTag.controller('tagCtrl', function($scope, $routeParams, $window, productFactory) {
 	$scope.loading = true;
 	$scope.tag = $routeParams.tag;
+	$window.document.title = $scope.tag + ' | Noodle Monster (英国)';
 	$scope.sort = {display: "Our favourites", code: undefined};
 	$scope.category = {display: 'All', code: undefined};
 
@@ -68,7 +69,8 @@ productTag.controller('tagCtrl', function($scope, $routeParams, productFactory) 
     }
 });
 
-productTag.controller('tagListCtrl', function($scope, tagFactory) {
+productTag.controller('tagListCtrl', function($scope, $window, tagFactory) {
+    $window.document.title = 'Tags | Noodle Monster (英国)';
 	$scope.loading = true;
 	tagFactory.getAllTags().then(function(response){
 		$scope.tags = response;
