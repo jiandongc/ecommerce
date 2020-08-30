@@ -165,7 +165,7 @@ customer.controller('registerCtrl', function($scope, $routeParams, $localstorage
             if (error.status === 409) {
                 $scope.errorMsg = "This email address is already used.";
             } else {
-                $scope.errorMsg = "Technical error, please contact site admin: jiandong.c@gmail.com";
+                $scope.errorMsg = "Technical error, please contact site admin: info@noodle-monster.co.uk";
             }
         });
     };
@@ -228,7 +228,7 @@ customer.controller('profileEditCtrl', function($scope, $routeParams, $location,
             if (error.status === 409) {
                 $scope.errorMsg = "This the email address is already used.";
             } else {
-                $scope.errorMsg = "Technical error, please contact site admin: jiandong.c@gmail.com";
+                $scope.errorMsg = "Technical error, please contact site admin: info@noodle-monster.co.uk";
             }
         });
     };
@@ -257,7 +257,7 @@ customer.controller('passwordUpdateCtrl', function($scope, $routeParams, $locati
             if (error.status === 409) {
                 $scope.errorMsg = "This the email address is already used.";
             } else {
-                $scope.errorMsg = "Technical error, please contact site admin: jiandong.c@gmail.com";
+                $scope.errorMsg = "Technical error, please contact site admin: info@noodle-monster.co.uk";
             }
         });
     };

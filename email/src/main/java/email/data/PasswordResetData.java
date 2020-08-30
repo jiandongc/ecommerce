@@ -17,7 +17,7 @@ public class PasswordResetData extends MailData {
 
     @Builder
     public PasswordResetData(List<String> sendTo, String link, String name) {
-        super("jiandong.c@gmail.com", "Noodle Monster Account", sendTo, "Reset your password");
+        super("info@noodle-monster.co.uk", "Noodle Monster Account", sendTo, "Reset your password");
         this.link = link;
         this.name = name;
     }
