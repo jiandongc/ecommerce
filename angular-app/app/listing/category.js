@@ -18,7 +18,7 @@ category.controller('categoryCtrl', function($scope, $window, $routeParams, cate
     $scope.subcategories = category.children;
 
     var title = $scope.parentcategories.map(function(c){return c.name;}).join(", ");
-    $window.document.title = title + ' | Noodle Monster (英国)';
+    $window.document.title = title + ' | Noodle Monster';
     $scope.loading = false;
   });
 
