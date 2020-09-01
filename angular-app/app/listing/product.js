@@ -10,7 +10,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
     $scope.display = 'itemInfo';
 
     productFactory.getProductWithCode($routeParams.code).then(function(response) {
-        $window.document.title = response.name + ' | Noodle Monster';
+        $window.document.title = response.name + ', 英国 | Noodle Monster';
         $scope.product = response;
         $scope.loading = false;
 

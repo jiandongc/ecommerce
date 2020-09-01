@@ -3,7 +3,7 @@ var brand = angular.module('brand', ['ngRoute']);
 brand.controller('brandCtl', function($scope, $routeParams, $window, brandFactory, productFactory) {
 	brandFactory.getBrandWithCode($routeParams.code).then(function(response){
 		$scope.brand = response;
-		$window.document.title = $scope.brand.name + ' | Noodle Monster';
+		$window.document.title = $scope.brand.name + ', 英国 | Noodle Monster';
 		$scope.brand.imageUrl = $scope.brand.imageUrl ? $scope.brand.imageUrl : '/images/brand/notfound.png';
 	});
 
