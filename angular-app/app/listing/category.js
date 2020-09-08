@@ -1,6 +1,6 @@
 var category = angular.module('category', ['ngRoute', 'checklist-model']);
 
-category.controller('categoryCtrl', function($scope, $window, $routeParams, categoryService) {
+category.controller('categoryCtrl', function($scope, $window, $routeParams, categoryService, environment) {
   $scope.loading = true;
   $scope.processing = {};
   $scope.selectedBrands = {};
@@ -19,6 +19,17 @@ category.controller('categoryCtrl', function($scope, $window, $routeParams, cate
 
     var title = $scope.parentcategories.map(function(c){return c.name;}).join(", ");
     $window.document.title = title + ', 英国 | Noodle Monster';
+    $scope.breadcrumbJsonLd = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": 'Home', "item": environment.homePage}]};
+    $scope.parentcategories.forEach(function (category, i) {
+        $scope.breadcrumbJsonLd.itemListElement.push({
+            "@type": "ListItem",
+            "position": i+2,
+            "name": category.name,
+            "item": environment.categoryPage + '/' + category.code
+        });
+    });
+    $('#breadcrumb-json-ld').html(JSON.stringify($scope.breadcrumbJsonLd));
+
     $scope.loading = false;
   });
 
@@ -41,6 +52,17 @@ category.controller('categoryCtrl', function($scope, $window, $routeParams, cate
           $scope.filters[facet.name] = selected;
         }
       }
+
+      $scope.listJsonLd = {"@context": "https://schema.org",  "@type":"ItemList", "numberOfItems": $scope.products.size, "itemListElement": []};
+      $scope.products.forEach(function (product, i) {
+        $scope.listJsonLd.itemListElement.push({
+            "@type": "ListItem",
+            "position": i+1,
+            "url": environment.productPage + '/' + product.code
+        });
+      });
+      $('#list-json-ld').html(JSON.stringify($scope.listJsonLd));
+
     });
   }
 

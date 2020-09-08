@@ -1,6 +1,6 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
-productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, $window, productFactory, shoppingCartFactory, customerFactory, categoryFactory, reviewFactory) {
+productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, $window, productFactory, shoppingCartFactory, customerFactory, categoryFactory, reviewFactory, environment) {
     $scope.addingItem = false;
     $scope.selectOptionAlert = false;
     $scope.addingItemToFavourites = false;
@@ -16,6 +16,16 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
 
         categoryFactory.getCategoryData(response.categoryCode).then(function(response) {
             $scope.parentcategories = response.parents;
+            $scope.breadcrumbJsonLd = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": 'Home', "item": environment.homePage}]};
+            $scope.parentcategories.forEach(function (category, i) {
+                $scope.breadcrumbJsonLd.itemListElement.push({
+                    "@type": "ListItem",
+                    "position": i+2,
+                    "name": category.name,
+                    "item": environment.categoryPage + '/' + category.code
+                });
+            });
+            $('#breadcrumb-json-ld').html(JSON.stringify($scope.breadcrumbJsonLd));
         });
 
         $scope.price = response.price;
@@ -38,6 +48,22 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
         for (var attribute in $scope.product.attributes) {
             $scope.selected[attribute] = '';
         }
+
+        $scope.productJsonLd = {
+            "@context":"http://schema.org",
+            "@type":"Product",
+            "name": $scope.product.name,
+            "image": $scope.product.images[0],
+            "sku": $scope.sku,
+            "offers": {
+                "@type": "Offer",
+                "availability": "http://schema.org/InStock",
+                "price": $scope.price,
+                "priceCurrency": "GBP"
+            }
+        }
+        $('#product-json-ld').html(JSON.stringify($scope.productJsonLd));
+
     });
 
     productFactory.getRelatedProducts('tier', $routeParams.code).then(function(response) {
