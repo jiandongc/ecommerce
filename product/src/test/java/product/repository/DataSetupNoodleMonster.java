@@ -31,25 +31,25 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     @Test
     @Rollback(false)
     public void initialise() {
-        vat();
-
-        cookingNoodlesCategory();
-        instanceNoodlesCategory();
-        mateCategory();
+//        vat();
+//
+//        cookingNoodlesCategory();
+//        instanceNoodlesCategory();
+//        mateCategory();
         brands();
 
-        instanceNoodlesSamyang();
-        instanceNoodlesNongshim();
-        instanceNoodlesNissin();
-        instanceNoodlesMasterkong();
-        instanceNoodlesTongyi();
-
-        noodlesZeng();
-        noodlesGuangyou();
-        noodlesJinpaiganliu();
-        noodlesOttogi();
-
-        mateBeverage();
+//        instanceNoodlesSamyang();
+//        instanceNoodlesNongshim();
+//        instanceNoodlesNissin();
+//        instanceNoodlesMasterkong();
+//        instanceNoodlesTongyi();
+//
+//        noodlesZeng();
+//        noodlesGuangyou();
+//        noodlesJinpaiganliu();
+//        noodlesOttogi();
+//
+//        mateBeverage();
 
     }
 
@@ -111,36 +111,38 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
     }
 
     private void brands(){
-        Brand samyang = Brand.builder().name("三養食品").code("samyang").startDate(LocalDate.now()).imageUrl("/images/brand/samyang.png").description("三养食品是一个韩国食品品牌，创立于1961年，所属公司韩国三养集团。2014年，因火鸡面超辣口感，在中国成为网红泡面之一。2017年，从韩国政府获得“1亿美元出口之塔”奖。2018年4月15日，三养食品成3X3黄金联赛伙伴").build();
-        brandRepository.save(samyang);
+//        Brand samyang = Brand.builder().name("三養食品").code("samyang").startDate(LocalDate.now()).imageUrl("/images/brand/samyang.png").description("三养食品是一个韩国食品品牌，创立于1961年，所属公司韩国三养集团。2014年，因火鸡面超辣口感，在中国成为网红泡面之一。2017年，从韩国政府获得“1亿美元出口之塔”奖。2018年4月15日，三养食品成3X3黄金联赛伙伴").build();
+//        brandRepository.save(samyang);
+//
+//        Brand nongshim = Brand.builder().name("農心").code("nongshim").startDate(LocalDate.now()).imageUrl("/images/brand/nongshim.jpg").description("株式会社农心成立于1965年，是以制造方便面、膨化食品（饼干）及其它食品加工为主导产业的韩国大型食品生产集团。").build();
+//        brandRepository.save(nongshim);
+//
+//        Brand nissin = Brand.builder().name("日清食品").code("nissin").startDate(LocalDate.now()).imageUrl("/images/brand/nissin.png").description("日清食品是一间日本食品公司，以推出各种即食食品著名，是总部位于大阪府大阪市淀川区的日本食品加工公司。由开发了世界最早的方便面Chicken Ramen的安藤百福创办。").build();
+//        brandRepository.save(nissin);
+//
+//        Brand tongyi = Brand.builder().name("統一").code("tongyi").startDate(LocalDate.now()).imageUrl("/images/brand/tongyi.jpg").description("统一企业正式成立于中国台湾地区台南市永康区,其总部位于台南市永康区。公司产品主要有饮料和方便面。").build();
+//        brandRepository.save(tongyi);
+//
+//        Brand masterKong = Brand.builder().name("康师傅").code("masterkong").startDate(LocalDate.now()).imageUrl("/images/brand/masterkong.jpg").description("康师傅自1992年研发生产出第一包方便面后，迅速成长为国内乃至全球最大的方便面生产销售企业。").build();
+//        brandRepository.save(masterKong);
+//
+//        Brand xiangpiaopiao = Brand.builder().name("香飘飘").code("xiangpiaopiao").startDate(LocalDate.now()).imageUrl("/images/brand/xiangpiaopiao.jpg").description("香飘飘是香飘飘食品股份有限公司旗下杯装奶茶品牌，成立于2005年，专业从事奶茶产品的研发、生产和销售。").build();
+//        brandRepository.save(xiangpiaopiao);
+//
+//        Brand zeng = Brand.builder().name("曾拌面").code("zeng").startDate(LocalDate.now()).imageUrl("/images/brand/zeng.jpg").description("主持过大小美食节目的曾国城，嚐遍各国美食，独独衷爱「面」，累积了30年闻面香、观面相、品面嚐的心得，更心心念念的是如何让大家吃到值得期待的面。于是，「曾拌面」在他的坚持之下诞生了。曾拌面改良关庙面的波浪面体，手工日晒、自然风乾，让它更弹牙的同时，充分吸附酱汁。「一个人可以吃得很简单，但绝对不随便」是曾拌面的初衷，也是希望传达的心意。").build();
+//        brandRepository.save(zeng);
+//
+//        Brand jinpaiganliu = Brand.builder().name("金牌干溜").code("jinpaiganliu").startDate(LocalDate.now()).imageUrl("/images/brand/jinpaiganliu.jpg").description(" 麦香四溢、韧性劲道. 重庆特色、味道醇正. 细腻口感、饱含嚼劲. 选材挑剔、舌尖美味.").build();
+//        brandRepository.save(jinpaiganliu);
+//
+//        Brand guangyou = Brand.builder().name("光友薯业").code("guangyou").startDate(LocalDate.now()).imageUrl("/images/brand/guangyou.png").description("1960年12月，四川省三台县邹家大院诞生了一个小男孩，从小吃红薯长大，与红薯结下了不解之缘。这个“小男孩”就是“方便粉丝发明人”、“方便粉丝专家”邹光友。").build();
+//        brandRepository.save(guangyou);
+//
+//        Brand ottogi = Brand.builder().name("OTTOGI").code("ottogi").startDate(LocalDate.now()).imageUrl("/images/brand/ottogi.jpeg").description("OTTOGI韓國不倒翁成立於1969年,從那時起不倒翁公司就已經著眼於改善韓國大眾的飲食習慣成長為追求食品的更高品質、更富營養、更加高級的專業化食品公司。").build();
+//        brandRepository.save(ottogi);
 
-        Brand nongshim = Brand.builder().name("農心").code("nongshim").startDate(LocalDate.now()).imageUrl("/images/brand/nongshim.jpg").description("株式会社农心成立于1965年，是以制造方便面、膨化食品（饼干）及其它食品加工为主导产业的韩国大型食品生产集团。").build();
-        brandRepository.save(nongshim);
-
-        Brand nissin = Brand.builder().name("日清食品").code("nissin").startDate(LocalDate.now()).imageUrl("/images/brand/nissin.png").description("日清食品是一间日本食品公司，以推出各种即食食品著名，是总部位于大阪府大阪市淀川区的日本食品加工公司。由开发了世界最早的方便面Chicken Ramen的安藤百福创办。").build();
-        brandRepository.save(nissin);
-
-        Brand tongyi = Brand.builder().name("統一").code("tongyi").startDate(LocalDate.now()).imageUrl("/images/brand/tongyi.jpg").description("统一企业正式成立于中国台湾地区台南市永康区,其总部位于台南市永康区。公司产品主要有饮料和方便面。").build();
-        brandRepository.save(tongyi);
-
-        Brand masterKong = Brand.builder().name("康师傅").code("masterkong").startDate(LocalDate.now()).imageUrl("/images/brand/masterkong.jpg").description("康师傅自1992年研发生产出第一包方便面后，迅速成长为国内乃至全球最大的方便面生产销售企业。").build();
-        brandRepository.save(masterKong);
-
-        Brand xiangpiaopiao = Brand.builder().name("香飘飘").code("xiangpiaopiao").startDate(LocalDate.now()).imageUrl("/images/brand/xiangpiaopiao.jpg").description("香飘飘是香飘飘食品股份有限公司旗下杯装奶茶品牌，成立于2005年，专业从事奶茶产品的研发、生产和销售。").build();
-        brandRepository.save(xiangpiaopiao);
-
-        Brand zeng = Brand.builder().name("曾拌面").code("zeng").startDate(LocalDate.now()).imageUrl("/images/brand/zeng.jpg").description("主持过大小美食节目的曾国城，嚐遍各国美食，独独衷爱「面」，累积了30年闻面香、观面相、品面嚐的心得，更心心念念的是如何让大家吃到值得期待的面。于是，「曾拌面」在他的坚持之下诞生了。曾拌面改良关庙面的波浪面体，手工日晒、自然风乾，让它更弹牙的同时，充分吸附酱汁。「一个人可以吃得很简单，但绝对不随便」是曾拌面的初衷，也是希望传达的心意。").build();
-        brandRepository.save(zeng);
-
-        Brand jinpaiganliu = Brand.builder().name("金牌干溜").code("jinpaiganliu").startDate(LocalDate.now()).imageUrl("/images/brand/jinpaiganliu.jpg").description(" 麦香四溢、韧性劲道. 重庆特色、味道醇正. 细腻口感、饱含嚼劲. 选材挑剔、舌尖美味.").build();
-        brandRepository.save(jinpaiganliu);
-
-        Brand guangyou = Brand.builder().name("光友薯业").code("guangyou").startDate(LocalDate.now()).imageUrl("/images/brand/guangyou.png").description("1960年12月，四川省三台县邹家大院诞生了一个小男孩，从小吃红薯长大，与红薯结下了不解之缘。这个“小男孩”就是“方便粉丝发明人”、“方便粉丝专家”邹光友。").build();
-        brandRepository.save(guangyou);
-
-        Brand ottogi = Brand.builder().name("OTTOGI").code("ottogi").startDate(LocalDate.now()).imageUrl("/images/brand/ottogi.jpeg").description("OTTOGI韓國不倒翁成立於1969年,從那時起不倒翁公司就已經著眼於改善韓國大眾的飲食習慣成長為追求食品的更高品質、更富營養、更加高級的專業化食品公司。").build();
-        brandRepository.save(ottogi);
-
+        Brand laomanoodle = Brand.builder().name("老媽拌麵").code("laomanoodle").startDate(LocalDate.now()).imageUrl("/images/brand/laomanoodle.png").description("老媽拌麵，運用好食材與對料理的熱愛，嚴選台南日曬關廟麵與其Q彈不軟爛的特性，搭配自家熬製醬包，僅要六分鐘就能享受到快速、隨興、能帶給家人美味的食物。因此廣受消費者喜愛，短五年內全球便銷售了一億包。海外銷售更是遍布美國、加拿大、英國、中國、香港、澳洲、新加坡等地。<br/><br/>有華人的地方就有老媽拌麵。").build();
+        brandRepository.save(laomanoodle);
 
     }
 
