@@ -6,13 +6,15 @@
 	<link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
 	<link href="dist/cawaii.css" rel="stylesheet" type="text/css"/>
 	<!--<link href="app.css" rel="stylesheet" type="text/css"/>-->
-	<link href="bower_components/animate.css/animate.css" rel="stylesheet" type="text/css"/>
-	<link href="bower_components/flexslider/flexslider.css" rel="stylesheet" type="text/css"/>
-	<link href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+	<link rel="preload" href="bower_components/animate.css/animate.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="bower_components/animate.css/animate.css"></noscript>
+	<link rel="preload" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" as="style" onload="this.onload=null;this.rel='stylesheet'">
+	<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i"></noscript>
+	<link rel="stylesheet" href="bower_components/flexslider/flexslider.css" type="text/css">
 	<title>煮食面, 即食面, 面條伴侶, 英国 | Noodle Monster</title>
 	<link href="/images/the-munchies.png" rel="icon" type="image/x-icon" >
 	<script src="bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="bower_components/flexslider/jquery.flexslider-min.js"></script>
+	<script src="bower_components/flexslider/jquery.flexslider-min.js" async></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="bower_components/angular/angular.min.js"></script>
 	<script src="bower_components/angular-route/angular-route.min.js"></script>
@@ -20,8 +22,8 @@
 	<script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
 	<script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
 	<script src='bower_components/checklist-model/checklist-model.js'></script>
-	<script src="https://kit.fontawesome.com/9ec2626c03.js" crossorigin="anonymous"></script>
-	<script src="https://js.stripe.com/v3/"></script>
+	<script src="https://kit.fontawesome.com/9ec2626c03.js" crossorigin="anonymous" async></script>
+	<script src="https://js.stripe.com/v3/" async></script>
 	<script src="dist/cawaii.js"></script>
 </head>
 
