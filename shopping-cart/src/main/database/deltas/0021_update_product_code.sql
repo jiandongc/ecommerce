@@ -1,0 +1,1 @@
+ALTER TABLE shopping_cart_item ALTER COLUMN product_code TYPE varchar(255);
