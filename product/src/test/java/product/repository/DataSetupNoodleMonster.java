@@ -147,8 +147,14 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
 //        Brand kiki = Brand.builder().name("KiKi拌麵").code("kiki").startDate(LocalDate.now()).imageUrl("/images/brand/kiki.png").description("KiKi拌麵由由台灣知名品牌「KiKi食品雜貨」研發及創立，舒淇代言。為了做出最好吃的乾拌麵，研發者們反覆試吃過的麵條應該超過100種，最後「台南手工日曬麵」在各個評分項目中勝出。<br/><br/>台南是個日曬充足的美食寶庫，自早年就是古法製麵曬麵的產地，透過天然陽光日曬風乾，即能達到天然防腐功能，不同於一般麵線需要加入大量鹽巴防腐，因此，做過日光浴的手工麵沒有你看不懂名字的添加物，僅以麵粉和水手工製作，絕對安全健康。<br/><br/>製麵過程中，最重要的就是日曬。先將手工折成扇形的麵體一一擺放在鏤空的竹篩上，經過兩天充滿正能量的強烈日照，每兩小時要翻面一次，讓麵線都能均勻受熱，吃得苦中苦，才能蛻變成為麵上麵-口感Q彈、久煮不爛、絕對天然又好吃。").build();
 //        brandRepository.save(kiki);
 
-        Brand weilih = Brand.builder().name("維力食品").code("weilih").startDate(LocalDate.now()).imageUrl("/images/brand/weilih.png").description("").build();
-        brandRepository.save(weilih);
+//        Brand weilih = Brand.builder().name("維力食品").code("weilih").startDate(LocalDate.now()).imageUrl("/images/brand/weilih.png").description("").build();
+//        brandRepository.save(weilih);
+
+//        Brand itsuki = Brand.builder().name("五木食品").code("itsuki").startDate(LocalDate.now()).imageUrl("/images/brand/itsuki.jpg").description("").build();
+//        brandRepository.save(itsuki);
+
+        Brand haohuanluo = Brand.builder().name("好欢螺").code("haohuanluo").startDate(LocalDate.now()).imageUrl("/images/brand/haohuanluo.png").description("").build();
+        brandRepository.save(haohuanluo);
 
 
     }
