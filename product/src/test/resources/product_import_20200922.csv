@@ -1,0 +1,5 @@
+category_code,brand_code,product_code,name,vat_rate,image,sku,quantity,price
+noodles-korea,wang,noodles-korea-wang-buckwheat-noodle-memil-kuksoo,韓國Wang 蕎麥麵 300g ,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-korea-wang-buckwheat-noodle-memil-kuksoo-1.jpeg,2020092201,48,1.59
+noodles-korea,wang,noodles-korea-wang-seafood-flavor-udong,韓國Wang 海鮮味 手打烏冬麵 420g 2人份,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-korea-wang-seafood-flavor-udong-1.jpeg,2020092202,12,3.99
+noodles-korea,wang,noodles-korea-wang-hot-flavor-udong,韓國Wang 香辣牛肉味 手打烏冬麵 430g 2人份,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-korea-wang-hot-flavor-udong-1.jpeg,2020092203,12,3.99
+noodles-korea,wang,noodles-korea-wang-katsuo-flavor-udong,韓國Wang 鰹魚味Katsuo 手打烏冬麵 420g 2人份,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-korea-wang-katsuo-flavor-udong-1.jpeg,2020092204,12,3.99

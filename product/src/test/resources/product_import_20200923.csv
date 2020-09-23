@@ -1,0 +1,4 @@
+category_code,brand_code,product_code,name,vat_rate,image,sku,quantity,price
+noodles-korea,ottogi,noodles-korea-ottogi-thin-round-wheat-noodle-somyun,韩国OTTOGI 不倒翁細掛麵 900g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-korea-ottogi-thin-round-wheat-noodle-somyun-1.jpeg,2020092301,15,3.49
+noodles-korea,ottogi,noodles-korea-ottogi-wild-round-wheat-noodle-kalkooksoo,韩国OTTOGI 不倒翁刀削麵 900g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-korea-ottogi-wild-round-wheat-noodle-kalkooksoo-1.jpeg,2020092302,15,3.49
+noodles-japan,itsuki,noodles-japan-itsuki-yakisoba-stir-fried-noodle,日本ITSUKI五木 三食焼 炒麵 510g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-japan-itsuki-yakisoba-stir-fried-noodle-1.jpeg,2020092303,12,3.99
