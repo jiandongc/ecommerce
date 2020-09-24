@@ -156,8 +156,12 @@ public class DataSetupNoodleMonster extends AbstractRepositoryTest {
 //        Brand haohuanluo = Brand.builder().name("好欢螺").code("haohuanluo").startDate(LocalDate.now()).imageUrl("/images/brand/haohuanluo.png").description("").build();
 //        brandRepository.save(haohuanluo);
 
-        Brand wang = Brand.builder().name("Wang Korea").code("wang").startDate(LocalDate.now()).imageUrl("/images/brand/wang.png").description("").build();
-        brandRepository.save(wang);
+//        Brand wang = Brand.builder().name("Wang Korea").code("wang").startDate(LocalDate.now()).imageUrl("/images/brand/wang.png").description("").build();
+//        brandRepository.save(wang);
+
+        Brand pm0315 = Brand.builder().name("三點一刻").code("pm0315").startDate(LocalDate.now()).imageUrl("/images/brand/pm0315.png").description("").build();
+        brandRepository.save(pm0315);
+
 
 
     }

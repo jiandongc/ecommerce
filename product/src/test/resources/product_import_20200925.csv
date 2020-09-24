@@ -1,0 +1,8 @@
+category_code,brand_code,product_code,name,vat_rate,image,sku,quantity,price
+milktea,pm0315,milktea-pm0315-brown-sugar-ginger-tea,三點一刻 黑糖薑母茶 15g x 5包,uk-standard,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/milktea-pm0315-brown-sugar-ginger-tea-1.jpeg,2020092501,24,2.69
+milktea,pm0315,milktea-pm0315-original-milk-tea,三點一刻 經典原味奶茶 20g x 5包,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/milktea-pm0315-original-milk-tea-1.jpeg,2020092502,24,2.69
+milktea,pm0315,milktea-pm0315-coffee-milk-tea,三點一刻 經典港式奶茶 20g x 5包,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/milktea-pm0315-coffee-milk-tea-1.jpeg,2020092503,24,2.69
+milktea,pm0315,milktea-pm0315-okinawa-brown-sugar-milk-tea,三點一刻 沖繩黑糖奶茶 20g x 5包,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/milktea-pm0315-okinawa-brown-sugar-milk-tea-1.jpeg,2020092504,24,2.79
+milktea,pm0315,milktea-pm0315-roasted-milk-tea,三點一刻 經典炭燒奶茶 20g x 5包,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/milktea-pm0315-roasted-milk-tea-1.jpeg,2020092505,24,2.79
+milktea,xiangpiaopiao,milktea-xiangpiaopiao-lan-fong-yuen-milk-tea,香港兰芳园 正宗港式丝袜奶茶 280ml,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/milktea-xiangpiaopiao-lan-fong-yuen-milk-tea-1.jpeg,2020092506,15,2.75
+milktea,xiangpiaopiao,milktea-xiangpiaopiao-lan-fong-yuen-coffee-milk-tea,香港兰芳园 正宗港式鸳鸯咖啡奶茶 280ml,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/milktea-xiangpiaopiao-lan-fong-yuen-coffee-milk-tea-1.jpeg,2020092507,15,2.75
