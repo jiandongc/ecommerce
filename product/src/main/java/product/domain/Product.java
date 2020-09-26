@@ -79,6 +79,9 @@ public class Product {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(name = "ordering")
+    private Integer ordering;
+
     public void addImage(Image image) {
         if (images == null) {
             images = new ArrayList<>();

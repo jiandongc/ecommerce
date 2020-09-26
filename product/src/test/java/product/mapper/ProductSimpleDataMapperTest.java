@@ -30,6 +30,7 @@ public class ProductSimpleDataMapperTest {
         product.setName("Chester");
         product.setDescription("delicious");
         product.setCode("CH");
+        product.setOrdering(1);
 
         final Image imageOne = new Image();
         imageOne.setOrdering(1);
@@ -75,6 +76,7 @@ public class ProductSimpleDataMapperTest {
                 .discountRate(null)
                 .isOnSale(false)
                 .tags(tags)
+                .ordering(1)
                 .build();
         assertThat(actual, is(expected));
     }

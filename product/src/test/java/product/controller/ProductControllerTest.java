@@ -396,6 +396,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.addImage(image);
 		productOne.addSku(sku);
 		productOne.setStartDate(LocalDate.now());
+		productOne.setOrdering(1);
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
@@ -404,6 +405,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setCategory(category);
 		productTwo.addSku(sku2);
 		productTwo.setStartDate(LocalDate.now());
+		productTwo.setOrdering(2);
 		productRepository.save(productTwo);
 
 		// When & Then
@@ -413,13 +415,17 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
 		assertThat(response.getBody()[0].getPrice().toPlainString(), is("1.00"));
+        assertThat(response.getBody()[0].getOrdering(), is(2));
 		assertThat(response.getBody()[1].getPrice().toPlainString(), is("10.00"));
+        assertThat(response.getBody()[1].getOrdering(), is(1));
 
 		response = rest.exchange(BASE_URL + "?sort=price.desc", GET, httpEntity, ProductSimpleData[].class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().length, is(2));
 		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10.00"));
+        assertThat(response.getBody()[0].getOrdering(), is(1));
 		assertThat(response.getBody()[1].getPrice().toPlainString(), is("1.00"));
+        assertThat(response.getBody()[1].getOrdering(), is(2));
 	}
 	
 	@Test
@@ -562,6 +568,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.setCategory(category);
 		productOne.addSku(sku); // 10.0
 		productOne.setStartDate(LocalDate.now());
+		productOne.setOrdering(1);
 		productRepository.save(productOne);
 
 		final Product productTwo = new Product();
@@ -570,12 +577,14 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productTwo.setCategory(category);
 		productTwo.addSku(sku2); // 1.0
 		productTwo.setStartDate(LocalDate.now());
+		productTwo.setOrdering(2);
 		productRepository.save(productTwo);
 
 		final Product productThree = new Product();
 		productThree.setName("Inactive");
 		productThree.setCategory(category);
 		productThree.setStartDate(LocalDate.now().plusDays(10));
+		productThree.setOrdering(3);
 		productRepository.save(productThree);
 
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
@@ -585,14 +594,18 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getProducts().size(), is(2));
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Chester"));
+        assertThat(response.getBody().getProducts().get(0).getOrdering(), is(1));
 		assertThat(response.getBody().getProducts().get(1).getName(), is("Book"));
+        assertThat(response.getBody().getProducts().get(1).getOrdering(), is(2));
 
 		// When & Then
 		response = rest.exchange(BASE_URL + "search/categories/FD?sort=priceasc", GET, httpEntity, ProductSearchData.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getProducts().size(), is(2));
 		assertThat(response.getBody().getProducts().get(0).getName(), is("Book"));
+        assertThat(response.getBody().getProducts().get(0).getOrdering(), is(2));
 		assertThat(response.getBody().getProducts().get(1).getName(), is("Chester"));
+        assertThat(response.getBody().getProducts().get(1).getOrdering(), is(1));
 	}
 
 }

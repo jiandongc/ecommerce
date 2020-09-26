@@ -28,6 +28,7 @@ public class ProductSimpleDataMapper {
                 .originalPrice(product.getOriginalPrice())
                 .discountRate(product.getDiscountRate())
                 .isOnSale(product.isOnSale())
+                .ordering(product.getOrdering())
                 .tags(tags.isEmpty() ? null: tags)
                 .build();
     }
