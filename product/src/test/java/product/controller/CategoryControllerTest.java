@@ -37,29 +37,34 @@ public class CategoryControllerTest extends AbstractControllerTest {
         final Category c1 = new Category();
         c1.setCode("c1");
         c1.setName("c1");
+        c1.setStartDate(LocalDate.now());
         categoryRepository.save(c1);
 
         final Category c2 = new Category();
         c2.setCode("c2");
         c2.setName("c2");
+        c2.setStartDate(LocalDate.now());
         c2.setParent(c1);
         categoryRepository.save(c2);
 
         final Category c3 = new Category();
         c3.setCode("c3");
         c3.setName("c3");
+        c3.setStartDate(LocalDate.now());
         c3.setParent(c2);
         categoryRepository.save(c3);
 
         final Category c4 = new Category();
         c4.setCode("c4");
         c4.setName("c4");
+        c4.setStartDate(LocalDate.now());
         c4.setParent(c3);
         categoryRepository.save(c4);
 
         final Category c5 = new Category();
         c5.setCode("c5");
         c5.setName("c5");
+        c5.setStartDate(LocalDate.now());
         c5.setParent(c3);
         categoryRepository.save(c5);
 
@@ -186,29 +191,34 @@ public class CategoryControllerTest extends AbstractControllerTest {
         final Category c1 = new Category();
         c1.setCode("c1");
         c1.setName("c1");
+        c1.setStartDate(LocalDate.now());
         categoryRepository.save(c1);
 
         final Category c2 = new Category();
         c2.setCode("c2");
         c2.setName("c2");
+        c2.setStartDate(LocalDate.now());
         c2.setParent(c1);
         categoryRepository.save(c2);
 
         final Category c3 = new Category();
         c3.setCode("c3");
         c3.setName("c3");
+        c3.setStartDate(LocalDate.now());
         c3.setParent(c2);
         categoryRepository.save(c3);
 
         final Category c4 = new Category();
         c4.setCode("c4");
         c4.setName("c4");
+        c4.setStartDate(LocalDate.now());
         c4.setParent(c3);
         categoryRepository.save(c4);
 
         final Category c5 = new Category();
         c5.setCode("c5");
         c5.setName("c5");
+        c5.setStartDate(LocalDate.now());
         c5.setParent(c3);
         categoryRepository.save(c5);
 
@@ -256,6 +266,163 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(subCategory.getCode(), is("c4"));
         assertThat(subCategory.getChildren(), is(nullValue()));
         subCategory = c3Response.getBody().getChildren().get(1);
+        assertThat(subCategory.getName(), is("c5"));
+        assertThat(subCategory.getCode(), is("c5"));
+        assertThat(subCategory.getChildren(), is(nullValue()));
+    }
+
+    /*
+                    c1
+         c2(inactive)       c3
+    */
+    @Test
+    public void shouldOnlyReturnActiveCategories(){
+        // Given
+        final Category c1 = new Category();
+        c1.setCode("c1");
+        c1.setName("c1");
+        c1.setStartDate(LocalDate.now());
+        categoryRepository.save(c1);
+
+        final Category c2 = new Category();
+        c2.setCode("c2");
+        c2.setName("c2");
+        c2.setStartDate(LocalDate.now().plusDays(10));
+        c2.setParent(c1);
+        categoryRepository.save(c2);
+
+        final Category c3 = new Category();
+        c3.setCode("c3");
+        c3.setName("c3");
+        c3.setStartDate(LocalDate.now());
+        c3.setParent(c1);
+        categoryRepository.save(c3);
+
+        final Product p1 = new Product();
+        p1.setCode("p1");
+        p1.setName("p1");
+        p1.setCategory(c2);
+        p1.setStartDate(LocalDate.now());
+        productRepository.save(p1);
+
+        final Product p2 = new Product();
+        p2.setCode("p2");
+        p2.setName("p2");
+        p2.setCategory(c3);
+        p2.setStartDate(LocalDate.now());
+        productRepository.save(p2);
+
+
+        // When & Then
+        final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<CategoryData> c1Response = rest.exchange(BASE_URL + "c1", GET, httpEntity, CategoryData.class);
+        assertThat(c1Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c1Response.getBody().getName(), is("c1"));
+        assertThat(c1Response.getBody().getCode(), is("c1"));
+        assertThat(c1Response.getBody().getProductTotal(), is(1));
+        assertThat(c1Response.getBody().getParents().size(), is(1));
+        assertThat(c1Response.getBody().getParents().get(0).getName(), is("c1"));
+        assertThat(c1Response.getBody().getParents().get(0).getCode(), is("c1"));
+        assertThat(c1Response.getBody().getChildren().size(), is(1));
+        assertThat(c1Response.getBody().getChildren().get(0).getName(), is("c3"));
+        assertThat(c1Response.getBody().getChildren().get(0).getCode(), is("c3"));
+        assertThat(c1Response.getBody().getChildren().get(0).getProductTotal(), is(1));
+
+        final ResponseEntity<CategoryData> c2Response = rest.exchange(BASE_URL + "c2", GET, httpEntity, CategoryData.class);
+        assertThat(c2Response.getStatusCode(), is(HttpStatus.NOT_FOUND));
+
+        final ResponseEntity<CategoryData> c3Response = rest.exchange(BASE_URL + "c3", GET, httpEntity, CategoryData.class);
+        assertThat(c3Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c3Response.getBody().getName(), is("c3"));
+        assertThat(c3Response.getBody().getCode(), is("c3"));
+        assertThat(c3Response.getBody().getProductTotal(), is(1));
+        assertThat(c3Response.getBody().getParents().size(), is(2));
+        assertThat(c3Response.getBody().getParents().get(0).getName(), is("c1"));
+        assertThat(c3Response.getBody().getParents().get(0).getCode(), is("c1"));
+        assertThat(c3Response.getBody().getParents().get(1).getName(), is("c3"));
+        assertThat(c3Response.getBody().getParents().get(1).getCode(), is("c3"));
+
+    }
+
+    /*
+                    c1
+                    c2
+                    c3
+         c4(inactive)       c5
+    */
+    @Test
+    public void shouldOnlyReturnActiveCategoriesByLevel(){
+        // Given
+        final Category c1 = new Category();
+        c1.setCode("c1");
+        c1.setName("c1");
+        c1.setStartDate(LocalDate.now());
+        categoryRepository.save(c1);
+
+        final Category c2 = new Category();
+        c2.setCode("c2");
+        c2.setName("c2");
+        c2.setStartDate(LocalDate.now());
+        c2.setParent(c1);
+        categoryRepository.save(c2);
+
+        final Category c3 = new Category();
+        c3.setCode("c3");
+        c3.setName("c3");
+        c3.setStartDate(LocalDate.now());
+        c3.setParent(c2);
+        categoryRepository.save(c3);
+
+        final Category c4 = new Category();
+        c4.setCode("c4");
+        c4.setName("c4");
+        c4.setStartDate(LocalDate.now().plusDays(10));
+        c4.setParent(c3);
+        categoryRepository.save(c4);
+
+        final Category c5 = new Category();
+        c5.setCode("c5");
+        c5.setName("c5");
+        c5.setStartDate(LocalDate.now());
+        c5.setParent(c3);
+        categoryRepository.save(c5);
+
+        // When & Then
+        final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<CategoryData> c1Response = rest.exchange(BASE_URL + "c1?level=2", GET, httpEntity, CategoryData.class);
+        assertThat(c1Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c1Response.getBody().getName(), is("c1"));
+        assertThat(c1Response.getBody().getCode(), is("c1"));
+        assertThat(c1Response.getBody().getChildren().size(), is(1));
+        CategoryData subCategory = c1Response.getBody().getChildren().get(0);
+        assertThat(subCategory.getName(), is("c2"));
+        assertThat(subCategory.getCode(), is("c2"));
+        assertThat(subCategory.getChildren().size(), is(1));
+        CategoryData subSubCategory = subCategory.getChildren().get(0);
+        assertThat(subSubCategory.getName(), is("c3"));
+        assertThat(subSubCategory.getCode(), is("c3"));
+        assertThat(subSubCategory.getChildren(), is(nullValue()));
+
+        final ResponseEntity<CategoryData> c2Response = rest.exchange(BASE_URL + "c2?level=2", GET, httpEntity, CategoryData.class);
+        assertThat(c2Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c2Response.getBody().getName(), is("c2"));
+        assertThat(c2Response.getBody().getCode(), is("c2"));
+        assertThat(c2Response.getBody().getChildren().size(), is(1));
+        subCategory = c2Response.getBody().getChildren().get(0);
+        assertThat(subCategory.getName(), is("c3"));
+        assertThat(subCategory.getCode(), is("c3"));
+        assertThat(subCategory.getChildren().size(), is(1));
+        subSubCategory = subCategory.getChildren().get(0);
+        assertThat(subSubCategory.getName(), is("c5"));
+        assertThat(subSubCategory.getCode(), is("c5"));
+        assertThat(subSubCategory.getChildren(), is(nullValue()));
+
+        final ResponseEntity<CategoryData> c3Response = rest.exchange(BASE_URL + "c3?level=2", GET, httpEntity, CategoryData.class);
+        assertThat(c3Response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(c3Response.getBody().getName(), is("c3"));
+        assertThat(c3Response.getBody().getCode(), is("c3"));
+        assertThat(c3Response.getBody().getChildren().size(), is(1));
+        subCategory = c3Response.getBody().getChildren().get(0);
         assertThat(subCategory.getName(), is("c5"));
         assertThat(subCategory.getCode(), is("c5"));
         assertThat(subCategory.getChildren(), is(nullValue()));

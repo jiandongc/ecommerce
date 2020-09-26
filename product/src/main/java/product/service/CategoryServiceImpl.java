@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 
@@ -39,13 +40,19 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional(readOnly = true)
     public Optional<Category> findByCode(String code) {
-        return categoryRepository.findByCode(code);
+        Optional<Category> categoryOptional = categoryRepository.findByCode(code);
+        if (categoryOptional.isPresent() && categoryOptional.get().isActive()) {
+            return categoryOptional;
+        } else {
+            return Optional.empty();
+        }
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Category> findSubCategories(String code) {
-        return categoryRepository.findSubCategoriesByCode(code);
+        List<Category> subCategories = categoryRepository.findSubCategoriesByCode(code);
+        return subCategories.stream().filter(Category::isActive).collect(Collectors.toList());
     }
 
     /* return all parent categories + current category */

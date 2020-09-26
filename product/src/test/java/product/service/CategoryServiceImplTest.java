@@ -6,6 +6,8 @@ import product.domain.Category;
 import product.mapper.CategoryDataMapper;
 import product.repository.CategoryRepository;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,15 +31,19 @@ public class CategoryServiceImplTest {
         // Given
         final Category categoryOne = new Category();
         categoryOne.setCode("C1");
+        categoryOne.setStartDate(LocalDate.now().minusDays(10));
         final Category categoryTwo = new Category();
         categoryTwo.setCode("C2");
         categoryTwo.setParent(categoryOne);
+        categoryTwo.setStartDate(LocalDate.now().minusDays(10));
         final Category categoryThree = new Category();
         categoryThree.setCode("C3");
         categoryThree.setParent(categoryTwo);
+        categoryThree.setStartDate(LocalDate.now().minusDays(10));
         final Category categoryFour = new Category();
         categoryFour.setCode("C4");
         categoryFour.setParent(categoryThree);
+        categoryFour.setStartDate(LocalDate.now().minusDays(10));
         when(categoryRepository.findByCode("C1")).thenReturn(Optional.of(categoryOne));
         when(categoryRepository.findByCode("C2")).thenReturn(Optional.of(categoryTwo));
         when(categoryRepository.findByCode("C3")).thenReturn(Optional.of(categoryThree));
@@ -77,6 +83,56 @@ public class CategoryServiceImplTest {
 
         // Then & When
         categoryService.findParentCategories("C1");
+    }
+
+    @Test
+    public void shouldReturnOptionalEmptyIfCategoryIsNotActive(){
+        // Given
+        final Category category = new Category();
+        category.setStartDate(LocalDate.now().plusDays(10));
+        when(categoryRepository.findByCode("code")).thenReturn(Optional.of(category));
+
+        // When
+        Optional<Category> categoryOptional = categoryService.findByCode("code");
+
+        // Then
+        assertThat(categoryOptional.isPresent(), is(false));
+    }
+
+    @Test
+    public void shouldReturnCategoryOptionalIfIsActive(){
+        // Given
+        final Category category = new Category();
+        category.setStartDate(LocalDate.now().minusDays(10));
+        when(categoryRepository.findByCode("code")).thenReturn(Optional.of(category));
+
+        // When
+        Optional<Category> categoryOptional = categoryService.findByCode("code");
+
+        // Then
+        assertThat(categoryOptional.isPresent(), is(true));
+    }
+
+    @Test
+    public void shouldOnlyReturnActiveSubCategories(){
+        // Given
+        final Category categoryOne = new Category();
+        categoryOne.setCode("C1");
+        categoryOne.setStartDate(LocalDate.now().minusDays(10));
+        final Category categoryTwo = new Category();
+        categoryTwo.setCode("C2");
+        categoryTwo.setStartDate(LocalDate.now());
+        final Category categoryThree = new Category();
+        categoryThree.setCode("C3");
+        categoryThree.setStartDate(LocalDate.now().plusDays(10));
+        when(categoryRepository.findSubCategoriesByCode("code")).thenReturn(Arrays.asList(categoryOne, categoryTwo, categoryThree));
+
+        // When
+        List<Category> actual = categoryService.findSubCategories("code");
+
+        // Then
+        assertThat(actual.size(), is(2));
+
     }
 
 }

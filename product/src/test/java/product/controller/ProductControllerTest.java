@@ -49,6 +49,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		category.setDescription("delicious");
 		category.setImageUrl("img/0001.jpg");
 		category.setCode("FD");
+		category.setStartDate(LocalDate.now());
 		category.addCategoryAttribute(CategoryAttribute.builder().key("Color").ordering(0).build());
 		categoryRepository.save(category);
 

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,12 @@ public class Category {
 	@Column(name = "hidden")
 	private boolean hidden;
 
+	@Column(name = "start_date")
+	private LocalDate startDate;
+
+	@Column(name = "end_date")
+	private LocalDate endDate;
+
 	@ManyToOne(fetch = EAGER)
 	@JoinColumn(name = "parent_id")
 	private Category parent;
@@ -60,6 +67,12 @@ public class Category {
 		}
 		categoryAttributes.add(categoryAttribute);
 		categoryAttribute.setCategory(this);
+	}
+
+	public boolean isActive(){
+		final LocalDate today = LocalDate.now();
+		return (this.getStartDate() != null && !today.isBefore(this.getStartDate()))
+				&& (this.getEndDate() == null || !today.isAfter(this.getEndDate()));
 	}
 
 }
