@@ -2,6 +2,7 @@ package customer.controller;
 
 import customer.repository.AddressRepository;
 import customer.repository.CustomerRepository;
+import customer.repository.ProductRepository;
 import customer.service.CustomerService;
 import org.junit.After;
 import org.junit.Before;
@@ -25,6 +26,9 @@ public abstract class AbstractControllerTest {
 
     @Autowired
     AddressRepository addressRepository;
+
+    @Autowired
+    ProductRepository productRepository;
 
     @Autowired
     CustomerService customerService;
@@ -57,6 +61,7 @@ public abstract class AbstractControllerTest {
     @After
     public void cleanup(){
         customerRepository.deleteAll();
+        productRepository.deleteAll();
     }
 }
 

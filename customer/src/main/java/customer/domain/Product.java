@@ -24,6 +24,9 @@ public class Product {
     @Column(name = "id")
     private long id;
 
+    @Column(name = "email")
+    private String email;
+
     @JsonProperty(value = "id", access = JsonProperty.Access.READ_WRITE)
     @Column(name = "product_uid")
     private UUID productUid;

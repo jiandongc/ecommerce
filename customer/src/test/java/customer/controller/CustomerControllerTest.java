@@ -19,6 +19,7 @@ import org.springframework.http.*;
 
 import customer.domain.Customer;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -669,6 +670,7 @@ public class CustomerControllerTest extends AbstractControllerTest {
         assertThat(products.size(), is(1));
         assertThat(products.get(0).getProductCode(), is("11L"));
         assertThat(products.get(0).getType(), is(FAVOURITE));
+        assertThat(products.get(0).getEmail(), is("Email"));
         assertThat(products.get(0).getStartDate(), is(now()));
     }
 
@@ -699,6 +701,62 @@ public class CustomerControllerTest extends AbstractControllerTest {
         assertThat(products.size(), is(1));
         assertThat(products.get(0).getProductCode(), is("11L"));
         assertThat(products.get(0).getType(), is(FAVOURITE));
+        assertThat(products.get(0).getStartDate(), is(now()));
+    }
+
+    @Test
+    public void shouldAddSameProductWithEmail() {
+        // Given
+        Product product = new Product();
+        product.setProductCode("11L");
+        product.setEmail("lee@gmail.com");
+        product.setStartDate(LocalDate.now().minusDays(10));
+        product.setType(Product.Type.NOTIFY_IN_STOCK);
+        product.setProductUid(UUID.randomUUID());
+        productRepository.save(product);
+
+        this.setGuestToken();
+        String addressJson = "{" +
+                "\"productCode\":\"11L\"," +
+                "\"email\":\"lee@gmail.com\"," +
+                "\"type\":\"NOTIFY_IN_STOCK\"" +
+                "}";
+        HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "/products", POST, payload, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        List<Product> products = productRepository.findAll();
+        assertThat(products.size(), is(1));
+        assertThat(products.get(0).getProductCode(), is("11L"));
+        assertThat(products.get(0).getType(), is(NOTIFY_IN_STOCK));
+        assertThat(products.get(0).getEmail(), is("lee@gmail.com"));
+        assertThat(products.get(0).getStartDate(), is(now()));
+    }
+
+    @Test
+    public void shouldAddProductWithEmail() {
+        // Given
+        this.setGuestToken();
+        String addressJson = "{" +
+                "\"productCode\":\"11L\"," +
+                "\"email\":\"lee@gmail.com\"," +
+                "\"type\":\"NOTIFY_IN_STOCK\"" +
+                "}";
+        HttpEntity<String> payload = new HttpEntity<>(addressJson, headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "/products", POST, payload, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        List<Product> products = productRepository.findAll();
+        assertThat(products.size(), is(1));
+        assertThat(products.get(0).getProductCode(), is("11L"));
+        assertThat(products.get(0).getType(), is(NOTIFY_IN_STOCK));
+        assertThat(products.get(0).getEmail(), is("lee@gmail.com"));
         assertThat(products.get(0).getStartDate(), is(now()));
     }
 

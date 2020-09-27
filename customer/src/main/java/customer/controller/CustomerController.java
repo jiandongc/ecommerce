@@ -143,6 +143,12 @@ public class CustomerController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @RequestMapping(value = "/products", method = POST)
+    public void addProduct(@RequestBody Product product) {
+        customerService.addProduct(product.getEmail(), product);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "/tokens", method = POST)
     public void createToken(@RequestBody TokenRequest tokenRequest) {
         Customer customer = customerService.findByEmail(tokenRequest.getEmail());

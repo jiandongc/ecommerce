@@ -21,6 +21,7 @@ public interface CustomerService {
 	Address updateAddress(UUID customerUid, UUID addressUid, Address address);
 	void removeAddress(UUID customerUid, UUID addressUid);
 	Product addProduct(UUID customerUid, Product product);
+	Product addProduct(String email, Product product);
 	List<Product> findProductsByCustomerUid(UUID customerUid);
 	void removeProduct(UUID customerUid, UUID productUid);
 	void removeProductByTypeAndCode(UUID customerUid, String type, String productCode);

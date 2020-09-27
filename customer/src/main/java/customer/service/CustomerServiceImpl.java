@@ -1,6 +1,7 @@
 package customer.service;
 
 import customer.domain.*;
+import customer.repository.ProductRepository;
 import customer.repository.TokenRepository;
 import customer.security.HashService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     @Autowired
     private HashService hashService;
@@ -171,13 +175,37 @@ public class CustomerServiceImpl implements CustomerService {
         Optional<Product> existingProduct = validProducts.stream().filter(p -> p.hasSameProductCodeAndType(product)).findFirst();
         if (existingProduct.isPresent()) {
             existingProduct.get().setStartDate(LocalDate.now());
+            existingProduct.get().setEndDate(null);
         } else {
             product.setStartDate(LocalDate.now());
             product.setProductUid(UUID.randomUUID());
+            product.setEmail(customer.getEmail());
             customer.addProduct(product);
         }
 
         return product;
+    }
+
+    @Override
+    @Transactional
+    public Product addProduct(String email, Product product) {
+        Customer customer = customerRepository.findByEmail(email);
+        if (customer != null){
+            return addProduct(customer.getCustomerUid(), product);
+        } else {
+            List<Product> products = productRepository.findByEmail(email);
+            Optional<Product> existingProduct = products.stream().filter(p -> p.hasSameProductCodeAndType(product)).findFirst();
+            if (existingProduct.isPresent()) {
+                existingProduct.get().setStartDate(LocalDate.now());
+                existingProduct.get().setEndDate(null);
+                return existingProduct.get();
+            } else {
+                product.setStartDate(LocalDate.now());
+                product.setProductUid(UUID.randomUUID());
+                product.setEmail(email);
+                return productRepository.save(product);
+            }
+        }
     }
 
     @Override
@@ -197,7 +225,7 @@ public class CustomerServiceImpl implements CustomerService {
         final Customer customer = customerRepository.findByCustomerUid(customerUid);
         final List<Product> products = customer.getValidProducts();
         final Product savedProduct = products.stream().filter(a -> productUid.equals(a.getProductUid())).findFirst().orElseThrow(() -> new IllegalArgumentException("Entity not found"));
-        customer.removeProduct(savedProduct);
+        savedProduct.setEndDate(LocalDate.now().minusDays(1));
     }
 
     @Override
@@ -206,7 +234,8 @@ public class CustomerServiceImpl implements CustomerService {
         final Product.Type productType = Product.Type.valueOf(type.toUpperCase());
         final Customer customer = customerRepository.findByCustomerUid(customerUid);
         final List<Product> products = customer.getValidProducts();
-        products.stream().filter(product -> product.getType().equals(productType) && product.getProductCode().equals(productCode)).forEach(customer::removeProduct);
+        products.stream().filter(product -> product.getType().equals(productType) && product.getProductCode().equals(productCode))
+                .forEach(product -> product.setEndDate(LocalDate.now().minusDays(1)));
     }
 
     @Override
