@@ -24,4 +24,8 @@ public class ProductPredicate {
         return Comparator.comparing(Product::getCurrentPrice).reversed();
     }
 
+    public static Comparator<Product> orderingComparator(){
+        return Comparator.comparing(Product::getOrdering);
+    }
+
 }

@@ -76,7 +76,6 @@ public class ProductSimpleDataMapperTest {
                 .discountRate(null)
                 .isOnSale(false)
                 .tags(tags)
-                .ordering(1)
                 .build();
         assertThat(actual, is(expected));
     }

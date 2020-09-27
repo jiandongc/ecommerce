@@ -64,13 +64,13 @@ public class ProductSearchServiceImpl implements ProductSearchService {
     }
 
     private List<Product> sort(List<Product> products, String sort) {
-        if (sort == null) return products;
+        if (sort == null) return products.stream().sorted(ProductPredicate.orderingComparator()).collect(toList());
 
         switch (sort) {
             case PRICE_DESC:
-                return products.stream().sorted(comparing(Product::getCurrentPrice).reversed()).collect(toList());
+                return products.stream().sorted(ProductPredicate.priceDescComparator()).collect(toList());
             case PRICE_ASC:
-                return products.stream().sorted(comparing(Product::getCurrentPrice)).collect(toList());
+                return products.stream().sorted(ProductPredicate.priceAscComparator()).collect(toList());
             default:
                 return products;
         }

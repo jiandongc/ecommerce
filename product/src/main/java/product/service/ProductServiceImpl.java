@@ -96,6 +96,10 @@ public class ProductServiceImpl implements ProductService {
             products = products.stream().filter(brandFilter(brand)).collect(Collectors.toList());
         }
 
+        if (sort == null) {
+            products = products.stream().sorted(ProductPredicate.orderingComparator()).collect(Collectors.toList());
+        }
+
         if (sort != null && sort.equalsIgnoreCase("price.asc")) {
             products = products.stream().sorted(ProductPredicate.priceAscComparator()).collect(Collectors.toList());
         }

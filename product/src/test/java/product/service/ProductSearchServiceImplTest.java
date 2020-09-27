@@ -42,36 +42,42 @@ public class ProductSearchServiceImplTest {
         redNike.setName("redNike");
         redNike.addAttribute(ProductAttribute.builder().key("color").value("red").build());
         redNike.addAttribute(ProductAttribute.builder().key("brand").value("nike").build());
+        redNike.setOrdering(1);
         this.setOtherProductProperties(redNike);
 
         final Product redAdidas = new Product();
         redAdidas.setName("redAdidas");
         redAdidas.addAttribute(ProductAttribute.builder().key("color").value("red").build());
         redAdidas.addAttribute(ProductAttribute.builder().key("brand").value("adidas").build());
+        redAdidas.setOrdering(1);
         this.setOtherProductProperties(redAdidas);
 
         final Product blueNike = new Product();
         blueNike.setName("blueNike");
         blueNike.addAttribute(ProductAttribute.builder().key("color").value("blue").build());
         blueNike.addAttribute(ProductAttribute.builder().key("brand").value("nike").build());
+        blueNike.setOrdering(1);
         this.setOtherProductProperties(blueNike);
 
         final Product blueAdidas = new Product();
         blueAdidas.setName("blueAdidas");
         blueAdidas.addAttribute(ProductAttribute.builder().key("color").value("blue").build());
         blueAdidas.addAttribute(ProductAttribute.builder().key("brand").value("adidas").build());
+        blueAdidas.setOrdering(1);
         this.setOtherProductProperties(blueAdidas);
 
         final Product yellowAdidas = new Product();
         yellowAdidas.setName("yellowAdidas");
         yellowAdidas.addAttribute(ProductAttribute.builder().key("color").value("yellow").build());
         yellowAdidas.addAttribute(ProductAttribute.builder().key("brand").value("adidas").build());
+        yellowAdidas.setOrdering(1);
         this.setOtherProductProperties(yellowAdidas);
 
         final Product redPuma = new Product();
         redPuma.setName("redPuma");
         redPuma.addAttribute(ProductAttribute.builder().key("color").value("red").build());
         redPuma.addAttribute(ProductAttribute.builder().key("brand").value("puma").build());
+        redPuma.setOrdering(1);
         this.setOtherProductProperties(redPuma);
 
         final Category category = new Category();
@@ -240,6 +246,29 @@ public class ProductSearchServiceImplTest {
         assertThat(products.get(0).getName(), is("p1"));
         assertThat(products.get(1).getName(), is("p2"));
         assertThat(products.get(2).getName(), is("p3"));
+    }
+
+    @Test
+    public void shouldSortProductsByOrderingNumber(){
+        // Given
+        final Category category = mock(Category.class);
+        final Product p1 = mock(Product.class);
+        when(p1.getOrdering()).thenReturn(3);
+        when(p1.getName()).thenReturn("p1");
+        final Product p2 = mock(Product.class);
+        when(p2.getOrdering()).thenReturn(1);
+        when(p2.getName()).thenReturn("p2");
+        final Product p3 = mock(Product.class);
+        when(p3.getOrdering()).thenReturn(2);
+        when(p3.getName()).thenReturn("p3");
+
+        // When & Then
+        ProductSearchData productSearchData = searchService.filter(category, asList(p1, p2, p3), null, null);
+        List<ProductSimpleData> products = productSearchData.getProducts();
+        assertThat(products.size(), is(3));
+        assertThat(products.get(0).getName(), is("p2"));
+        assertThat(products.get(1).getName(), is("p3"));
+        assertThat(products.get(2).getName(), is("p1"));
     }
 
     private void setOtherProductProperties(Product product){
