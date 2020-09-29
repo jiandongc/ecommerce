@@ -8,7 +8,9 @@
 				</div>
 			  	<div class="form-group" ng-class="{'has-error': loginForm.loginEmail.$invalid && (loginForm.loginEmail.$touched || loginForm.$submitted) }">
 			    	<label for="loginEmail">Email</label>
-			    	<input type="email" id="loginEmail" name="loginEmail" class="form-control" ng-model="credentials.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+			    	<input type="email" id="loginEmail" name="loginEmail" class="form-control"
+						   ng-model="credentials.email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/"
+						   placeholder="Enter email" required>
 			    	<div id="loginEmailMsg" ng-show="loginForm.loginEmail.$touched || loginForm.$submitted">
 						<p ng-show="loginForm.loginEmail.$error.required" class="help-block">
 							Email is missing. Please check and try again.
@@ -52,7 +54,7 @@
 			<form ng-show="cartUid && !customerId" name="guestForm" ng-submit="guestForm.$valid && guestContinue(guest)">
 			  	<div class="form-group" ng-class="{'has-error': guestForm.guestEmail.$invalid && (guestForm.guestEmail.$touched || guestForm.$submitted) }">
 			    	<label for="guestEmail">Email</label>
-			    	<input type="email" id="guestEmail" name="guestEmail" class="form-control" ng-model="guest.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" placeholder="Enter email" required>
+			    	<input type="email" id="guestEmail" name="guestEmail" class="form-control" ng-model="guest.email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/" placeholder="Enter email" required>
 			    	<div id="guestEmailMsg" ng-show="guestForm.guestEmail.$touched || guestForm.$submitted">
 						<p ng-show="guestForm.guestEmail.$error.required" class="help-block">
 							Email is missing. Please check and try again.

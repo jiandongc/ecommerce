@@ -47,7 +47,7 @@
 						</td>
 						<td>
 							<div ng-class="{'has-error': userform.email.$invalid && (userform.email.$touched || userform.$submitted)}">
-								<input type="text" id="email" name="email" class="form-control" ng-model="customer.email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})$/" required>
+								<input type="text" id="email" name="email" class="form-control" ng-model="customer.email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/" required>
 								<div id="emailMsg" ng-show="userform.email.$touched || userform.$submitted">
 									<p ng-show="userform.email.$error.required" class="help-block">
 										Email is missing. Please check and try again.
