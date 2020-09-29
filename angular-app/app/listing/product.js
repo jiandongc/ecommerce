@@ -222,6 +222,18 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             $scope.voting[index] = false;
         });
     };
+
+    $scope.setStockNotification = function(product, email) {
+        if(typeof email === "undefined"){
+            return;
+        }
+
+        $scope.addingBackInStockNotification = true;
+        customerFactory.addToNotifyInStock(product.code, email).then(function(product) {
+            $scope.addingBackInStockNotification = false;
+            $scope.backInStockNotificationAddedAlter = true;
+        });
+    }
 });
 
 productDetail.controller('createProductReviewCtrl', function($scope, $routeParams, $location, productFactory, reviewFactory) {
@@ -231,7 +243,6 @@ productDetail.controller('createProductReviewCtrl', function($scope, $routeParam
 
     $scope.adding = false;
     $scope.addReview = function(review) {
-        console.log(review);
         if(typeof review === "undefined"){
             return;
         }

@@ -496,6 +496,23 @@ customer.factory('customerFactory', function($http, environment) {
         });
     };
 
+    var addToNotifyInStock = function(productCode, email) {
+        var configs = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        };
+        var data = {
+            productCode: productCode,
+            type: 'NOTIFY_IN_STOCK',
+            email: email
+        };
+
+        return $http.post(environment.customerUrl + '/customers/products/', data, configs).then(function(response) {
+            return response.data;
+        });
+    };
+
     var requestPasswordResetToken = function(email) {
         var configs = {
             headers: {
@@ -558,6 +575,7 @@ customer.factory('customerFactory', function($http, environment) {
         addToFavourite: addToFavourite,
         getFavouriteItems: getFavouriteItems,
         removeFavouriteItem: removeFavouriteItem,
+        addToNotifyInStock: addToNotifyInStock,
         requestPasswordResetToken: requestPasswordResetToken,
         retrieveToken: retrieveToken,
         resetPassword: resetPassword,

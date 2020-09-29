@@ -36,10 +36,12 @@
 				<span ng-show="onSale" class="fs-16 m-l-05 text-line-through">{{originalPrice | currency:"£"}}</span>
 			</div>
 			<div class="m-b-05">
-				<span ng-show="qty >= 0 && qty <= 10" class="fs-09 label label-warning m-r-05">{{qty}} left</span>
-				<span ng-show="qty > 10 || !qty" class="fs-09 label label-success m-r-05">Items in stock</span>
+				<span ng-show="qty == 0" class="fs-09 label label-danger m-r-05">Out of stock</span>
+				<span ng-show="qty > 0 && qty <= 10" class="fs-09 label label-danger m-r-05">Only {{qty}} left
+					in stock</span>
+				<span ng-show="qty > 10" class="fs-09 label label-success m-r-05">Items in stock</span>
 				<span ng-show="onSale" class="fs-09 label label-danger m-r-05">{{discountRate}} Off</span>
-				<span class="fs-09 label label-info m-r-05">满$49免运费</span>
+				<span class="fs-09 label label-info m-r-05">Free Shipping Over $29.99</span>
 			</div>
 			<div class="m-b-05">
 				<a ng-repeat='item in product.tags' class="clickable-label" href="#!/tags/{{item.tag}}">
@@ -68,8 +70,8 @@
 			<div ng-show="addedToFavouriteAlert" class="m-b-05 alert alert-success">
 				Added to <a href="#!/account/{{customerId}}/favourites" class="alert-link">your favourites</a>!
 			</div>
-			<div class="m-b-05">
-				<button ng-show="qty > 0 || !qty" class="btn btn-style-primary" ng-click="addItemToCart(product)">
+			<div class="m-b-05" ng-show="qty > 0">
+				<button class="btn btn-style-primary" ng-click="addItemToCart(product)">
 					<span ng-show="addingItem"><i class="glyphicon glyphicon-refresh spinning"></i></span>
 					<span class="glyphicon glyphicon-shopping-cart"></span>&nbsp;&nbsp;Add to Bag
 				</button>
@@ -78,11 +80,27 @@
 					<span class="color-valencia glyphicon glyphicon-heart"></span>&nbsp;&nbsp;Add to Favourites
 				</button>
 			</div>
-			<!--<div>-->
-				<!--<button ng-show="qty == 0" class="btn btn-style-secondary" ng-click="">-->
-					<!--<span class="color-cream-can glyphicon glyphicon-envelope"></span>&nbsp;&nbsp;Email me when available-->
-				<!--</button>-->
-			<!--</div>-->
+			<div ng-show="qty == 0" class="m-b-05">
+				<div ng-show="backInStockNotificationAddedAlter" class="m-b-05 alert alert-success">
+					Thank you for your interest. We will send an email to <b>{{notificationEmail}}</b> when the product
+					is back	in stock!
+				</div>
+				<div ng-hide="backInStockNotificationAddedAlter" class="m-b-05">
+					<span class="color-emperor fs-10">Would you like to get email notification when the product is
+						back in stock?</span>
+				</div>
+				<div ng-hide="backInStockNotificationAddedAlter" class="input-group">
+					<input type="text" class="form-control" ng-model="notificationEmail"
+						   placeholder="Enter your email address">
+					<span class="input-group-btn">
+						<button class="btn btn-default" style="background-color: #f0c14b;"
+								ng-click="setStockNotification(product, notificationEmail)">
+							<span ng-show="addingBackInStockNotification"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+							Notify Me
+						</button>
+			        </span>
+				</div>
+			</div>
 			<div class="m-t-20 m-b-10">
 				<ul class="nav nav-tabs">
 					<li role="presentation" ng-class="display==='itemInfo' ? 'active' : ''">
