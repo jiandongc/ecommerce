@@ -41,7 +41,9 @@
 					in stock</span>
 				<span ng-show="qty > 10" class="fs-09 label label-success m-r-05">Items in stock</span>
 				<span ng-show="onSale" class="fs-09 label label-danger m-r-05">{{discountRate}} Off</span>
-				<span class="fs-09 label label-info m-r-05">Free Shipping Over $29.99</span>
+			</div>
+			<div class="m-b-05">
+				<span class="fs-09 label label-info m-r-05">Free shipping over $29.99</span>
 			</div>
 			<div class="m-b-05">
 				<a ng-repeat='item in product.tags' class="clickable-label" href="#!/tags/{{item.tag}}">

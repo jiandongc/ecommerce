@@ -78,16 +78,21 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
                 return;
             }
 
-            $scope.cartUid = data.cartUid;
-            $scope.totalQuantity = (data.quantity != 0 ? data.quantity : null);
-            $scope.itemsTotal = (data.itemsTotal != 0 ? data.itemsTotal : null);
-            $scope.cartItems = data.cartItems;
-            if (showDropDown === true) {
-                var dropdown = $('ul.menu li.dropdown').find('.dropdown-menu');
-                dropdown.stop(true, true).fadeIn(1000, "swing", function() {
-                    dropdown.stop(true, true).delay(5000).fadeOut(3800);
-                });
+            if (data.itemsTotal != 0) {
+                $scope.cartUid = data.cartUid;
+                $scope.totalQuantity = (data.quantity != 0 ? data.quantity : null);
+                $scope.itemsTotal = (data.itemsTotal != 0 ? data.itemsTotal : null);
+                $scope.cartItems = data.cartItems;
+                if (showDropDown === true) {
+                    var dropdown = $('ul.menu li.dropdown').find('.dropdown-menu');
+                    dropdown.stop(true, true).fadeIn(1000, "swing", function() {
+                        dropdown.stop(true, true).delay(5000).fadeOut(3800);
+                    });
+                }
+            } else {
+                $rootScope.$broadcast('resetCartInfo');
             }
+
         });
     });
 
