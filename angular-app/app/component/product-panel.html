@@ -10,7 +10,7 @@
         </li>
     </ul>
 </div>
-<div class="row auto-clear product-list" ng-class="loading">
+<div ng-show="products.length>0" class="row auto-clear product-list" ng-class="loading">
     <div ng-repeat="product in products | limitTo:6" class="col-lg-2 col-md-3 col-sm-4 col-xs-6 p-b-20">
         <a href="#!/products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
         <div>
@@ -20,6 +20,11 @@
         <a href="#!/products/{{product.code}}"><span class="color-emperor fs-10">{{product.name}}</span></a>
     </div>
 </div>
-<div class="p-b-20">
+<div ng-show="products.length>0" class="p-b-20">
     <span class="pull-right"><a href="#!/tags/{{tag}}">VIEW MORE</a></span>
+</div>
+<div ng-show="products.length==0" class="row m-t-10 m-b-10">
+    <div class="col-xs-12 color-san-juan">
+        There are no products matching the selection.
+    </div>
 </div>
