@@ -134,6 +134,42 @@ public class VoucherValidationServiceTest {
     }
 
     @Test
+    public void shouldFailValidationIfVoucherDoesNotBelongToTheCustomer(){
+        // Given
+        final UUID cartUid = UUID.randomUUID();
+        final String voucherCode = "ABC-2099";
+        when(voucherRepository.findByVoucherCode(voucherCode))
+                .thenReturn(Optional.of(Voucher.builder()
+                        .customerUid(UUID.randomUUID())
+                        .startDate(LocalDate.of(2010, 1, 1))
+                        .endDate(LocalDate.of(2099, 12, 31))
+                        .maxUses(10)
+                        .minSpend(BigDecimal.valueOf(10L).setScale(2))
+                        .build()));
+        when(voucherRepository.findNumberOfUses(voucherCode)).thenReturn(1);
+        ShoppingCart shoppingCart = ShoppingCart.builder().customerUid(UUID.randomUUID()).build();
+        shoppingCart.addItem(ShoppingCartItem.builder()
+                .name("product")
+                .code("code1")
+                .price(BigDecimal.valueOf(29.99))
+                .quantity(1)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .description("Size: S")
+                .vatRate(20)
+                .build());
+        when(shoppingCartService.getShoppingCartByUid(cartUid))
+                .thenReturn(Optional.of(shoppingCart));
+
+        // When
+        ValidationResult actual = validationService.validate(cartUid, voucherCode);
+
+        // Then
+        assertThat(actual.isValid(), is(false));
+        assertThat(actual.getErrorMsg(), is("Not authorized to use voucher: ABC-2099. You might need to sign in first."));
+    }
+    
+    @Test
     public void shouldPassValidation(){
         // Given
         final UUID cartUid = UUID.randomUUID();

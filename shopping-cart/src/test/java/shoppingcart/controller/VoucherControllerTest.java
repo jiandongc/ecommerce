@@ -14,11 +14,13 @@ import shoppingcart.repository.VoucherRepository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpStatus.OK;
 import static shoppingcart.domain.Voucher.Type.MONETARY;
 
@@ -184,6 +186,36 @@ public class VoucherControllerTest extends AbstractControllerTest {
         assertThat(response.getBody()[0].getDiscountAmount(), is(BigDecimal.TEN.setScale(2)));
         assertThat(response.getBody()[0].getStartDate(), is(LocalDate.now().minusDays(10).toString()));
         assertThat(response.getBody()[0].getEndDate(), is(LocalDate.now().minusDays(1).toString()));
+    }
+
+    @Test
+    public void shouldAddWelcomeVoucherForNewCustomer(){
+        // Given
+        this.setUserToken();
+        final String customerData = "{\"id\": \"123e4567-e89b-12d3-a456-556642440000\"}";
+        final HttpEntity<String> payload = new HttpEntity<>(customerData, headers);
+
+        // When
+        ResponseEntity<String> response = rest.exchange("/carts/vouchers/welcome", POST, payload, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(OK));
+        List<Voucher> vouchers = voucherRepository.findByCustomerUid(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"));
+        assertThat(vouchers.size(), is(1));
+        assertThat(vouchers.get(0).getType(), is(Voucher.Type.PERCENTAGE));
+        assertThat(vouchers.get(0).getDiscountAmount(), is(BigDecimal.valueOf(20).setScale(2)));
+        assertThat(vouchers.get(0).getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
+
+        // When
+        response = rest.exchange("/carts/vouchers/welcome", POST, payload, String.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(OK));
+        vouchers = voucherRepository.findByCustomerUid(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"));
+        assertThat(vouchers.size(), is(1));
+        assertThat(vouchers.get(0).getType(), is(Voucher.Type.PERCENTAGE));
+        assertThat(vouchers.get(0).getDiscountAmount(), is(BigDecimal.valueOf(20).setScale(2)));
+        assertThat(vouchers.get(0).getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
     }
 
 }

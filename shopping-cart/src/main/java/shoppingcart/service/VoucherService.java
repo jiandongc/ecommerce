@@ -10,4 +10,6 @@ public interface VoucherService {
     List<Voucher> findByCustomerUid(UUID customerUid, String status);
 
     Integer getNumberOfUses(String code);
+
+    void addNewCustomerWelcomeVoucher(UUID customerUid);
 }

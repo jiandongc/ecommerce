@@ -42,6 +42,11 @@ public abstract class AbstractControllerTest {
         }
     }
 
+    public void setUserToken(){
+        // user token which will expire in 100 years
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+    }
+
     @After
     public void reset(){
         jdbcTemplate.update("delete from address");

@@ -55,6 +55,9 @@ public class VoucherValidationService {
             return ValidationResult.invalid(String.format("Minimum spend of this voucher is £%s.", voucher.getMinSpend()));
         }
 
+        if (voucher.getCustomerUid() != null && !voucher.getCustomerUid().equals(shoppingCart.getCustomerUid())){
+            return ValidationResult.invalid(String.format("Not authorized to use voucher: %s. You might need to sign in first.", voucherCode));
+        }
 
         return ValidationResult.valid();
     }
