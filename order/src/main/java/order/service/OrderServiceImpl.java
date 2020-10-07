@@ -51,13 +51,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void addCustomerInfo(String orderNumber, UUID customerUid) {
-        Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
-        orderOptional.ifPresent(order -> {
-            if (order.getCustomerUid() == null) {
-                order.setCustomerUid(customerUid);
-            }
-        });
+    public void addCustomerInfo(String email, UUID customerUid) {
+        List<Order> orders = orderRepository.findByEmail(email);
+        orders.stream().filter(order -> order.getCustomerUid() == null).forEach(order -> order.setCustomerUid(customerUid));
     }
 
     @Override

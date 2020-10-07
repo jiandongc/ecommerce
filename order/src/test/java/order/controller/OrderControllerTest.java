@@ -351,22 +351,60 @@ public class OrderControllerTest extends AbstractControllerTest {
     @Test
     public void shouldAddCustomerInfo(){
         // Given
-        Order order = Order.builder().customerUid(null)
+        Order order = Order.builder().customerUid(null).email("joe@gmail.com")
                 .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
-        final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642440000", headers);
+
+        Order order2 = Order.builder().customerUid(null).email("joe@gmail.com")
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        order2.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
+        order2.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumber2 = orderService.createOrder(order2);
+
+        Order order3 = Order.builder().customerUid(null).email("mary@gmail.com")
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        order3.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
+        order3.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumber3 = orderService.createOrder(order3);
+
+        UUID existingCustomerUid = UUID.randomUUID();
+        Order order4 = Order.builder().customerUid(existingCustomerUid).email("joe@gmail.com")
+                .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
+                .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
+                .build();
+        order4.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
+        order4.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
+        String orderNumber4 = orderService.createOrder(order4);
+
+        // Given
+        final String customerData = "{\n" +
+                "\"id\": \"123e4567-e89b-42d3-a456-556642440000\",\n" +
+                "\"email\": \"joe@gmail.com\"\n" +
+                "}";
+
+        final HttpEntity<String> payload = new HttpEntity<>(customerData, headers);
 
         // When
-        ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "/customer", POST, payload, String.class);
 
         // Then
-        assertThat(response.getStatusCode(), is(CREATED));
+        assertThat(response.getStatusCode(), is(OK));
         Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
         assertThat(orderOptional.get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")));
+        Optional<Order> orderOptional2 = orderService.findByOrderNumber(orderNumber2);
+        assertThat(orderOptional2.get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")));
+        Optional<Order> orderOptional3 = orderService.findByOrderNumber(orderNumber3);
+        assertThat(orderOptional3.get().getCustomerUid(), is(nullValue()));
+        Optional<Order> orderOptional4 = orderService.findByOrderNumber(orderNumber4);
+        assertThat(orderOptional4.get().getCustomerUid(), is(existingCustomerUid));
     }
 
     @Test
@@ -379,11 +417,17 @@ public class OrderControllerTest extends AbstractControllerTest {
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
-        String orderNumber = orderService.createOrder(order);
-        final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642440000", headers);
+        orderService.createOrder(order);
+
+        // Given
+        final String customerData = "{\n" +
+                "\"id\": \"123e4567-e89b-42d3-a456-556642440000\",\n" +
+                "\"email\": \"joe@gmail.com\"\n" +
+                "}";
+        final HttpEntity<String> httpEntity = new HttpEntity<>(customerData, headers);
 
         // When
-        ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "/customer", POST, httpEntity, String.class);
 
         // Then
         assertThat(response.getStatusCode(), is(FORBIDDEN));
@@ -391,23 +435,30 @@ public class OrderControllerTest extends AbstractControllerTest {
 
     @Test
     public void shouldNotUpdateCustomerInfoIfAlreadySet(){
-        // Given
-        Order order = Order.builder().customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
+        UUID existingCustomerUid = UUID.randomUUID();
+        Order order = Order.builder().customerUid(existingCustomerUid).email("joe@gmail.com")
                 .items(ONE).postage(ONE).discount(ONE).totalBeforeVat(ONE)
                 .itemsVat(ONE).postageVat(ONE).discountVat(ONE).totalVat(ONE).orderTotal(ONE)
                 .build();
         order.addOrderItem(OrderItem.builder().sku("sku").code("code").name("name").description("desc").price(ONE).quantity(1).subTotal(ONE).vatRate(20).vat(ONE).sale(ONE).build());
         order.addOrderAddress(OrderAddress.builder().addressType("shipping").name("name").title("Mr.").mobile("000").addressLine1("addressline1").city("city").country("country").postcode("000").build());
         String orderNumber = orderService.createOrder(order);
-        final HttpEntity<String> httpEntity = new HttpEntity<>("123e4567-e89b-42d3-a456-556642441111", headers);
+
+        // Given
+        final String customerData = "{\n" +
+                "\"id\": \"123e4567-e89b-42d3-a456-556642440000\",\n" +
+                "\"email\": \"joe@gmail.com\"\n" +
+                "}";
+
+        final HttpEntity<String> payload = new HttpEntity<>(customerData, headers);
 
         // When
-        ResponseEntity<String> response = rest.exchange(BASE_URL + orderNumber + "/customer", POST, httpEntity, String.class);
+        ResponseEntity<String> response = rest.exchange(BASE_URL + "/customer", POST, payload, String.class);
 
         // Then
-        assertThat(response.getStatusCode(), is(CREATED));
+        assertThat(response.getStatusCode(), is(OK));
         Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
-        assertThat(orderOptional.get().getCustomerUid(), is(UUID.fromString("123e4567-e89b-42d3-a456-556642440000")));
+        assertThat(orderOptional.get().getCustomerUid(), is(existingCustomerUid));
     }
 
 }

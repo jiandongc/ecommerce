@@ -1,5 +1,6 @@
 package order.controller;
 
+import order.data.CustomerData;
 import order.domain.Order;
 import order.domain.OrderStatus;
 import order.service.OrderService;
@@ -48,11 +49,10 @@ public class OrderController {
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")
-    @RequestMapping(value = "{orderNumber}/customer", method = POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Order> addCustomerInfo(@PathVariable String orderNumber, @RequestBody String customerId) {
-        orderService.addCustomerInfo(orderNumber, UUID.fromString(customerId));
-        Optional<Order> order = orderService.findByOrderNumber(orderNumber);
-        return order.map(o -> new ResponseEntity<>(o, CREATED)).orElse(new ResponseEntity<>(NOT_FOUND));
+    @RequestMapping(value = "customer", method = POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity addCustomerInfo(@RequestBody CustomerData customerData) {
+        orderService.addCustomerInfo(customerData.getEmail(), UUID.fromString(customerData.getId()));
+        return new ResponseEntity<>(OK);
     }
 
     @PreAuthorize("hasAnyRole('ROLE_USER')")

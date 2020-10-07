@@ -143,4 +143,82 @@ public class OrderRepositoryTest extends AbstractRepositoryTest {
 
     }
 
+
+    @Test
+    public void shouldFindOrderByEmail(){
+        final Order orderOne = Order.builder()
+                .orderNumber("20191230")
+                .email("joe@gmail.com")
+                .customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
+                .items(new BigDecimal("20.2"))
+                .postage(new BigDecimal("3.0"))
+                .discount(new BigDecimal("-2.0"))
+                .totalBeforeVat(new BigDecimal("21.2"))
+                .itemsVat(new BigDecimal("0.3"))
+                .postageVat(new BigDecimal("0.2"))
+                .discountVat(new BigDecimal("-0.1"))
+                .totalVat(new BigDecimal("0.4"))
+                .orderTotal(new BigDecimal("21.6"))
+                .orderDate(LocalDate.of(2019, 12, 30))
+                .deliveryMethod("Standard Delivery")
+                .minDaysRequired(1)
+                .maxDaysRequired(3)
+                .creationTime(LocalDateTime.now())
+                .build();
+        orderRepository.save(orderOne);
+
+        final Order orderTwo = Order.builder()
+                .orderNumber("20191229")
+                .email("joe@gmail.com")
+                .customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
+                .items(new BigDecimal("20.2"))
+                .postage(new BigDecimal("3.0"))
+                .discount(new BigDecimal("-2.0"))
+                .totalBeforeVat(new BigDecimal("21.2"))
+                .itemsVat(new BigDecimal("0.3"))
+                .postageVat(new BigDecimal("0.2"))
+                .discountVat(new BigDecimal("-0.1"))
+                .totalVat(new BigDecimal("0.4"))
+                .orderTotal(new BigDecimal("21.6"))
+                .orderDate(LocalDate.of(2019, 12, 29))
+                .deliveryMethod("Standard Delivery")
+                .minDaysRequired(1)
+                .maxDaysRequired(3)
+                .creationTime(LocalDateTime.now())
+                .build();
+        orderRepository.save(orderTwo);
+
+        final Order orderThree = Order.builder()
+                .orderNumber("20191231")
+                .email("mary@gmail.com")
+                .customerUid(UUID.fromString("123e4567-e89b-42d3-a456-556642440000"))
+                .items(new BigDecimal("20.2"))
+                .postage(new BigDecimal("3.0"))
+                .discount(new BigDecimal("-2.0"))
+                .totalBeforeVat(new BigDecimal("21.2"))
+                .itemsVat(new BigDecimal("0.3"))
+                .postageVat(new BigDecimal("0.2"))
+                .discountVat(new BigDecimal("-0.1"))
+                .totalVat(new BigDecimal("0.4"))
+                .orderTotal(new BigDecimal("21.6"))
+                .orderDate(LocalDate.of(2019, 12, 31))
+                .deliveryMethod("Standard Delivery")
+                .minDaysRequired(1)
+                .maxDaysRequired(3)
+                .creationTime(LocalDateTime.now())
+                .build();
+        orderRepository.save(orderThree);
+
+        // When & Then
+        List<Order> orders = orderRepository.findByEmail("joe@gmail.com");
+        assertThat(orders.size(), is(2));
+
+        orders = orderRepository.findByEmail("mary@gmail.com");
+        assertThat(orders.size(), is(1));
+
+        orders = orderRepository.findByEmail("tom@gmail.com");
+        assertThat(orders.size(), is(0));
+
+    }
+
 }
