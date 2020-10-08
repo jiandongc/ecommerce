@@ -61,6 +61,7 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucher = Voucher.builder()
                 .type(Voucher.Type.PERCENTAGE)
                 .code(voucherCode)
+                .name("Welcome to Noodle Monster!")
                 .maxUses(1)
                 .maxUsesUser(1)
                 .discountAmount(BigDecimal.valueOf(20))
