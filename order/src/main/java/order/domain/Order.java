@@ -154,7 +154,6 @@ public class Order {
         return this.orderAddresses.stream().filter(address -> address.getAddressType().equalsIgnoreCase("Shipping")).findFirst();
     }
 
-    @JsonIgnore
     public String getCurrentStatus() {
         if (this.orderStatuses == null) {
             return "";

@@ -272,6 +272,7 @@ public class OrderControllerTest extends AbstractControllerTest {
         assertThat(response.getStatusCode(), is(OK));
         assertThat(response.getBody(), containsString("\"customerId\":\"123e4567-e89b-42d3-a456-556642440000\""));
         assertThat(response.getBody(), containsString("\"eta\""));
+        assertThat(response.getBody(), containsString("\"currentStatus\":\"CREATED\""));
     }
 
     @Test
