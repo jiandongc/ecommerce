@@ -20,30 +20,31 @@ order.factory('orderFactory', function($http, environment){
       });
 	};
 
-  var getOrderByCustomerId = function(customerId, status){
-      return $http.get(environment.orderUrl + '/orders?customerId=' + customerId + '&status=' + status).then(function(response){
-        return response.data;
-      });
-  }
+    var getOrderByCustomerId = function(customerId, status){
+        return $http.get(environment.orderUrl + '/orders?customerId=' + customerId + '&status=' + status).then(function(response){
+            return response.data;
+        });
+    }
 
-  var downloadStripeClientSecret = function(orderNumber, stripeMetaData){
-      return $http.post(environment.orderUrl + '/orders/stripe/' + orderNumber, stripeMetaData).then(function(response){
-        return response.data;
-      }); 
-  };
+    var downloadStripeClientSecret = function(orderNumber, stripeMetaData){
+        return $http.post(environment.orderUrl + '/orders/stripe/' + orderNumber, stripeMetaData).then(function(response){
+            return response.data;
+        });
+    };
 
-  var addCustomerInfo = function(orderNumber, customerId) {
-    return $http.post(environment.orderUrl + '/orders/' + orderNumber + '/customer', customerId).then(function(response) {
-        return response.data;
-    });
-  };
+    var addCustomerInfo = function(email, customerId) {
+        var customerData = {id: customerId, email: email};
+        return $http.post(environment.orderUrl + '/orders/customer', customerData).then(function(response) {
+            return response.data;
+        });
+    };
 
 	return {
     	createOrder: createOrder,
     	addOrderStatus: addOrderStatus,
     	getOrderByNumber: getOrderByNumber,
-      getOrderByCustomerId: getOrderByCustomerId,
-      downloadStripeClientSecret: downloadStripeClientSecret,
-      addCustomerInfo: addCustomerInfo
+        getOrderByCustomerId: getOrderByCustomerId,
+        downloadStripeClientSecret: downloadStripeClientSecret,
+        addCustomerInfo: addCustomerInfo
   	}
 });

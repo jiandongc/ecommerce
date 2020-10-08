@@ -40,6 +40,9 @@
                             <div class="fs-09 m-b-05">
                                 <div>Item(s) Subtotal: <span class="fw-bold">{{order.items + order.itemsVat | currency:'£'}}</span></div>
                                 <div>Postage & Packing: <span class="fw-bold">{{order.postage + order.postageVat | currency:'£'}}</span></div>
+                                <div ng-hide="order.discount==0">Discount: <span
+                                        class="fw-bold">({{order.discount +
+                                    order.discountVat | currency:'£'}})</span></div>
                                 <div>Grant Total: <span class="fw-bold">{{order.orderTotal | currency:'£'}}</span></div>
                             </div>
                         </div>

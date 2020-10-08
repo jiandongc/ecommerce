@@ -33,11 +33,11 @@
                         </div>
                         <div class="col-xs-6 col-sm-3">
                             <span class="fs-08">Status</span>
-                            <div class="fs-08 fw-bold">Processing</div>
+                            <div class="fs-08 fw-bold">{{order.currentStatus}}</div>
                         </div>
                         <div class="col-xs-6 col-sm-3">
-                            <span class="fs-08">TOTAL (POSTAGE)</span>
-                            <div class="fs-08 fw-bold">{{order.orderTotal | currency:'£'}} ({{order.postage + order.postageVat | currency:'£'}})</div>
+                            <span class="fs-08">TOTAL</span>
+                            <div class="fs-08 fw-bold">{{order.orderTotal | currency:'£'}}</div>
                         </div>
                         <div class="col-xs-6 col-sm-3">
                             <span class="fs-08">ORDER #</span>

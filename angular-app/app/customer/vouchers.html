@@ -44,10 +44,13 @@
 						{{voucher.name}}
 					</div>
 					<div class="col-xs-12 fs-10">
-						Voucher code: {{voucher.code}}
+						Voucher code: <span class="fw-bold">{{voucher.code}}</span>
 					</div>
-					<div class="col-xs-12 fs-10">
-						Valid until: {{voucher.endDate}}
+					<div class="col-xs-12 fs-10" ng-show="voucher.endDate">
+						Valid until: <span class="fw-bold">{{voucher.endDate}}</span>
+					</div>
+					<div class="col-xs-12 fs-10" ng-hide="voucher.endDate">
+						No expiry date
 					</div>
 				</div>
 			</div>

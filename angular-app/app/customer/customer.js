@@ -126,7 +126,7 @@ customer.controller('loginCtrl', function($scope, authService, $rootScope, $loca
     }
 });
 
-customer.controller('registerCtrl', function($scope, $routeParams, $localstorage, authService, customerFactory, orderFactory, authFactory) {
+customer.controller('registerCtrl', function($scope, $routeParams, $localstorage, authService, customerFactory, orderFactory, authFactory, shoppingCartFactory) {
 
     $scope.error = false;
     $scope.loading = false;
@@ -151,14 +151,13 @@ customer.controller('registerCtrl', function($scope, $routeParams, $localstorage
                 password: newCustomer.password
             };
 
-            if (typeof $routeParams.orderNumber !== 'undefined') {
-                authFactory.validateUser(credentials).then(function(response) {
-                    $localstorage.set('access_token', response.headers("Authentication"));
-                    orderFactory.addCustomerInfo($routeParams.orderNumber, data.id);
-                });
-            }
+            authFactory.validateUser(credentials).then(function(response) {
+                $localstorage.set('access_token', response.headers("Authentication"));
+                orderFactory.addCustomerInfo(data.email, data.id);
+                shoppingCartFactory.addWelcomeVoucher(data.id);
+                authService.authenticateUser(credentials);
+            });
 
-            authService.authenticateUser(credentials);
         }, function(error) {
             $scope.error = true;
             $scope.loading = false;

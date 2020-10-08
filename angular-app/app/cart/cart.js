@@ -169,6 +169,13 @@ cart.factory('shoppingCartFactory', function($http, $localstorage, environment) 
         });
     }
 
+    var addWelcomeVoucher = function(customerId) {
+        var customerData = {id: customerId};
+        return $http.post(environment.shoppingCartUrl + '/carts/vouchers/welcome', customerData).then(function(response) {
+            return response.data;
+        });
+    };
+
     return {
         addCustomerInfo: addCustomerInfo,
         addItemToShoppingCart: addItemToShoppingCart,
@@ -186,7 +193,8 @@ cart.factory('shoppingCartFactory', function($http, $localstorage, environment) 
         getOrderData: getOrderData,
         getVoucher: getVoucher,
         applyVoucher: applyVoucher,
-        removeVoucher: removeVoucher
+        removeVoucher: removeVoucher,
+        addWelcomeVoucher: addWelcomeVoucher
     }
 });
 
