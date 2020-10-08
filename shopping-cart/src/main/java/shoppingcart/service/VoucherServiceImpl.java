@@ -72,12 +72,12 @@ public class VoucherServiceImpl implements VoucherService {
 
     private String randomString() {
         LocalDate today = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YYYYMMdd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMdd");
         final String date = formatter.format(today);
 
         int leftLimit = 97; // letter 'a'
         int rightLimit = 122; // letter 'z'
-        int targetStringLength = 10;
+        int targetStringLength = 6;
         Random random = new Random();
 
         String generatedString = random.ints(leftLimit, rightLimit + 1)
