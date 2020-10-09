@@ -53,11 +53,11 @@ public class OrderDataMapper {
                     .description(cartItem.getDescription())
                     .price(cartItem.getPrice())
                     .quantity(cartItem.getQuantity())
-                    .subTotal(cartItem.getItemTotal())
+                    .subTotal(cartItem.getGrossTotal())
                     .imageUrl(cartItem.getImageUrl())
                     .vatRate(cartItem.getVatRate())
                     .vat(cartItem.getVat())
-                    .sale(cartItem.getSale())
+                    .sale(cartItem.getNetAmount())
                     .build();
             orderData.addOrderItem(itemData);
         });

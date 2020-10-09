@@ -115,7 +115,7 @@ public class ShoppingCart {
 
     public BigDecimal getItemSubTotal() {
         return this.getShoppingCartItems().stream()
-                .map(ShoppingCartItem::getItemTotal)
+                .map(ShoppingCartItem::getGrossTotal)
                 .reduce(ZERO.setScale(2, ROUND_HALF_UP), BigDecimal::add);
     }
 
@@ -127,7 +127,7 @@ public class ShoppingCart {
 
     public BigDecimal getItemsBeforeVat() {
         return this.getShoppingCartItems().stream()
-                .map(ShoppingCartItem::getSale)
+                .map(ShoppingCartItem::getNetAmount)
                 .reduce(ZERO.setScale(2, ROUND_HALF_UP), BigDecimal::add);
     }
 
@@ -172,7 +172,7 @@ public class ShoppingCart {
 
     private BigDecimal getDiscountVatRate() {
         BigDecimal vat = getItemsVat().add(getPostageVat());
-        BigDecimal total = getItemSubTotal().add(getPostage());
+        BigDecimal total = getItemsBeforeVat().add(getPostageBeforeVat());
         return total.compareTo(BigDecimal.ZERO) <= 0 ? BigDecimal.ZERO.setScale(2) : vat.divide(total, 2, ROUND_HALF_UP);
     }
 

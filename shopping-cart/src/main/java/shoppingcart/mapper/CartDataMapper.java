@@ -12,9 +12,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static java.math.BigDecimal.ROUND_HALF_UP;
-import static java.math.BigDecimal.ZERO;
-
 @Component
 public class CartDataMapper {
 
@@ -29,7 +26,7 @@ public class CartDataMapper {
                         .description(cartItem.getDescription())
                         .quantity(cartItem.getQuantity())
                         .sku(cartItem.getSku())
-                        .subTotal(cartItem.getItemTotal())
+                        .subTotal(cartItem.getGrossTotal())
                         .thumbnail(cartItem.getImageUrl())
                         .code(cartItem.getCode())
                         .vatRate(cartItem.getVatRate())

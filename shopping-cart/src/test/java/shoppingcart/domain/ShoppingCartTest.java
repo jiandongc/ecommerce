@@ -184,5 +184,123 @@ public class ShoppingCartTest {
         assertThat(shoppingCart.getOrderTotal(), is(BigDecimal.valueOf(19).setScale(2)));
     }
 
+    @Test
+    public void vatOnItemPlusVatOnPostagePlusDiscount(){
+        final ShoppingCart shoppingCart = ShoppingCart.builder().build();
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .code("code1")
+                .price(BigDecimal.valueOf(22.4))
+                .quantity(1)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .description("Size: S")
+                .vatRate(20)
+                .build();
+        shoppingCart.addItem(cartItem);
+        final DeliveryOption deliveryOption = DeliveryOption.builder().charge(3.99D).vatRate(20).build();
+        shoppingCart.setDeliveryOption(deliveryOption);
+        final Promotion promotion = Promotion.builder().voucherType(PERCENTAGE).discountAmount(BigDecimal.valueOf(20D)).build();
+        shoppingCart.setPromotion(promotion);
 
+        assertThat(shoppingCart.getItemsBeforeVat(), is(BigDecimal.valueOf(18.67).setScale(2)));
+        assertThat(shoppingCart.getItemsVat(), is(BigDecimal.valueOf(3.73).setScale(2)));
+        assertThat(shoppingCart.getPostageBeforeVat(), is(BigDecimal.valueOf(3.33).setScale(2)));
+        assertThat(shoppingCart.getPostageVat(), is(BigDecimal.valueOf(0.66).setScale(2)));
+        assertThat(shoppingCart.getDiscountBeforeVat(), is(BigDecimal.valueOf(4.4).setScale(2)));
+        assertThat(shoppingCart.getDiscountVat(), is(BigDecimal.valueOf(0.88).setScale(2)));
+        assertThat(shoppingCart.getTotalBeforeVat(), is(BigDecimal.valueOf(17.6).setScale(2)));
+        assertThat(shoppingCart.getVatTotal(), is(BigDecimal.valueOf(3.51).setScale(2)));
+        assertThat(shoppingCart.getOrderTotal(), is(BigDecimal.valueOf(21.11).setScale(2)));
+    }
+
+    @Test
+    public void noVatOnItemPlusVatOnPostagePlusDiscount(){
+        final ShoppingCart shoppingCart = ShoppingCart.builder().build();
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .code("code1")
+                .price(BigDecimal.valueOf(22.4))
+                .quantity(1)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .description("Size: S")
+                .vatRate(0)
+                .build();
+        shoppingCart.addItem(cartItem);
+        final DeliveryOption deliveryOption = DeliveryOption.builder().charge(3.99D).vatRate(20).build();
+        shoppingCart.setDeliveryOption(deliveryOption);
+        final Promotion promotion = Promotion.builder().voucherType(PERCENTAGE).discountAmount(BigDecimal.valueOf(20D)).build();
+        shoppingCart.setPromotion(promotion);
+
+        assertThat(shoppingCart.getItemsBeforeVat(), is(BigDecimal.valueOf(22.4).setScale(2)));
+        assertThat(shoppingCart.getItemsVat(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getPostageBeforeVat(), is(BigDecimal.valueOf(3.33).setScale(2)));
+        assertThat(shoppingCart.getPostageVat(), is(BigDecimal.valueOf(0.66).setScale(2)));
+        assertThat(shoppingCart.getDiscountBeforeVat(), is(BigDecimal.valueOf(5.13).setScale(2)));
+        assertThat(shoppingCart.getDiscountVat(), is(BigDecimal.valueOf(0.15).setScale(2)));
+        assertThat(shoppingCart.getTotalBeforeVat(), is(BigDecimal.valueOf(20.60).setScale(2)));
+        assertThat(shoppingCart.getVatTotal(), is(BigDecimal.valueOf(0.51).setScale(2)));
+        assertThat(shoppingCart.getOrderTotal(), is(BigDecimal.valueOf(21.11).setScale(2)));
+    }
+
+    @Test
+    public void vatOnItemPlusFreePostagePlusDiscount(){
+        final ShoppingCart shoppingCart = ShoppingCart.builder().build();
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .code("code1")
+                .price(BigDecimal.valueOf(22.4))
+                .quantity(1)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .description("Size: S")
+                .vatRate(20)
+                .build();
+        shoppingCart.addItem(cartItem);
+        final DeliveryOption deliveryOption = DeliveryOption.builder().charge(0D).vatRate(20).build();
+        shoppingCart.setDeliveryOption(deliveryOption);
+        final Promotion promotion = Promotion.builder().voucherType(PERCENTAGE).discountAmount(BigDecimal.valueOf(20D)).build();
+        shoppingCart.setPromotion(promotion);
+
+        assertThat(shoppingCart.getItemsBeforeVat(), is(BigDecimal.valueOf(18.67).setScale(2)));
+        assertThat(shoppingCart.getItemsVat(), is(BigDecimal.valueOf(3.73).setScale(2)));
+        assertThat(shoppingCart.getPostageBeforeVat(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getPostageVat(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getDiscountBeforeVat(), is(BigDecimal.valueOf(3.73).setScale(2)));
+        assertThat(shoppingCart.getDiscountVat(), is(BigDecimal.valueOf(0.75).setScale(2)));
+        assertThat(shoppingCart.getTotalBeforeVat(), is(BigDecimal.valueOf(14.94).setScale(2)));
+        assertThat(shoppingCart.getVatTotal(), is(BigDecimal.valueOf(2.98).setScale(2)));
+        assertThat(shoppingCart.getOrderTotal(), is(BigDecimal.valueOf(17.92).setScale(2)));
+    }
+
+    @Test
+    public void noVatOnItemPlusFreePostagePlusDiscount(){
+        final ShoppingCart shoppingCart = ShoppingCart.builder().build();
+        final ShoppingCartItem cartItem = ShoppingCartItem.builder()
+                .name("product")
+                .code("code1")
+                .price(BigDecimal.valueOf(22.4))
+                .quantity(1)
+                .sku("109283")
+                .imageUrl("/image.jpeg")
+                .description("Size: S")
+                .vatRate(0)
+                .build();
+        shoppingCart.addItem(cartItem);
+        final DeliveryOption deliveryOption = DeliveryOption.builder().charge(0D).vatRate(20).build();
+        shoppingCart.setDeliveryOption(deliveryOption);
+        final Promotion promotion = Promotion.builder().voucherType(PERCENTAGE).discountAmount(BigDecimal.valueOf(20D)).build();
+        shoppingCart.setPromotion(promotion);
+
+        assertThat(shoppingCart.getItemsBeforeVat(), is(BigDecimal.valueOf(22.4).setScale(2)));
+        assertThat(shoppingCart.getItemsVat(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getPostageBeforeVat(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getPostageVat(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getDiscountBeforeVat(), is(BigDecimal.valueOf(4.48).setScale(2)));
+        assertThat(shoppingCart.getDiscountVat(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getTotalBeforeVat(), is(BigDecimal.valueOf(17.92).setScale(2)));
+        assertThat(shoppingCart.getVatTotal(), is(BigDecimal.valueOf(0).setScale(2)));
+        assertThat(shoppingCart.getOrderTotal(), is(BigDecimal.valueOf(17.92).setScale(2)));
+    }
 }

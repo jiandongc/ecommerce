@@ -101,16 +101,14 @@ public class ShoppingCartController {
     public List<DeliveryOptionData> getDeliveryOptions(@PathVariable UUID cartUid) {
         Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByUid(cartUid);
         BigDecimal itemSubTotal = shoppingCart.map(ShoppingCart::getItemSubTotal).orElse(BigDecimal.ZERO);
-        if (itemSubTotal.compareTo(BigDecimal.valueOf(40L)) < 0) {
+        if (itemSubTotal.compareTo(BigDecimal.valueOf(29.99)) < 0) {
             return Arrays.asList(
-                    cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3D).minDaysRequired(3).maxDaysRequired(5).build()),
-                    cartDataMapper.map(DeliveryOption.builder().method("Tracked Express Delivery").charge(5D).minDaysRequired(1).maxDaysRequired(1).build()),
-                    cartDataMapper.map(DeliveryOption.builder().method("FREE Delivery").charge(0D).minDaysRequired(5).maxDaysRequired(7).build())
+                    cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3.99D).minDaysRequired(2).maxDaysRequired(5).vatRate(20).build())
             );
         } else {
             return Arrays.asList(
-                    cartDataMapper.map(DeliveryOption.builder().method("FREE Delivery").charge(0D).minDaysRequired(3).maxDaysRequired(5).build()),
-                    cartDataMapper.map(DeliveryOption.builder().method("Tracked Express Delivery").charge(3D).minDaysRequired(1).maxDaysRequired(1).build())
+                    cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3.99D).minDaysRequired(2).maxDaysRequired(5).vatRate(20).build()),
+                    cartDataMapper.map(DeliveryOption.builder().method("FREE Delivery").charge(0D).minDaysRequired(2).maxDaysRequired(5).vatRate(20).build())
             );
         }
     }

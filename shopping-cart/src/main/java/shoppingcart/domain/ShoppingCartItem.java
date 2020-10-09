@@ -99,17 +99,17 @@ public class ShoppingCartItem {
         return lastUpdateTime;
     }
 
-    public BigDecimal getItemTotal(){
+    public BigDecimal getGrossTotal(){
         return this.price.multiply(BigDecimal.valueOf(this.quantity)).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     public BigDecimal getVat(){
-        return this.getItemTotal().subtract(this.getSale());
+        return this.getGrossTotal().subtract(this.getNetAmount());
     }
 
-    public BigDecimal getSale(){
+    public BigDecimal getNetAmount(){
         double divisor = (double) vatRate / 100 + 1;
-        return this.getItemTotal().divide(BigDecimal.valueOf(divisor), 2, BigDecimal.ROUND_HALF_UP);
+        return this.getGrossTotal().divide(BigDecimal.valueOf(divisor), 2, BigDecimal.ROUND_HALF_UP);
     }
 
     @Override

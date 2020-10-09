@@ -35,7 +35,7 @@ public class ShoppingCartItemTest {
                 .build();
 
         // When
-        BigDecimal sale = cartItem.getSale();
+        BigDecimal sale = cartItem.getNetAmount();
 
         // Then
         assertThat(sale, is(BigDecimal.valueOf(4.98).setScale(2, BigDecimal.ROUND_HALF_UP)));
@@ -67,7 +67,7 @@ public class ShoppingCartItemTest {
                 .build();
 
         // When
-        BigDecimal sale = cartItem.getSale();
+        BigDecimal sale = cartItem.getNetAmount();
 
         // Then
         assertThat(sale, is(BigDecimal.valueOf(5.97).setScale(2, BigDecimal.ROUND_HALF_UP)));
