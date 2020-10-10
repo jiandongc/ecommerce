@@ -9,10 +9,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import shoppingcart.data.CustomerData;
 import shoppingcart.data.VoucherData;
+import shoppingcart.domain.Voucher;
 import shoppingcart.mapper.VoucherDataMapper;
+import shoppingcart.service.ShoppingCartEmailService;
 import shoppingcart.service.VoucherService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -30,6 +33,9 @@ public class VoucherController {
     @Autowired
     private VoucherDataMapper voucherDataMapper;
 
+    @Autowired
+    private ShoppingCartEmailService emailService;
+
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(method = GET)
     public List<VoucherData> getVouchers(@RequestParam(value = "customerId") String customerId,
@@ -42,7 +48,11 @@ public class VoucherController {
     @PreAuthorize("hasAnyRole('ROLE_USER')")
     @RequestMapping(value = "welcome", method = POST)
     public ResponseEntity addNewCustomerWelcomeVoucher(@RequestBody CustomerData customerData) {
-        voucherService.addNewCustomerWelcomeVoucher(UUID.fromString(customerData.getId()));
+        Optional<Voucher> voucherOptional = voucherService.addNewCustomerWelcomeVoucher(UUID.fromString(customerData.getId()));
+        voucherOptional.ifPresent(voucher -> emailService.sendWelcomeEmail(
+                customerData.getEmail(),
+                voucher.getDiscountAmount().toBigInteger().toString(),
+                voucher.getCode()));
         return new ResponseEntity<>(OK);
     }
 

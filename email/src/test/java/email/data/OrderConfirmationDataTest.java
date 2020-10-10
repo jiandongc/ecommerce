@@ -30,7 +30,7 @@ public class OrderConfirmationDataTest {
 
         // When
         String text = orderConfirmationData.generateText();
-System.out.println(text);
+
         // Then
         assertThat(text, containsString("Would you like to create an account with us to track your order on Noodle Monster? <a href=\"http://cawaii.co.uk/#!/register/0159-318963-2182\">Click here to create account</a>"));
     }

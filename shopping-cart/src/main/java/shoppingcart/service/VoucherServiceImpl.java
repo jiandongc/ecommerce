@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -48,12 +49,12 @@ public class VoucherServiceImpl implements VoucherService {
     }
 
     @Override
-    public void addNewCustomerWelcomeVoucher(UUID customerUid) {
+    public Optional<Voucher> addNewCustomerWelcomeVoucher(UUID customerUid) {
 
         final List<Voucher> vouchers = voucherRepository.findByCustomerUid(customerUid);
         for (Voucher voucher : vouchers) {
             if (voucher.getCode().startsWith("WELCOME20_")) {
-                return;
+                return Optional.empty();
             }
         }
 
@@ -69,6 +70,7 @@ public class VoucherServiceImpl implements VoucherService {
                 .customerUid(customerUid)
                 .build();
         voucherRepository.save(voucher);
+        return voucherRepository.findByVoucherCode(voucherCode);
     }
 
     private String randomString() {
