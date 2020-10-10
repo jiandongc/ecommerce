@@ -169,8 +169,8 @@ cart.factory('shoppingCartFactory', function($http, $localstorage, environment) 
         });
     }
 
-    var addWelcomeVoucher = function(customerId) {
-        var customerData = {id: customerId};
+    var addWelcomeVoucher = function(customerId, email) {
+        var customerData = {id: customerId, email: email};
         return $http.post(environment.shoppingCartUrl + '/carts/vouchers/welcome', customerData).then(function(response) {
             return response.data;
         });

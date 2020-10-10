@@ -154,7 +154,7 @@ customer.controller('registerCtrl', function($scope, $routeParams, $localstorage
             authFactory.validateUser(credentials).then(function(response) {
                 $localstorage.set('access_token', response.headers("Authentication"));
                 orderFactory.addCustomerInfo(data.email, data.id);
-                shoppingCartFactory.addWelcomeVoucher(data.id);
+                shoppingCartFactory.addWelcomeVoucher(data.id, data.email);
                 authService.authenticateUser(credentials);
             });
 
