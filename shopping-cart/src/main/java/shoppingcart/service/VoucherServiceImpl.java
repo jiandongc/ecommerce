@@ -66,7 +66,7 @@ public class VoucherServiceImpl implements VoucherService {
                 .maxUses(1)
                 .maxUsesUser(1)
                 .discountAmount(BigDecimal.valueOf(20))
-                .startDate(LocalDate.now())
+                .startDate(LocalDate.now().minusDays(1))
                 .customerUid(customerUid)
                 .build();
         voucherRepository.save(voucher);

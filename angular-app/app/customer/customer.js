@@ -143,8 +143,6 @@ customer.controller('registerCtrl', function($scope, $routeParams, $localstorage
         };
 
         customerFactory.save(newCustomer).then(function(data) {
-            $scope.error = false;
-            $scope.loading = false;
 
             var credentials = {
                 email: data.email,
@@ -158,6 +156,8 @@ customer.controller('registerCtrl', function($scope, $routeParams, $localstorage
                 authService.authenticateUser(credentials);
             });
 
+            $scope.error = false;
+            $scope.loading = false;
         }, function(error) {
             $scope.error = true;
             $scope.loading = false;
