@@ -33,7 +33,7 @@ public class OrderController {
         return new ResponseEntity<>(orderService.createOrder(order), CREATED);
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ADMIN')")
     @RequestMapping(value = "{orderNumber}/status", method = POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order> addOrderStatus(@PathVariable String orderNumber, @RequestBody OrderStatus orderStatus) {
         orderService.addOrderStatus(orderNumber, orderStatus);
@@ -41,7 +41,7 @@ public class OrderController {
         return order.map(o -> new ResponseEntity<>(o, CREATED)).orElse(new ResponseEntity<>(NOT_FOUND));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ADMIN')")
     @RequestMapping(value = "{orderNumber}", method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Order> getOrderByOrderNumber(@PathVariable String orderNumber) {
         Optional<Order> order = orderService.findByOrderNumber(orderNumber);

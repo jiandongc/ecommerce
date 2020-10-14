@@ -10,9 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -68,10 +66,37 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(readOnly = true)
     public List<Order> findOrders(UUID customerUid, String status) {
         final List<Order> orders = orderRepository.findByCustomerUidOrderByOrderDateDesc(customerUid);
-        if ("open".equalsIgnoreCase(status)) {
-            return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("created|processing|shipped|payment succeeded")).collect(Collectors.toList());
-        } else if ("completed".equalsIgnoreCase(status)) {
-            return orders.stream().filter(order -> order.getCurrentStatus().toLowerCase().matches("delivered|returned|cancelled|failed")).collect(Collectors.toList());
+        if (status != null) {
+            return orders.stream().filter(OrderPredicate.statusFilter(status)).collect(Collectors.toList());
+        } else {
+            return orders;
+        }
+
+    }
+
+    @Override
+    public List<Order> findOrders(String status, String date, String orderNumber, String sort) {
+        if (orderNumber != null) {
+            Optional<Order> orderOptional = orderRepository.findByOrderNumber(orderNumber);
+            return orderOptional.map(order -> Arrays.asList(order)).orElse(Collections.emptyList());
+        }
+
+        List<Order> orders = orderRepository.findAll();
+
+        if (status != null) {
+            orders = orders.stream().filter(OrderPredicate.statusFilter(status)).collect(Collectors.toList());
+        }
+
+        if (date != null) {
+            orders = orders.stream().filter(OrderPredicate.orderDateFilter(LocalDate.parse(date))).collect(Collectors.toList());
+        }
+
+        if (sort != null && sort.equalsIgnoreCase("date.asc")) {
+            orders = orders.stream().sorted(OrderPredicate.orderDateAscComparator()).collect(Collectors.toList());
+        }
+
+        if (sort != null && sort.equalsIgnoreCase("date.desc")) {
+            orders = orders.stream().sorted(OrderPredicate.orderDateDescComparator()).collect(Collectors.toList());
         }
 
         return orders;

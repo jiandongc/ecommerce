@@ -12,6 +12,7 @@ import order.data.StripeMetaData;
 import order.domain.Order;
 import order.domain.OrderAddress;
 import order.domain.OrderStatus;
+import order.mapper.OrderConfirmationDataMapper;
 import order.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,6 +48,9 @@ public class StripePayController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private OrderConfirmationDataMapper orderConfirmationDataMapper;
 
     @Value("${stripe.apiKey}")
     private String apiKey;
@@ -98,42 +100,7 @@ public class StripePayController {
                 );
 
                 Order order = orderOptional.get();
-                OrderAddress shippingAddress = order.getShippingAddress().get();
-                List<OrderConfirmationData.OrderItemData> orderItems = order.getOrderItems().stream()
-                        .map(item -> OrderConfirmationData.OrderItemData.builder()
-                                .code(item.getCode())
-                                .description(item.getDescription())
-                                .imageUrl(item.getImageUrl())
-                                .name(item.getName())
-                                .quantity(String.valueOf(item.getQuantity()))
-                                .price(item.getPrice().setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString())
-                                .subTotal(item.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString())
-                                .sku(item.getSku())
-                                .build())
-                        .collect(Collectors.toList());
-                OrderConfirmationData orderConfirmationData = OrderConfirmationData.builder()
-                        .sendTo(Arrays.asList(order.getEmail()))
-                        .customerName(name)
-                        .orderNumber(order.getOrderNumber())
-                        .orderEta(order.getEta())
-                        .orderDeliveryMethod(order.getDeliveryMethod())
-                        .orderItems(orderItems)
-                        .shippingAddress(
-                                OrderConfirmationData.AddressData.builder()
-                                        .title(shippingAddress.getTitle())
-                                        .name(shippingAddress.getName())
-                                        .addressLine1(shippingAddress.getAddressLine1())
-                                        .addressLine2(shippingAddress.getAddressLine2())
-                                        .city(shippingAddress.getCity())
-                                        .country(shippingAddress.getCountry())
-                                        .build()
-                        )
-                        .guest(order.getCustomerUid() == null)
-                        .siteName(siteName)
-                        .homePage(homePage)
-                        .registrationPage(registrationPage)
-                        .build();
-
+                OrderConfirmationData orderConfirmationData = orderConfirmationDataMapper.map(order, name, siteName, registrationPage, homePage);
                 emailService.sendMessage(orderConfirmationData);
             } else {
                 response.setStatus(400);

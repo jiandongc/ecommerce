@@ -13,4 +13,5 @@ public interface OrderService {
     void addCustomerInfo(String orderNumber, UUID customerUid);
     void addOrderStatus(String orderNumber, OrderStatus orderStatus);
     List<Order> findOrders(UUID customerUid, String status);
+    List<Order> findOrders(String status, String date, String orderNumber, String sort);
 }
