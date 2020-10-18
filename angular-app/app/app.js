@@ -13,7 +13,8 @@ var app = angular.module('store', [
     'productTag',
     'review',
     'brand',
-    'blog'
+    'blog',
+    'admin'
 ]);
 
 app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, $q, environment, shoppingCartFactory, categoryFactory) {

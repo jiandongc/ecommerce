@@ -17,7 +17,9 @@
     "html5-boilerplate": "~4.3.0",
     "animate.css": "latest",
     "flexslider": "2.6.4",
-    "checklist-model": "0.11.0"
+    "checklist-model": "0.11.0",
+    "pdfmake": "0.1.22",
+    "html2canvas": "0.4.1"
   },
   "resolutions": {
     "angular": "~1.7"
