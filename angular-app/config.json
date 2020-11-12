@@ -25,10 +25,10 @@
 			"productUrl": "https://service.noodle-monster.co.uk/p",
 			"reviewUrl": "https://service.noodle-monster.co.uk/r",
 			"siteName": "Noodle Monster",
-			"categoryPage": "https://noodle-monster.co.uk/#!/category",
-			"productPage": "http://noodle-monster.co.uk/#!/products",
-			"homePage": "https://noodle-monster.co.uk/#!/home",
-			"registrationPage": "https://noodle-monster.co.uk/#!/register/",
+			"categoryPage": "https://noodle-monster.co.uk/category",
+			"productPage": "http://noodle-monster.co.uk/products",
+			"homePage": "https://noodle-monster.co.uk/",
+			"registrationPage": "https://noodle-monster.co.uk/register/",
 			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
 			"categories": ["noodles", "ins-noodles", "noodles-mate"]
 		}	

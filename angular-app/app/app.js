@@ -189,9 +189,10 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q, $ro
     return service;
 });
 
-app.config(function($routeProvider, $httpProvider) {
+app.config(function($routeProvider, $httpProvider, $locationProvider) {
+    $locationProvider.html5Mode(true);
     $routeProvider.otherwise({
-        redirectTo: '/home'
+        redirectTo: '/'
     });
     $httpProvider.interceptors.push('accessTokenInterceptor');
 });

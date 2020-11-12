@@ -1,0 +1,63 @@
+<div class="container">
+    <div ng-show="loading" class="m-t-05 m-b-05 fs-20" style="text-align: center;">
+        <i class="glyphicon glyphicon-refresh spinning"></i>
+    </div>
+    <div ng-show="!loading" class="row m-b-02">
+        <div class="col-xs-6">
+            <ul class="breadcrumb category-crumb hidden-xs hidden-sm">
+                <li><a href="home"><i class="glyphicon glyphicon-home"></i></a></li>
+                <li><a href="brands">All Brands</a></li>
+                <li class="fw-bold"><a href="brands/{{brand.code}}">{{brand.name}}</a></li>
+            </ul>
+            <ul class="category-crumb visible-xs-block visible-sm-block">
+                <div>
+                    <i class="glyphicon glyphicon-chevron-left"></i>
+					<a href="brands">All Brands</a></li>
+                </div>
+            </ul>
+        </div>
+        <div class="col-xs-6">
+            <span class="label label-info fs-10 pull-right m-t-10">{{size}} products</span>
+        </div>
+    </div>
+    <div ng-show="!loading" class="row m-b-10">
+        <div class="media col-xs-12 col-sm-12 col-md-8 col-lg-10">
+            <div class="media-left media-middle">
+                <a href="brands/{{brand.code}}">
+                    <img class="media-object img-circle" height="128" width="128" ng-src='{{brand.imageUrl}}'>
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">{{brand.name}}&nbsp;&nbsp;<i class="fas fa-check-circle" style="color:#00acee;"></i></h4>
+                <p class="color-grey" ng-bind-html="brand.description"></p>
+            </div>
+        </div>
+        <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
+            <div class="btn-group m-b-10 pull-right">
+                <button class="btn btn-info btn-sort dropdown-toggle" type="button" data-toggle="dropdown">
+                    {{sort.display}}&nbsp;&nbsp;<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li class="m-l-05"><a href="" ng-click="sortby('Our favourites')">Our favourites</a></li>
+                    <li class="m-l-05"><a href="" ng-click="sortby('Price high to low', 'price.desc')">Price high to low</a></li>
+                    <li class="m-l-05"><a href="" ng-click="sortby('Price low to high', 'price.asc')">Price low to high</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div ng-show="!loading && size>0" class="row auto-clear product-list">
+        <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 p-b-20" ng-repeat="product in products">
+            <a href="products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
+            <div>
+                <span class="fs-16 fw-bold" ng-class="{'color-valencia': product.onSale}">{{product.price | currency:"£"}}</span>
+                <span ng-show="product.onSale" class="fs-12 m-l-05 text-line-through">{{product.originalPrice | currency:"£"}}</span>
+            </div>
+            <a href="products/{{product.code}}"><span class="color-emperor fs-10">{{product.name}}</span></a>
+        </div>
+    </div>
+    <div ng-show="!loading && size==0" class="row m-b-10">
+        <div class="col-xs-12 color-san-juan">
+            There are no products matching the selection.
+        </div>
+    </div>
+</div>

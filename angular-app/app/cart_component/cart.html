@@ -1,0 +1,70 @@
+<div class="container cart">
+    <div class="row" ng-show="cartUid">
+        <div class="col-xs-12 m-b-15">
+            <div class="pull-right">
+                <div class="title m-b-05">
+                    Bag {{totalQuantity}} itme(s): <span style="color: #B12704">{{itemsTotal | currency:'£'}}</span>
+                </div>
+                <button type="button" class="btn btn-style-primary pull-right" ng-click="checkout()">
+                    <span ng-show="checking"><i class="glyphicon glyphicon-refresh spinning"></i></span> Proceed to Checkout
+                </button>
+            </div>
+        </div>
+        <div class="a-box-group col-xs-12 m-b-15">
+            <div class="p-10 a-box" ng-repeat="cartItem in cartItems">
+                <div class="row">
+                    <div class="col-xs-9">
+                        <div style="float: left;" class="m-r-10">
+                            <a href="products/{{cartItem.code}}">
+                                <img class="img-responsive" ng-src="{{cartItem.thumbnail}}" style="width: 100px; height: 100px;">
+                            </a>
+                        </div>
+                        <div class="p-r-05">
+                            <div class="fs-08">
+                                <a href="products/{{cartItem.code}}">{{cartItem.name}}</a>
+                            </div>
+                            <div class="fs-08">
+                                <span class="fw-light">#{{cartItem.sku}}</span>
+                            </div>
+                            <div class="fs-08">
+                                <span class="fw-light">{{cartItem.description}}</span>
+                            </div>
+                            <div class="fs-08">
+                                <span class="fw-light">Price (each):&nbsp&nbsp</span>
+                                <span class="fw-bold">{{cartItem.price | currency:'£'}}</span>
+                            </div>
+                            <div class="fs-08">
+                                <span class="fw-light">Quantity:&nbsp&nbsp</span>
+                                <select ng-model="cartItem.quantity" ng-options="n for n in [1,2,3,4,5,6,7,8,9,10]" ng-change="updateItem(cartItem)" ng-model-options="{updateOn:'default blur', debounce:{default: 1000, blur: 500}}"></select>
+                            </div>
+                            <div class="fs-08">
+                                <span class="fw-light">Sub-total:&nbsp&nbsp</span>
+                                <span class="fw-bold">{{cartItem.subTotal | currency:'£'}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-3">
+                        <div class="fs-08">
+                            <a href ng-click="removeItem(cartItem)">Remove</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 m-b-15">
+            <div class="pull-right">
+                <button type="button" class="btn btn-style-primary pull-right" ng-click="checkout()">
+                    <span ng-show="checking"><i class="glyphicon glyphicon-refresh spinning"></i></span> Proceed to Checkout
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row m-b-10" ng-show="!cartUid">
+        <div class="col-xs-12 fs-09 color-san-juan">
+            You have no items in your shopping cart.
+        </div>
+    </div>
+
+</div>

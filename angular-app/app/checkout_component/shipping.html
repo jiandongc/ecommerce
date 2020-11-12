@@ -1,0 +1,46 @@
+<div class="container checkout">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="row">
+                <progressbar value="20%"></progressbar>
+                <div class="col-xs-12 address">
+                    <div class="header p-b-05">Shipping Address</div>
+                    <div class="a-box-group">
+                        <div class="a-box p-15" ng-repeat="address in addresses | orderBy :'defaultAddress' : true">
+                            <div class="row">
+                                <div class="col-xs-12 col-sm-8">
+                                    <div class="pull-left" style="top: 35%; position: absolute;">
+                                        <input type="radio" ng-checked="selected===$index" ng-click="select($index, address)">
+                                    </div>
+                                    <div class="m-l-20">
+                                        <div class="name">{{address.title}} {{address.name}}</div>
+                                        <div>{{address.addressLine1}}</div>
+                                        <div>{{address.addressLine2}}</div>
+                                        <div>{{address.city}}, {{address.postcode}}</div>
+                                        <div>{{address.country}}</div>
+                                        <div>T: {{address.mobile}}</div>
+                                    </div>
+                                </div>
+                                <div class="col-xs-12 col-sm-4" ng-show="selected===$index">
+                                    <button class="btn btn-block btn-style-primary" ng-click="saveAddress(address)">
+                                        <span ng-show="saveAddressLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                                        Deliver to this address
+                                    </button>
+                                    <a class="btn btn-block btn-style-secondary" href="checkout/shipping/{{customerId}}/address/{{address.id}}/edit">Edit address</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row p-t-05 p-b-05">
+                        <div class="col-sm-6">
+                            <a class="btn btn-block btn-style-primary" href="checkout/shipping/address/add">Add a new address</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <summary></summary>
+        </div>
+    </div>
+</div>

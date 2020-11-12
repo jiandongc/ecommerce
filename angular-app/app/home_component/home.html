@@ -1,0 +1,115 @@
+<div class="container">
+    <div class="m-t-02">
+        <div id="carousel" class="carousel slide" data-ride="carousel">
+            <ol class="carousel-indicators">
+                <li data-target="#carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel" data-slide-to="1"></li>
+                <li data-target="#carousel" data-slide-to="2"></li>
+                <!--<li data-target="#carousel" data-slide-to="3"></li>-->
+            </ol>
+
+            <div class="carousel-inner">
+                <div class="item active">
+                    <img src="/images/banner/stay-at-home-eat-some-noodles-beat-the-virus.png" style="width:100%;">
+                </div>
+                <div class="item">
+                    <img src="/images/banner/noodle-monster-new-account-discount.png" style="width:100%;">
+                </div>
+
+                <div class="item">
+                    <img src="/images/banner/noodle-monster-free-shipping.png" style="width:100%;">
+                </div>
+                <!--<div class="item">-->
+                    <!--<img src="/images/banner-4.png" style="width:100%;">-->
+                <!--</div>-->
+            </div>
+
+            <a class="left carousel-control" data-target="#carousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="right carousel-control" data-target="#carousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </div>
+
+	<div class="p-05 underline">
+		<img src="/images/Tilda_Icons_3st_store.svg" style="width: 30px; height: 30px; vertical-align: middle;">
+    	<span class="fw-bold fs-15 color-grey" style="vertical-align: middle;">Categories</span>
+	</div>
+	<div class="row p-05">
+		<div class="a-box-group col-xs-12 col-sm-6 m-t-05 box-2" ng-repeat="category in categories">
+			<div class="a-box a-color-offset-background p-05">
+				<a href="category/{{category.code}}" class="color-grey">{{category.name}}</a>
+			</div>
+			<div class="a-box p-05">
+				<div class="row">
+					<span ng-repeat="children in category.children">
+						<div class="col-xs-6 col-sm-4">
+	                		<a href="category/{{children.code}}" class="link-primary">{{children.name}}</a>
+	                	</div>
+	            	</span>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<productpanel tag="促销" title="Sale" color="color-grey" categories="categories" icon="/images/Tilda_Icons_3st_discount.svg"></productpanel>
+    <productpanel tag="新款到货" title="New In" color="color-grey" categories="categories" icon="/images/Tilda_Icons_2web_star.svg"></productpanel>
+
+	<div class="p-05 underline">
+		<img src="/images/Blck_Tilda_Icons_46_ny_discount.svg" style="width: 30px; height: 30px; vertical-align: middle;">
+		<span class="fw-bold fs-15 color-grey" style="vertical-align: middle;">Tags</span>
+	</div>
+	<div ng-repeat="item in tags" class="p-t-10 p-r-05 p-b-10" style="display: inline-block;">
+		<a class="clickable-label" href="tags/{{item.tag}}">
+			<span class="fs-12 label" style="background-color: {{item.colorHex}}">#{{item.tag}}</span>
+		</a>
+	</div>
+	<div class="p-b-20">
+		<span class="pull-right"><a href="tags">VIEW MORE</a></span>
+	</div>
+
+	<div class="p-05 underline">
+		<img src="/images/Tilda_Icons_9ta_medal.svg" style="width: 30px; height: 30px; vertical-align: middle;">
+		<span class="fw-bold fs-15 color-grey" style="vertical-align: middle;">Brands</span>
+	</div>
+	<div ng-show="!loadingBrands" class="row auto-clear">
+		<div ng-repeat="brand in brands | limitTo:6" class="col-lg-2 col-md-3 col-sm-4 col-xs-6 p-b-10">
+			<div class="thumbnail" style="border: 0px;">
+				<a href="brands/{{brand.code}}">
+					<img class="media-object img-circle" ng-src='{{brand.imageUrl}}'>
+				</a>
+				<div class="caption">
+					<div style="text-align: center;">
+						{{brand.name}}&nbsp;&nbsp;<i class="fas fa-check-circle" style="color:#00acee;"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="p-b-20">
+		<span class="pull-right"><a href="brands">VIEW MORE</a></span>
+	</div>
+
+	<div class="p-t-05 p-b-15 clearfix">
+		<div class="row">
+			<div class="col-md-3 hidden-xs hidden-sm">
+				<span style="display: inline-block; height: 100%; vertical-align: middle;"></span>
+				<img src="/images/logo_grey.png" class="img-responsive" style="vertical-align: middle;">
+			</div>
+			<div class="col-md-9 col-sm-12">
+				<div class="row">
+					<div class="col-xs-12">
+						<span class="fw-bold fs-20">We Want Your Feedback</span>
+					</div>
+					<div class="col-xs-12">
+						<postfeedback seeallbutton=true></postfeedback>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

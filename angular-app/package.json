@@ -10,7 +10,7 @@
     "cssmin": "latest",
     "gulp": "^3.9.1",
     "gulp-ng-config": "latest",
-    "http-server": "^0.6.1",
+    "http-server": "^0.12.3",
     "jshint": "latest",
     "karma": "^0.13",
     "karma-junit-reporter": "^0.2.2",
@@ -21,7 +21,7 @@
   "scripts": {
     "postinstall": "bower install",
     "prestart": "npm install",
-    "start": "http-server -a localhost -p 8000 -c-1",
+    "start": "http-server -a localhost -p 8000 --P http://localhost:8000/app/? -c-1",
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",

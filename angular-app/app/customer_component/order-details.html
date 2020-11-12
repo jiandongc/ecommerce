@@ -1,0 +1,82 @@
+<div class="container account">
+    <div class="row">
+        <ul class="breadcrumb fs-09" style="background: #fff;">
+            <li><a href="account/{{customer.id}}"><span class="color-san-juan">Your Account</span></a></li>
+            <li><a href="account/{{customer.id}}/orders?status=all"><span class="color-san-juan">Your Orders</span></a></li>
+            <li><span class="color-tenne">Order Details</span></li>
+        </ul>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 fs-18 m-b-02">Order Details</div>
+        <div class="col-xs-12 fs-08 m-b-10">
+            Ordered on {{order.orderDate.dayOfMonth}} {{order.orderDate.month}} {{order.orderDate.year}}<span class="fw-light"> | </span>Order # {{order.orderNumber}}
+        </div>
+        <div class="col-xs-12 m-b-10">
+            <div class="a-box-group">
+                <div class="p-10 a-box">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Delivery Address</span>
+                            <div class="fs-09 m-b-05" ng-repeat="address in order.orderAddresses | filter:{addressType:'Shipping'}">
+                                <div>{{address.title}} {{address.name}}</div>
+                                <div>{{address.addressLine1}}</div>
+                                <div>{{address.addressLine2}}</div>
+                                <div>{{address.city}}, {{address.postcode}}</div>
+                                <div>{{address.country}}</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Billing Address</span>
+                            <div class="fs-09 m-b-05" ng-repeat="address in order.orderAddresses | filter:{addressType:'Billing'}">
+                                <div>{{address.title}} {{address.name}}</div>
+                                <div>{{address.addressLine1}}</div>
+                                <div>{{address.addressLine2}}</div>
+                                <div>{{address.city}}, {{address.postcode}}</div>
+                                <div>{{address.country}}</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Order Summary</span>
+                            <div class="fs-09 m-b-05">
+                                <div>Item(s) Subtotal: <span class="fw-bold">{{order.items + order.itemsVat | currency:'£'}}</span></div>
+                                <div>Postage & Packing: <span class="fw-bold">{{order.postage + order.postageVat | currency:'£'}}</span></div>
+                                <div ng-hide="order.discount==0">Discount: <span
+                                        class="fw-bold">({{order.discount +
+                                    order.discountVat | currency:'£'}})</span></div>
+                                <div>Grant Total: <span class="fw-bold">{{order.orderTotal | currency:'£'}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-10 a-box">
+                    <div class="row">
+                        <div class="col-xs-12 fw-bold fs-09 m-b-02">Order Status</div>
+                        <div ng-repeat="orderStatus in order.orderStatuses" class="col-xs-12 fs-09">
+                            {{orderStatus.creationTime.dayOfMonth}} {{orderStatus.creationTime.month}} {{orderStatus.creationTime.year}} : Order {{orderStatus.status}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 m-b-10">
+            <div class="a-box-group">
+                <div class="p-l-10 p-t-05 p-b-05 a-box a-color-offset-background fs-09 fw-bold">Order Items</div>
+                <div class="p-10 a-box" ng-repeat="orderItem in order.orderItems">
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3">
+                            <img src="{{orderItem.imageUrl}}" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <a href="products/{{orderItem.code}}">
+                                <span class="fs-08">{{orderItem.name}}</span>
+                            </a>
+                            <div class="fs-08">Price (each):&nbsp&nbsp<span class="fw-bold">{{orderItem.price | currency:'£'}}</span></div>
+                            <div class="fs-08">Quantity:&nbsp&nbsp<span class="fw-bold">{{orderItem.quantity}}</span></div>
+                            <div class="fs-08">Sub-total:&nbsp&nbsp<span class="fw-bold">{{orderItem.subTotal | currency:'£'}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,90 @@
+<div class="container account">
+	<div class="row">
+		<ul class="breadcrumb fs-09" style="background: #fff;">
+  			<li><a href="account/{{customer.id}}"><span style="color: #45555f;">Your Account</span></a></li>
+  			<li><span style="color: #c45500;">Your Profile</span></li>
+		</ul>
+	</div>
+	<div class = "row">
+		<div class = "col-xs-12 col-md-6">
+			<div id="error" ng-show="error" class="alert alert-danger width-60">{{errorMsg}}</div>
+			<form name="userform" ng-submit="userform.$valid && update(customer)">
+				<table class="table">
+					<tr>
+						<td>
+							<div class="p-t-05 required-field">Title </div>
+						</td>
+						<td>
+							<select class="form-control" id="customerTitle" ng-model="customer.title">
+								<option value="" disabled selected>Please select</option>
+								<option>Mr</option>
+								<option>Mrs</option>
+								<option>Miss</option>
+								<option>Ms</option>
+								<option>Dr.</option>
+								<option>Rev.</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="p-t-05 required-field">Name </div>
+						</td>
+						<td>
+							<div ng-class="{'has-error': userform.name.$invalid && (userform.name.$touched || userform.$submitted) }">
+								<input type="text" id="name" name="name" class="form-control" ng-model="customer.name" required>
+								<div id="nameMsg" ng-show="userform.name.$touched || userform.$submitted">
+									<p ng-show="userform.name.$error.required" class="help-block">
+										Username is missing. Please check and try again.
+									</p>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="p-t-05 required-field">Email </div>
+						</td>
+						<td>
+							<div ng-class="{'has-error': userform.email.$invalid && (userform.email.$touched || userform.$submitted)}">
+								<input type="text" id="email" name="email" class="form-control" ng-model="customer.email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/" required>
+								<div id="emailMsg" ng-show="userform.email.$touched || userform.$submitted">
+									<p ng-show="userform.email.$error.required" class="help-block">
+										Email is missing. Please check and try again.
+									</p>
+									<p ng-show="userform.email.$error.pattern" class="help-block">
+										Sorry, that email doesn’t look right. Please check it’s a proper email.
+									</p>
+								</div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<div class="p-t-05">Mobile</div>
+						</td>
+						<td>
+							<div ng-class="{'has-error': userform.mobile.$invalid && (userform.mobile.$touched || userform.$submitted) }">
+								<input type="text" id="mobile" name="mobile" class="form-control" ng-model="customer.mobile" ng-pattern="/^(?:0|\+?44)(?:\d\s?){9,10}$/">
+								<div id="mobileMsg" ng-show="userform.mobile.$touched || userform.$submitted">
+									<p ng-show="userform.mobile.$error.pattern" class="help-block">
+										Mobile is invalid. Please enter a valid UK number.
+									</p>
+								</div>
+							</div>
+							
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<button id="cancelBtn" type="button" class="btn btn-style-primary" ng-click="cancel()">Cancel</button>
+                            <button id="updateBtn" type="submit" class="btn btn-style-primary">
+                                <span ng-show="saving"><i class="glyphicon glyphicon-refresh spinning"></i>&nbsp;</span>Save changes
+                            </button>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>
+</div>
