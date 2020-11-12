@@ -30,7 +30,7 @@ import java.util.List;
 @Ignore
 public class SiteMapGenerator extends AbstractRepositoryTest {
 
-    private static final String BASE_URL = "https://noodle-monster.co.uk/#!";
+    private static final String BASE_URL = "https://noodle-monster.co.uk";
     private static final String BASE_DIRECTORY = "/home/jiandong/Project2015";
 
     @Autowired
