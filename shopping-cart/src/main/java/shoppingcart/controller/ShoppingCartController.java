@@ -101,7 +101,7 @@ public class ShoppingCartController {
     public List<DeliveryOptionData> getDeliveryOptions(@PathVariable UUID cartUid) {
         Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByUid(cartUid);
         BigDecimal itemSubTotal = shoppingCart.map(ShoppingCart::getItemSubTotal).orElse(BigDecimal.ZERO);
-        if (itemSubTotal.compareTo(BigDecimal.valueOf(29.99)) < 0) {
+        if (itemSubTotal.compareTo(BigDecimal.valueOf(39.99)) < 0) {
             return Arrays.asList(
                     cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3.99D).minDaysRequired(2).maxDaysRequired(5).vatRate(20).build())
             );
