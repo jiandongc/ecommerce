@@ -1,6 +1,6 @@
 var category = angular.module('category', ['ngRoute', 'checklist-model']);
 
-category.controller('categoryCtrl', function($scope, $window, $routeParams, categoryService, environment) {
+category.controller('categoryCtrl', function($scope, ngMeta, $routeParams, categoryService, environment) {
   $scope.loading = true;
   $scope.processing = {};
   $scope.selectedBrands = {};
@@ -18,7 +18,7 @@ category.controller('categoryCtrl', function($scope, $window, $routeParams, cate
     $scope.subcategories = category.children;
 
     var title = $scope.parentcategories.map(function(c){return c.name;}).join(", ");
-    $window.document.title = title + ', 英国 | Noodle Monster';
+    ngMeta.setTitle(title + ', 英国');
     $scope.breadcrumbJsonLd = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": 'Home', "item": environment.homePage}]};
     $scope.parentcategories.forEach(function (category, i) {
         $scope.breadcrumbJsonLd.itemListElement.push({

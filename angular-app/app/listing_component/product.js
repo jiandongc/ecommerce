@@ -1,6 +1,6 @@
 var productDetail = angular.module('productDetail', ['ngRoute']);
 
-productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, $window, productFactory, shoppingCartFactory, customerFactory, categoryFactory, reviewFactory, environment) {
+productDetail.controller('productDetailCtrl', function($scope, $rootScope, $localstorage, $routeParams, $timeout, ngMeta, productFactory, shoppingCartFactory, customerFactory, categoryFactory, reviewFactory, environment) {
     $scope.addingItem = false;
     $scope.selectOptionAlert = false;
     $scope.addingItemToFavourites = false;
@@ -10,7 +10,8 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
     $scope.display = 'itemInfo';
 
     productFactory.getProductWithCode($routeParams.code).then(function(response) {
-        $window.document.title = response.name + ', 英国 | Noodle Monster';
+        ngMeta.setTitle(response.name + ', 英国');
+        ngMeta.setTag('description', '愛吃的你千萬不要錯過[' + response.name + '], and GET FREE SHIPPING FOR ORDERS OVER £39.99!');
         $scope.product = response;
         $scope.loading = false;
 

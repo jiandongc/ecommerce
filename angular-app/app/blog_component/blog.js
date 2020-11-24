@@ -1,11 +1,11 @@
 var blog = angular.module('blog', []);
 
-blog.controller('blogCtrl', function($window) {
-  $window.document.title = 'Our Blog | Noodle Monster';
+blog.controller('blogCtrl', function(ngMeta) {
+    ngMeta.setTitle('Our Blog');
 });
 
 blog.controller('blogArticleCtrl', function($scope, $routeParams) {
-  $scope.article = $routeParams.article;
+    $scope.article = $routeParams.article;
 });
 
 blog.config(['$routeProvider',

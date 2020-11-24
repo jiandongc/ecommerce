@@ -1,7 +1,7 @@
 var admin = angular.module('admin', ['ngRoute']);
 
-admin.controller('adminOrderCtrl', function($window, $scope, adminFactory) {
-  $window.document.title = 'Noodle Monster Admin | Order';
+admin.controller('adminOrderCtrl', function(ngMeta, $scope, adminFactory) {
+  ngMeta.setTitle('Order Admin');
   $scope.template.header = 'admin-dashboard-header.html';
   $scope.template.footer = 'default-footer.html';
   $scope.status = 'open';

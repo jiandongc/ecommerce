@@ -1,6 +1,7 @@
 var app = angular.module('store', [
     'ngRoute',
     'ngCookies',
+    'ngMeta',
     'home',
     'productDetail',
     'category',
@@ -189,10 +190,16 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q, $ro
     return service;
 });
 
-app.config(function($routeProvider, $httpProvider, $locationProvider) {
+app.config(function($routeProvider, $httpProvider, $locationProvider, ngMetaProvider) {
     $locationProvider.html5Mode(true);
     $routeProvider.otherwise({
         redirectTo: '/'
     });
     $httpProvider.interceptors.push('accessTokenInterceptor');
-});
+    ngMetaProvider.useTitleSuffix(true);
+    ngMetaProvider.setDefaultTitle('煮食面, 即食面, 面條伴侶, 英国');
+    ngMetaProvider.setDefaultTitleSuffix(' | Noodle Monster');
+    ngMetaProvider.setDefaultTag('description', 'GET FREE SHIPPING FOR ORDERS OVER £39.99! We have 100s of types of noodle products + friendly customer service.');
+}).run(['ngMeta', function(ngMeta) {
+    ngMeta.init();
+}]);
