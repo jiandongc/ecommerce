@@ -23,14 +23,14 @@
 			<div class="flexslider">
   				<ul class="slides">
     				<li ng-repeat='url in product.images' data-thumb='{{url}}' on-finish-init-slider>
-      					<img ng-src='{{url}}' />
+      					<img ng-src='{{url}}' alt="英国 {{product.name}}"/>
     				</li>
   				</ul>
 			</div>
 		</div>
 		<div class = "col-xs-12 col-md-6">
 			<div ng-show="product.brand" class="fs-10 text-underline m-b-05"><a href="brands/{{product.brand.code}}" class="color-emperor">{{product.brand.name}}</a></div>
-			<div class="fs-13 fw-bold m-b-05">{{product.name}}</div>
+			<h1 class="fs-14 fw-bold m-t-05 m-b-05">{{product.name}}</h1>
 			<div class="m-b-05">
 				<span class="fs-20 fw-bold" ng-class="{'color-valencia': onSale}">{{price | currency:"£"}}</span>
 				<span ng-show="onSale" class="fs-16 m-l-05 text-line-through">{{originalPrice | currency:"£"}}</span>

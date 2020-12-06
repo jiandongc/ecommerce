@@ -641,6 +641,8 @@ a.clickable-label:hover {
 .fw-bold {font-weight: bold}
 .fw-light {font-weight: 200}
 
+.line-height-16 {line-height: 1.6;}
+
 .width-60 {width: 60%;}
 
 .color-matterhorn {

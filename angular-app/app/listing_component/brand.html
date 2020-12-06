@@ -24,12 +24,13 @@
         <div class="media col-xs-12 col-sm-12 col-md-8 col-lg-10">
             <div class="media-left media-middle">
                 <a href="brands/{{brand.code}}">
-                    <img class="media-object img-circle" height="128" width="128" ng-src='{{brand.imageUrl}}'>
+                    <img class="media-object img-circle" height="128" width="128" ng-src='{{brand.imageUrl}}'
+                         alt="英国 {{brand.name}}">
                 </a>
             </div>
             <div class="media-body">
-                <h4 class="media-heading">{{brand.name}}&nbsp;&nbsp;<i class="fas fa-check-circle" style="color:#00acee;"></i></h4>
-                <p class="color-grey" ng-bind-html="brand.description"></p>
+                <h1 class="media-heading fs-15">{{brand.name}}&nbsp;&nbsp;<i class="fas fa-check-circle" style="color:#00acee;"></i></h1>
+                <h2 class="color-grey fs-10" ng-bind-html="brand.description"></h2>
             </div>
         </div>
         <div class="col-xs-12 col-sm-12 col-md-4 col-lg-2">
