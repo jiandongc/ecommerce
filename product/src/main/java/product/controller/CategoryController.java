@@ -23,7 +23,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
     @RequestMapping(value = "/{code}", method = RequestMethod.GET)
     public ResponseEntity findCategoryByCode(@PathVariable String code, @RequestParam(value = "level", required = false) Integer level) {
         if (level == null) {

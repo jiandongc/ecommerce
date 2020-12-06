@@ -33,12 +33,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws IOException, ServletException {
         final String accessToken = req.getHeader("Authentication");
 
+        UsernamePasswordAuthenticationToken authentication;
         if (accessToken == null) {
-            chain.doFilter(req, res);
-            return;
+            authentication = new UsernamePasswordAuthenticationToken(
+                    "anonymous",
+                    null,
+                    createAuthorityList("ROLE_ANONYMOUS"));
+        } else {
+            authentication = getAuthentication(accessToken);
         }
 
-        final UsernamePasswordAuthenticationToken authentication = getAuthentication(accessToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         chain.doFilter(req, res);
     }

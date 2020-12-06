@@ -427,4 +427,24 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(subCategory.getCode(), is("c5"));
         assertThat(subCategory.getChildren(), is(nullValue()));
     }
+
+
+
+    @Test
+    public void shouldAllowRequestWithoutAccessToken() {
+        // Given
+        final Category c1 = new Category();
+        c1.setCode("c1");
+        c1.setName("c1");
+        c1.setStartDate(LocalDate.now());
+        categoryRepository.save(c1);
+        headers.remove("Authentication");
+
+        // When
+        final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+        final ResponseEntity<CategoryData> response = rest.exchange(BASE_URL + "c1?level=2", GET, httpEntity, CategoryData.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    }
 }
