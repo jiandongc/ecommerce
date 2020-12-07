@@ -26,7 +26,7 @@ public class ProductTagController {
         this.productTagService = productTagService;
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
     @RequestMapping(method= RequestMethod.GET)
     public ResponseEntity findAll(@RequestParam(value = "sort", required = false) String sort){
         List<ProductTag> tags = productTagService.findAll();
