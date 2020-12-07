@@ -23,6 +23,7 @@ public class CategoryDataMapperTest {
         final Category c1 = new Category();
         c1.setCode("c1");
         c1.setName("c1-n");
+        c1.setDescription("c1-description");
 
         final Category p1 = new Category();
         p1.setCode("p1");
@@ -73,6 +74,7 @@ public class CategoryDataMapperTest {
         final CategoryData expected = CategoryData.builder()
                 .code("c1")
                 .name("c1-n")
+                .description("c1-description")
                 .productTotal(3)
                 .parents(Arrays.asList(p1d, p2d))
                 .children(Arrays.asList(s1d, s2d))

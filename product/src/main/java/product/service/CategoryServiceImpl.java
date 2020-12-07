@@ -104,6 +104,7 @@ public class CategoryServiceImpl implements CategoryService {
             return Optional.of(CategoryData.builder()
                             .code(category.get().getCode())
                             .name(category.get().getName())
+                            .description(category.get().getDescription())
                             .children(categoryDataList.isEmpty() ? null : categoryDataList)
                             .build());
         } else {

@@ -37,6 +37,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         final Category c1 = new Category();
         c1.setCode("c1");
         c1.setName("c1");
+        c1.setDescription("c1-desc");
         c1.setStartDate(LocalDate.now());
         categoryRepository.save(c1);
 
@@ -102,6 +103,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(c1Response.getStatusCode(), is(HttpStatus.OK));
         assertThat(c1Response.getBody().getName(), is("c1"));
         assertThat(c1Response.getBody().getCode(), is("c1"));
+        assertThat(c1Response.getBody().getDescription(), is("c1-desc"));
         assertThat(c1Response.getBody().getProductTotal(), is(4));
         assertThat(c1Response.getBody().getParents().size(), is(1));
         assertThat(c1Response.getBody().getParents().get(0).getName(), is("c1"));
@@ -356,6 +358,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         final Category c1 = new Category();
         c1.setCode("c1");
         c1.setName("c1");
+        c1.setDescription("c1-desc");
         c1.setStartDate(LocalDate.now());
         categoryRepository.save(c1);
 
@@ -393,6 +396,7 @@ public class CategoryControllerTest extends AbstractControllerTest {
         assertThat(c1Response.getStatusCode(), is(HttpStatus.OK));
         assertThat(c1Response.getBody().getName(), is("c1"));
         assertThat(c1Response.getBody().getCode(), is("c1"));
+        assertThat(c1Response.getBody().getDescription(), is("c1-desc"));
         assertThat(c1Response.getBody().getChildren().size(), is(1));
         CategoryData subCategory = c1Response.getBody().getChildren().get(0);
         assertThat(subCategory.getName(), is("c2"));

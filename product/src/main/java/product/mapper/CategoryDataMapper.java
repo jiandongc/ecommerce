@@ -39,6 +39,7 @@ public class CategoryDataMapper {
         return CategoryData.builder()
                 .code(category.getCode())
                 .name(category.getName())
+                .description(category.getDescription())
                 .productTotal(products.size())
                 .parents(parents)
                 .children(children)
