@@ -23,7 +23,7 @@ public class BrandController {
         this.brandService = brandService;
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
     @RequestMapping(value = "/{code}", method= RequestMethod.GET)
     public ResponseEntity findByCode(@PathVariable String code) {
         final Optional<Brand> brandOptional = brandService.findByCode(code);
@@ -31,7 +31,7 @@ public class BrandController {
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+    @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
     @RequestMapping(method= RequestMethod.GET)
     public ResponseEntity findAll(@RequestParam(value = "sort", required = false) String sort){
         List<Brand> brands = brandService.findAll();

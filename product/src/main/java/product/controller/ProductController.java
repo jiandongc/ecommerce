@@ -43,7 +43,7 @@ public class ProductController {
 		this.categoryService = categoryService;
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
 	@RequestMapping(value = "/search/categories/{categoryCode}", method=RequestMethod.GET)
 	public ResponseEntity findProductsInCategory(@PathVariable String categoryCode,
 												 @RequestParam(value = "filter", required = false) String filterJsonStr,
@@ -61,7 +61,7 @@ public class ProductController {
 		}
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
 	@RequestMapping(method=RequestMethod.GET)
 	public List<ProductSimpleData> findProducts(@RequestParam(value = "cc", required = false) String categoryCode,
 												@RequestParam(value = "tg", required = false) List<String> tags,
@@ -73,7 +73,7 @@ public class ProductController {
 				.collect(Collectors.toList());
 	}
 
-	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
     @RequestMapping(value = "/{code}", method=RequestMethod.GET)
     public ResponseEntity findByCode(@PathVariable String code) {
 		final Optional<Product> productOptional = productService.findByCode(code);
@@ -81,7 +81,7 @@ public class ProductController {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
+	@PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER', 'ROLE_ANONYMOUS')")
 	@RequestMapping(value = "/{type}/{code}", method=RequestMethod.GET)
 	public List<ProductSimpleData> findRelatedProducts(@PathVariable(value = "type") String type, @PathVariable String code){
 		return productService.findRelatedProducts(type, code)
