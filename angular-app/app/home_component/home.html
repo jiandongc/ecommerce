@@ -11,7 +11,7 @@
             <div class="carousel-inner">
                 <div class="item active">
                     <img src="/images/banner/stay-at-home-eat-some-noodles-beat-the-virus.png"
-						 alt="Noodle Monster沒有你找不到的煮食面，即食面。"
+						 alt="Noodle Monster"
 						 style="width:100%;">
                 </div>
                 <div class="item">
@@ -86,7 +86,7 @@
 		<div ng-repeat="brand in brands | limitTo:6" class="col-lg-2 col-md-3 col-sm-4 col-xs-6 p-b-10">
 			<div class="thumbnail" style="border: 0px;">
 				<a href="brands/{{brand.code}}">
-					<img class="media-object img-circle" ng-src='{{brand.imageUrl}}'>
+					<img class="media-object img-circle" ng-src='{{brand.imageUrl}}' alt="英国 {{brand.name}}">
 				</a>
 				<div class="caption">
 					<div style="text-align: center;">

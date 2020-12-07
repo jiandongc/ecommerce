@@ -158,7 +158,7 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q, $ro
     var service = this;
 
     service.request = function(config) {
-        if (config.url.includes('/guesttoken')) {
+        if (config.url.includes('/guesttoken') || config.url.includes('.html')) {
             return config;
         }
 
