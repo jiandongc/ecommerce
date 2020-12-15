@@ -17,8 +17,14 @@ category.controller('categoryCtrl', function($scope, ngMeta, $routeParams, categ
     $scope.parentcategories = category.parents;
     $scope.subcategories = category.children;
 
-    var title = $scope.parentcategories.map(function(c){return c.name;}).join(", ");
-    ngMeta.setTitle(title + ', 英国');
+    if(category.description != null){
+        ngMeta.setTitle(category.description.split("@")[0]);
+        ngMeta.setTag('description', category.description.split("@")[1]);
+    } else {
+        var title = $scope.parentcategories.map(function(c){return c.name;}).join(", ");
+        ngMeta.setTitle(title + ', 英国');
+    }
+
     $scope.breadcrumbJsonLd = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": 'Home', "item": environment.homePage}]};
     $scope.parentcategories.forEach(function (category, i) {
         $scope.breadcrumbJsonLd.itemListElement.push({
