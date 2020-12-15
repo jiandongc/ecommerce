@@ -197,9 +197,9 @@ app.config(function($routeProvider, $httpProvider, $locationProvider, ngMetaProv
     });
     $httpProvider.interceptors.push('accessTokenInterceptor');
     ngMetaProvider.useTitleSuffix(true);
-    ngMetaProvider.setDefaultTitle('煮食面, 即食面, 面條伴侶, 英国');
+    ngMetaProvider.setDefaultTitle('煮食麵, 即食麵, 麵條伴侶, 英国');
     ngMetaProvider.setDefaultTitleSuffix(' | Noodle Monster');
-    ngMetaProvider.setDefaultTag('description', '新用戶享受首單8折優惠，满39.99镑免邮。GET FREE SHIPPING FOR ORDERS OVER £39.99! We have 100s of types of noodle products + friendly customer service.');
+    ngMetaProvider.setDefaultTag('description', 'Noodle Monster新用戶享受首單8折優惠，满39.99镑免邮。GET FREE SHIPPING FOR ORDERS OVER £39.99! We have 100s of types of noodle products + friendly customer service.');
 }).run(['ngMeta', function(ngMeta) {
     ngMeta.init();
 }]);

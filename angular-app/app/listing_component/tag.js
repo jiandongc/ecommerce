@@ -70,7 +70,7 @@ productTag.controller('tagCtrl', function($scope, $routeParams, ngMeta, productF
 });
 
 productTag.controller('tagListCtrl', function($scope, ngMeta, tagFactory) {
-    ngMeta.setTitle('Tags');
+    ngMeta.setTitle('商品标签, Tags');
 	$scope.loading = true;
 	tagFactory.getAllTags().then(function(response){
 		$scope.tags = response;

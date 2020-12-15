@@ -55,7 +55,7 @@
     </div>
     <div ng-show="!loading && size>0" class="row auto-clear product-list" ng-class="refreshing">
         <div ng-repeat="product in products" class="col-lg-3 col-md-3 col-sm-4 col-xs-6 p-b-20">
-            <a href="products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}"></a>
+            <a href="products/{{product.code}}"><img class="img-responsive" ng-src="{{product.imageUrl}}" loading="lazy" alt="英国 {{product.name}}"></a>
             <div>
                 <span class="fs-16 fw-bold" ng-class="{'color-valencia': product.onSale}">{{product.price | currency:"£"}}</span>
                 <span ng-show="product.onSale" class="fs-12 m-l-05 text-line-through">{{product.originalPrice | currency:"£"}}</span>

@@ -1,4 +1,20 @@
 <div class="container">
+	<script type="application/ld+json">
+		{
+      		"@context": "https://schema.org/",
+      		"@type": "Organization",
+      		"name": "Noodle Monster",
+      		"url": "https://noodle-monster.co.uk",
+      		"description": "煮食麵, 即食麵, 麵條伴侶, 我们为麵條打Call!",
+      		"sameAs": [
+                        "https://www.youtube.com/channel/UCtq0jIKXjT9ny1nvxyUi-CQ"
+            ],
+            "email": "info@noodle-monster.co.uk",
+            "image": "https://s3-eu-west-1.amazonaws.com/noodle-monster.co
+            .uk/images/stay-at-home-eat-some-noodles-beat-the-virus.png",
+            "logo": "https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/noodle-monster.co.uk-logo.png"
+    	}
+	</script>
     <div class="m-t-02">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <ol class="carousel-indicators">
@@ -86,7 +102,7 @@
 		<div ng-repeat="brand in brands | limitTo:6" class="col-lg-2 col-md-3 col-sm-4 col-xs-6 p-b-10">
 			<div class="thumbnail" style="border: 0px;">
 				<a href="brands/{{brand.code}}">
-					<img class="media-object img-circle" ng-src='{{brand.imageUrl}}' alt="英国 {{brand.name}}">
+					<img class="media-object img-circle" ng-src='{{brand.imageUrl}}' loading="lazy" alt="英国 {{brand.name}}">
 				</a>
 				<div class="caption">
 					<div style="text-align: center;">

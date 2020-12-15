@@ -13,7 +13,7 @@
 <div ng-show="products.length>0" class="row auto-clear product-list" ng-class="loading">
     <div ng-repeat="product in products | limitTo:6" class="col-lg-2 col-md-3 col-sm-4 col-xs-6 p-b-20">
         <a href="products/{{product.code}}">
-            <img class="img-responsive" ng-src="{{product.imageUrl}}" alt="英国 {{product.name}}">
+            <img class="img-responsive" ng-src="{{product.imageUrl}}" loading="lazy" alt="英国 {{product.name}}">
         </a>
         <div>
             <span class="fs-16 fw-bold" ng-class="{'color-valencia': product.onSale}">{{product.price | currency:"£"}}</span>

@@ -30,7 +30,7 @@ brand.controller('brandCtl', function($scope, $routeParams, ngMeta, brandFactory
 });
 
 brand.controller('brandListCtl', function($scope, ngMeta, brandFactory) {
-    ngMeta.setTitle('Brands We Carry');
+    ngMeta.setTitle('最受歡迎的麵條品牌, Popular Brands We Carry')
 	$scope.loading = true;
 	brandFactory.getAllBrands().then(function(response){
 		$scope.brands = response;
