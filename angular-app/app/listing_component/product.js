@@ -54,13 +54,19 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             "@context":"http://schema.org",
             "@type":"Product",
             "name": $scope.product.name,
-            "image": $scope.product.images[0],
+            "image": $scope.product.images,
             "sku": $scope.sku,
+            "brand": {
+                "@type": "Brand",
+                "name": $scope.product.brand != null ? $scope.product.brand.name : ""
+            },
             "offers": {
                 "@type": "Offer",
                 "availability": "http://schema.org/InStock",
                 "price": $scope.price,
-                "priceCurrency": "GBP"
+                "priceCurrency": "GBP",
+                "url": environment.productPage + '/' + $routeParams.code,
+                "priceValidUntil": "2021-12-31"
             }
         }
         $('#product-json-ld').html(JSON.stringify($scope.productJsonLd));
