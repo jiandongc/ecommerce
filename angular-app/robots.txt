@@ -1,0 +1,13 @@
+User-agent: *
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /login/
+Disallow: /account/
+Disallow: /customer_component/login.html
+
+Sitemap: https://noodle-monster.co.uk/product_map.xml
+Sitemap: https://noodle-monster.co.uk/brand_map.xml
+Sitemap: https://noodle-monster.co.uk/category_map.xml
+Sitemap: https://noodle-monster.co.uk/blog_map.xml
+Sitemap: https://noodle-monster.co.uk/static_map.xml
+Sitemap: https://noodle-monster.co.uk/tag_map.xml
