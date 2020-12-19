@@ -164,10 +164,6 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q, $ro
 
         if ($localstorage.containsKey('access_token')) {
             config.headers.Authentication = $localstorage.get('access_token');
-        } else {
-            authFactory.downloadGuestToken().then(function(response) {
-                $localstorage.set('access_token', response.headers("Authentication"));
-            });
         }
 
         return config;
@@ -177,6 +173,9 @@ app.factory('accessTokenInterceptor', function($localstorage, $location, $q, $ro
     service.responseError = function(response) {
         if (response.status === 403 || response.status === 401) {
             if (response.config.headers.Authentication == undefined) {
+                authFactory.downloadGuestToken().then(function(tokenResponse) {
+                    $localstorage.set('access_token', tokenResponse.headers("Authentication"));
+                });
                 var $http = $injector.get('$http');
                 return $http(response.config);
             } else {
