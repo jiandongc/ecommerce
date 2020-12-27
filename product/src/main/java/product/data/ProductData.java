@@ -20,6 +20,8 @@ public class ProductData {
 
     private String description;
 
+    private String shortDescription;
+
     private String categoryCode;
 
     private Integer vat;

@@ -1,0 +1,1 @@
+ALTER TABLE product ADD COLUMN short_description varchar(500);

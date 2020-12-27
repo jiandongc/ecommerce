@@ -39,6 +39,9 @@ public class Product {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "short_description")
+    private String shortDescription;
+
     @Column(name = "product_code")
     private String code;
 

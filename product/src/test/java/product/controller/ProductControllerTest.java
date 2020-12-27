@@ -98,6 +98,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		final Product productOne = new Product();
 		productOne.setName("Chester");
 		productOne.setDescription("Chester description");
+		productOne.setShortDescription("Short description");
 		productOne.setCategory(category);
 		productOne.setBrand(brand);
 		productOne.addImage(image);
@@ -115,6 +116,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getName(), is("Chester"));
 		assertThat(response.getBody().getDescription(), is("Chester description"));
+		assertThat(response.getBody().getShortDescription(), is("Short description"));
 		assertThat(response.getBody().getCategoryCode(), is("FD"));
 		assertThat(response.getBody().getPrice().toPlainString(), is("10.00"));
 		assertThat(response.getBody().getImages().get(0), is("img/0002.jpg"));
