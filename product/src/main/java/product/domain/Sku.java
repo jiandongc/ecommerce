@@ -47,7 +47,7 @@ public class Sku {
     }
 
     public BigDecimal getOriginalPrice() {
-        if(prices == null){
+        if (prices == null) {
             return null;
         }
 
@@ -59,7 +59,7 @@ public class Sku {
     }
 
     public BigDecimal getCurrentSalePrice() {
-        if(prices == null){
+        if (prices == null) {
             return null;
         }
 
@@ -70,6 +70,19 @@ public class Sku {
         return priceOptional.map(price -> price.getPrice().setScale(2, BigDecimal.ROUND_HALF_UP)).orElse(null);
     }
 
+
+    public Price getSalePrice() {
+        if (prices == null) {
+            return null;
+        }
+
+        final LocalDate today = LocalDate.now();
+        return prices.stream()
+                .filter(price -> price.getStartDate() != null && price.getEndDate() != null && !today.isBefore(price.getStartDate()) && !today.isAfter(price.getEndDate()))
+                .findFirst().orElse(null);
+
+    }
+
     public String getDiscountRate() {
         final LocalDate today = LocalDate.now();
         final Optional<Price> priceOptional = prices.stream()
@@ -78,7 +91,7 @@ public class Sku {
         return priceOptional.map(Price::getDiscountRate).orElse(null);
     }
 
-    public boolean isOnSale(){
+    public boolean isOnSale() {
         final LocalDate today = LocalDate.now();
         final Optional<Price> priceOptional = prices.stream()
                 .filter(price -> price.getStartDate() != null && price.getEndDate() != null && !today.isBefore(price.getStartDate()) && !today.isAfter(price.getEndDate()))
