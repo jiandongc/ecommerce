@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static java.time.format.DateTimeFormatter.ISO_DATE_TIME;
 
+@Ignore
 public class MerchantFeedGenerator extends AbstractRepositoryTest {
 
     private static final String BASE_URL = "https://noodle-monster.co.uk";
@@ -48,7 +49,7 @@ public class MerchantFeedGenerator extends AbstractRepositoryTest {
                 .map(product -> ProductFeed.builder()
                         .id(product.getSkus().get(0).getSku())
                         .title(product.getName())
-                        .description(product.getName())
+                        .description(product.getShortDescription() == null ? product.getName() : product.getShortDescription())
                         .link(BASE_URL + "/products/" + product.getCode())
                         .price(product.getSkus().get(0).getOriginalPrice() + " GBP")
                         .salePrice(product.getSkus().get(0).getSalePrice() != null ? product.getSkus().get(0).getSalePrice().getPrice().setScale(2, BigDecimal.ROUND_HALF_UP) + " GBP":  null)
