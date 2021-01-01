@@ -12,7 +12,7 @@ review.controller('allFeedbackCtrl', function($scope, reviewFactory) {
 	$scope.showLoadMoreButton = false;
 	$scope.offset = 0;
 	$scope.limit = 10;
-	$scope.sort = {display: "Newest First", code: 'date.desc'};
+	$scope.sort = {display: "Most Helpful first", code: 'vote.desc'};
 	$scope.voting = [];
 	$scope.search;
 
