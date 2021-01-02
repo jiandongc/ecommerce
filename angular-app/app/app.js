@@ -18,7 +18,7 @@ var app = angular.module('store', [
     'admin'
 ]);
 
-app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, $q, environment, shoppingCartFactory, categoryFactory) {
+app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope, $q, $window, environment, shoppingCartFactory, categoryFactory) {
 
     $scope.template = {
         header: "default-header.html",
@@ -115,6 +115,14 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
     $scope.$on('$routeChangeStart', function($event, next, current) {
         $scope.template.header = 'default-header.html';
         $scope.template.footer = 'default-footer.html';
+    });
+
+    $scope.$on('$routeChangeSuccess', function($event, next, current) {
+        var dataLayer = $window.dataLayer = $window.dataLayer || [];
+        dataLayer.push({
+            'event' : 'virtualPageview',
+            'virtualUrl' : $location.path()
+        });
     });
 
     $scope.removeItem = function(cartItem) {
