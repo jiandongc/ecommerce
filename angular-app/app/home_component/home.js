@@ -44,11 +44,18 @@ home.component('productpanel', {
   bindings: {title: '@', color: '@', icon: '@', categories: '='}
 });
 
+home.controller('contactUsCtrl', function($scope, ngMeta) {
+    ngMeta.setTitle('与我们联系 | Contact Information');
+});
+
 home.config(['$routeProvider',
   function($routeProvider) {
-    $routeProvider.
-      when('/', {
+    $routeProvider
+      .when('/', {
         templateUrl: 'home_component/home.html',
         controller: 'homeCtrl'
+      }).when('/contact-us', {
+         templateUrl: 'home_component/contact-us.html',
+         controller: 'contactUsCtrl'
       });
 }]);
