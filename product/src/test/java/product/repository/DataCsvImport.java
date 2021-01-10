@@ -18,6 +18,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class DataCsvImport extends AbstractRepositoryTest {
 
@@ -39,7 +40,7 @@ public class DataCsvImport extends AbstractRepositoryTest {
     @Test
     @Rollback(false)
     public void importData() throws Exception {
-        String fileName = "src/test/resources/product_import_20201223.csv";
+        String fileName = "src/test/resources/product_import_20210105.csv";
         Path myPath = Paths.get(fileName);
         try (BufferedReader br = Files.newBufferedReader(myPath, StandardCharsets.UTF_8)) {
 
@@ -56,12 +57,12 @@ public class DataCsvImport extends AbstractRepositoryTest {
 
             for (ProductData productData : products) {
                 Category category = categoryRepository.findByCode(productData.getCategoryCode()).get();
-                Brand brand = brandRepository.findByCode(productData.getBrandCode()).get();
+                Optional<Brand> brandOptional = brandRepository.findByCode(productData.getBrandCode());
                 Vat vat = vatRepository.findByName(productData.getVat()).get();
 
                 Product product = Product.builder()
                         .category(category)
-                        .brand(brand)
+                        .brand(brandOptional.orElse(null))
                         .code(productData.getProductCode())
                         .name(productData.getName())
                         .vat(vat)
