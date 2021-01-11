@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toList;
 
 @Component
 public class OrderConfirmationDataMapper {
@@ -34,9 +35,9 @@ public class OrderConfirmationDataMapper {
                         .subTotal(item.getSubTotal().setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString())
                         .sku(item.getSku())
                         .build())
-                .collect(Collectors.toList());
+                .collect(toList());
 
-        List<String> sendToList = Arrays.asList(this.adminEmails.split(";"));
+        List<String> sendToList = Stream.of(adminEmails.split(";")).collect(toList());
         sendToList.add(order.getEmail());
 
         return OrderConfirmationData.builder()
