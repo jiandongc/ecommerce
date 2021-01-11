@@ -3,6 +3,7 @@ package order.mapper;
 import email.data.OrderConfirmationData;
 import order.domain.Order;
 import order.domain.OrderAddress;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
@@ -12,6 +13,9 @@ import java.util.stream.Collectors;
 
 @Component
 public class OrderConfirmationDataMapper {
+
+    @Value("${admin.emails}")
+    private String adminEmails;
 
     public OrderConfirmationData map(Order order,
                                      String name,
@@ -31,8 +35,12 @@ public class OrderConfirmationDataMapper {
                         .sku(item.getSku())
                         .build())
                 .collect(Collectors.toList());
+
+        List<String> sendToList = Arrays.asList(this.adminEmails.split(";"));
+        sendToList.add(order.getEmail());
+
         return OrderConfirmationData.builder()
-                .sendTo(Arrays.asList(order.getEmail()))
+                .sendTo(sendToList)
                 .orderNumber(order.getOrderNumber())
                 .orderEta(order.getEta())
                 .orderDeliveryMethod(order.getDeliveryMethod())

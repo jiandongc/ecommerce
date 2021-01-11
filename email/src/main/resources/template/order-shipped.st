@@ -71,7 +71,7 @@ order-shipped(orderNumber, orderDeliveryMethod, shippingAddress, orderItems) ::=
         <p style="color: grey;">Kind regards,<br>Noodle-Monster Customer Service</p>
     </div>
     <div class="footer" style="padding-top: 30px; padding-bottom: 15px; background-color: #f6f6f6; text-align: center; color: grey; font-size: 12px; letter-spacing: 0.8px;">
-        @ 2020 Noodle-Monster. INC.
+        @ 2021 Noodle-Monster. INC.
     </div>
 </div>
 
