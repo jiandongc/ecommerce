@@ -1,0 +1,4 @@
+category_code,brand_code,product_code,name,vat_rate,image,sku,quantity,price
+noodles-korea,wang,noodles-korea-wang-cold-buckwheat-noodles-with-chilled-broth,韓國Wang 平壤冷面 624g 4人份 (帶湯粉),uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-korea-wang-cold-buckwheat-noodles-with-chilled-broth-1.jpg,2021010501,10,3.85
+noodles-korea,,noodles-taiwan-seafood-flavour-udong,韓國 海鮮味 烏冬面 690g 3人份,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-taiwan-seafood-flavour-udong-1.jpg,2021010502,12,2.99
+noodles-korea,,noodles-taiwan-tempura-flavour-udong,韓國 天婦羅 烏冬面 705g 3人份,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/noodles-taiwan-tempura-flavour-udong-1.jpg,2021010503,12,2.99
