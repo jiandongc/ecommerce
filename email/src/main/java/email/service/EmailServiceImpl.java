@@ -7,6 +7,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import static javax.mail.Message.RecipientType.BCC;
 import static javax.mail.Message.RecipientType.TO;
 
 @Slf4j
@@ -27,6 +28,9 @@ public class EmailServiceImpl implements EmailService {
             mimeMessage.setText(mailData.generateText(), "utf-8", "html");
             for(int i = 0; i < mailData.getSendTo().size(); i++){
                 mimeMessage.addRecipients(TO, mailData.getSendTo().get(i));
+            }
+            for(int i = 0; i < mailData.getBccTo().size(); i++){
+                mimeMessage.addRecipients(BCC, mailData.getBccTo().get(i));
             }
             emailSender.send(mimeMessage);
         } catch (Exception exception) {

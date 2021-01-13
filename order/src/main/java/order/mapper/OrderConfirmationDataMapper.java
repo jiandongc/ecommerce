@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -37,11 +38,9 @@ public class OrderConfirmationDataMapper {
                         .build())
                 .collect(toList());
 
-        List<String> sendToList = Stream.of(adminEmails.split(";")).collect(toList());
-        sendToList.add(order.getEmail());
-
         return OrderConfirmationData.builder()
-                .sendTo(sendToList)
+                .sendTo(Arrays.asList(order.getEmail()))
+                .bccTo(Stream.of(adminEmails.split(";")).collect(toList()))
                 .orderNumber(order.getOrderNumber())
                 .orderEta(order.getEta())
                 .orderDeliveryMethod(order.getDeliveryMethod())

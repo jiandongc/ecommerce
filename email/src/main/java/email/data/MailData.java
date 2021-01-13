@@ -12,6 +12,7 @@ public abstract class MailData {
     private final String from;
     private final String fromAlias;
     private final List<String> sendTo;
+    private final List<String> bccTo;
     private final String subject;
     public abstract String generateText() throws IOException;
 }

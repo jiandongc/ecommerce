@@ -6,6 +6,7 @@ import org.stringtemplate.v4.ST;
 import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupDir;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -17,7 +18,7 @@ public class PasswordResetData extends MailData {
 
     @Builder
     public PasswordResetData(List<String> sendTo, String link, String name) {
-        super("info@noodle-monster.co.uk", "Noodle Monster Account", sendTo, "Reset your password");
+        super("info@noodle-monster.co.uk", "Noodle Monster Account", sendTo, Collections.<String>emptyList(),"Reset your password");
         this.link = link;
         this.name = name;
     }

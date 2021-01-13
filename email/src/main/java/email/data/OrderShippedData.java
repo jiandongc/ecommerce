@@ -7,6 +7,7 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupDir;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -25,7 +26,7 @@ public class OrderShippedData extends MailData {
                             String orderDeliveryMethod,
                             AddressData shippingAddress,
                             List<OrderItemData> orderItems) {
-        super("info@noodle-monster.co.uk", "Noodle Monster Order", sendTo, format("Your order has shipped #%s", orderNumber));
+        super("info@noodle-monster.co.uk", "Noodle Monster Order", sendTo, Collections.<String>emptyList(), format("Your order has shipped #%s", orderNumber));
         this.orderNumber = orderNumber;
         this.orderDeliveryMethod = orderDeliveryMethod;
         this.shippingAddress = shippingAddress;

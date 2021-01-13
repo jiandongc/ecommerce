@@ -27,6 +27,7 @@ public class OrderConfirmationData extends MailData {
 
     @Builder
     public OrderConfirmationData(List<String> sendTo,
+                                 List<String> bccTo,
                                  String customerName,
                                  String orderNumber,
                                  String orderEta,
@@ -37,7 +38,7 @@ public class OrderConfirmationData extends MailData {
                                  String siteName,
                                  String homePage,
                                  String registrationPage) {
-        super("info@noodle-monster.co.uk", String.format("%s Order", siteName), sendTo, format("Your %s order confirmation #", siteName) + orderNumber);
+        super("info@noodle-monster.co.uk", String.format("%s Order", siteName), sendTo, bccTo, format("Your %s order confirmation #", siteName) + orderNumber);
         this.customerName = customerName;
         this.orderNumber = orderNumber;
         this.orderEta = orderEta;
