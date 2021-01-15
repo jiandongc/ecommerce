@@ -137,7 +137,8 @@
                                     <div>Postage & Packing: <span class="fw-bold">{{order.postage + order.postageVat | currency:'£'}}</span></div>
                                     <div ng-hide="order.discount==0">Discount: <span class="fw-bold">({{order.discount +
                                     order.discountVat | currency:'£'}})</span></div>
-                                    <div>Grant Total: <span class="fw-bold">{{order.orderTotal | currency:'£'}}</span></div>
+                                    <div>Grand Total: <span class="fw-bold">{{order.orderTotal |
+                                        currency:'£'}}</span></div>
                                     <div>(incl. VAT: <span class="fw-bold">{{order.totalVat | currency:"£"}})</span></div>
                                 </div>
                             </div>
@@ -202,7 +203,7 @@
                     <div class="color-grey m-t-05">
                         <div class="row">
                             <div class="col-xs-12 p-l-15">
-                                VAT Number: GB 922 944 513
+
                             </div>
                         </div>
                     </div>
