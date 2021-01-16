@@ -22,11 +22,12 @@ public class OrderShippedData extends MailData {
 
     @Builder
     public OrderShippedData(List<String> sendTo,
+                            List<String> bccTo,
                             String orderNumber,
                             String orderDeliveryMethod,
                             AddressData shippingAddress,
                             List<OrderItemData> orderItems) {
-        super("info@noodle-monster.co.uk", "Noodle Monster Order", sendTo, Collections.<String>emptyList(), format("Your order has shipped #%s", orderNumber));
+        super("info@noodle-monster.co.uk", "Noodle Monster Order", sendTo, bccTo, format("Your order has shipped #%s", orderNumber));
         this.orderNumber = orderNumber;
         this.orderDeliveryMethod = orderDeliveryMethod;
         this.shippingAddress = shippingAddress;

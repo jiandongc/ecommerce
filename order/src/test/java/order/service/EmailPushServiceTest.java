@@ -1,9 +1,11 @@
 package order.service;
 
+import email.data.GoogleReviewRequestData;
 import email.data.OrderConfirmationData;
 import email.data.OrderShippedData;
 import email.service.EmailService;
 import order.domain.Order;
+import order.mapper.GoogleReviewRequestDataMapper;
 import order.mapper.OrderConfirmationDataMapper;
 import order.mapper.OrderShippedDataMapper;
 import org.junit.Test;
@@ -32,6 +34,9 @@ public class EmailPushServiceTest {
 
     @Mock
     private OrderShippedDataMapper orderShippedDataMapper;
+
+    @Mock
+    private GoogleReviewRequestDataMapper googleReviewRequestDataMapper;
 
     @InjectMocks
     private EmailPushService emailPushService;
@@ -62,6 +67,20 @@ public class EmailPushServiceTest {
 
         // Then
         Mockito.verify(emailService).sendMessage(orderShippedData);
+    }
+
+    @Test
+    public void shouldPushGoogleReviewRequestEmail(){
+        // Given
+        GoogleReviewRequestData googleReviewRequestData = GoogleReviewRequestData.builder().build();
+        when(orderService.findByOrderNumber("123-456-789")).thenReturn(Optional.of(new Order()));
+        when(googleReviewRequestDataMapper.map(any(Order.class))).thenReturn(googleReviewRequestData);
+
+        // When
+        emailPushService.push("123-456-789", "google-review-request");
+
+        // Then
+        Mockito.verify(emailService).sendMessage(googleReviewRequestData);
     }
 
     @Test
