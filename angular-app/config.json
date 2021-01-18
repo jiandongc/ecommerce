@@ -13,7 +13,8 @@
 			"homePage": "http://localhost:8000/app/#!/home",
 			"registrationPage": "http://localhost:8000/app/#!/register/",
 			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
-			"categories": ["noodles", "ins-noodles", "noodles-mate"]
+			"categories": ["noodles", "ins-noodles", "noodles-mate"],
+			"tracking": "off"
 		}	
 	},
 	"uat" : {
@@ -30,7 +31,8 @@
 			"homePage": "https://noodle-monster.co.uk/",
 			"registrationPage": "https://noodle-monster.co.uk/register/",
 			"stripePublishableKey": "pk_test_ZCtSfzQis8KdwNXWTNsJsq1W00qzNYAJRM",
-			"categories": ["noodles", "ins-noodles", "noodles-mate"]
+			"categories": ["noodles", "ins-noodles", "noodles-mate"],
+			"tracking": "on"
 		}	
 	}
 	

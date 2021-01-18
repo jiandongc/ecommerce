@@ -118,11 +118,13 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
     });
 
     $scope.$on('$routeChangeSuccess', function($event, next, current) {
-        var dataLayer = $window.dataLayer = $window.dataLayer || [];
-        dataLayer.push({
-            'event' : 'virtualPageview',
-            'virtualUrl' : $location.path()
-        });
+        if (environment.tracking == 'on') {
+            var dataLayer = $window.dataLayer = $window.dataLayer || [];
+            dataLayer.push({
+                'event' : 'virtualPageview',
+                'virtualUrl' : $location.path()
+            });
+        }
     });
 
     $scope.removeItem = function(cartItem) {
@@ -206,7 +208,7 @@ app.config(function($routeProvider, $httpProvider, $locationProvider, ngMetaProv
     ngMetaProvider.useTitleSuffix(true);
     ngMetaProvider.setDefaultTitle('煮食麵, 即食麵, 麵條伴侶, 英国');
     ngMetaProvider.setDefaultTitleSuffix(' | Noodle Monster');
-    ngMetaProvider.setDefaultTag('description', 'Noodle Monster新用戶享受首單8折優惠，满39.99镑免邮。GET FREE SHIPPING FOR ORDERS OVER £39.99! We have 100s of types of noodle products + friendly customer service.');
+    ngMetaProvider.setDefaultTag('description', '新用戶享受首單8折優惠，满39.99镑免邮。GET FREE SHIPPING FOR ORDERS OVER £39.99! We have 100s of types of noodle products + friendly customer service.');
 }).run(['ngMeta', function(ngMeta) {
     ngMeta.init();
 }]);

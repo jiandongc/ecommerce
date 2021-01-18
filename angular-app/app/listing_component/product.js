@@ -11,7 +11,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
 
     productFactory.getProductWithCode($routeParams.code).then(function(response) {
         ngMeta.setTitle(response.name + ', 英国');
-        ngMeta.setTag('description', '愛吃的你千萬不要錯過[' + response.name + '],新用戶享受首單8折優惠，满39.99镑免邮。 GET FREE SHIPPING FOR ORDERS OVER £39.99!');
+        ngMeta.setTag('description', '愛吃的你千萬不要錯過[' + response.name + ']，新用戶享受首單8折優惠，满39.99镑免邮。 GET FREE SHIPPING FOR ORDERS OVER £39.99!');
         $scope.product = response;
         $scope.loading = false;
 
@@ -29,21 +29,14 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             $('#breadcrumb-json-ld').html(JSON.stringify($scope.breadcrumbJsonLd));
         });
 
-        $scope.price = response.price;
-        $scope.originalPrice = response.originalPrice;
-        $scope.onSale = response.onSale;
-        $scope.discountRate = response.discountRate;
-
-        if ($scope.product.variants.length == 1) {
-            var variant = $scope.product.variants[0];
-            $scope.sku = variant.sku;
-            $scope.description = variant.description;
-            $scope.qty = variant.qty;
-        } else {
-            $scope.sku = undefined;
-            $scope.description = undefined;
-            $scope.qty = undefined;
-        }
+        var variant = $scope.product.variants[0];
+        $scope.sku = variant.sku;
+        $scope.description = variant.description;
+        $scope.qty = variant.qty;
+        $scope.price = variant.price;
+        $scope.originalPrice = variant.originalPrice;
+        $scope.onSale = variant.isOnSale;
+        $scope.discountRate = variant.discountRate;
 
         $scope.selected = {};
         for (var attribute in $scope.product.attributes) {
