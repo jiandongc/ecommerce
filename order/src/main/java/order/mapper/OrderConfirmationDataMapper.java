@@ -53,6 +53,7 @@ public class OrderConfirmationDataMapper {
                                 .addressLine2(shippingAddress.getAddressLine2())
                                 .city(shippingAddress.getCity())
                                 .country(shippingAddress.getCountry())
+                                .postcode(shippingAddress.getPostcode())
                                 .build()
                 )
                 .guest(order.getCustomerUid() == null)

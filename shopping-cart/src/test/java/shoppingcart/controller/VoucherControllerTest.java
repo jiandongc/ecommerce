@@ -203,7 +203,7 @@ public class VoucherControllerTest extends AbstractControllerTest {
         List<Voucher> vouchers = voucherRepository.findByCustomerUid(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"));
         assertThat(vouchers.size(), is(1));
         assertThat(vouchers.get(0).getType(), is(Voucher.Type.PERCENTAGE));
-        assertThat(vouchers.get(0).getDiscountAmount(), is(BigDecimal.valueOf(20).setScale(2)));
+        assertThat(vouchers.get(0).getDiscountAmount(), is(BigDecimal.valueOf(10).setScale(2)));
         assertThat(vouchers.get(0).getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
 
         // When
@@ -214,7 +214,8 @@ public class VoucherControllerTest extends AbstractControllerTest {
         vouchers = voucherRepository.findByCustomerUid(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"));
         assertThat(vouchers.size(), is(1));
         assertThat(vouchers.get(0).getType(), is(Voucher.Type.PERCENTAGE));
-        assertThat(vouchers.get(0).getDiscountAmount(), is(BigDecimal.valueOf(20).setScale(2)));
+        assertThat(vouchers.get(0).getDiscountAmount(), is(BigDecimal.valueOf(10).setScale(2)));
+        assertThat(vouchers.get(0).getDiscountAmount(), is(BigDecimal.valueOf(10).setScale(2)));
         assertThat(vouchers.get(0).getCustomerUid(), is(UUID.fromString("123e4567-e89b-12d3-a456-556642440000")));
     }
 

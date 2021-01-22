@@ -53,19 +53,19 @@ public class VoucherServiceImpl implements VoucherService {
 
         final List<Voucher> vouchers = voucherRepository.findByCustomerUid(customerUid);
         for (Voucher voucher : vouchers) {
-            if (voucher.getCode().startsWith("WELCOME20_")) {
+            if (voucher.getCode().startsWith("WELCOME10_")) {
                 return Optional.empty();
             }
         }
 
-        final String voucherCode = "WELCOME20_" + randomString();
+        final String voucherCode = "WELCOME10_" + randomString();
         Voucher voucher = Voucher.builder()
                 .type(Voucher.Type.PERCENTAGE)
                 .code(voucherCode)
                 .name("Welcome to Noodle Monster!")
                 .maxUses(1)
                 .maxUsesUser(1)
-                .discountAmount(BigDecimal.valueOf(20))
+                .discountAmount(BigDecimal.valueOf(10))
                 .startDate(LocalDate.now().minusDays(1))
                 .customerUid(customerUid)
                 .build();

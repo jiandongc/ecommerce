@@ -7,7 +7,6 @@ import org.stringtemplate.v4.STGroup;
 import org.stringtemplate.v4.STGroupDir;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 @Getter
@@ -17,8 +16,11 @@ public class WelcomeEmailData extends MailData {
     private final String voucherCode;
 
     @Builder
-    public WelcomeEmailData(List<String> sendTo, String voucherAmount, String voucherCode) {
-        super("info@noodle-monster.co.uk", "Noodle Monster Account", sendTo, Collections.<String>emptyList(),"Welcome to Noodle Monster!");
+    public WelcomeEmailData(List<String> sendTo,
+                            List<String> bccTo,
+                            String voucherAmount,
+                            String voucherCode) {
+        super("info@noodle-monster.co.uk", "Noodle Monster Account", sendTo, bccTo,"Welcome to Noodle Monster!");
         this.voucherAmount = voucherAmount;
         this.voucherCode = voucherCode;
     }
