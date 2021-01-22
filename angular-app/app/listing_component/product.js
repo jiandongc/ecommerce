@@ -11,7 +11,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
 
     productFactory.getProductWithCode($routeParams.code).then(function(response) {
         ngMeta.setTitle(response.name + ', 英国');
-        ngMeta.setTag('description', '愛吃的你千萬不要錯過[' + response.name + ']，新用戶享受首單8折優惠，满39.99镑免邮。 GET FREE SHIPPING FOR ORDERS OVER £39.99!');
+        ngMeta.setTag('description', '愛吃的你千萬不要錯過[' + response.name + ']，新用戶享受首單9折優惠，满39.99镑免邮。 GET FREE SHIPPING FOR ORDERS OVER £39.99!');
         $scope.product = response;
         $scope.loading = false;
 
