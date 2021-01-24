@@ -96,5 +96,54 @@ public class BrandControllerTest extends AbstractControllerTest {
         assertThat(responseEntity.getBody()[2].getName(), is("TESCO"));
     }
 
+    @Test
+    public void shouldReturnBrandsInOrder(){
+        // Given
+        brandRepository.save(Brand.builder()
+                .name("NIKE")
+                .code("nike")
+                .startDate(LocalDate.now().minusDays(10))
+                .endDate(null)
+                .ordering(3)
+                .build());
+
+        brandRepository.save(Brand.builder()
+                .name("ADIDAS")
+                .code("adidas")
+                .startDate(LocalDate.now().minusDays(10))
+                .endDate(null)
+                .ordering(2)
+                .build());
+
+        brandRepository.save(Brand.builder()
+                .name("TESCO")
+                .code("tesco")
+                .startDate(LocalDate.now().minusDays(10))
+                .endDate(null)
+                .ordering(null)
+                .build());
+
+        brandRepository.save(Brand.builder()
+                .name("WILKO")
+                .code("wilko")
+                .startDate(LocalDate.now().minusDays(10))
+                .endDate(null)
+                .ordering(1)
+                .build());
+
+
+        // When
+        final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        final ResponseEntity<Brand[]> responseEntity = rest.exchange(BASE_URL, GET, httpEntity, Brand[].class);
+
+        // Then
+        assertThat(responseEntity.getStatusCode(), is(HttpStatus.OK));
+        assertThat(responseEntity.getBody().length, is(4));
+        assertThat(responseEntity.getBody()[0].getName(), is("WILKO"));
+        assertThat(responseEntity.getBody()[1].getName(), is("ADIDAS"));
+        assertThat(responseEntity.getBody()[2].getName(), is("NIKE"));
+        assertThat(responseEntity.getBody()[3].getName(), is("TESCO"));
+    }
+
 
 }

@@ -48,6 +48,9 @@ public class Brand {
     @Column(name = "end_date")
     private LocalDate endDate;
 
+    @Column(name = "ordering")
+    private Integer ordering;
+
     @JsonIgnore
     public Map<String, String> getAsMap() {
         final Map<String, String> values = new HashMap<>();

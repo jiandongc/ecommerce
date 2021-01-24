@@ -35,6 +35,7 @@ public class BrandServiceImpl implements BrandService {
         return brands.stream()
                 .filter(b -> b.getStartDate() != null && !today.isBefore(b.getStartDate()))
                 .filter(b -> b.getEndDate() == null || !today.isAfter(b.getEndDate()))
+                .sorted(BrandPredicate.orderingComparator())
                 .collect(Collectors.toList());
     }
 }
