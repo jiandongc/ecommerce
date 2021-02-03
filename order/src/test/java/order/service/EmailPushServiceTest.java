@@ -18,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Optional;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -74,10 +75,24 @@ public class EmailPushServiceTest {
         // Given
         GoogleReviewRequestData googleReviewRequestData = GoogleReviewRequestData.builder().build();
         when(orderService.findByOrderNumber("123-456-789")).thenReturn(Optional.of(new Order()));
-        when(googleReviewRequestDataMapper.map(any(Order.class))).thenReturn(googleReviewRequestData);
+        when(googleReviewRequestDataMapper.map(any(Order.class), any(String.class))).thenReturn(googleReviewRequestData);
 
         // When
         emailPushService.push("123-456-789", "google-review-request");
+
+        // Then
+        Mockito.verify(emailService).sendMessage(googleReviewRequestData);
+    }
+
+    @Test
+    public void shouldPushGoogleReviewRequestEmailWithVoucherCode(){
+        // Given
+        GoogleReviewRequestData googleReviewRequestData = GoogleReviewRequestData.builder().build();
+        when(orderService.findByOrderNumber("123-456-789")).thenReturn(Optional.of(new Order()));
+        when(googleReviewRequestDataMapper.map(any(Order.class), eq("voucherCode"))).thenReturn(googleReviewRequestData);
+
+        // When
+        emailPushService.pushGoogleReviewRequestMailWithVoucherCode("123-456-789", "voucherCode");
 
         // Then
         Mockito.verify(emailService).sendMessage(googleReviewRequestData);

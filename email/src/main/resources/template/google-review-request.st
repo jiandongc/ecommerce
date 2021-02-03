@@ -1,4 +1,4 @@
-google-review-request(customerName) ::= <<
+google-review-request(customerName, voucherCode) ::= <<
 <!DOCTYPE html>
 <html>
 <head>
@@ -25,7 +25,15 @@ google-review-request(customerName) ::= <<
             <a href="https://g.page/NoodleMonsterUk/review?gm" target="_blank"
                style="font-size: 15px; text-decoration: none; display: inline-block; background: #f0c14b; color: #002E36; padding: 10px 20px 10px; border-radius: 5px; text-align: center;">Write a Review</a>
         </div>
+        $if(voucherCode)$
+        <div style="text-align: center;">To thank you, we've awarded you an exclusive <b>5% off</b> voucher for your next orders:</div>
+        <br/>
+        <div style="text-align: center; font-weight: bold; font-size: 20px;">$voucherCode$</div>
+        <br/>
+        <div style="text-align: center;">You can use this voucher up to 3 times, so feel free to share it with your family and friends!</div>
+        $else$
         <div style="text-align: center; font-weight: 600;">Thank you!</div>
+        $endif$
         <br/>
         <p style="color: grey;">Kind regards,<br>Noodle-Monster Customer Service</p>
     </div>

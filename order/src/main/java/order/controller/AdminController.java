@@ -38,9 +38,14 @@ public class AdminController {
     @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
     @RequestMapping(value = "email", method = GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity pushEmails(@RequestParam(value = "type") String type,
-                                     @RequestParam(value = "orderNumber") String orderNumber){
+                                     @RequestParam(value = "orderNumber") String orderNumber,
+                                     @RequestParam(value = "voucherCode", required = false) String voucherCode){
 
-        emailPushService.push(orderNumber, type);
+        if (type.equalsIgnoreCase("google-review-request") && voucherCode != null) {
+            emailPushService.pushGoogleReviewRequestMailWithVoucherCode(orderNumber, voucherCode);
+        } else {
+            emailPushService.push(orderNumber, type);
+        }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

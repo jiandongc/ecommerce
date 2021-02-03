@@ -41,9 +41,18 @@ public class EmailPushService {
             Order order = orderOptional.get();
             OrderShippedData orderShippedData = orderShippedDataMapper.map(order);
             emailService.sendMessage(orderShippedData);
-        } else if (orderOptional.isPresent() && type.equalsIgnoreCase("google-review-request")){
+        } else if (orderOptional.isPresent() && type.equalsIgnoreCase("google-review-request")) {
             Order order = orderOptional.get();
-            GoogleReviewRequestData googleReviewRequestData = googleReviewRequestDataMapper.map(order);
+            GoogleReviewRequestData googleReviewRequestData = googleReviewRequestDataMapper.map(order, null);
+            emailService.sendMessage(googleReviewRequestData);
+        }
+    }
+
+    public void pushGoogleReviewRequestMailWithVoucherCode(String orderNumber, String voucherCode) {
+        Optional<Order> orderOptional = orderService.findByOrderNumber(orderNumber);
+        if (orderOptional.isPresent()) {
+            Order order = orderOptional.get();
+            GoogleReviewRequestData googleReviewRequestData = googleReviewRequestDataMapper.map(order, voucherCode);
             emailService.sendMessage(googleReviewRequestData);
         }
     }

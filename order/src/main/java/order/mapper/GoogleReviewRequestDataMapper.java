@@ -17,12 +17,13 @@ public class GoogleReviewRequestDataMapper {
     @Value("${admin.emails}")
     private String adminEmails;
 
-    public GoogleReviewRequestData map(Order order) {
+    public GoogleReviewRequestData map(Order order, String voucherCode) {
         OrderAddress shippingAddress = order.getShippingAddress().get();
         return GoogleReviewRequestData.builder()
                 .sendTo(Arrays.asList(order.getEmail()))
                 .bccTo(Stream.of(adminEmails.split(";")).collect(toList()))
                 .customerName(shippingAddress.getName())
+                .voucherCode(voucherCode)
                 .build();
     }
 }

@@ -13,13 +13,16 @@ import java.util.List;
 public class GoogleReviewRequestData extends MailData {
 
     private final String customerName;
+    private final String voucherCode;
 
     @Builder
     public GoogleReviewRequestData(List<String> sendTo,
                                    List<String> bccTo,
-                                   String customerName) {
+                                   String customerName,
+                                   String voucherCode) {
         super("info@noodle-monster.co.uk", "Noodle Monster Review", sendTo, bccTo, "How is your recent experience with Noodle Monster?");
         this.customerName = customerName;
+        this.voucherCode = voucherCode;
     }
 
     @Override
@@ -27,6 +30,7 @@ public class GoogleReviewRequestData extends MailData {
         STGroup group = new STGroupDir("template", '$', '$');
         ST st = group.getInstanceOf("google-review-request");
         st.add("customerName", this.customerName);
+        st.add("voucherCode", this.voucherCode);
         return st.render();
     }
 }
