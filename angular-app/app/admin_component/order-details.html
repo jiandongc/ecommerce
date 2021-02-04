@@ -93,7 +93,6 @@
                     <div class="m-b-05">
                         <span class="fw-bold">Order Email</span>: {{order.email}}&nbsp&nbsp
                         <span ng-show="sendingEmail"><i class="glyphicon glyphicon-refresh spinning"></i>&nbsp&nbspSending email...</span>
-
                     </div>
                     <div class="btn-group">
                         <button type="button" class="btn btn-default btn-primary" ng-click="pushEmail('order-confirmation')">
@@ -105,10 +104,18 @@
                             Send Order Shipped Email
                         </button>
                     </div>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-default btn-info" ng-click="pushEmail('google-review-request')">
+                    <div class="btn-group m-t-05">
+                        <button type="button" class="btn btn-default btn-info m-r-05"
+                                ng-click="pushEmail('google-review-request')">
                             Send Google Review Request Email
                         </button>
+                        <div class="input-group">
+                            <input type="text" class="form-control" ng-model="voucherCode" placeholder="Voucher Code">
+                            <span class="input-group-btn">
+                                <button class="btn btn-default btn-success" type="button"
+                                        ng-click="pushReviewRequestEmailWithVoucherCode('google-review-request')">Send Google Review Request Email With Voucher Code</button>
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -36,6 +36,7 @@ admin.controller('adminOrderDetailsCtrl', function($window, $scope, $routeParams
   $scope.template.header = 'admin-dashboard-header.html';
   $scope.template.footer = 'default-footer.html';
   $scope.status = 'Choose a new status';
+  $scope.voucherCode = null;
   $scope.addingStatus = false;
   $scope.sendingEmail = false;
 
@@ -65,6 +66,17 @@ admin.controller('adminOrderDetailsCtrl', function($window, $scope, $routeParams
       adminFactory.pushOrderEmail(type, $scope.order.orderNumber).then(function(response){
           $scope.sendingEmail = false;
       });
+  }
+
+  $scope.pushReviewRequestEmailWithVoucherCode = function(type) {
+    if($scope.voucherCode == null){
+        return;
+    }
+
+    $scope.sendingEmail = true;
+    adminFactory.pushOrderEmail(type, $scope.order.orderNumber, $scope.voucherCode).then(function(response){
+        $scope.sendingEmail = false;
+    });
   }
 
   $scope.downloadInvoice = function() {
@@ -106,10 +118,17 @@ admin.factory('adminFactory', function($http, environment){
         });
 	};
 
-	var pushOrderEmail = function(type, orderNumber){
-	    return $http.get(environment.orderUrl + '/admin/orders/email?orderNumber=' + orderNumber + '&type=' + type).then(function(response){
-	        return response.data;
-	    });
+	var pushOrderEmail = function(type, orderNumber, voucherCode){
+	    if (voucherCode != null){
+	        return $http.get(environment.orderUrl + '/admin/orders/email?orderNumber=' + orderNumber + '&type=' + type + '&voucherCode=' + voucherCode).then(function(response){
+	            return response.data;
+	        });
+	    } else {
+            return $http.get(environment.orderUrl + '/admin/orders/email?orderNumber=' + orderNumber + '&type=' + type).then(function(response){
+                return response.data;
+            });
+	    }
+
 	};
 
 	return {
