@@ -1,5 +1,6 @@
 package shoppingcart.service;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -134,6 +135,7 @@ public class VoucherValidationServiceTest {
     }
 
     @Test
+    @Ignore
     public void shouldFailValidationIfVoucherDoesNotBelongToTheCustomer(){
         // Given
         final UUID cartUid = UUID.randomUUID();
