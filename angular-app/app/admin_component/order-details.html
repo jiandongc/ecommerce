@@ -44,6 +44,8 @@
                                     order.discountVat | currency:'£'}})</span></div>
                                 <div>Grant Total: <span class="fw-bold">{{order.orderTotal | currency:'£'}}</span></div>
                                 <div>(incl. VAT: <span class="fw-bold">{{order.totalVat | currency:"£"}})</span></div>
+                                <div>Delivery Method: <span class="fw-bold">{{order.deliveryMethod}}</span></div>
+                                <div>Customer Uid: <span class="fw-bold">{{order.customerId}}</span></div>
                             </div>
                         </div>
                     </div>
