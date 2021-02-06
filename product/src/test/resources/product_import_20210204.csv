@@ -1,0 +1,8 @@
+category_code,brand_code,product_code,name,vat_rate,image,sku,quantity,price
+snack,bestore,bestore-spicy-lotus-root-168g,良品铺子 卤藕 香辣味 168g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/bestore-spicy-lotus-root-168g-1.jpeg,2021020401,1,3.69
+snack,bestore,bestore-spicy-niu-ban-jin-120g,良品铺子 牛板筋 香辣味 120g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/bestore-spicy-niu-ban-jin-120g-1.jpeg,2021020402,1,4.99
+snack,bestore,bestore-spicy-xiao-yu-zai-120g,良品铺子 小鱼仔 香辣味 120g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/bestore-spicy-xiao-yu-zai-120g-1.jpeg,2021020403,1,3.99
+snack,bestore,bestore-spicy-fish-ball-100g,良品铺子 鱼丸 香辣味 100g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/bestore-spicy-fish-ball-100g-1.jpeg,2021020404,2,3.99
+snack,bestore,bestore-spicy-spicy-beef-108g,良品铺子 麻辣牛肉 108g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/bestore-spicy-spicy-beef-108g-1.jpeg,2021020405,2,4.99
+noodles-china,,shun-savory-dandan-noodle-260g,顺香春 非油炸 四川干拌 担担面 260g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/shun-savory-dandan-noodle-260g-1.jpeg,2021020406,8,3.69
+noodles-china,,pearl-river-bridge-soba-noodles-300g,珠江橋牌 荞麦面 300g 4人份,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/pearl-river-bridge-soba-noodles-300g-1.jpeg,2021020407,2,1.49

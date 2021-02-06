@@ -1,0 +1,8 @@
+category_code,brand_code,product_code,name,vat_rate,image,sku,quantity,price
+taiwan-instant-noodles,weilih,taiwan-instant-noodles-weilih-spicy-hot-pot-flavour,台灣維力 麻辣鍋麵 85g x 5包,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/taiwan-instant-noodles-weilih-spicy-hot-pot-flavour-1.jpeg,2021012801,6,3.99
+snack,weilih,snack-weilih-gge-wheat-crackers-seaweed-flavour-80g,台灣維力 張君雅點心麵 海苔味 80g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/snack-weilih-gge-wheat-crackers-seaweed-flavour-85g-1.jpeg,2021012802,15,1.49
+snack,weilih,snack-weilih-gge-wheat-crackers-bbq-flavour-80g,台灣維力 張君雅點心麵 BBQ味 80g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/snack-weilih-gge-wheat-crackers-bbq-flavour-80g-1.jpeg,2021012803,15,1.49
+snack,,snack-pei-tian-corn-roll-french-soup-flavour-100g,北田 蒟蒻糙米捲 法國玉米濃湯 100g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/snack-pei-tian-corn-roll-french-soup-flavour-100g-1.jpeg,2021012804,12,1.99
+snack,,snack-pei-tien-corn-roll-japanese-seaweed-100g,北田 蒟蒻糙米捲 日式岩燒海苔 100g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/snack-pei-tien-corn-roll-japanese-seaweed-100g-1.jpeg,2021012805,12,1.99
+snack,wantwant,want-want-senbei-rice-crackers-56g,旺旺仙貝 56g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/want-want-senbei-rice-crackers-56g-1.jpeg,2021012806,20,1.19
+snack,wantwant,want-want-fried-crackers-chili-60g,旺旺小小酥輕辣 原味 60g,uk-zero-rate,https://s3-eu-west-1.amazonaws.com/noodle-monster.co.uk/images/products/want-want-fried-crackers-chili-60g-1.jpeg,2021012807,20,1.19
