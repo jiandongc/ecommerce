@@ -118,7 +118,7 @@ app.controller('appCtrl', function($scope, $location, $localstorage, $rootScope,
     });
 
     $scope.$on('$routeChangeSuccess', function($event, next, current) {
-        if (environment.tracking == 'on') {
+        if (environment.tracking == 'on' && !$location.path().includes('/admin')) {
             var dataLayer = $window.dataLayer = $window.dataLayer || [];
             dataLayer.push({
                 'event' : 'virtualPageview',
