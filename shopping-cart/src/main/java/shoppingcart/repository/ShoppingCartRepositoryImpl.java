@@ -25,6 +25,7 @@ import static java.util.Optional.empty;
 public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
     private static final String INSERT_SQL = "INSERT INTO shopping_cart (cart_uid, customer_uid, email) VALUES (?, ?, ?)";
+    private static final String SELECT_ALL = "SELECT * FROM shopping_cart";
     private static final String SELECT_BY_UUID_SQL = "SELECT * FROM shopping_cart WHERE cart_uid = ? AND active = true";
     private static final String SELECT_BY_CUSTOMER_ID_SQL = "SELECT * FROM shopping_cart WHERE customer_uid = ? AND active = true";
     private static final String UPDATE_CUSTOMER_ID = "UPDATE shopping_cart SET customer_uid = ? WHERE cart_uid = ?";
@@ -45,6 +46,7 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     private static final String DELETE_SHOPPING_CART_BY_ID_SQL = "DELETE FROM shopping_cart where id = ?";
     private static final String DELETE_ADDRESS_BY_SESSION_ID_SQL = "DELETE FROM address where shopping_cart_id = ?";
     private static final String DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL = "DELETE FROM delivery_option where shopping_cart_id = ?";
+    private static final String DELETE_SHOPPING_CART_ITEM_SQL = "DELETE FROM shopping_cart_item where shopping_cart_id = ?";
     private static final String DEACTIVATE_SHOPPING_CART = "UPDATE shopping_cart SET active = false WHERE id = ?";
     private static final String INSERT_PROMOTION_SQL = "INSERT INTO promotion " +
             "(voucher_code, voucher_type, discount_amount, vat_rate, shopping_cart_id) " +
@@ -87,6 +89,11 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
     }
 
     @Override
+    public List<ShoppingCart> findAll() {
+        return jdbcTemplate.query(SELECT_ALL, shoppingCartMapper);
+    }
+
+    @Override
     public Optional<ShoppingCart> findByUUID(UUID uuid) {
         try {
             return Optional.of(jdbcTemplate.queryForObject(SELECT_BY_UUID_SQL, shoppingCartMapper, uuid));
@@ -112,8 +119,10 @@ public class ShoppingCartRepositoryImpl implements ShoppingCartRepository {
 
     @Override
     public int delete(long cartId) {
-        jdbcTemplate.update(DELETE_ADDRESS_BY_SESSION_ID_SQL, cartId);
+        jdbcTemplate.update(DELETE_PROMOTION_SQL, cartId);
         jdbcTemplate.update(DELETE_DELIVERY_OPTION_BY_SESSION_ID_SQL, cartId);
+        jdbcTemplate.update(DELETE_ADDRESS_BY_SESSION_ID_SQL, cartId);
+        jdbcTemplate.update(DELETE_SHOPPING_CART_ITEM_SQL, cartId);
         return jdbcTemplate.update(DELETE_SHOPPING_CART_BY_ID_SQL, cartId);
     }
 

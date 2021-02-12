@@ -9,9 +9,8 @@ import shoppingcart.repository.ShoppingCartItemRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 import shoppingcart.repository.VoucherRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class ShoppingCartServiceImpl implements ShoppingCartService {
@@ -113,5 +112,26 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
     public void deletePromotion(UUID cartUid) {
         final Optional<ShoppingCart> cartOptional = cartRepository.findByUUID(cartUid);
         cartOptional.ifPresent(cart -> cartRepository.deletePromotion(cart.getId()));
+    }
+
+    @Override
+    public List<ShoppingCart> findShoppingCarts(Date date) {
+        List<ShoppingCart> shoppingCarts = cartRepository.findAll();
+        if (date != null) {
+            return shoppingCarts.stream()
+                    .filter(sc -> !sc.getCreationTime().before(date))
+                    .sorted(Comparator.comparing(ShoppingCart::getCreationTime).reversed())
+                    .collect(Collectors.toList());
+        } else {
+            return shoppingCarts.stream()
+                    .sorted(Comparator.comparing(ShoppingCart::getCreationTime).reversed())
+                    .collect(Collectors.toList());
+        }
+    }
+
+    @Override
+    public void deleteShoppingCart(UUID cartUid) {
+        Optional<ShoppingCart> shoppingCartOptional = this.getShoppingCartByUid(cartUid);
+        shoppingCartOptional.ifPresent(cart -> cartRepository.delete(cart.getId()));
     }
 }

@@ -5,6 +5,8 @@ import shoppingcart.domain.Address;
 import shoppingcart.domain.DeliveryOption;
 import shoppingcart.domain.ShoppingCart;
 
+import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -20,4 +22,7 @@ public interface ShoppingCartService {
     void addDeliveryOption(UUID cartUid, DeliveryOption deliveryOption);
     void addPromotion(UUID cartUid, String voucherCode);
     void deletePromotion(UUID cartUid);
+    List<ShoppingCart> findShoppingCarts(Date date);
+    void deleteShoppingCart(UUID cartUid);
+
 }

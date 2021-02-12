@@ -12,6 +12,7 @@ import java.util.UUID;
 public interface ShoppingCartRepository {
     UUID create();
     UUID create(String customerUid, String email);
+    List<ShoppingCart> findAll();
     Optional<ShoppingCart> findByUUID(UUID uuid);
     List<ShoppingCart> findByCustomerUid(UUID customerUid);
     int updateCustomerUid(UUID cartUid, UUID customerUid);
