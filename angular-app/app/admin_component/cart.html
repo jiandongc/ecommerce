@@ -1,0 +1,51 @@
+<div class="container account">
+    <div class="row m-b-10">
+        <div class="col-xs-12">
+            <form class="form-inline">
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="creationDate" placeholder="Before Date (yyyy-mm-dd)">
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="applyFilter()">
+                                <span ng-show="loading"><i class="glyphicon glyphicon-refresh spinning"></i></span>
+                                Apply Filter
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">Shopping Cart</div>
+                <table ng-hide='error' class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Cart Uid</th>
+                        <th>Customer Uid</th>
+                        <th>Email</th>
+                        <th>Active</th>
+                        <th>Creation Date</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="cart in carts">
+                        <td><a ng-href="admin/carts/{{cart.cartUid}}">{{cart.cartUid}}</a></td>
+                        <td>{{cart.customerUid}}</td>
+                        <td>{{cart.email}}</td>
+                        <td>{{cart.active}}</td>
+                        <td>{{cart.creationTime}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div ng-show="error" class="panel-body">
+                    {{errorMsg}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

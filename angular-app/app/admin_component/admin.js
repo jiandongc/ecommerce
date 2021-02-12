@@ -96,6 +96,67 @@ admin.controller('adminOrderDetailsCtrl', function($window, $scope, $routeParams
 
 });
 
+admin.controller('adminCartCtrl', function(ngMeta, $scope, adminFactory) {
+  ngMeta.setTitle('Shopping Cart Admin | Shopping Cart');
+  $scope.template.header = 'admin-dashboard-header.html';
+  $scope.template.footer = 'default-footer.html';
+  $scope.loading = true;
+  $scope.error = false;
+
+  $scope.applyFilter = function() {
+      $scope.loading = true;
+      $scope.error = false;
+      adminFactory.getShoppingCart($scope.creationDate).then(function(response) {
+        $scope.loading = false;
+        $scope.carts = response;
+      }, function(error){
+        $scope.loading = false;
+        $scope.error = true;
+        $scope.errorMsg = error;
+      });
+  }
+
+  $scope.getCurrentDate = function() {
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    return yyyy + '-' + mm + '-01';
+  }
+
+  $scope.creationDate = $scope.getCurrentDate();
+  adminFactory.getShoppingCart($scope.creationDate).then(function(response) {
+    $scope.loading = false;
+    $scope.carts = response;
+  });
+
+});
+
+admin.controller('adminCartDetailsCtrl', function($window, $scope, $routeParams, $location, adminFactory, shoppingCartFactory) {
+  $window.document.title = 'Noodle Monster Admin | Shopping Cart';
+  $scope.template.header = 'admin-dashboard-header.html';
+  $scope.template.footer = 'default-footer.html';
+  $scope.sendingEmail = false;
+
+  shoppingCartFactory.getShoppingCart($routeParams.cartUid).then(function(response) {
+    $scope.cart = response;
+  });
+
+  $scope.deleteShoppingCart = function(cartUid) {
+      adminFactory.deleteShoppingCart(cartUid).then(function(response) {
+        $location.path("/admin/carts");
+      });
+  }
+
+  $scope.pushEmail = function(type) {
+      $scope.sendingEmail = true;
+      adminFactory.pushShoppingCartEmail(type, $scope.cart.cartUid).then(function(response){
+          $scope.sendingEmail = false;
+      });
+  }
+
+});
+
 admin.factory('adminFactory', function($http, environment){
 
 	var getOrders = function(status, orderDate, orderNumber) {
@@ -131,9 +192,35 @@ admin.factory('adminFactory', function($http, environment){
 
 	};
 
+	var pushShoppingCartEmail = function(type, cartUid){
+	    return $http.get(environment.shoppingCartUrl + '/admin/carts/email?cartUid=' + cartUid + '&type=' + type).then(function(response){
+	        return response.data;
+	    });
+	};
+
+	var getShoppingCart = function(creationDate){
+	    var url = '/admin/carts';
+
+	    if(creationDate != null){
+	        url = url + "?date=" + creationDate;
+	    }
+	    return $http.get(environment.shoppingCartUrl + url).then(function(response){
+	        return response.data;
+        });
+	}
+
+	var deleteShoppingCart = function(cartUid){
+	    return $http.delete(environment.shoppingCartUrl + '/admin/carts/' + cartUid).then(function(response){
+        	return response.data;
+        });
+	}
+
 	return {
     	getOrders: getOrders,
-    	pushOrderEmail: pushOrderEmail
+    	pushOrderEmail: pushOrderEmail,
+    	getShoppingCart: getShoppingCart,
+    	deleteShoppingCart: deleteShoppingCart,
+    	pushShoppingCartEmail: pushShoppingCartEmail
   	}
 });
 
@@ -146,5 +233,11 @@ admin.config(['$routeProvider',
       }).when('/admin/orders/:orderNumber', {
         templateUrl: 'admin_component/order-details.html',
         controller: 'adminOrderDetailsCtrl'
+      }).when('/admin/carts', {
+        templateUrl: 'admin_component/cart.html',
+        controller: 'adminCartCtrl'
+      }).when('/admin/carts/:cartUid', {
+        templateUrl: 'admin_component/cart-details.html',
+        controller: 'adminCartDetailsCtrl'
       });
 }]);

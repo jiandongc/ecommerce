@@ -1,9 +1,14 @@
 var cart = angular.module('cart', []);
 
-cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $localstorage, $timeout, $location) {
+cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $localstorage, $timeout, $location, $routeParams) {
 
     $scope.template.header = 'cart-header.html';
     $scope.template.footer = 'default-footer.html';
+
+    if($routeParams.cartUid != null){
+        $localstorage.set('cart_uid', $routeParams.cartUid);
+        $rootScope.$broadcast('updateCartSummary', false);
+    }
 
     $scope.updateItem = function(cartItem) {
         if (cartItem.quantity == undefined) {
@@ -37,17 +42,7 @@ cart.controller('cartCtrl', function($scope, $rootScope, shoppingCartFactory, $l
             $scope.checking = true;
             shoppingCartFactory.getShoppingCart($localstorage.get('cart_uid')).then(function(response){
                 $scope.shoppingCart = response;
-                if ($scope.shoppingCart.email == null) {
-                    $location.path("/login");
-                } else if ($scope.shoppingCart.shipping == null) {
-                    $location.path("/checkout/guest");
-                } else if ($scope.shoppingCart.deliveryOption == null){
-                    $location.path("/checkout/guest");
-                } else if ($scope.shoppingCart.billing == null){
-                    $location.path("/checkout/guest");
-                }  else {
-                    $location.path("/checkout/guest/payment");
-                }
+                $location.path("/login");
             });
             
         }
@@ -202,6 +197,9 @@ cart.config(
     function($routeProvider) {
         $routeProvider.
         when('/cart', {
+            templateUrl: 'cart_component/cart.html',
+            controller: 'cartCtrl'
+        }).when('/cart/:cartUid', {
             templateUrl: 'cart_component/cart.html',
             controller: 'cartCtrl'
         });

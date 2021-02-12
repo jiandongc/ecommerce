@@ -1,0 +1,93 @@
+<div class="container account" id="test">
+    <div class="row m-b-10">
+        <div class="col-xs-12">
+            <a ng-href="admin/carts"><span class="glyphicon glyphicon-arrow-left"></span> Go Back</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 fs-18 m-b-02">Shopping Cart Details</div>
+        <div class="col-xs-12 fs-08 m-b-10">
+            Cart Uid # {{cart.cartUid}}
+        </div>
+        <div class="col-xs-12 m-b-10">
+            <div class="a-box-group">
+                <div class="p-10 a-box">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Delivery Address</span>
+                            <div class="fs-09 m-b-05">
+                                <div>{{cart.shipping.title}} {{cart.shipping.name}}</div>
+                                <div>{{cart.shipping.addressLine1}}</div>
+                                <div>{{cart.shipping.addressLine2}}</div>
+                                <div>{{cart.shipping.city}}, {{shipping.postcode}}</div>
+                                <div>{{cart.shipping.country}}</div>
+                                <div><b>M:</b> {{cart.shipping.mobile}}</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Billing Address</span>
+                            <div class="fs-09 m-b-05">
+                                <div>{{cart.billing.title}} {{cart.billing.name}}</div>
+                                <div>{{cart.billing.addressLine1}}</div>
+                                <div>{{cart.billing.addressLine2}}</div>
+                                <div>{{cart.billing.city}}, {{cart.billing.postcode}}</div>
+                                <div>{{cart.billing.country}}</div>
+                                <div><b>M:</b> {{cart.billing.mobile}}</div>
+                            </div>
+                        </div>
+                        <div class="col-xs-6 col-sm-4">
+                            <span class="fs-09 fw-bold m-b-02">Order Summary</span>
+                            <div class="fs-09 m-b-05">
+                                <div>Item(s) Subtotal:
+                                    <span class="fw-bold">{{cart.itemsTotal | currency:'£'}}</span></div>
+                                <div>Postage & Packing:<span class="fw-bold">{{cart.postage | currency:'£'}}</span></div>
+                                <div>Discount: <span class="fw-bold">({{cart.promotion | currency:'£'}})</span></div>
+                                <div>Grant Total: <span class="fw-bold">{{cart.orderTotal | currency:'£'}}</span></div>
+                                <div>(incl. VAT: <span class="fw-bold">{{cart.vat | currency:"£"}})</span></div>
+                                <div>Delivery Method: <span class="fw-bold">{{cart.deliveryOption.method}}</span></div>
+                                <div>Customer Uid: <span class="fw-bold">{{cart.customerId}}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-10 a-box">
+                    <div class="m-b-05">
+                        <span class="fw-bold">Customer Email</span>: {{cart.email}}&nbsp&nbsp
+                        <span ng-show="sendingEmail"><i class="glyphicon glyphicon-refresh spinning"></i>&nbsp&nbspSending email...</span>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-primary" ng-click="pushEmail('abandoned-cart-notification')">
+                            Send Shopping Cart Notification
+                        </button>
+                    </div>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default btn-danger" ng-click="deleteShoppingCart(cart.cartUid)">
+                            Delete Shopping Cart
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-12 m-b-10">
+            <div class="a-box-group">
+                <div class="p-l-10 p-t-05 p-b-05 a-box a-color-offset-background fs-09 fw-bold">Shopping Cart
+                    Items</div>
+                <div class="p-10 a-box" ng-repeat="cartItem in cart.cartItems">
+                    <div class="row">
+                        <div class="col-xs-4 col-sm-3">
+                            <img src="{{cartItem.thumbnail}}" style="width: 100px; height: 100px;">
+                        </div>
+                        <div class="col-xs-8 col-sm-9">
+                            <a href="products/{{cartItem.code}}">
+                                <span class="fs-08">{{cartItem.name}}</span>
+                            </a>
+                            <div class="fs-08">Price (each):&nbsp&nbsp<span class="fw-bold">{{cartItem.price | currency:'£'}}</span></div>
+                            <div class="fs-08">Quantity:&nbsp&nbsp<span class="fw-bold">{{cartItem.quantity}}</span></div>
+                            <div class="fs-08">Sub-total:&nbsp&nbsp<span class="fw-bold">{{cartItem.subTotal | currency:'£'}}</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
