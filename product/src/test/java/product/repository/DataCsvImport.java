@@ -40,7 +40,7 @@ public class DataCsvImport extends AbstractRepositoryTest {
     @Test
     @Rollback(false)
     public void importData() throws Exception {
-        String fileName = "src/test/resources/product_import_20210110.csv";
+        String fileName = "src/test/resources/product_import_20210220.csv";
         Path myPath = Paths.get(fileName);
         try (BufferedReader br = Files.newBufferedReader(myPath, StandardCharsets.UTF_8)) {
 
