@@ -75,6 +75,7 @@ public class ProductSimpleDataMapperTest {
                 .originalPrice(BigDecimal.valueOf(0.9).setScale(2, ROUND_HALF_UP))
                 .discountRate(null)
                 .isOnSale(false)
+                .saleEndDate(null)
                 .tags(tags)
                 .build();
         assertThat(actual, is(expected));
@@ -110,5 +111,33 @@ public class ProductSimpleDataMapperTest {
         assertThat(actual.getOriginalPrice(), is(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)));
         assertThat(actual.getDiscountRate(), is(nullValue()));
         assertThat(actual.isOnSale(), is(false));
+        assertThat(actual.getSaleEndDate(), is(nullValue()));
+    }
+
+    @Test
+    public void shouldMapProductOnSale(){
+        // Given
+        final Product product = new Product();
+
+        final Image imageOne = new Image();
+        imageOne.setUrl("url one");
+        product.addImage(imageOne);
+
+        final Sku sku = new Sku();
+        sku.addPrice(Price.builder().startDate(LocalDate.now().minusDays(10)).price(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)).build());
+        sku.addPrice(Price.builder().startDate(LocalDate.now().minusDays(3)).endDate(LocalDate.of(2050, 3, 3)).discountRate("20%").price(BigDecimal.valueOf(0.8).setScale(2, ROUND_HALF_UP)).build());
+        sku.setStockQuantity(99);
+        sku.setSku("FD10039403_Y");
+        product.addSku(sku);
+
+        // When
+        final ProductSimpleData actual = mapper.map(product);
+
+        // Then
+        assertThat(actual.getPrice(), is(BigDecimal.valueOf(0.8).setScale(2, ROUND_HALF_UP)));
+        assertThat(actual.getOriginalPrice(), is(BigDecimal.valueOf(1).setScale(2, ROUND_HALF_UP)));
+        assertThat(actual.getDiscountRate(), is("20%"));
+        assertThat(actual.isOnSale(), is(true));
+        assertThat(actual.getSaleEndDate(), is(nullValue()));
     }
 }

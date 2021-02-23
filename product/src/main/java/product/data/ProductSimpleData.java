@@ -29,5 +29,7 @@ public class ProductSimpleData {
 
     private boolean isOnSale;
 
+    private String saleEndDate;
+
     private List<Map<String, String>> tags;
 }

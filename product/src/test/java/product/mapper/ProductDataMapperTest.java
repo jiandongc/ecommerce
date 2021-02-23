@@ -121,6 +121,7 @@ public class ProductDataMapperTest {
                 BigDecimal.valueOf(1.5).setScale(2, ROUND_HALF_UP),
                 null,
                 false,
+                null,
                 attributes,
                 variants,
                 images,

@@ -70,6 +70,11 @@ public class Sku {
         return priceOptional.map(price -> price.getPrice().setScale(2, BigDecimal.ROUND_HALF_UP)).orElse(null);
     }
 
+    public LocalDate getCurrentSaleEndDate() {
+        Price price = getSalePrice();
+        return price != null ? price.getEndDate() : null;
+    }
+
 
     public Price getSalePrice() {
         if (prices == null) {

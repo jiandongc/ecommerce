@@ -34,6 +34,8 @@ public class ProductData {
 
     private boolean isOnSale;
 
+    private String saleEndDate;
+
     private Map<String, Set<String>> attributes;
 
     private List<Map<String, Object>> variants;

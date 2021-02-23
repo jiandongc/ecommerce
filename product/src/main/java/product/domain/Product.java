@@ -163,6 +163,15 @@ public class Product {
         return skuOptional.map(Sku::isOnSale).orElse(false);
     }
 
+    public LocalDate getSalesEndDate() {
+        if (skus == null) {
+            return null;
+        }
+
+        final Optional<Sku> skuOptional = skus.stream().filter(sku -> sku.getCurrentPrice() != null).min(Comparator.comparing(Sku::getCurrentPrice));
+        return skuOptional.map(Sku::getCurrentSaleEndDate).orElse(null);
+    }
+
     public List<ProductTag> getValidTags() {
         if (tags == null){
             return null;

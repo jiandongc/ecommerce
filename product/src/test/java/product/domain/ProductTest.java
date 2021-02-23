@@ -90,6 +90,8 @@ public class ProductTest {
         Assert.assertThat(product.getOriginalPrice(), is(BigDecimal.valueOf(1).setScale(2, BigDecimal.ROUND_HALF_UP)));
         Assert.assertThat(product.getDiscountRate(), is("20%"));
         Assert.assertThat(product.isOnSale(), is(true));
+        Assert.assertThat(product.getSalesEndDate(), is(LocalDate.now().plusDays(1)));
+
     }
 
     @Test
