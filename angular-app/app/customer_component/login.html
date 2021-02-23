@@ -1,6 +1,24 @@
 <div class="container">
 	<div class = "row p-b-40" style="position:relative;">
 		<div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+			<form ng-show="cartUid && !customerId" name="guestForm" ng-submit="guestForm.$valid && guestContinue(guest)">
+				<h3 class="p-b-05">Guest</h3>
+				<div class="form-group" ng-class="{'has-error': guestForm.guestEmail.$invalid && (guestForm.guestEmail.$touched || guestForm.$submitted) }">
+					<label for="guestEmail">Email</label>
+					<input type="email" id="guestEmail" name="guestEmail" class="form-control" ng-model="guest.email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/" placeholder="Enter email" required>
+					<div id="guestEmailMsg" ng-show="guestForm.guestEmail.$touched || guestForm.$submitted">
+						<p ng-show="guestForm.guestEmail.$error.required" class="help-block">
+							Email is missing. Please check and try again.
+						</p>
+						<p ng-show="guestForm.guestEmail.$error.pattern" class="help-block">
+							Sorry, that email doesn’t look right. Please check it’s a proper email.
+						</p>
+					</div>
+				</div>
+				<button id="guestBtn" type="submit" class="btn btn-block btn-style-primary">
+					<span ng-show="guestLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>&nbsp;Continue as guest
+				</button>
+			</form>
 			<form name="loginForm" ng-submit="loginForm.$valid && login(credentials)">
 				<h3 class="p-b-05">Sign-In</h3>
 				<div id="loginError" ng-show="loginError" class="alert alert-danger">
@@ -50,23 +68,6 @@
 				<div class="m-t-05">
 					<a href="register"><u>Register now</u></a>
 				</div>
-			</form>
-			<form ng-show="cartUid && !customerId" name="guestForm" ng-submit="guestForm.$valid && guestContinue(guest)">
-			  	<div class="form-group" ng-class="{'has-error': guestForm.guestEmail.$invalid && (guestForm.guestEmail.$touched || guestForm.$submitted) }">
-			    	<label for="guestEmail">Email</label>
-			    	<input type="email" id="guestEmail" name="guestEmail" class="form-control" ng-model="guest.email" ng-pattern="/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/" placeholder="Enter email" required>
-			    	<div id="guestEmailMsg" ng-show="guestForm.guestEmail.$touched || guestForm.$submitted">
-						<p ng-show="guestForm.guestEmail.$error.required" class="help-block">
-							Email is missing. Please check and try again.
-						</p>
-						<p ng-show="guestForm.guestEmail.$error.pattern" class="help-block">
-							Sorry, that email doesn’t look right. Please check it’s a proper email.
-						</p>
-					</div>
-			  	</div>
-				<button id="guestBtn" type="submit" class="btn btn-block btn-style-primary">
-					<span ng-show="guestLoading"><i class="glyphicon glyphicon-refresh spinning"></i></span>&nbsp;Continue as guest
-				</button>
 			</form>
 		</div>
 		<div class="hidden-xs col-sm-6 col-md-8 col-lg-8 text-center" style='position:absolute;bottom:4.0em;right:0;'>
