@@ -19,7 +19,9 @@ public class ProductDataMapper {
         final Map<String, Set<String>> attributes = new HashMap<>();
         final List<Map<String, Object>> variants = new ArrayList<>();
         product.getSkus().forEach(sku -> {
-            variants.add(sku.getAsMap());
+            Map<String, Object> skuMap = sku.getAsMap();
+            skuMap.put("saleEndDate", formatDate(sku.getCurrentSaleEndDate()));
+            variants.add(skuMap);
             sku.getAttributes().forEach(attribute -> {
                 if (attributes.containsKey(attribute.getKey())) {
                     attributes.get(attribute.getKey()).add(attribute.getValue());
