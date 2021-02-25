@@ -36,6 +36,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
         $scope.price = variant.price;
         $scope.originalPrice = variant.originalPrice;
         $scope.onSale = variant.isOnSale;
+        $scope.saleEndDate = variant.saleEndDate;
         $scope.discountRate = variant.discountRate;
 
         $scope.selected = {};
@@ -78,6 +79,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             $scope.price = variant.price;
             $scope.originalPrice = variant.originalPrice;
             $scope.onSale = variant.isOnSale;
+            $scope.saleEndDate = variant.saleEndDate;
             $scope.discountRate = variant.discountRate;
             $scope.sku = variant.sku;
             $scope.description = variant.description;
@@ -87,6 +89,7 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             $scope.price = $scope.product.price;
             $scope.originalPrice = $scope.product.originalPrice;
             $scope.onSale = $scope.product.onSale;
+            $scope.saleEndDate = $scope.product.saleEndDate;
             $scope.discountRate = $scope.product.discountRate;
             $scope.sku = undefined;
             $scope.description = undefined;
