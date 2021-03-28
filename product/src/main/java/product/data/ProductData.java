@@ -16,6 +16,8 @@ public class ProductData {
 
     private String code;
 
+    private String type;
+
     private String name;
 
     private String description;

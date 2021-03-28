@@ -43,6 +43,7 @@ public class ProductDataMapper {
         product.getImages().forEach(image -> images.add(image.getUrl()));
 
         return ProductData.builder()
+                .type(product.getAttribute("Type"))
                 .code(product.getCode())
                 .name(product.getName())
                 .description(product.getDescription())

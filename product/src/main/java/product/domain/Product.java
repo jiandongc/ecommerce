@@ -212,4 +212,13 @@ public class Product {
                 && (this.getEndDate() == null || !today.isAfter(this.getEndDate()));
     }
 
+    public String getAttribute(String key) {
+        if (attributes == null) {
+            return null;
+        }
+
+        return attributes.stream().filter(attribute -> attribute.getKey().equals(key))
+                .findFirst().map(ProductAttribute::getValue).orElse(null);
+    }
+
 }

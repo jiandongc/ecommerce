@@ -225,4 +225,27 @@ public class ProductTest {
         assertThat(product.isActive(), is(false));
     }
 
+    @Test
+    public void shouldReturnNullWhenAttributesIsNull(){
+        // Given
+        Product product = new Product();
+        assertThat(product.getAttribute("Type"), is(nullValue()));
+    }
+
+    @Test
+    public void shouldReturnAttributeValue(){
+        // Given
+        Product product = new Product();
+        product.addAttribute(ProductAttribute.builder().key("Type").value("Combo").build());
+        assertThat(product.getAttribute("Type"), is("Combo"));
+    }
+
+    @Test
+    public void shouldReturnNullWhenAttributeDoesNotExist(){
+        // Given
+        Product product = new Product();
+        product.addAttribute(ProductAttribute.builder().key("Type").value("Combo").build());
+        assertThat(product.getAttribute("Colour"), is(nullValue()));
+    }
+
 }

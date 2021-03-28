@@ -40,6 +40,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 	private Sku sku;
 	private Sku sku2;
 	private Vat vat;
+	private ProductAttribute productAttribute;
 
 	@Before
 	public void setUp(){
@@ -90,6 +91,8 @@ public class ProductControllerTest extends AbstractControllerTest {
 		sku2.setStockQuantity(70);
 		sku2.setSku("FD10039403_Y");
 		sku2.addAttribute(SkuAttribute.builder().key("Color").value("Red").build());
+
+		productAttribute = ProductAttribute.builder().key("Type").value("Combo").build();
 	}
 	
 	@Test
@@ -107,6 +110,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		productOne.addSku(sku);
 		productOne.setStartDate(LocalDate.now());
 		productOne.setVat(vat);
+		productOne.addAttribute(productAttribute);
 		productRepository.save(productOne);
 
 		// When & Then
@@ -114,6 +118,7 @@ public class ProductControllerTest extends AbstractControllerTest {
 		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
 		final ResponseEntity<ProductData> response = rest.exchange(BASE_URL + p.getCode(), GET, httpEntity, ProductData.class);
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getType(), is("Combo"));
 		assertThat(response.getBody().getName(), is("Chester"));
 		assertThat(response.getBody().getDescription(), is("Chester description"));
 		assertThat(response.getBody().getShortDescription(), is("Short description"));

@@ -31,6 +31,8 @@ public class ProductDataMapperTest {
         product.setBrand(Brand.builder().name("nike").code("abc").build());
         product.setVat(Vat.builder().rate(20).name("uk_standard").build());
 
+        product.addAttribute(ProductAttribute.builder().key("Type").value("Combo").build());
+
         final Category category = new Category();
         category.setCode("FH");
         product.setCategory(category);
@@ -114,6 +116,7 @@ public class ProductDataMapperTest {
         tags.add(popularTag);
         final ProductData expected = new ProductData(
                 "code",
+                "Combo",
                 "name",
                 "description",
                 "short_description",
