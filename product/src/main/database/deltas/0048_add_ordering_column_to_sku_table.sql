@@ -1,0 +1,1 @@
+ALTER TABLE sku ADD COLUMN ordering smallint;

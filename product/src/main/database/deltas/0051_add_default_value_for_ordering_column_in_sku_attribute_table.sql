@@ -1,0 +1,1 @@
+update sku_attribute set ordering = 1;

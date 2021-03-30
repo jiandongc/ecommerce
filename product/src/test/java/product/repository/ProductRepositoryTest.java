@@ -31,9 +31,9 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 	private static final String product_insert_sql
 			= "insert into product(category_id, description, name, brand_id) values (?, ?, ?, ?)";
 	private static final String sku_insert_sql
-			= "insert into sku(product_id, sku, stock_quantity) values (?, ?, ?)";
+			= "insert into sku(product_id, sku, stock_quantity, ordering) values (?, ?, ?, ?)";
 	private static final String sku_attribute_insert_sql
-			= "insert into sku_attribute (sku_id, key, value) values (?, ?, ?)";
+			= "insert into sku_attribute (sku_id, key, value, ordering) values (?, ?, ?, ?)";
 	private static final String sku_price_insert_sql
 			= "insert into price(sku_id, price, start_date, end_date, discount_rate) values (?, ?, ?, ?, ?)";
 	private static final String product_attribute_insert_sql
@@ -55,12 +55,12 @@ public class ProductRepositoryTest extends AbstractRepositoryTest {
 		jdbcTemplate.update(image_insert_sql, productId, "img/0001.jpg", 1);
 		jdbcTemplate.update(image_insert_sql, productId, "img/0003.jpg", 3);
 		jdbcTemplate.update(image_insert_sql, productId, "img/0002.jpg", 2);
-		jdbcTemplate.update(sku_insert_sql, productId, "FD10039403_X", 100);
+		jdbcTemplate.update(sku_insert_sql, productId, "FD10039403_X", 100, 1);
 		final Long skuId = jdbcTemplate.queryForObject("select id from sku where sku = 'FD10039403_X'", Long.class);
 		jdbcTemplate.update(sku_price_insert_sql, skuId, 10, Date.valueOf("2019-11-01"), null, null);
 		jdbcTemplate.update(sku_price_insert_sql, skuId, 9, Date.valueOf("2019-11-01"), Date.valueOf("2019-12-01"), "10%");
-		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "color", "red");
-		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "brand", "nike");
+		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "color", "red", 1);
+		jdbcTemplate.update(sku_attribute_insert_sql, skuId, "brand", "nike", 2);
 		jdbcTemplate.update(product_attribute_insert_sql, productId, "color", "red");
 		jdbcTemplate.update(product_attribute_insert_sql, productId, "brand", "nike");
 		jdbcTemplate.update(product_tag_insert_sql, productId, "new", "#F0C14B", Date.valueOf("2019-11-01"), Date.valueOf("2019-12-01"));

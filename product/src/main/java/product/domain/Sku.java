@@ -34,7 +34,11 @@ public class Sku {
     private List<Price> prices;
 
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "sku")
+    @OrderBy(value = "ordering")
     private List<SkuAttribute> attributes;
+
+    @Column(name = "ordering")
+    private int ordering;
 
     @ToString.Exclude
     @EqualsAndHashCode.Exclude

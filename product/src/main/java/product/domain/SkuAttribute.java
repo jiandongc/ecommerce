@@ -25,6 +25,9 @@ public class SkuAttribute {
     @Column(name = "value")
     private String value;
 
+    @Column(name = "ordering")
+    private int ordering;
+
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = LAZY)

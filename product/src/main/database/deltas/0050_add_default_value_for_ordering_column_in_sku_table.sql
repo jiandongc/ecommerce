@@ -1,0 +1,1 @@
+update sku set ordering = 1;

@@ -471,6 +471,32 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getBody()[0].getPrice().toPlainString(), is("10.00"));
 		assertThat(response.getBody()[1].getPrice().toPlainString(), is("1.00"));
 	}
+
+	@Test
+	public void shouldOrderSkuByOrderingNumber(){
+		// Given
+		final Product product = new Product();
+		product.setCode("1234");
+		product.setName("Chester");
+		product.setDescription("Chester description");
+		product.setCategory(category);
+		product.addImage(image);
+		sku.setOrdering(2);
+		product.addSku(sku);
+		sku2.setOrdering(1);
+		product.addSku(sku2);
+		product.setStartDate(LocalDate.now());
+		product.setOrdering(1);
+		productRepository.save(product);
+
+		// When & Then
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+
+		final ResponseEntity<ProductData> response = rest.exchange(BASE_URL + "1234", GET, httpEntity, ProductData.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_Y"));
+		assertThat(response.getBody().getVariants().get(1).get("sku"), is("FD10039403_X"));
+	}
 	
 	@Test
 	public void shouldFindProductsByMultipleAttributes(){

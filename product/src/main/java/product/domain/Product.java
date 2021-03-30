@@ -66,6 +66,7 @@ public class Product {
     private List<Image> images;
 
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
+    @OrderBy(value = "ordering")
     private List<Sku> skus;
 
     @OneToMany(fetch = LAZY, cascade = ALL, mappedBy = "product")
