@@ -25,6 +25,9 @@ import product.domain.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class ProductControllerTest extends AbstractControllerTest {
 
@@ -84,13 +87,13 @@ public class ProductControllerTest extends AbstractControllerTest {
 		sku.addPrice(Price.builder().price(TEN).startDate(LocalDate.now()).build());
 		sku.setStockQuantity(100);
 		sku.setSku("FD10039403_X");
-		sku.addAttribute(SkuAttribute.builder().key("Color").value("Red").build());
+		sku.addAttribute(SkuAttribute.builder().key("Color").value("Red").ordering(1).build());
 
 		sku2 = new Sku();
 		sku2.addPrice(Price.builder().price(BigDecimal.ONE).startDate(LocalDate.now()).build());
 		sku2.setStockQuantity(70);
 		sku2.setSku("FD10039403_Y");
-		sku2.addAttribute(SkuAttribute.builder().key("Color").value("Red").build());
+		sku2.addAttribute(SkuAttribute.builder().key("Color").value("Red").ordering(1).build());
 
 		productAttribute = ProductAttribute.builder().key("Type").value("Combo").build();
 	}
@@ -496,6 +499,30 @@ public class ProductControllerTest extends AbstractControllerTest {
 		assertThat(response.getStatusCode(), is(HttpStatus.OK));
 		assertThat(response.getBody().getVariants().get(0).get("sku"), is("FD10039403_Y"));
 		assertThat(response.getBody().getVariants().get(1).get("sku"), is("FD10039403_X"));
+	}
+
+	@Test
+	public void shouldOrderSkuAttributeByOrderingNumber(){
+		final Product product = new Product();
+		product.setCode("1234");
+		product.setName("Chester");
+		product.setDescription("Chester description");
+		product.setCategory(category);
+		product.addImage(image);
+		sku.addAttribute(SkuAttribute.builder().key("Size").value("Large").ordering(2).build());
+		product.addSku(sku);
+		product.setStartDate(LocalDate.now());
+		product.setOrdering(1);
+		productRepository.save(product);
+
+		// When & Then
+		final HttpEntity<Object> httpEntity = new HttpEntity<Object>(headers);
+
+		final ResponseEntity<ProductData> response = rest.exchange(BASE_URL + "1234", GET, httpEntity, ProductData.class);
+		assertThat(response.getStatusCode(), is(HttpStatus.OK));
+		Iterator<Map.Entry<String, Set<String>>> iterator = response.getBody().getAttributes().entrySet().iterator();
+		assertThat(iterator.next().getKey(), is("Color"));
+		assertThat(iterator.next().getKey(), is("Size"));
 	}
 	
 	@Test

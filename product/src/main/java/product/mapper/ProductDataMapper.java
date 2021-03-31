@@ -16,7 +16,7 @@ public class ProductDataMapper {
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("MMM. dd");
 
     public ProductData getValue(Product product) {
-        final Map<String, Set<String>> attributes = new HashMap<>();
+        final Map<String, Set<String>> attributes = new LinkedHashMap<>();
         final List<Map<String, Object>> variants = new ArrayList<>();
         product.getSkus().forEach(sku -> {
             Map<String, Object> skuMap = sku.getAsMap();
