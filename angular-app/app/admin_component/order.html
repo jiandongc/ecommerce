@@ -56,6 +56,7 @@
                     <tr>
                         <th>Order</th>
                         <th>Status</th>
+                        <th>Email</th>
                         <th>Total</th>
                         <th>Date</th>
                         <th>Delivery Method</th>
@@ -65,6 +66,7 @@
                     <tr ng-repeat="order in orders">
                         <td><a ng-href="admin/orders/{{order.orderNumber}}">{{order.orderNumber}}</a></td>
                         <td>{{order.currentStatus}}</td>
+                        <td>{{order.email}}</td>
                         <td>{{order.orderTotal | currency:'£'}}</td>
                         <td>{{order.orderDate.year}}-{{order.orderDate.monthValue}}-{{order.orderDate.dayOfMonth}}</td>
                         <td>{{order.deliveryMethod}}</td>

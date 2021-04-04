@@ -56,11 +56,11 @@
 			<div class="divider"></div>
 			<div ng-repeat="(attribute, values) in product.attributes">
 				<div class="form-group">
-  					<label for="{{attribute}}">{{attribute}}</label>
-  					<select class="form-control" id="{{attribute}}" ng-init="value = values[0]" ng-model="value" ng-change="select(attribute, value)">
-  						<!--<option value="">Choose an Option...</option>-->
-  						<option ng-repeat="value in values" value="{{value}}">{{value}}</option>
-  					</select>
+					<label for="{{attribute}}">{{attribute}}</label>
+					<select class="form-control" id="{{attribute}}" ng-init="value=''" ng-model="value" ng-change="select(attribute, value)">
+						<option value="">Choose an Option...</option>
+						<option ng-repeat="value in values" value="{{value}}">{{value}}</option>
+					</select>
 				</div>
 			</div>
 			<div ng-show="selectOptionAlert" class="m-b-05 alert alert-danger">

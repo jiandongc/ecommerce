@@ -71,6 +71,7 @@
                                 <span class="fs-08">{{orderItem.name}}</span>
                             </a>
                             <div class="fs-08">Price (each):&nbsp&nbsp<span class="fw-bold">{{orderItem.price | currency:'£'}}</span></div>
+                            <div class="fs-08" ng-hide="orderItem.description==''">Description:&nbsp&nbsp<span class="fw-bold">{{orderItem.description}}</span></div>
                             <div class="fs-08">Quantity:&nbsp&nbsp<span class="fw-bold">{{orderItem.quantity}}</span></div>
                             <div class="fs-08">Sub-total:&nbsp&nbsp<span class="fw-bold">{{orderItem.subTotal | currency:'£'}}</span></div>
                         </div>

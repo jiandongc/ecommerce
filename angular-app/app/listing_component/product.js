@@ -39,6 +39,11 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
         $scope.saleEndDate = variant.saleEndDate;
         $scope.discountRate = variant.discountRate;
 
+        if ($scope.product.variants.length > 1 || $scope.product.type == 'Combo') {
+            $scope.sku = undefined;
+            $scope.description = undefined;
+        }
+
         $scope.selected = {};
         for (var attribute in $scope.product.attributes) {
             $scope.selected[attribute] = '';
@@ -73,28 +78,49 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
 
     $scope.select = function(attribute, value) {
         $scope.selected[attribute] = value;
-        var variant = $scope.find();
-
-        if (variant) {
-            $scope.price = variant.price;
-            $scope.originalPrice = variant.originalPrice;
-            $scope.onSale = variant.isOnSale;
-            $scope.saleEndDate = variant.saleEndDate;
-            $scope.discountRate = variant.discountRate;
-            $scope.sku = variant.sku;
-            $scope.description = variant.description;
-            $scope.qty = variant.qty;
+        if ($scope.product.type == 'Combo') {
+            var sku = '';
+            var description = '';
+            for (var attribute in $scope.selected) {
+                var selectedValue = $scope.selected[attribute];
+                var values = $scope.product.attributes[attribute];
+                var index = values.indexOf(selectedValue)
+                if (index == -1) {
+                    $scope.sku = undefined;
+                    $scope.description = undefined;
+                    return;
+                } else {
+                    sku = sku + index;
+                    description = description + attribute + ": " + selectedValue + "; "
+                }
+            }
+            $scope.sku = $scope.product.variants[0].sku + '-' + sku;
+            $scope.description = description;
             $scope.selectOptionAlert = false;
         } else {
-            $scope.price = $scope.product.price;
-            $scope.originalPrice = $scope.product.originalPrice;
-            $scope.onSale = $scope.product.onSale;
-            $scope.saleEndDate = $scope.product.saleEndDate;
-            $scope.discountRate = $scope.product.discountRate;
-            $scope.sku = undefined;
-            $scope.description = undefined;
-            $scope.qty = undefined;
-            $scope.selectOptionAlert = true;
+            var variant = $scope.find();
+
+            if (variant) {
+                $scope.price = variant.price;
+                $scope.originalPrice = variant.originalPrice;
+                $scope.onSale = variant.isOnSale;
+                $scope.saleEndDate = variant.saleEndDate;
+                $scope.discountRate = variant.discountRate;
+                $scope.sku = variant.sku;
+                $scope.description = variant.description;
+                $scope.qty = variant.qty;
+                $scope.selectOptionAlert = false;
+            } else {
+                $scope.price = $scope.product.price;
+                $scope.originalPrice = $scope.product.originalPrice;
+                $scope.onSale = $scope.product.onSale;
+                $scope.saleEndDate = $scope.product.saleEndDate;
+                $scope.discountRate = $scope.product.discountRate;
+                $scope.sku = undefined;
+                $scope.description = undefined;
+                $scope.qty = undefined;
+                $scope.selectOptionAlert = true;
+            }
         }
     };
 
