@@ -23,7 +23,7 @@ google-review-request(customerName, voucherCode) ::= <<
         <div style="text-align: center;">To submit your review, simply click below and let us know what you think!</div>
         <div class="button" style="text-align: center; margin: 20px;">
             <a href="https://g.page/NoodleMonsterUk/review?gm" target="_blank"
-               style="font-size: 15px; text-decoration: none; display: inline-block; background: #f0c14b; color: #002E36; padding: 10px 20px 10px; border-radius: 5px; text-align: center;">Write a Review</a>
+               style="font-size: 15px; text-decoration: none; display: inline-block; background: #f0c14b; color: #002E36; padding: 10px 20px 10px; border-radius: 5px; text-align: center;">Rate Noodle Monster</a>
         </div>
         $if(voucherCode)$
         <div style="text-align: center;">To thank you, we've awarded you an exclusive <b>5% off</b> voucher for your next orders:</div>
