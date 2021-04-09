@@ -13,14 +13,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @EnableWebSecurity
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    @Value("${host.url}")
-    private String hostUrl;
+    @Value("#{'${host.url}'.split(';')}")
+    private List<String> hostUrls;
     @Value("${security.secret}")
     private String secret;
     @Value("${security.secret.expirationtime}")
@@ -56,7 +59,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(asList(hostUrl));
+        corsConfiguration.setAllowedOrigins(hostUrls);
         corsConfiguration.setAllowedMethods(asList("GET", "POST", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(asList("Content-Type", "Authentication"));
         corsConfiguration.setExposedHeaders(asList("Authentication"));

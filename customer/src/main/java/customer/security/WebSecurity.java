@@ -10,6 +10,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
@@ -17,8 +19,8 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    @Value("${allowed.domain}")
-    private String allowedDomain;
+    @Value("#{'${allowed.domain}'.split(';')}")
+    private List<String> allowedDomains;
     @Value("${security.secret}")
     private String secret;
 
@@ -36,7 +38,7 @@ public class WebSecurity extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(asList(allowedDomain));
+        corsConfiguration.setAllowedOrigins(allowedDomains);
         corsConfiguration.setAllowedMethods(asList("POST", "PUT", "DELETE", "GET", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(asList("Content-Type", "X-Requested-With", "Authentication"));
         corsConfiguration.setMaxAge(3600L);
