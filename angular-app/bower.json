@@ -20,7 +20,8 @@
     "checklist-model": "0.11.0",
     "pdfmake": "0.1.22",
     "html2canvas": "0.4.1",
-    "ngMeta": "1.0.3"
+    "ngMeta": "1.0.3",
+    "components-font-awesome": "^4.7.0"
   },
   "resolutions": {
     "angular": "~1.7"
