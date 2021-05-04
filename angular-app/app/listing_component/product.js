@@ -55,13 +55,14 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
             "name": $scope.product.name,
             "image": $scope.product.images,
             "sku": $scope.sku,
+            "description": $scope.shortDescription != null ? $scope.shortDescription: null,
             "brand": {
                 "@type": "Brand",
-                "name": $scope.product.brand != null ? $scope.product.brand.name : ""
+                "name": $scope.product.brand != null ? $scope.product.brand.name : null
             },
             "offers": {
                 "@type": "Offer",
-                "availability": "http://schema.org/InStock",
+                "availability": $scope.qty > 0 ? "http://schema.org/InStock" : "http://schema.org/OutOfStock",
                 "price": $scope.price,
                 "priceCurrency": "GBP",
                 "url": environment.productPage + '/' + $routeParams.code,
