@@ -1,9 +1,15 @@
 var productTag = angular.module('productTag', ['ngRoute']);
 
-productTag.controller('tagCtrl', function($scope, $routeParams, ngMeta, productFactory) {
+productTag.controller('tagCtrl', function($scope, $routeParams, ngMeta, productFactory, environment) {
 	$scope.loading = true;
 	$scope.tag = $routeParams.tag;
-	ngMeta.setTitle($scope.tag);
+	var title = '商品标签: ' + $scope.tag + ', 英国';
+	var description = '来看看我们的[' + $scope.tag + ']商品，新用戶享受首單9折優惠，满39.99镑免邮。 GET FREE SHIPPING FOR ORDERS OVER £39.99!';
+	ngMeta.setTitle(title);
+	ngMeta.setTag('description', description);
+	ngMeta.setTag('ogUrl', environment.tagPage + '/' + $scope.tag);
+    ngMeta.setTag('ogTitle', title);
+    ngMeta.setTag('ogDescription', description);
 	$scope.sort = {display: "Our favourites", code: undefined};
 	$scope.category = {display: 'All', code: undefined};
 

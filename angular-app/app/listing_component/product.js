@@ -10,8 +10,6 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
     $scope.display = 'itemInfo';
 
     productFactory.getProductWithCode($routeParams.code).then(function(response) {
-        ngMeta.setTitle(response.name + ', 英国');
-        ngMeta.setTag('description', '愛吃的你千萬不要錯過[' + response.name + ']，新用戶享受首單9折優惠，满39.99镑免邮。 GET FREE SHIPPING FOR ORDERS OVER £39.99!');
         $scope.product = response;
         $scope.loading = false;
 
@@ -48,6 +46,17 @@ productDetail.controller('productDetailCtrl', function($scope, $rootScope, $loca
         for (var attribute in $scope.product.attributes) {
             $scope.selected[attribute] = '';
         }
+
+        var description = '愛吃的你千萬不要錯過[' + $scope.product.name + ']，新用戶享受首單9折優惠，满39.99镑免邮。 GET FREE SHIPPING FOR ORDERS OVER £39.99!';
+        ngMeta.setTitle($scope.product.name + ', 英国');
+        ngMeta.setTag('description', description);
+        ngMeta.setTag('ogUrl', environment.productPage + '/' + $scope.product.code);
+        ngMeta.setTag('ogType', 'og:product');
+        ngMeta.setTag('ogTitle', $scope.product.name);
+        ngMeta.setTag('ogDescription', $scope.product.shortDescription != null ? $scope.product.shortDescription : description);
+        ngMeta.setTag('ogImage', $scope.product.images[0]);
+        ngMeta.setTag('ogPriceAmount', $scope.price);
+        ngMeta.setTag('ogPriceCurrency', 'GBP');
 
         $scope.productJsonLd = {
             "@context":"http://schema.org",

@@ -1,11 +1,15 @@
 var brand = angular.module('brand', ['ngRoute']);
 
-brand.controller('brandCtl', function($scope, $routeParams, ngMeta, brandFactory, productFactory) {
+brand.controller('brandCtl', function($scope, $routeParams, ngMeta, brandFactory, productFactory, environment) {
 	brandFactory.getBrandWithCode($routeParams.code).then(function(response){
 		$scope.brand = response;
 		ngMeta.setTitle($scope.brand.name + ', 英国');
 		ngMeta.setTag('description', $scope.brand.description);
 		$scope.brand.imageUrl = $scope.brand.imageUrl ? $scope.brand.imageUrl : '/images/brand/notfound.png';
+		ngMeta.setTag('ogUrl', environment.brandPage + '/' + $scope.brand.code);
+        ngMeta.setTag('ogTitle', $scope.brand.name);
+        ngMeta.setTag('ogImage', $scope.brand.imageUrl);
+        ngMeta.setTag('ogDescription', $scope.brand.description);
 	});
 
 	$scope.loading = true;
