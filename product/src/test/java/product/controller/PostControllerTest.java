@@ -37,7 +37,7 @@ public class PostControllerTest extends AbstractControllerTest {
     private PostRepository postRepository;
 
     @Test
-    public void shouldGetProductBySlug(){
+    public void shouldGetPostBySlug(){
         // Given
         Author author = Author.builder().name("Emma").slug("emma").build();
         authorRepository.save(author);
@@ -139,6 +139,7 @@ public class PostControllerTest extends AbstractControllerTest {
         Post firstPost = Post.builder().title("Taiwan Noodle Recipe").slug("taiwan-noodle-recipe").published(true).build();
         firstPost.addPostCategory(recipeCategory);
         firstPost.setAuthor(author);
+        firstPost.setImage("http://localhost:8000/image/post.jpeg");
         firstPost.setCreateDate(LocalDate.of(2011, 1, 1));
         postRepository.save(firstPost);
 
@@ -163,6 +164,7 @@ public class PostControllerTest extends AbstractControllerTest {
         PostSimpleData[] actual = response.getBody();
         assertThat(actual.length, is(1));
         assertThat(actual[0].getTitle(), is("Taiwan Noodle Recipe"));
+        assertThat(actual[0].getImage(), is("http://localhost:8000/image/post.jpeg"));
     }
 
     @Test
@@ -204,6 +206,32 @@ public class PostControllerTest extends AbstractControllerTest {
         PostSimpleData[] actual = response.getBody();
         assertThat(actual.length, is(1));
         assertThat(actual[0].getTitle(), is("Taiwan Noodle Recipe"));
+    }
+
+
+    @Test
+    public void shouldGetPostCategoryBySlug(){
+        // Given
+        PostCategory postCategory = PostCategory.builder()
+                .name("Recipe")
+                .slug("recipe")
+                .image("http://localhost:9000/image/recipe.jpeg")
+                .published(true)
+                .summary("summary")
+                .build();
+        postCategoryRepository.save(postCategory);
+
+        // When
+        final HttpEntity<Object> httpEntity = new HttpEntity<>(headers);
+        final ResponseEntity<PostCategory> response = restTemplate.exchange("/posts/categories/recipe", GET, httpEntity, PostCategory.class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        PostCategory actual = response.getBody();
+        assertThat(actual.getName(), is("Recipe"));
+        assertThat(actual.getSlug(), is("recipe"));
+        assertThat(actual.getImage(), is("http://localhost:9000/image/recipe.jpeg"));
+        assertThat(actual.getSummary(), is("summary"));
     }
 
 }

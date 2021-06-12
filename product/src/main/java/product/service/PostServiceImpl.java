@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 @Service
 public class PostServiceImpl implements PostService {
 
-
     private final PostRepository postRepository;
 
     private final PostCategoryRepository postCategoryRepository;
@@ -61,5 +60,11 @@ public class PostServiceImpl implements PostService {
                 .filter(Post::getPublished)
                 .sorted(PostPredicate.createDateDescComparator())
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Optional<PostCategory> getPostCategoryBySlug(String slug) {
+        return postCategoryRepository.findBySlug(slug);
     }
 }

@@ -16,6 +16,7 @@ public class PostSimpleDataMapper {
         return PostSimpleData.builder()
                 .title(post.getTitle())
                 .slug(post.getSlug())
+                .image(post.getImage())
                 .summary(post.getSummary())
                 .author(post.getAuthor().getName())
                 .createDate(dateTimeFormatter.format(post.getCreateDate()))

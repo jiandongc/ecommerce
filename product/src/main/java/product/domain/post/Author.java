@@ -39,9 +39,11 @@ public class Author {
     @Column(name = "image")
     private String image;
 
+    @JsonIgnore
     @Column(name = "create_date")
     private LocalDate createDate;
 
+    @JsonIgnore
     @Column(name = "published")
     private Boolean published;
 
