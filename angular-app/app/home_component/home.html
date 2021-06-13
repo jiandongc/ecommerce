@@ -98,6 +98,28 @@
 	</div>
 
 	<div class="p-05 underline">
+		<img src="/images/Tilda_Icons_42_restaurant_soup.svg" style="width: 30px; height: 30px; vertical-align: middle;">
+		<span class="fw-bold fs-15 color-grey" style="vertical-align: middle;">Posts</span>
+	</div>
+	<div ng-show="!loadingPosts" class="row auto-clear">
+		<div ng-repeat="post in posts | limitTo:4" class="col-lg-3 col-md-3 col-sm-6 col-xs-6 p-b-10">
+			<div class="thumbnail" style="border: 0px;">
+				<a href="blogs/{{post.slug}}">
+					<img class="media-object" ng-src='{{post.image}}' loading="lazy" alt="{{post.title}}">
+				</a>
+				<div class="caption">
+					<div class="m-b-02">{{post.title}}</div>
+					<div style="color: #888;"><i>by:</i> {{post.author}}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="p-b-20">
+		<span class="pull-right"><a href="blogs">VIEW MORE</a></span>
+	</div>
+
+
+	<div class="p-05 underline">
 		<img src="/images/Tilda_Icons_9ta_medal.svg" style="width: 30px; height: 30px; vertical-align: middle;">
 		<span class="fw-bold fs-15 color-grey" style="vertical-align: middle;">Brands</span>
 	</div>

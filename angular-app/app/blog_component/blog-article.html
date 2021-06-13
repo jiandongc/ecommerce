@@ -1,3 +1,23 @@
 <div class="container blog-article">
-    <div ng-include src="'blog_component/' + article + '.html'"></div>
+    <script type="application/ld+json" id="post-json-ld"></script>
+    <div ng-show="post.categories.length>0" class="blog-decorative-bg m-t-05">
+        <a class="category" href="post-category/{{post.categories[0].slug}}">
+            <span class="glyphicon glyphicon-link"></span>&nbsp;&nbsp;更多“{{post.categories[0].name}}”
+        </a>
+    </div>
+    <div ng-show="loadingPost" class="m-t-05 m-b-05 fs-20" style="text-align: center;">
+        <i class="glyphicon glyphicon-refresh spinning"></i>
+    </div>
+    <div ng-show="!loadingPost">
+        <h1 style="text-align: center;">{{post.title}}</h1>
+        <p ng-show="post.summary" class="post-summary m-t-10" style="text-align: center;">{{post.summary}}</p>
+        <p class="post-date m-t-05 m-b-05" style="text-align: center;">
+            <i>by:</i> {{post.author.name}} |
+            {{post.createDate.dayOfMonth}}-{{post.createDate.month}}-{{post.createDate.year}}
+        </p>
+        <p style="text-align: center;">
+            <iframe ng-src="{{facebookUrl}}" width="138" height="30" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe>
+        </p>
+        <div ng-bind-html="post.content"></div>
+    </div>
 </div>

@@ -681,6 +681,10 @@ a.clickable-label:hover {
   color: #0ABAB5; 
 }
 
+.color-dark-grayish-orange {
+  color: #a18f7a;
+}
+
 .text-line-through {
   text-decoration: line-through;  
 }
@@ -756,8 +760,31 @@ div > .glyphicon-thumbs-up:hover  {
     font-size: 1.2em;
 }
 
-.blog-article .date {
+.blog-article .post-date {
     color: grey;
     font-size: 0.9em;
     font-style: italic;
+}
+
+.blog-article .post-summary {
+    font-style: italic;
+}
+
+.blog-decorative-bg {
+    text-align: center;
+    background-image: url("/images/category.svg");
+    background-repeat: no-repeat;
+    background-size: 90px 8px;
+    background-position: center bottom;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+}
+
+a.category {
+    color: #a18f7a;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    text-decoration: none;
 }

@@ -1,6 +1,6 @@
 var home = angular.module('home', ['ngRoute', 'ngCookies']);
 
-home.controller('homeCtrl', function($scope, tagFactory, brandFactory) {
+home.controller('homeCtrl', function($scope, tagFactory, brandFactory, blogFactory) {
   $scope.loadingTags = true;
   tagFactory.getAllTags().then(function(response){
   	$scope.tags = response;
@@ -15,6 +15,13 @@ home.controller('homeCtrl', function($scope, tagFactory, brandFactory) {
     }
     $scope.loadingBrands = false;
   });
+
+  $scope.loadingPosts = true;
+  blogFactory.getAllPublishedPosts().then(function(response){
+  	$scope.posts = response;
+  	$scope.loadingPosts = false;
+  });
+
 });
 
 home.component('productpanel', {

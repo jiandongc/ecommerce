@@ -1,0 +1,20 @@
+<div class="container account">
+    <img src="{{category.image}}" class="img-responsive"/>
+    <h1 class="m-b-05 color-dark-grayish-orange">
+        {{category.name}}
+    </h1>
+    <div class="row auto-clear">
+        <div ng-repeat="post in posts" class="col-lg-4 col-md-4 col-sm-6 col-xs-12">
+            <div class="thumbnail product-list">
+                <a href="blogs/{{post.slug}}">
+                    <img src="{{post.image}}">
+                    <div class="caption">
+                        <h3>{{post.title}}</h3>
+                        <p>{{post.summary}}</p>
+                        <p class="color-grey m-t-20"><i>by:</i> {{post.author}} | {{post.createDate}}</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
