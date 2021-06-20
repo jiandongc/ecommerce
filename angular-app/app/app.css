@@ -20,7 +20,7 @@ html, body {
 }
 
 .main-content{
-  padding-top: 54px;
+  padding-top: 50px;
 }
 
 .product-list .product-price {
@@ -685,6 +685,10 @@ a.clickable-label:hover {
   color: #a18f7a;
 }
 
+.colour-thai-green-curry {
+  color: #c9b959;
+}
+
 .text-line-through {
   text-decoration: line-through;  
 }
@@ -787,4 +791,13 @@ a.category {
     letter-spacing: 0.6px;
     text-transform: uppercase;
     text-decoration: none;
+}
+
+.notification {
+    text-align: center;
+    background: rgba(112, 121, 154, 0.29);
+    font-size: 12px;
+    font-weight: 600;
+    min-height: 28px;
+    padding: 5px 16px;
 }

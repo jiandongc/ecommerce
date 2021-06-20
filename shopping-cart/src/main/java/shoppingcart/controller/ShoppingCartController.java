@@ -9,19 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import shoppingcart.data.CartData;
 import shoppingcart.data.CustomerData;
 import shoppingcart.data.DeliveryOptionData;
-import shoppingcart.domain.Address;
-import shoppingcart.domain.DeliveryOption;
-import shoppingcart.domain.ShoppingCart;
-import shoppingcart.domain.ValidationResult;
+import shoppingcart.domain.*;
 import shoppingcart.mapper.CartDataMapper;
+import shoppingcart.service.DeliveryOptionService;
 import shoppingcart.service.ShoppingCartService;
 import shoppingcart.service.VoucherValidationService;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.*;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -33,14 +30,17 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCartService;
     private final CartDataMapper cartDataMapper;
     private final VoucherValidationService voucherValidationService;
+    private final DeliveryOptionService deliveryOptionService;
 
     @Autowired
     public ShoppingCartController(ShoppingCartService shoppingCartService,
                                   CartDataMapper cartDataMapper,
-                                  VoucherValidationService voucherValidationService) {
+                                  VoucherValidationService voucherValidationService,
+                                  DeliveryOptionService deliveryOptionService) {
         this.shoppingCartService = shoppingCartService;
         this.cartDataMapper = cartDataMapper;
         this.voucherValidationService = voucherValidationService;
+        this.deliveryOptionService = deliveryOptionService;
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
@@ -99,18 +99,8 @@ public class ShoppingCartController {
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")
     @RequestMapping(value = "{cartUid}/deliveryoption", method = GET)
     public List<DeliveryOptionData> getDeliveryOptions(@PathVariable UUID cartUid) {
-        Optional<ShoppingCart> shoppingCart = shoppingCartService.getShoppingCartByUid(cartUid);
-        BigDecimal itemSubTotal = shoppingCart.map(ShoppingCart::getItemSubTotal).orElse(BigDecimal.ZERO);
-        if (itemSubTotal.compareTo(BigDecimal.valueOf(39.99)) < 0) {
-            return Arrays.asList(
-                    cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3.99D).minDaysRequired(2).maxDaysRequired(5).vatRate(20).build())
-            );
-        } else {
-            return Arrays.asList(
-                    cartDataMapper.map(DeliveryOption.builder().method("Standard Delivery").charge(3.99D).minDaysRequired(2).maxDaysRequired(5).vatRate(20).build()),
-                    cartDataMapper.map(DeliveryOption.builder().method("FREE Delivery").charge(0D).minDaysRequired(2).maxDaysRequired(5).vatRate(20).build())
-            );
-        }
+        List<DeliveryOptionOffer> deliveryOptionOffers = deliveryOptionService.getDeliveryOptionOffers(cartUid, "UK");
+        return deliveryOptionOffers.stream().map(cartDataMapper::map).collect(Collectors.toList());
     }
 
     @PreAuthorize("hasAnyRole('ROLE_GUEST', 'ROLE_USER')")

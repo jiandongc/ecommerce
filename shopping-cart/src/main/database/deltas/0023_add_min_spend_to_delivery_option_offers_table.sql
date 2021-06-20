@@ -1,0 +1,1 @@
+ALTER TABLE delivery_option_offer ADD COLUMN min_spend double precision NOT NULL;

@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import shoppingcart.data.CartData;
+import shoppingcart.data.DeliveryOptionData;
+import shoppingcart.domain.DeliveryOptionOffer;
 import shoppingcart.domain.Promotion;
 import shoppingcart.domain.ShoppingCart;
 import shoppingcart.domain.Voucher;
+import shoppingcart.repository.DeliveryOptionRepository;
 import shoppingcart.repository.ShoppingCartRepository;
 import shoppingcart.repository.VoucherRepository;
 
@@ -35,6 +38,9 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
 
     @Autowired
     private VoucherRepository voucherRepository;
+
+    @Autowired
+    private DeliveryOptionRepository deliveryOptionRepository;
 
     @Test
     public void shouldCreateShoppingCartForUser(){
@@ -422,6 +428,167 @@ public class ShoppingCartControllerTest extends AbstractControllerTest {
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMinDaysRequired(), is(1));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getMaxDaysRequired(), is(2));
         assertThat(cartDataUpdateResponseEntity.getBody().getDeliveryOption().getVatRate(), is(10));
+    }
+
+    @Test
+    public void shouldGetDeliveryOptionOffersForOrdersOverMinSpend(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+        final String customerId = "123e4567-e89b-12d3-a456-556642440000";
+        final UUID cartUid = repository.create(customerId, null);
+        final String itemOne = "{\n" +
+                "\"sku\": \"123456\",\n" +
+                "\"name\": \"kid's cloth\",\n" +
+                "\"price\": \"39.99\",\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\",\n" +
+                "\"description\": \"Size: S\"\n" +
+                "}";
+        final HttpEntity<String> itemOnePayload = new HttpEntity<>(itemOne, headers);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartData.class);
+
+        DeliveryOptionOffer defaultStandardDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("Standard Delivery")
+                .minSpend(0D)
+                .charge(3.99D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(null)
+                .endDate(null)
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(defaultStandardDelivery);
+
+        DeliveryOptionOffer defaultFreeDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("Standard FREE Delivery")
+                .minSpend(29.99D)
+                .charge(0D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(null)
+                .endDate(null)
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(defaultFreeDelivery);
+
+        LocalDate today = LocalDate.now();
+
+        DeliveryOptionOffer standardDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("Delivery Offer")
+                .minSpend(0D)
+                .charge(3.99D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(today)
+                .endDate(today.plusDays(10))
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(standardDelivery);
+
+        DeliveryOptionOffer freeDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("FREE Delivery Offer")
+                .minSpend(39.99D)
+                .charge(0D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(today.minusDays(1))
+                .endDate(today)
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(freeDelivery);
+
+        // When
+        final HttpEntity<Long> emptyPayload = new HttpEntity<>(null, headers);
+        final ResponseEntity<DeliveryOptionData[]> response = rest.exchange(BASE_URL + cartUid.toString() + "/deliveryoption", GET, emptyPayload, DeliveryOptionData[].class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().length, is(2));
+        assertThat(response.getBody()[0].getMethod(), is("Delivery Offer"));
+        assertThat(response.getBody()[1].getMethod(), is("FREE Delivery Offer"));
+    }
+
+    @Test
+    public void shouldGetDefaultDeliveryOptionForOrdersUnderMinSpend(){
+        // Given - set user token
+        headers.set("Authentication", "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjaGVuQGdtYWlsLmNvbSIsInJvbGVzIjpbInVzZXIiXSwiZXhwIjo0NjY4MzgzNDM3fQ.xjlZBzvqJ1fmfFupB1FMWXCBODlLf6aslnidRP1d1fPvgfc0cS7tyRikkk-KBVlf8n17O3vZgEPlAjw5lSiuiA");
+        final String customerId = "123e4567-e89b-12d3-a456-556642440000";
+        final UUID cartUid = repository.create(customerId, null);
+        final String itemOne = "{\n" +
+                "\"sku\": \"123456\",\n" +
+                "\"name\": \"kid's cloth\",\n" +
+                "\"price\": \"39.99\",\n" +
+                "\"imageUrl\": \"/kid-cloth.jpeg\",\n" +
+                "\"description\": \"Size: S\"\n" +
+                "}";
+        final HttpEntity<String> itemOnePayload = new HttpEntity<>(itemOne, headers);
+        rest.exchange(BASE_URL + cartUid.toString() + "/items", POST, itemOnePayload, CartData.class);
+
+        DeliveryOptionOffer defaultStandardDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("Standard Delivery")
+                .minSpend(0D)
+                .charge(3.99D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(null)
+                .endDate(null)
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(defaultStandardDelivery);
+
+        DeliveryOptionOffer defaultFreeDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("Standard FREE Delivery")
+                .minSpend(49.99D)
+                .charge(0D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(null)
+                .endDate(null)
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(defaultFreeDelivery);
+
+        LocalDate today = LocalDate.now();
+
+        DeliveryOptionOffer standardDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("Delivery Offer")
+                .minSpend(0D)
+                .charge(3.99D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(today.minusDays(10))
+                .endDate(today.minusDays(7))
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(standardDelivery);
+
+        DeliveryOptionOffer freeDelivery = DeliveryOptionOffer.deliveryOptionOfferBuilder()
+                .countryCode("UK")
+                .method("FREE Delivery Offer")
+                .minSpend(39.99D)
+                .charge(0D)
+                .minDaysRequired(2)
+                .maxDaysRequired(5)
+                .vatRate(20)
+                .startDate(today.minusDays(10))
+                .endDate(today.minusDays(7))
+                .build();
+        deliveryOptionRepository.addDeliveryOptionOffers(freeDelivery);
+
+        // When
+        final HttpEntity<Long> emptyPayload = new HttpEntity<>(null, headers);
+        final ResponseEntity<DeliveryOptionData[]> response = rest.exchange(BASE_URL + cartUid.toString() + "/deliveryoption", GET, emptyPayload, DeliveryOptionData[].class);
+
+        // Then
+        assertThat(response.getStatusCode(), is(HttpStatus.OK));
+        assertThat(response.getBody().length, is(1));
+        assertThat(response.getBody()[0].getMethod(), is("Standard Delivery"));
     }
 
     @Test
