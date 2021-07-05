@@ -304,6 +304,8 @@ checkout.controller('stripePaymentCtrl', function($scope, $location, $localstora
         $scope.template.footer = 'default-footer.html';
     }
 
+    $scope.paymentOption = 'card';
+
     shoppingCartFactory.getOrderData($localstorage.get('cart_uid')).then(function(response) {
         $scope.orderData = response;
 
@@ -396,6 +398,92 @@ checkout.controller('stripePaymentCtrl', function($scope, $location, $localstora
             });
 
         });
+
+        var paymentRequest = stripe.paymentRequest({
+          country: 'GB',
+          currency: 'gbp',
+          total: {
+            label: 'Order total',
+            amount: Math.round(($scope.orderData.orderTotal * 100) * 1e12) / 1e12,
+          },
+          requestPayerName: true,
+          requestPayerEmail: true,
+        });
+
+        var prButton = elements.create('paymentRequestButton', {
+          paymentRequest: paymentRequest,
+        });
+
+        paymentRequest.canMakePayment().then(function(result) {
+          if (result) {
+            prButton.mount('#payment-request-button');
+          } else {
+            document.getElementById('payment-request-button').style.display = 'none';
+            var displayError = document.getElementById('wallet-payment-errors');
+            displayError.textContent = "I am sorry, it seems that your device/browser combination does not support Google Pay or Apply Pay."
+          }
+        });
+
+        paymentRequest.on('paymentmethod', function(ev) {
+            orderFactory.createOrder($scope.orderData).then(function(orderNumber) {
+                $scope.orderNumber = orderNumber;
+
+                var stripeMetaData = {
+                    shoppingCartId: $localstorage.get('cart_uid'),
+                    userName: $localstorage.get('current_user'),
+                    siteName: environment.siteName,
+                    homePage: environment.homePage,
+                    registrationPage: environment.registrationPage
+                };
+
+                orderFactory.downloadStripeClientSecret($scope.orderNumber, stripeMetaData).then(function(response) {
+                    $scope.clientSecret = response;
+
+                    // Confirm the PaymentIntent without handling potential next actions (yet).
+                    stripe.confirmCardPayment($scope.clientSecret, {payment_method: ev.paymentMethod.id}, {handleActions: false}).then(function(confirmResult) {
+                        if (confirmResult.error) {
+                            var displayError = document.getElementById('wallet-payment-errors');
+                            displayError.textContent = confirmResult.error;
+                            ev.complete('fail');
+                        } else {
+                            // Report to the browser that the confirmation was successful, prompting
+                            // it to close the browser payment method collection interface.
+                            ev.complete('success');
+                            // Check if the PaymentIntent requires any actions and if so let Stripe.js
+                            // handle the flow. If using an API version older than "2019-02-11"
+                            // instead check for: `paymentIntent.status === "requires_source_action"`.
+                            if (confirmResult.paymentIntent.status === "requires_action") {
+                                // Let Stripe.js handle the rest of the payment flow.
+                                stripe.confirmCardPayment($scope.clientSecret).then(function(result) {
+                                    if (result.error) {
+                                        var displayError = document.getElementById('wallet-payment-errors');
+                                        displayError.textContent = result.error;
+                                    } else {
+                                        $rootScope.$broadcast('resetCartInfo');
+                                        $scope.$apply(function() {
+                                            $location.path("/checkout/" + $scope.orderNumber + "/thank_you");
+                                        });
+                                    }
+                                });
+                            } else {
+                                $rootScope.$broadcast('resetCartInfo');
+                                $scope.$apply(function() {
+                                    $location.path("/checkout/" + $scope.orderNumber + "/thank_you");
+                                });
+                            }
+                        }
+                    });
+                }, function(error) {
+                    var displayError = document.getElementById('wallet-payment-errors');
+                    displayError.textContent = 'Failed to initialise payment. Please try again later.';
+                });
+            }, function(error) {
+                var displayError = document.getElementById('wallet-payment-errors');
+                displayError.textContent = 'Failed to create order. Your card hasn\'t been charged, please try again later.';
+            });
+
+        });
+
     });
 
     $scope.showSpinner = function() {

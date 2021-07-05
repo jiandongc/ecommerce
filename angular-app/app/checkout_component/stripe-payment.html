@@ -3,38 +3,62 @@
         <div class="col-md-8">
             <div class="row">
                 <progressbar value="80%"></progressbar>
-                <div class="col-xs-12 m-b-05">
-                    <div class="header">Payment</div>
-                    <!--<span style="font-style: italic;">(Beta Site: Your account will not be charged)</span>-->
-                </div>
-                <div class="col-xs-12 m-b-05">
-                    <img ng-src="/images/visa_logo.jpg" style="width:64px;height:auto;">
-                    <img ng-src="/images/amex_logo.png" style="width:64px;height:auto;" >
-                    <img ng-src="/images/master_logo.png" style="width:64px;height:auto;" >
-                </div>
-                <div class="col-xs-12 m-b-05">
-                    <form id="payment-form" class="payment-form">
-                        <div class="row">
-                            <div class="form-group col-xs-12">
-                                <div id="card-element" class="form-control input-lg">
-                                    <!-- A Stripe Element will be inserted here. -->
-                                </div>
+                <div class="col-xs-12">
+                    <div class="header border-bottom p-b-05">Payment Method</div>
+                    <div class="row payment p-t-10 p-b-10 border-bottom">
+                        <div class="col-xs-12">
+                            <input type="radio" name="payment" ng-model="paymentOption" value="card">
+                            <span class="desc">&nbsp;Credit / Debit Card</span>
+                            <i class="fa fa-credit-card fa-2x pull-right" aria-hidden="true"></i>
+                        </div>
+                        <div ng-class="paymentOption==='card' ? 'animated fadeIn' : 'ng-hide'">
+                            <div class="col-xs-12 m-b-05">
+                                <img ng-src="/images/visa_logo.jpg" style="width:64px;height:auto;">
+                                <img ng-src="/images/amex_logo.png" style="width:64px;height:auto;" >
+                                <img ng-src="/images/master_logo.png" style="width:64px;height:auto;" >
                             </div>
+                            <div class="col-xs-12 m-b-05">
+                                <form id="payment-form" class="payment-form">
+                                    <div class="row">
+                                        <div class="form-group col-xs-12">
+                                            <div id="card-element" class="form-control input-lg">
+                                                <!-- A Stripe Element will be inserted here. -->
+                                            </div>
+                                        </div>
 
-                            <!-- We'll put the error messages in this element -->
-                            <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-6">
-                                <div id="card-errors" class="color-valencia" role="alert"></div>
-                            </div>
+                                        <!-- We'll put the error messages in this element -->
+                                        <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-6">
+                                            <div id="card-errors" class="color-valencia" role="alert"></div>
+                                        </div>
 
-                            <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-6 pull-right">
-                                <button id="submit" class="btn btn-block btn-style-primary" type="submit">
-                                    <i id="btnSpinner" class=""></i>&nbsp;Pay {{orderData.orderTotal | currency:"£"}}
-                                </button>
+                                        <div class="col-xs-12 col-sm-6 col-lg-6 col-xl-6 pull-right">
+                                            <button id="submit" class="btn btn-block btn-style-primary" type="submit">
+                                                <i id="btnSpinner" class=""></i>&nbsp;Pay {{orderData.orderTotal | currency:"£"}}
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    <div class="row payment p-t-10 p-b-10">
+                        <div class="col-xs-12 m-b-10">
+                            <input type="radio" name="payment" ng-model="paymentOption" value="wallet">
+                            <span class="desc">&nbsp;Google Pay / Apply Pay</span>
+                            <i class="fa fa-google-wallet fa-2x pull-right" aria-hidden="true"></i>
+                        </div>
+                        <div ng-class="paymentOption==='wallet' ? 'animated fadeIn' : 'ng-hide'">
+                            <div class="col-xs-12 m-b-05">
+                                <div id="payment-request-button">
+                                        <!-- A Stripe Element will be inserted here. -->
+                                 </div>
+                            </div>
+                            <div class="col-xs-12 m-b-05">
+                                <div id="wallet-payment-errors" class="color-valencia" role="alert"></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
             </div>
         </div>
         <div class="col-md-4">
