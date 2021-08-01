@@ -10,10 +10,12 @@ import product.domain.Brand;
 import product.domain.Category;
 import product.domain.Product;
 import product.domain.ProductTag;
+import product.domain.post.Post;
 import product.repository.AbstractRepositoryTest;
 import product.repository.CategoryRepository;
 import product.repository.ProductRepository;
 import product.service.BrandService;
+import product.service.PostService;
 import product.service.ProductTagService;
 
 import javax.xml.bind.JAXBContext;
@@ -44,6 +46,9 @@ public class SiteMapGenerator extends AbstractRepositoryTest {
 
     @Autowired
     private BrandService brandService;
+
+    @Autowired
+    private PostService postService;
 
     @Test
     public void categoryMap() throws Exception {
@@ -120,6 +125,26 @@ public class SiteMapGenerator extends AbstractRepositoryTest {
         });
 
         marshallerObj.marshal(urlSet, new File(BASE_DIRECTORY + "/ecommerce/angular-app/brand_map.xml"));
+    }
+
+    @Test
+    public void blogMap() throws Exception {
+        List<Post> posts = postService.findPublishedPosts(null, null);
+
+        JAXBContext contextObj = JAXBContext.newInstance(UrlSet.class);
+
+        Marshaller marshallerObj = contextObj.createMarshaller();
+        marshallerObj.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+
+        String lastModified = DateTimeFormatter.ISO_DATE.format(LocalDate.now());
+
+        UrlSet urlSet = UrlSet.builder().xmlns("http://www.sitemaps.org/schemas/sitemap/0.9").build();
+        posts.forEach(post -> {
+            Url url = Url.builder().location(BASE_URL + "/blogs/" + post.getSlug()).lastModified(lastModified).build();
+            urlSet.addUrl(url);
+        });
+
+        marshallerObj.marshal(urlSet, new File(BASE_DIRECTORY + "/ecommerce/angular-app/blog_map.xml"));
     }
 
     @Builder
