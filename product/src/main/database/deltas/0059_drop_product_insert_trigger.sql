@@ -1,0 +1,1 @@
+DROP TRIGGER update_product_code ON product;
